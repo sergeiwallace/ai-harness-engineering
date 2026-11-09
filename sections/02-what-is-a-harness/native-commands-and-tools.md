@@ -198,9 +198,9 @@ At the start of a fresh session this shows the standing cost of the harness: sys
 
 ## Sources
 
-- Claude Code tools reference: <https://code.claude.com/docs/en/tools-reference.md>, verified 2026-11-09.
-- Claude Code commands: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- Claude Code permissions and compound commands: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
-- Codex configuration: <https://learn.chatgpt.com/docs/config-file/config-reference>, verified 2026-11-09.
+- [Claude Code tools reference](https://code.claude.com/docs/en/tools-reference.md), verified 2026-11-09.
+- [Claude Code commands](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
+- [Claude Code permissions and compound commands](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
+- [Codex configuration](https://learn.chatgpt.com/docs/config-file/config-reference), verified 2026-11-09.
 
 {% include page_nav.html %}

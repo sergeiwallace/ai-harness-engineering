@@ -192,7 +192,7 @@ To start: two stages, plan then build, with the plan as a file you read before t
 
 ## Sources
 
-- Skills: <https://code.claude.com/docs/en/skills.md>.
-- Dynamic workflows and mid-run input: <https://code.claude.com/docs/en/workflows.md>, verified 2026-11-09.
+- Skills: [Skills (Claude Code docs)](https://code.claude.com/docs/en/skills.md).
+- Dynamic workflows and mid-run input: [Orchestrate subagents at scale with dynamic workflows (Claude Code docs)](https://code.claude.com/docs/en/workflows.md), verified 2026-11-09.
 
 {% include page_nav.html %}

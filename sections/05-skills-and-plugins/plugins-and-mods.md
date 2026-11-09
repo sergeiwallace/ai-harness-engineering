@@ -231,8 +231,8 @@ In my harness one core plugin serves the same read-only tools to Claude Code and
 
 ## Sources
 
-- Plugins, marketplaces, the hooks module and mods: <https://code.claude.com/docs/en/plugins/overview.md> and <https://code.claude.com/docs/en/plugins/mods/overview.md>, verified 2026-11-08.
-- `/plugin`, `/reload-plugins`, `/skill-doctor`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
+- Plugins, marketplaces, the hooks module and mods: [Claude Code plugins overview](https://code.claude.com/docs/en/plugins/overview.md) and [Claude Code mods overview](https://code.claude.com/docs/en/plugins/mods/overview.md), verified 2026-11-08.
+- `/plugin`, `/reload-plugins`, `/skill-doctor`: [Claude Code commands reference](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
 - The shared library, core plugin and context pane are from the author's own harness, described conceptually. The example plugin, marketplace, audit and tool code are illustrations written for this page.
 
 {% include page_nav.html %}

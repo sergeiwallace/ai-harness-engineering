@@ -241,11 +241,11 @@ A completion check can create the loop it was meant to prevent. If the condition
 
 ## Sources
 
-- `/goal`: syntax, evaluator, verdicts, status and clearing, headless use, and the no-progress stop: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
-- `Stop` hook blocking, the 8-block cap, `stop_hook_active` and `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`: <https://code.claude.com/docs/en/hooks-guide.md> and <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- `--max-turns` and `--max-budget-usd`: <https://code.claude.com/docs/en/cli-reference.md>, verified 2026-11-09.
-- `/rewind` and `/autocompact`: <https://code.claude.com/docs/en/commands.md> and <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
-- Command timeouts and sub-agent `maxTurns`: <https://code.claude.com/docs/en/tools-reference.md>, verified 2026-11-09.
+- `/goal`: syntax, evaluator, verdicts, status and clearing, headless use, and the no-progress stop: [Claude Code docs: Keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
+- `Stop` hook blocking, the 8-block cap, `stop_hook_active` and `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`: [Claude Code docs: Automate actions with hooks](https://code.claude.com/docs/en/hooks-guide.md) and [Claude Code docs: Hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- `--max-turns` and `--max-budget-usd`: [Claude Code docs: CLI reference](https://code.claude.com/docs/en/cli-reference.md), verified 2026-11-09.
+- `/rewind` and `/autocompact`: [Claude Code docs: Commands](https://code.claude.com/docs/en/commands.md) and [Claude Code docs: Explore the context window](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
+- Command timeouts and sub-agent `maxTurns`: [Claude Code docs: Tools reference](https://code.claude.com/docs/en/tools-reference.md), verified 2026-11-09.
 - The examples, the hook script and the checklist are written for this page.
 
 {% include page_nav.html %}

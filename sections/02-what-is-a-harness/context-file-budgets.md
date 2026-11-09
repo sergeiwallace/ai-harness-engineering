@@ -181,10 +181,10 @@ My harness pairs every trim with a traceability check.
 
 ## Sources
 
-- Claude Code `/context`: <https://code.claude.com/docs/en/slash-commands.md>.
-- Claude Code size guidance and limits: <https://code.claude.com/docs/en/memory.md>, <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
-- Codex `project_doc_max_bytes`: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, verified 2026-11-09.
-- Liu et al., "Lost in the Middle: How Language Models Use Long Contexts" (2023): <https://arxiv.org/abs/2307.03172>.
+- [Claude Code `/context`](https://code.claude.com/docs/en/slash-commands.md).
+- Claude Code size guidance and limits: [memory docs](https://code.claude.com/docs/en/memory.md) and [skills docs](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
+- [Codex `project_doc_max_bytes`](https://learn.chatgpt.com/docs/agent-configuration/agents-md), verified 2026-11-09.
+- [Liu et al., "Lost in the Middle: How Language Models Use Long Contexts" (2023)](https://arxiv.org/abs/2307.03172).
 - The two-threshold gate, trim ladder and traceability check are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

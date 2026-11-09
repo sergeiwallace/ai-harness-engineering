@@ -264,9 +264,9 @@ A skill is code written in prose, so check it the way you would check a script:
 
 ## Sources
 
-- Skills, frontmatter fields, arguments, injected command output and forked context: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
-- Agent Skills donation: <https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation>, verified 2026-11-08.
-- Codex skills: <https://learn.chatgpt.com/docs/build-skills.md>, verified 2026-11-08.
+- Skills, frontmatter fields, arguments, injected command output and forked context: [Claude Code skills documentation](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
+- Agent Skills donation: [Anthropic, Donating Agent Skills to the Agentic AI Foundation](https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation), verified 2026-11-08.
+- Codex skills: [Codex skills documentation](https://learn.chatgpt.com/docs/build-skills.md), verified 2026-11-08.
 - The example skills and transcript are illustrations written for this page. The loading-layers diagram was drawn for this page.
 
 {% include page_nav.html %}

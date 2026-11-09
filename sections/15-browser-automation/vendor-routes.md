@@ -232,7 +232,7 @@ Work down the routes in order and stop at the first that answers:
 
 ## Sources
 
-- Claude in Chrome: capabilities, requirements, the `--chrome` flag, the project-settings rule, uploads and troubleshooting: <https://code.claude.com/docs/en/chrome.md>, verified 2026-11-09.
-- Computer use in the CLI: requirements, enabling, app approval, behaviour, safety and the tool order: <https://code.claude.com/docs/en/computer-use.md>, verified 2026-11-09.
+- Claude in Chrome: capabilities, requirements, the `--chrome` flag, the project-settings rule, uploads and troubleshooting: [Claude Code docs: Use Claude Code with Chrome](https://code.claude.com/docs/en/chrome.md), verified 2026-11-09.
+- Computer use in the CLI: requirements, enabling, app approval, behaviour, safety and the tool order: [Claude Code docs: Let Claude use your computer from the CLI](https://code.claude.com/docs/en/computer-use.md), verified 2026-11-09.
 
 {% include page_nav.html %}

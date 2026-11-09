@@ -482,12 +482,12 @@ See [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
 ## Sources
 
-- Install, first session, shell flags and permission-mode switching: <https://code.claude.com/docs/en/quickstart.md>, read 2026-11-09.
-- Commands and features: <https://code.claude.com/docs/en/commands.md>, <https://code.claude.com/docs/en/goal.md>, <https://code.claude.com/docs/en/scheduled-tasks.md>, <https://code.claude.com/docs/en/remote-control.md>, verified 2026-11-08 and 2026-11-09.
-- Settings files and precedence: <https://code.claude.com/docs/en/settings.md>, read 2026-11-09.
-- Surfaces: <https://code.claude.com/docs/en/platforms.md>, verified 2026-11-08.
-- Monitor and headless runs: <https://code.claude.com/docs/en/tools-reference>, <https://code.claude.com/docs/en/headless.md>, verified 2026-11-02 and 2026-11-09.
-- Codex install and sign-in: <https://github.com/openai/codex>, read 2026-11-09. Codex commands (including `/init`, `/model`, `/ps`, `/stop`, `/status`): <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09. Hooks, sub-agents, skills: <https://learn.chatgpt.com/docs/hooks.md>, <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, <https://learn.chatgpt.com/docs/build-skills.md>, verified 2026-11-08.
+- Install, first session, shell flags and permission-mode switching: [Claude Code: quickstart](https://code.claude.com/docs/en/quickstart.md), read 2026-11-09.
+- Commands and features: [Claude Code: commands reference](https://code.claude.com/docs/en/commands.md), [Claude Code: keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), [Claude Code: run prompts on a schedule](https://code.claude.com/docs/en/scheduled-tasks.md), [Claude Code: Remote Control](https://code.claude.com/docs/en/remote-control.md), verified 2026-11-08 and 2026-11-09.
+- Settings files and precedence: [Claude Code: settings files and precedence](https://code.claude.com/docs/en/settings.md), read 2026-11-09.
+- Surfaces: [Claude Code: platforms](https://code.claude.com/docs/en/platforms.md), verified 2026-11-08.
+- Monitor and headless runs: [Claude Code: tools reference](https://code.claude.com/docs/en/tools-reference), [Claude Code: headless mode](https://code.claude.com/docs/en/headless.md), verified 2026-11-02 and 2026-11-09.
+- Codex install and sign-in: [the Codex CLI README on GitHub](https://github.com/openai/codex), read 2026-11-09. Codex commands (including `/init`, `/model`, `/ps`, `/stop`, `/status`): [Codex: CLI slash commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), read 2026-11-09. Hooks, sub-agents, skills: [Codex: hooks](https://learn.chatgpt.com/docs/hooks.md), [Codex: subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents.md), [Codex: build skills](https://learn.chatgpt.com/docs/build-skills.md), verified 2026-11-08.
 - The install pattern is from the author's own harness, described conceptually. Example files and session excerpts are illustrations written for this page.
 
 {% include page_nav.html %}

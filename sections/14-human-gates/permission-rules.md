@@ -247,7 +247,7 @@ To start: put your never-alone list into `ask` and `deny` rules in the project's
 
 ## Sources
 
-- Configure permissions: settings locations and precedence, rule order and syntax, permission modes, `defaultMode`, the mode-disabling keys, and how hooks interact with rules: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Configure permissions: settings locations and precedence, rule order and syntax, permission modes, `defaultMode`, the mode-disabling keys, and how hooks interact with rules: [Claude Code docs: Configure permissions](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
 - Codex approval policy and sandbox mode: not yet verified against the primary source for this page.
 
 {% include page_nav.html %}

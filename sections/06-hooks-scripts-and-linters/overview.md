@@ -296,10 +296,10 @@ To start: pick one rule in your context file that a program could check, such as
 
 ## Sources
 
-- Claude Code hooks, events, exit code 2, handler types: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09 (partial read of a long page).
-- "context, not enforced configuration": <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- Moving a must-hold rule into a hook: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
-- Codex hooks: <https://learn.chatgpt.com/docs/hooks.md>, verified 2026-11-08.
+- Claude Code hooks, events, exit code 2, handler types: [Claude Code hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09 (partial read of a long page).
+- "context, not enforced configuration": [Claude Code memory documentation](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- Moving a must-hold rule into a hook: [Claude Code skills documentation](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
+- Codex hooks: [Codex hooks documentation](https://learn.chatgpt.com/docs/hooks.md), verified 2026-11-08.
 - The guards, the manifest and the isolation guard are from the author's own harness, described conceptually. The example scripts, settings and transcripts are illustrations written for this page. The ladder and timeline diagrams were drawn for this page.
 
 {% include page_nav.html %}

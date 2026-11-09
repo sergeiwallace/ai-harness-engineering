@@ -141,10 +141,10 @@ A nightly job reads new support tickets, classifies each, drafts replies for two
 
 ## Sources
 
-- LangGraph: <https://docs.langchain.com/oss/python/langgraph/overview>, verified 2026-11-08.
-- OpenAI Agents SDK: <https://openai.github.io/openai-agents-python/>, verified 2026-11-09.
-- CrewAI: <https://docs.crewai.com/>, verified 2026-11-09.
-- Google Agent Development Kit: <https://adk.dev/> (formerly google.github.io/adk-docs), verified 2026-11-09.
-- Microsoft Agent Framework: <https://github.com/microsoft/agent-framework>, verified 2026-11-09. AutoGen archived: <https://github.com/microsoft/autogen>, verified 2026-11-08.
+- LangGraph: [LangGraph overview (LangChain docs)](https://docs.langchain.com/oss/python/langgraph/overview), verified 2026-11-08.
+- OpenAI Agents SDK: [OpenAI Agents SDK documentation](https://openai.github.io/openai-agents-python/), verified 2026-11-09.
+- CrewAI: [CrewAI documentation](https://docs.crewai.com/), verified 2026-11-09.
+- Google Agent Development Kit: [Agent Development Kit documentation](https://adk.dev/) (it moved from Google's GitHub Pages site), verified 2026-11-09.
+- Microsoft Agent Framework: [microsoft/agent-framework on GitHub](https://github.com/microsoft/agent-framework), verified 2026-11-09. AutoGen archived: [microsoft/autogen on GitHub](https://github.com/microsoft/autogen), verified 2026-11-08.
 
 {% include page_nav.html %}

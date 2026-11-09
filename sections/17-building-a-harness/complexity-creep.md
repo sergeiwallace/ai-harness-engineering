@@ -222,7 +222,7 @@ To start: list every always-loaded line in your context files and, next to each,
 
 ## Sources
 
-- The five outcomes for a correction: TRACE, <https://arxiv.org/abs/2606.13174>, from my research survey; not yet verified against the primary source.
+- The five outcomes for a correction: TRACE, [Getting Better at Working With You: Compiling User Corrections into Runtime Enforcement for Coding Agents](https://arxiv.org/abs/2606.13174), from my research survey; not yet verified against the primary source.
 - From the author's own harness, described conceptually.
 
 {% include page_nav.html %}

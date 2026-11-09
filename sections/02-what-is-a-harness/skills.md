@@ -221,9 +221,9 @@ See [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp
 
 ## Sources
 
-- Claude Code skills: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
-- Codex skills: <https://learn.chatgpt.com/docs/build-skills>, verified 2026-11-09.
-- Agent Skills format: <https://agentskills.io/>.
+- [Claude Code skills](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
+- [Codex skills](https://learn.chatgpt.com/docs/build-skills), verified 2026-11-09.
+- [Agent Skills format](https://agentskills.io/).
 - The skill examples are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

@@ -270,8 +270,8 @@ A change that is never measured stays forever, whether it helped or not. Unmeasu
 
 ## Sources
 
-- Claude Code hooks, the `Stop` event and exit code 2: <https://code.claude.com/docs/en/hooks.md>, not re-checked for this page.
-- LangChain's verification middleware and Terminal Bench 2.0 result: <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09.
+- Claude Code hooks, the `Stop` event and exit code 2: [Claude Code docs: Hooks](https://code.claude.com/docs/en/hooks.md), not re-checked for this page.
+- LangChain's verification middleware and Terminal Bench 2.0 result: [LangChain, Improving Deep Agents with harness engineering](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering), verified 2026-11-09.
 - From the author's own harness, described conceptually.
 
 {% include page_nav.html %}

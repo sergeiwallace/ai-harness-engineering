@@ -78,7 +78,7 @@ A hook, script, linter, test or CI gate runs the same way every time. It cannot 
 ![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
 *Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*
 
-*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
+*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: [Swiss cheese model of accident causation on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png), by Davidmack, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). Resized for this page.*
 
 ### The layers
 
@@ -234,11 +234,11 @@ When you adopt someone else's setup, or open your own after a few months, three 
 
 ## Sources
 
-- Böckeler, "Harness engineering": <https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html> (2026-04-02), verified 2026-11-08.
-- "context, not enforced configuration" and the guidance quoted with it: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- Swiss cheese model image: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0. The model is James Reason's.
-- Harness cost measurements: reported by HarnessTax (UC Berkeley and Arena, 2026), <https://harnesstax.github.io/>; not yet verified against the primary source.
-- LangChain, "Improving deep agents with harness engineering" (2026-02-17): <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09.
+- [Böckeler, "Harness engineering"](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html) (2026-04-02), verified 2026-11-08.
+- [Claude Code memory docs](https://code.claude.com/docs/en/memory.md), source of "context, not enforced configuration" and the guidance quoted with it, verified 2026-11-09.
+- [Swiss cheese model of accident causation](https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png), Wikimedia Commons, by Davidmack, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). The model is James Reason's.
+- Harness cost measurements: reported by [HarnessTax](https://harnesstax.github.io/) (UC Berkeley and Arena, 2026); not yet verified against the primary source.
+- [LangChain, "Improving deep agents with harness engineering" (2026-02-17)](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering), verified 2026-11-09.
 - The enforcement ladder, the citation example and the commit script are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

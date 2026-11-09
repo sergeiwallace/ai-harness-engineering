@@ -170,9 +170,9 @@ See [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
 ## Sources
 
-- `/model` and `/effort`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- Profile `model` field and `inherit`: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
-- `CLAUDE_CODE_SUBAGENT_MODEL` and `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`: <https://code.claude.com/docs/en/agent-teams.md> (model selection), verified 2026-11-09; the force variable's effect on ordinary sub-agents is taken from that page's link to the sub-agents docs and not checked there.
+- `/model` and `/effort`: [Claude Code docs: commands reference](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
+- Profile `model` field and `inherit`: [Claude Code docs: sub-agents](https://code.claude.com/docs/en/sub-agents.md), verified 2026-11-09.
+- `CLAUDE_CODE_SUBAGENT_MODEL` and `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`: [Claude Code docs: Orchestrate teams of Claude Code sessions](https://code.claude.com/docs/en/agent-teams.md) (model selection), verified 2026-11-09; the force variable's effect on ordinary sub-agents is taken from that page's link to the sub-agents docs and not checked there.
 - The tier split and cross-family review practice are from the author's own harness, described conceptually. The worked example is an illustration written for this page.
 
 {% include page_nav.html %}

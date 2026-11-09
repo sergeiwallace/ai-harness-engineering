@@ -151,8 +151,8 @@ To start: write five tasks from past failures into a file today, so the next mod
 
 ## Sources
 
-- Reasoning-effort results on Terminal Bench 2.0: LangChain, "Improving Deep Agents with harness engineering", 2026-02-17, <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09.
-- Starting with 20 to 50 simple tasks from real failures: Anthropic, <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents>, not re-checked for this page.
+- Reasoning-effort results on Terminal Bench 2.0: [LangChain, Improving Deep Agents with harness engineering](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering) (2026-02-17), verified 2026-11-09.
+- Starting with 20 to 50 simple tasks from real failures: Anthropic, [Anthropic, Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents), not re-checked for this page.
 - From the author's own harness, described conceptually.
 
 {% include page_nav.html %}

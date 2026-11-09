@@ -250,8 +250,8 @@ To start: ask Claude Code to "use a workflow" for one task you would otherwise r
 
 ## Sources
 
-- Dynamic workflows: script API, limits, approval, resume, saving, cost and size guideline: <https://code.claude.com/docs/en/workflows.md>, verified 2026-11-09.
-- LangGraph: <https://docs.langchain.com/oss/python/langgraph/overview>, verified 2026-11-08.
-- AutoGen archived: <https://github.com/microsoft/autogen>, verified 2026-11-08.
+- Dynamic workflows: script API, limits, approval, resume, saving, cost and size guideline: [Orchestrate subagents at scale with dynamic workflows (Claude Code docs)](https://code.claude.com/docs/en/workflows.md), verified 2026-11-09.
+- LangGraph: [LangGraph overview (LangChain docs)](https://docs.langchain.com/oss/python/langgraph/overview), verified 2026-11-08.
+- AutoGen archived: [microsoft/autogen on GitHub](https://github.com/microsoft/autogen), verified 2026-11-08.
 
 {% include page_nav.html %}

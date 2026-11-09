@@ -220,8 +220,8 @@ To start: one notes file the agent updates before each compaction, and a `Sessio
 
 ## Sources
 
-- What survives compaction, `/compact`, `/autocompact`, `/rewind`, `/clear`, idle compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
-- `SessionStart` hook with the `compact` matcher: <https://code.claude.com/docs/en/hooks-guide.md>, verified 2026-11-09.
-- `/goal` cleared on an unrecoverable context overflow: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- What survives compaction, `/compact`, `/autocompact`, `/rewind`, `/clear`, idle compaction: [Explore the context window (Claude Code docs)](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
+- `SessionStart` hook with the `compact` matcher: [Automate actions with hooks (Claude Code docs)](https://code.claude.com/docs/en/hooks-guide.md), verified 2026-11-09.
+- `/goal` cleared on an unrecoverable context overflow: [Keep Claude working toward a goal (Claude Code docs)](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
 
 {% include page_nav.html %}

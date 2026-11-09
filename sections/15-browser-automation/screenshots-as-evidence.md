@@ -189,7 +189,7 @@ To start: build the screenshot into the workflow, for example a script your UI t
 
 ## Sources
 
-- Playwright visual comparisons: baseline creation, `--update-snapshots`, platform-specific file names, `threshold` and `maxDiffPixels`: <https://playwright.dev/docs/test-snapshots>, verified 2026-11-09.
+- Playwright visual comparisons: baseline creation, `--update-snapshots`, platform-specific file names, `threshold` and `maxDiffPixels`: [Playwright docs: Visual comparisons](https://playwright.dev/docs/test-snapshots), verified 2026-11-09.
 - The screenshot skill and the capture checks: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

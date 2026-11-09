@@ -187,9 +187,9 @@ The tool is layer 3 of the harness (a script that flags at the moment of review)
 
 ## Sources
 
-- Escalation channels study (test-file modification flag): <https://arxiv.org/abs/2608.29460>, verified 2026-11-09.
-- EvilGenie (test file edit detection): <https://arxiv.org/abs/2511.21654>, verified 2026-10-08.
-- git interpret-trailers (trailer block position): <https://git-scm.com/docs/git-interpret-trailers>, verified 2026-11-09.
-- git log pretty formats (`%(trailers:...)`): <https://git-scm.com/docs/pretty-formats>, not re-verified for this page.
+- [Escalation channels study (test-file modification flag)](https://arxiv.org/abs/2608.29460), verified 2026-11-09.
+- [EvilGenie (test file edit detection)](https://arxiv.org/abs/2511.21654), verified 2026-10-08.
+- [git interpret-trailers (trailer block position)](https://git-scm.com/docs/git-interpret-trailers), verified 2026-11-09.
+- [git log pretty formats (`%(trailers:...)`)](https://git-scm.com/docs/pretty-formats), not re-verified for this page.
 
 {% include page_nav.html %}

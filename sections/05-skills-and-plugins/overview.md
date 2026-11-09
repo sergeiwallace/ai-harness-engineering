@@ -479,10 +479,10 @@ To start: turn the prompt you type most often into a skill.
 
 ## Sources
 
-- Skills, the file format, arguments, injected command output and invocation settings: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
-- Several skills in one message, up to six; `/plugin`, `/reload-plugins`, `/skill-doctor`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- Plugins, marketplaces, the hooks module and mods: <https://code.claude.com/docs/en/plugins/overview.md> and <https://code.claude.com/docs/en/plugins/mods/overview.md>, verified 2026-11-08.
-- Codex skills: <https://learn.chatgpt.com/docs/build-skills.md>, verified 2026-11-08.
+- Skills, the file format, arguments, injected command output and invocation settings: [Claude Code skills documentation](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
+- Several skills in one message, up to six; `/plugin`, `/reload-plugins`, `/skill-doctor`: [Claude Code commands reference](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
+- Plugins, marketplaces, the hooks module and mods: [Claude Code plugins overview](https://code.claude.com/docs/en/plugins/overview.md) and [Claude Code mods overview](https://code.claude.com/docs/en/plugins/mods/overview.md), verified 2026-11-08.
+- Codex skills: [Codex skills documentation](https://learn.chatgpt.com/docs/build-skills.md), verified 2026-11-08.
 - The shared library, chained launch path, core plugin and mods are from the author's own harness, described conceptually. The example skills and plugin are illustrations written for this page. The loading-layers diagram was drawn for this page; the sequence diagrams were made with archify.
 
 {% include page_nav.html %}

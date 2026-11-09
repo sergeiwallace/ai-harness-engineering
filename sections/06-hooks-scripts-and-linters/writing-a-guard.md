@@ -261,7 +261,7 @@ def test_kill_guard_cases():
 
 ## Sources
 
-- Hook exit codes and feedback: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09 (partial read of a long page).
+- Hook exit codes and feedback: [Claude Code hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09 (partial read of a long page).
 - The five guards, their incidents and the isolation guard are from the author's own harness, described conceptually. The scripts, transcripts and test cases are illustrations written for this page. The sequence diagram was made with archify for this page.
 
 {% include page_nav.html %}

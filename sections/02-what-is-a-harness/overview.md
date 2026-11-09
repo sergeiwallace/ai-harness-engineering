@@ -23,7 +23,7 @@ The components sort into five functions around the agent loop: context injection
 
 ![A layered map of a harness, read top to bottom. The person at the top sends a prompt or a slash command into Skills. Context injection: context files and the memory index load into the loop at session start, and a skill's steps load on use. In the middle, the agent loop, where the model reasons and decides and the context window is its working memory. Control: every tool call passes the hooks and guards, and permissions and settings send allow, ask and deny rules up into the agent loop. Action: allowed calls reach the native tools or MCP servers and plugins. Delegation: the Agent tool sends a brief to a sub-agent, which takes its role and tools from an agent profile and edits in its own worktree. Observe, verify, persist: the sub-agent's diff and report go to tests and review, a pass becomes a verified change, the task tracker closes the task, and lessons flow back up into memory for the next session.]({{ '/assets/images/02-ai-harnesses/harness-layers.png' | relative_url }})
 
-*The harness as layers around the agent loop. Green arrows are the main path of one task; red are control points; dashed purple are asynchronous or returning flows. Our own diagram, made with archify. Inspired by Addy Osmani's harness anatomy (<https://addyosmani.com/assets/images/harness-anatomy.jpeg>), Phil Schmid's agent harness diagram (<https://www.philschmid.de/static/blog/agent-harness-2026/agent-harness.jpeg>) and a layered Claude Code architecture map published on Substack (<https://substack-post-media.s3.amazonaws.com/public/images/fd726fee-d916-4c94-8947-adb16f45d08d_2412x1488.jpeg>).*
+*The harness as layers around the agent loop. Green arrows are the main path of one task; red are control points; dashed purple are asynchronous or returning flows. Our own diagram, made with archify. Inspired by [Addy Osmani's harness anatomy](https://addyosmani.com/assets/images/harness-anatomy.jpeg), [Phil Schmid's agent harness diagram](https://www.philschmid.de/static/blog/agent-harness-2026/agent-harness.jpeg) and [a layered Claude Code architecture map on Substack](https://substack-post-media.s3.amazonaws.com/public/images/fd726fee-d916-4c94-8947-adb16f45d08d_2412x1488.jpeg).*
 
 ## Contents
 {: .no_toc .text-delta }
@@ -111,7 +111,7 @@ Claude Code's docs describe `CLAUDE.md` as "context, not enforced configuration"
 ![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
 *Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*
 
-*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
+*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: [Swiss cheese model of accident causation on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png), by Davidmack, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). Resized for this page.*
 
 The ladder, from the layer that guides to the layers that enforce:
 
@@ -123,6 +123,7 @@ The ladder, from the layer that guides to the layers that enforce:
 | 4. Validation and tests | tests, CI, link checkers, review before a change lands | programs and reviewers on the result | a link checker that walks the built site before publish | design and judgment problems no check encodes; those go to a person |
 
 My harness puts each rule as high on this ladder as it can be checked, and keeps the context-file line as a second layer. Rules that cannot be checked from an action, such as design judgment, stay as guidance with a review step behind them. The [systems approach](#a-systems-approach-to-harness-engineering) section below explains the layers, and [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#one-rule-moved-into-the-system) follows one rule into the system.
+
 
 ## Context injection
 
@@ -301,7 +302,7 @@ They are how a harness reaches past the local machine, and how you share a set o
 Adding a remote server at project scope writes it to `.mcp.json`, which the team commits:
 
 ```text
-claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
+$ claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
 ```
 
 ```json
@@ -368,7 +369,7 @@ A hook is a command the harness runs at a fixed point in a session: before a too
 
 ![The Claude Code hook lifecycle, simplified, top to bottom. SessionStart once per session injects context. Inside the turn, once per user prompt, UserPromptSubmit validates or blocks the prompt. Inside it, the agentic loop runs once per tool call: PreToolUse can allow, deny, ask the user or rewrite the tool input; the tool executes; PostToolUse reacts to the result, gives feedback or rewrites the output; then the loop repeats. Stop can block the stop until tests pass. SessionEnd once per session does cleanup and logging.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle-ran-the-builder.png' | relative_url }})
 
-*Placeholder image: the Claude Code hook lifecycle. Source: Ran the Builder, <https://ranthebuilder.cloud/blog/agentic-coding-hooks-deterministic-ai-guardrails/>, used with credit.*
+*Placeholder image: the Claude Code hook lifecycle. Source: [Ran the Builder, "Agentic Coding Hooks: Deterministic AI Guardrails"](https://ranthebuilder.cloud/blog/agentic-coding-hooks-deterministic-ai-guardrails/), used with credit.*
 
 #### Why they matter
 
@@ -657,7 +658,7 @@ Use judgement too. Fix it the first time when the context shows it will recur, o
 
 #### Another way to slice the same stack
 
-ShipWithAI's guide, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)" (<https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j>), slices the stack by Claude Code surface: memory, tools, permissions, hooks and observability. This page slices it by how strongly a rule is enforced. The two line up like this:
+ShipWithAI's guide, ["The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)"](https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j), slices the stack by Claude Code surface: memory, tools, permissions, hooks and observability. This page slices it by how strongly a rule is enforced. The two line up like this:
 
 | Guide layer | Where it sits in the four layers above |
 |---|---|
@@ -677,7 +678,7 @@ Every component that loads into the context costs tokens on every turn.
 - HarnessTax (UC Berkeley and Arena, 2026) reported that across 21 model and harness pairs, the harness moved task success by about 2 to 5 points.
 - The same work reported that Claude Code cost about twice as much as a minimal four-tool harness on SWE-bench Lite.
 - Both figures are not yet verified against the primary source, and benchmark tasks are short, so memory, coordination and approvals never show on them.
-- LangChain reported the other side, what a harness can gain: its deepagents-cli went from 52.8% to 66.5% on Terminal Bench 2.0 with the model fixed at gpt-5.2-codex, by changing only the harness (LangChain, 2026-02-17, <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>).
+- LangChain reported the other side, what a harness can gain: its deepagents-cli went from 52.8% to 66.5% on Terminal Bench 2.0 with the model fixed at gpt-5.2-codex, by changing only the harness ([LangChain, "Improving deep agents with harness engineering"](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering), 2026-02-17).
 
 In practice:
 
@@ -709,14 +710,14 @@ In practice:
 
 ## Sources
 
-- Böckeler, "Harness engineering": <https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html> (2026-04-02), verified 2026-11-08.
-- "context, not enforced configuration": <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08.
-- Claude Code hooks, settings, skills and sub-agents: <https://code.claude.com/docs/en/hooks.md>, <https://code.claude.com/docs/en/settings.md>, <https://code.claude.com/docs/en/skills.md>, <https://code.claude.com/docs/en/sub-agents.md>.
-- Model Context Protocol: <https://modelcontextprotocol.io/>.
-- Beads: <https://github.com/steveyegge/beads>.
-- Harness cost measurements: reported by HarnessTax (UC Berkeley and Arena, 2026), <https://harnesstax.github.io/>; not yet verified against the primary source.
-- LangChain, "Improving deep agents with harness engineering" (2026-02-17): <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09.
-- ShipWithAI, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)", DEV Community, 2026-05-08: <https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j>, read 2026-11-09.
+- [Böckeler, "Harness engineering"](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html) (2026-04-02), verified 2026-11-08.
+- [Claude Code memory docs](https://code.claude.com/docs/en/memory.md), source of "context, not enforced configuration", verified 2026-11-09.
+- Claude Code docs: [hooks](https://code.claude.com/docs/en/hooks.md), [settings](https://code.claude.com/docs/en/settings.md), [skills](https://code.claude.com/docs/en/skills.md) and [sub-agents](https://code.claude.com/docs/en/sub-agents.md).
+- [Model Context Protocol](https://modelcontextprotocol.io/).
+- [Beads](https://github.com/steveyegge/beads).
+- Harness cost measurements: reported by [HarnessTax](https://harnesstax.github.io/) (UC Berkeley and Arena, 2026); not yet verified against the primary source.
+- [LangChain, "Improving deep agents with harness engineering" (2026-02-17)](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering), verified 2026-11-09.
+- [ShipWithAI, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)", DEV Community, 2026-05-08](https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j), read 2026-11-09.
 - The examples labelled as my harness are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

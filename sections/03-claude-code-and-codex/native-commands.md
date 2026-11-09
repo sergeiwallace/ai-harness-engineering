@@ -265,10 +265,10 @@ See [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/clau
 
 ## Sources
 
-- <https://code.claude.com/docs/en/commands.md>, <https://code.claude.com/docs/en/workflows.md>, <https://code.claude.com/docs/en/goal.md>, <https://code.claude.com/docs/en/permission-modes.md>, <https://code.claude.com/docs/en/advisor.md>, <https://code.claude.com/docs/en/costs.md>, <https://code.claude.com/docs/en/code-review-local.md>, <https://code.claude.com/docs/en/cross-session-messaging.md>, <https://code.claude.com/docs/en/remote-control.md>, verified 2026-11-09.
-- `/rewind`: <https://code.claude.com/docs/en/checkpointing.md>, verified 2026-11-09.
-- Codex: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09.
-- Typing `/` to list commands and skills: <https://code.claude.com/docs/en/quickstart.md>, read 2026-11-09.
+- [Claude Code: commands reference](https://code.claude.com/docs/en/commands.md), [Claude Code: dynamic workflows](https://code.claude.com/docs/en/workflows.md), [Claude Code: keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), [Claude Code: permission modes](https://code.claude.com/docs/en/permission-modes.md), [Claude Code: the advisor](https://code.claude.com/docs/en/advisor.md), [Claude Code: managing costs](https://code.claude.com/docs/en/costs.md), [Claude Code: local code review](https://code.claude.com/docs/en/code-review-local.md), [Claude Code: cross-session messaging](https://code.claude.com/docs/en/cross-session-messaging.md), [Claude Code: Remote Control](https://code.claude.com/docs/en/remote-control.md), verified 2026-11-09.
+- `/rewind`: [Claude Code: checkpointing](https://code.claude.com/docs/en/checkpointing.md), verified 2026-11-09.
+- Codex: [Codex: CLI slash commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), read 2026-11-09.
+- Typing `/` to list commands and skills: [Claude Code: quickstart](https://code.claude.com/docs/en/quickstart.md), read 2026-11-09.
 - Session excerpts are illustrations written for this page.
 
 {% include page_nav.html %}

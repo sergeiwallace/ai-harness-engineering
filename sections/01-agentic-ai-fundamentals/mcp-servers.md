@@ -195,9 +195,9 @@ A command-line tool the shell already runs is often enough:
 
 ## Sources
 
-- Claude Code MCP: `claude mcp add` syntax, scopes and storage, `.mcp.json` variable expansion, project-server approval, `/mcp`, tool search and `MAX_MCP_OUTPUT_TOKENS`: <https://code.claude.com/docs/en/mcp.md>, verified 2026-11-09.
-- The Model Context Protocol specification, transports and primitives: <https://modelcontextprotocol.io/specification>, not yet verified against the primary source for this page's date.
-- The `mcp__<server>__<tool>` and `mcp__<server>__*` rule forms: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Claude Code MCP: `claude mcp add` syntax, scopes and storage, `.mcp.json` variable expansion, project-server approval, `/mcp`, tool search and `MAX_MCP_OUTPUT_TOKENS`: [Claude Code docs: MCP](https://code.claude.com/docs/en/mcp.md), verified 2026-11-09.
+- The Model Context Protocol specification, transports and primitives: [Model Context Protocol specification](https://modelcontextprotocol.io/specification), not yet verified against the primary source for this page's date.
+- The `mcp__<server>__<tool>` and `mcp__<server>__*` rule forms: [Claude Code docs: Configure permissions](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
 - The server names, URL and configuration values are illustrations; `example-db-mcp-server` is not a real package.
 
 {% include page_nav.html %}

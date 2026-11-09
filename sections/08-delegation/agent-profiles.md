@@ -250,6 +250,7 @@ On current versions, `/agents` prints a reminder to ask Claude or edit the agent
 | Plan | Gathering context during plan mode before a plan is presented |
 | General-purpose | Complex, multi-step tasks that need both exploration and action |
 
+
 ### Starting one explicitly
 
 ```text
@@ -374,8 +375,8 @@ The trailer names are illustrative. Any consistent set works, as long as every d
 
 ## Sources
 
-- Sub-agent profiles, locations and priority, fields, `isolation`, `--agents`, `/agents`, built-in sub-agents, `@` mentions, foreground and background: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
-- Codex sub-agents: <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, verified 2026-11-08.
+- Sub-agent profiles, locations and priority, fields, `isolation`, `--agents`, `/agents`, built-in sub-agents, `@` mentions, foreground and background: [Claude Code docs: sub-agents](https://code.claude.com/docs/en/sub-agents.md), verified 2026-11-09.
+- Codex sub-agents: [Codex docs: sub-agents](https://learn.chatgpt.com/docs/agent-configuration/subagents.md), verified 2026-11-08.
 - The role set, the authority check and the trailers are from the author's own harness, described conceptually. The other examples are illustrations written for this page.
 
 {% include page_nav.html %}

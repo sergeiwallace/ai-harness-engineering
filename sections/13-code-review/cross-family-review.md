@@ -197,11 +197,11 @@ Steps 1 and 2 are built into the review workflow and its commit tool (layer 2 of
 
 ## Sources
 
-- Self-preference in LLM evaluators: <https://papers.nips.cc/paper_files/paper/2024/hash/7f1f0218e45f5414c79c0679633e47bc-Abstract-Conference.html>, verified 2026-07-26.
-- Self-preference across 20 models: <https://arxiv.org/abs/2604.22891>, verified 2026-09-20.
-- Claude Code best practices: <https://code.claude.com/docs/en/best-practices>, verified 2026-10-08.
-- Claude Code commands (`/review`, `/security-review`): <https://code.claude.com/docs/en/commands.md>, verified 2026-11-08.
-- Codex CLI command reference (`codex review`): <https://learn.chatgpt.com/docs/developer-commands?surface=cli>, verified 2026-11-09.
-- Claude Code April 2026 postmortem: <https://www.anthropic.com/engineering/april-23-postmortem>, verified 2026-07-26.
+- [Self-preference in LLM evaluators](https://papers.nips.cc/paper_files/paper/2024/hash/7f1f0218e45f5414c79c0679633e47bc-Abstract-Conference.html), verified 2026-07-26.
+- [Self-preference across 20 models](https://arxiv.org/abs/2604.22891), verified 2026-09-20.
+- [Claude Code best practices](https://code.claude.com/docs/en/best-practices), verified 2026-10-08.
+- [Claude Code commands (`/review`, `/security-review`)](https://code.claude.com/docs/en/commands.md), verified 2026-11-08.
+- [Codex CLI command reference (`codex review`)](https://learn.chatgpt.com/docs/developer-commands?surface=cli), verified 2026-11-09.
+- [Claude Code April 2026 postmortem](https://www.anthropic.com/engineering/april-23-postmortem), verified 2026-07-26.
 
 {% include page_nav.html %}

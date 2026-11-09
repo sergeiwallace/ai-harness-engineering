@@ -463,24 +463,26 @@ To start, write one end-to-end test per feature that runs the real entry point, 
 
 ## Sources
 
-- Test overfitting on SWE-bench (21.8% and 33.0%): <https://arxiv.org/abs/2511.16858>, verified 2026-10-08.
-- SpecBench (28 points per tenfold code size): <https://arxiv.org/abs/2605.21384>, verified 2026-10-08.
-- Escalation channels and reward hacking (23.6% to 5.3%, eight models): <https://arxiv.org/abs/2608.29460>, verified 2026-11-09.
-- ImpossibleBench: <https://arxiv.org/abs/2510.20270>, verified 2026-10-08.
-- EvilGenie reward-hacking benchmark: <https://arxiv.org/abs/2511.21654>, verified 2026-10-08.
-- Claude Opus 5.5 system card (three to six times on impossible tasks): <https://www.anthropic.com/claude-opus-5-5-system-card>, verified 2026-10-08.
-- TDD inside the agent loop: <https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html>, verified 2026-10-08.
-- Maintainability sensors (13 surviving mutants): <https://martinfowler.com/articles/sensors-for-coding-agents.html>, verified 2026-10-08.
-- Thoughtworks Technology Radar, mutation testing: <https://www.thoughtworks.com/radar/techniques/mutation-testing>, verified 2026-10-08.
-- TDAD impact maps (6.08% to 1.82%): <https://arxiv.org/abs/2603.17973>, verified 2026-10-08.
-- Effective harnesses for long-running agents: <https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents>, verified 2026-10-08.
-- Over-testing guidance: <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1> and <https://developers.openai.com/api/docs/guides/latest-model>, verified 2026-10-08.
-- GPT-6 Astra and testing: <https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra>, verified 2026-10-08.
-- The deleted-tests example: <https://www.explainx.ai/blog/openclaw-test-audit-skill-deleted-400k-lines-tests-2026>, verified 2026-11-09, a secondary report of the maintainer's post.
-- mutmut: <https://mutmut.readthedocs.io/en/latest/>, verified 2026-11-09.
-- StrykerJS getting started: <https://stryker-mutator.io/docs/stryker-js/getting-started/>, verified 2026-11-09.
-- Playwright test agents (Healer): <https://playwright.dev/docs/test-agents>, verified 2026-10-08.
-- Claude Code with Chrome (provider availability): <https://code.claude.com/docs/en/chrome>, verified 2026-10-08.
-- Model-tier guidance: <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5> and <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5>, verified 2026-10-08.
+- [Test overfitting on SWE-bench (21.8% and 33.0%)](https://arxiv.org/abs/2511.16858), verified 2026-10-08.
+- [SpecBench (28 points per tenfold code size)](https://arxiv.org/abs/2605.21384), verified 2026-10-08.
+- [Escalation channels and reward hacking (23.6% to 5.3%, eight models)](https://arxiv.org/abs/2608.29460), verified 2026-11-09.
+- [ImpossibleBench](https://arxiv.org/abs/2510.20270), verified 2026-10-08.
+- [EvilGenie reward-hacking benchmark](https://arxiv.org/abs/2511.21654), verified 2026-10-08.
+- [Claude Opus 5.5 system card (three to six times on impossible tasks)](https://www.anthropic.com/claude-opus-5-5-system-card), verified 2026-10-08.
+- [TDD inside the agent loop](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html), verified 2026-10-08.
+- [Maintainability sensors (13 surviving mutants)](https://martinfowler.com/articles/sensors-for-coding-agents.html), verified 2026-10-08.
+- [Thoughtworks Technology Radar, mutation testing](https://www.thoughtworks.com/radar/techniques/mutation-testing), verified 2026-10-08.
+- [TDAD impact maps (6.08% to 1.82%)](https://arxiv.org/abs/2603.17973), verified 2026-10-08.
+- [Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents), verified 2026-10-08.
+- [Prompting Claude Fable 5.1 (over-testing guidance)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1), verified 2026-10-08.
+- [OpenAI, Using GPT-6 (testing guidance)](https://developers.openai.com/api/docs/guides/latest-model), verified 2026-10-08.
+- [GPT-6 Astra and testing](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra), verified 2026-10-08.
+- [The deleted-tests example](https://www.explainx.ai/blog/openclaw-test-audit-skill-deleted-400k-lines-tests-2026), verified 2026-11-09, a secondary report of the maintainer's post.
+- [mutmut](https://mutmut.readthedocs.io/en/latest/), verified 2026-11-09.
+- [StrykerJS getting started](https://stryker-mutator.io/docs/stryker-js/getting-started/), verified 2026-11-09.
+- [Playwright test agents (Healer)](https://playwright.dev/docs/test-agents), verified 2026-10-08.
+- [Claude Code with Chrome (provider availability)](https://code.claude.com/docs/en/chrome), verified 2026-10-08.
+- [Prompting Claude Opus 5 (verification instructions)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5), verified 2026-10-08.
+- [Prompting Claude Sonnet 5.5 (low-effort checks)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5), verified 2026-10-08.
 
 {% include page_nav.html %}

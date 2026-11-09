@@ -355,20 +355,20 @@ To start, have a model from another family review one change and count which of 
 
 ## Sources
 
-- `/review` and `/security-review`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-08.
-- Automatic review of every pull request: <https://code.claude.com/docs/en/platforms.md>, verified 2026-11-08.
-- `codex review`: <https://learn.chatgpt.com/docs/developer-commands?surface=cli>, verified 2026-11-09.
-- "will always find something": <https://code.claude.com/docs/en/best-practices.md>, verified 2026-11-08.
-- Finding verification, the 65% to 78% figure and "An agent's approval never counts as a person's": <https://claude.dev/blog/solving-code-review-at-anthropic/>, verified 2026-11-09.
-- Automated security reviews in Claude Code: <https://support.claude.com/en/articles/11932705-automated-security-reviews-in-claude-code>, verified 2026-07-26.
-- Kemerer and Paulk, design and code reviews (PSP data): <https://sites.pitt.edu/~ckemerer/PSP_Data.pdf>, verified 2026-07-26.
-- Google, small changes: <https://google.github.io/eng-practices/review/developer/small-cls.html>, verified 2026-07-26.
-- Package hallucinations (19.7%): <https://www.usenix.org/system/files/usenixsecurity25-spracklen.pdf>, verified 2026-07-26.
-- Self-preference in LLM evaluators: <https://papers.nips.cc/paper_files/paper/2024/hash/7f1f0218e45f5414c79c0679633e47bc-Abstract-Conference.html>, verified 2026-07-26.
-- Self-preference across 20 models: <https://arxiv.org/abs/2604.22891>, verified 2026-09-20.
-- Claude Code April 2026 postmortem: <https://www.anthropic.com/engineering/april-23-postmortem>, verified 2026-07-26.
-- Stack Overflow 2025 developer survey, AI section: <https://survey.stackoverflow.co/2025/ai>, verified 2026-07-26.
-- Functionally correct but vulnerable agent patches: <https://neurips.cc/virtual/2025/133169>, verified 2026-07-26.
-- GitHub rulesets: <https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets>, verified 2026-07-26.
+- [`/review` and `/security-review`](https://code.claude.com/docs/en/commands.md), verified 2026-11-08.
+- [Automatic review of every pull request](https://code.claude.com/docs/en/platforms.md), verified 2026-11-08.
+- [`codex review`](https://learn.chatgpt.com/docs/developer-commands?surface=cli), verified 2026-11-09.
+- ["will always find something"](https://code.claude.com/docs/en/best-practices.md), verified 2026-11-08.
+- [Finding verification, the 65% to 78% figure and "An agent's approval never counts as a person's"](https://claude.dev/blog/solving-code-review-at-anthropic/), verified 2026-11-09.
+- [Automated security reviews in Claude Code](https://support.claude.com/en/articles/11932705-automated-security-reviews-in-claude-code), verified 2026-07-26.
+- [Kemerer and Paulk, design and code reviews (PSP data)](https://sites.pitt.edu/~ckemerer/PSP_Data.pdf), verified 2026-07-26.
+- [Google, small changes](https://google.github.io/eng-practices/review/developer/small-cls.html), verified 2026-07-26.
+- [Package hallucinations (19.7%)](https://www.usenix.org/system/files/usenixsecurity25-spracklen.pdf), verified 2026-07-26.
+- [Self-preference in LLM evaluators](https://papers.nips.cc/paper_files/paper/2024/hash/7f1f0218e45f5414c79c0679633e47bc-Abstract-Conference.html), verified 2026-07-26.
+- [Self-preference across 20 models](https://arxiv.org/abs/2604.22891), verified 2026-09-20.
+- [Claude Code April 2026 postmortem](https://www.anthropic.com/engineering/april-23-postmortem), verified 2026-07-26.
+- [Stack Overflow 2025 developer survey, AI section](https://survey.stackoverflow.co/2025/ai), verified 2026-07-26.
+- [Functionally correct but vulnerable agent patches](https://neurips.cc/virtual/2025/133169), verified 2026-07-26.
+- [GitHub rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets), verified 2026-07-26.
 
 {% include page_nav.html %}

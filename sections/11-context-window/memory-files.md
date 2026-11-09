@@ -211,7 +211,7 @@ To start: one notes file for state. When the agent repeats a mistake, look first
 
 ## Sources
 
-- Auto memory: location, load limit, note types, controls, sub-agents: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- What reloads after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
+- Auto memory: location, load limit, note types, controls, sub-agents: [How Claude remembers your project (Claude Code docs)](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- What reloads after compaction: [Explore the context window (Claude Code docs)](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
 
 {% include page_nav.html %}

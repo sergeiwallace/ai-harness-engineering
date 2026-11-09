@@ -345,13 +345,13 @@ To start: one template for the task you delegate most.
 
 ## Sources
 
-- Commands in cross-session messages arrive as text: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
-- Built-in commands in scheduled `/loop` fires arrive as text: <https://code.claude.com/docs/en/scheduled-tasks.md>, verified 2026-11-09.
-- `/goal` commands, verdicts and check-ins: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
-- Skills, `.claude/commands/`, `$ARGUMENTS` and `$N` placeholders, `disable-model-invocation`, `argument-hint`: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
-- Codex custom prompts, their placeholders and their deprecation in favour of skills: <https://learn.chatgpt.com/docs/custom-prompts>, verified 2026-11-09.
-- `SessionStart` hook with the `compact` matcher: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- Channels: <https://code.claude.com/docs/en/channels.md>, verified 2026-11-09.
+- Commands in cross-session messages arrive as text: [Claude Code docs: Message your other Claude Code sessions](https://code.claude.com/docs/en/cross-session-messaging.md), verified 2026-11-09.
+- Built-in commands in scheduled `/loop` fires arrive as text: [Claude Code docs: scheduled tasks and /loop](https://code.claude.com/docs/en/scheduled-tasks.md), verified 2026-11-09.
+- `/goal` commands, verdicts and check-ins: [Claude Code docs: Keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
+- Skills, `.claude/commands/`, `$ARGUMENTS` and `$N` placeholders, `disable-model-invocation`, `argument-hint`: [Claude Code docs: skills](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
+- Codex custom prompts, their placeholders and their deprecation in favour of skills: [Codex docs: custom prompts (deprecated)](https://learn.chatgpt.com/docs/custom-prompts), verified 2026-11-09.
+- `SessionStart` hook with the `compact` matcher: [Claude Code docs: hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- Channels: [Claude Code docs: Push events into a running session with channels](https://code.claude.com/docs/en/channels.md), verified 2026-11-09.
 - The stubs, templates, original-request block and injection library are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

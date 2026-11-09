@@ -212,8 +212,8 @@ The skill is layer 2 of the harness: it builds the order into the workflow the a
 
 ## Sources
 
-- OpenClaw test-audit skill: <https://github.com/openclaw/openclaw/blob/main/.agents/skills/test-audit/SKILL.md>, verified 2026-10-08.
-- Claude Code best practices: <https://code.claude.com/docs/en/best-practices>, verified 2026-10-08.
-- TDD inside the agent loop: <https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html>, verified 2026-10-08.
+- [OpenClaw test-audit skill](https://github.com/openclaw/openclaw/blob/main/.agents/skills/test-audit/SKILL.md), verified 2026-10-08.
+- [Claude Code best practices](https://code.claude.com/docs/en/best-practices), verified 2026-10-08.
+- [TDD inside the agent loop](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html), verified 2026-10-08.
 
 {% include page_nav.html %}

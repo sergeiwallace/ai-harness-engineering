@@ -243,11 +243,11 @@ The rule I review delegated work by is the working rule in the [code review over
 
 ## Sources
 
-- Cisco code review case study: <https://static0.smartbear.co/support/media/resources/cc/book/code-review-cisco-case-study.pdf>, verified 2026-07-26.
-- Kemerer and Paulk, design and code reviews (PSP data): <https://sites.pitt.edu/~ckemerer/PSP_Data.pdf>, verified 2026-07-26.
-- Modern code review and software quality (Qt, VTK, ITK): <https://rebels.cs.uwaterloo.ca/papers/emse2016_mcintosh.pdf>, verified 2026-07-26.
-- Google, what to look for in a code review: <https://google.github.io/eng-practices/review/reviewer/looking-for.html>, verified 2026-07-26.
-- Google, small changes: <https://google.github.io/eng-practices/review/developer/small-cls.html>, verified 2026-07-26.
-- GitHub rulesets (path-specific required reviewers): <https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets>, verified 2026-07-26.
+- [Cisco code review case study](https://static0.smartbear.co/support/media/resources/cc/book/code-review-cisco-case-study.pdf), verified 2026-07-26.
+- [Kemerer and Paulk, design and code reviews (PSP data)](https://sites.pitt.edu/~ckemerer/PSP_Data.pdf), verified 2026-07-26.
+- [Modern code review and software quality (Qt, VTK, ITK)](https://rebels.cs.uwaterloo.ca/papers/emse2016_mcintosh.pdf), verified 2026-07-26.
+- [Google, what to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html), verified 2026-07-26.
+- [Google, small changes](https://google.github.io/eng-practices/review/developer/small-cls.html), verified 2026-07-26.
+- [GitHub rulesets (path-specific required reviewers)](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets), verified 2026-07-26.
 
 {% include page_nav.html %}

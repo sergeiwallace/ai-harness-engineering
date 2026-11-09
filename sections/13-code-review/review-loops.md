@@ -222,8 +222,8 @@ Steps 1, 2 and 5 are built into the audit workflow (layer 2 of the harness); ste
 
 ## Sources
 
-- Claude Code best practices: <https://code.claude.com/docs/en/best-practices.md>, verified 2026-11-08.
-- Claude Code code review at Anthropic (65% to 78%): <https://claude.dev/blog/solving-code-review-at-anthropic/>, verified 2026-11-09.
+- [Claude Code best practices](https://code.claude.com/docs/en/best-practices.md), verified 2026-11-08.
+- [Claude Code code review at Anthropic (65% to 78%)](https://claude.dev/blog/solving-code-review-at-anthropic/), verified 2026-11-09.
 - Framework loop limits: as summarised in the research behind this page; not re-verified against each framework's documentation.
 
 {% include page_nav.html %}

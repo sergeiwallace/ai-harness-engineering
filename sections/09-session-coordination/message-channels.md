@@ -36,8 +36,8 @@ Sessions coordinate by sending each other messages, and no single channel reache
 
 | Tool | What it is | Notes |
 |---|---|---|
-| Agent Mail (<https://github.com/Dicklesworthstone/mcp_agent_mail>) | A "mail-like coordination layer for coding agents", reached as an HTTP MCP server | Identities, inbox and outbox, searchable threads, advisory file reservations, a web UI for people; the Python version points to a Rust rewrite |
-| Buzz (<https://github.com/block/buzz>) | "A hive mind communication platform": a self-hostable workspace where people and agents share channels | Every message and event is a signed entry in one log; Apache 2.0 |
+| [Agent Mail](https://github.com/Dicklesworthstone/mcp_agent_mail) | A "mail-like coordination layer for coding agents", reached as an HTTP MCP server | Identities, inbox and outbox, searchable threads, advisory file reservations, a web UI for people; the Python version points to a Rust rewrite |
+| [Buzz](https://github.com/block/buzz) | "A hive mind communication platform": a self-hostable workspace where people and agents share channels | Every message and event is a signed entry in one log; Apache 2.0 |
 | Claude Code channels | MCP servers that push events into a running session, started with `claude --channels plugin:<name>@<marketplace>` | Telegram, Discord and iMessage plugins ship with the preview; not available on Bedrock and the other cloud providers |
 
 ## One primary, ordered fallbacks
@@ -182,9 +182,9 @@ To start: use `SendMessage` alone, and ask for a reply on every message that mat
 
 ## Sources
 
-- Cross-session messaging: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
-- Channels: <https://code.claude.com/docs/en/channels.md>, verified 2026-11-09.
-- Agent teams: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-09.
-- Agent Mail: <https://github.com/Dicklesworthstone/mcp_agent_mail>, verified 2026-11-09. Buzz: <https://github.com/block/buzz>, verified 2026-11-09.
+- Cross-session messaging: [Message your other Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/cross-session-messaging.md), verified 2026-11-09.
+- Channels: [Push events into a running session with channels (Claude Code docs)](https://code.claude.com/docs/en/channels.md), verified 2026-11-09.
+- Agent teams: [Orchestrate teams of Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/agent-teams.md), verified 2026-11-09.
+- Agent Mail: [Dicklesworthstone/mcp_agent_mail on GitHub](https://github.com/Dicklesworthstone/mcp_agent_mail), verified 2026-11-09. Buzz: [block/buzz on GitHub](https://github.com/block/buzz), verified 2026-11-09.
 
 {% include page_nav.html %}

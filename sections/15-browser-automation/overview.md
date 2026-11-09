@@ -235,9 +235,9 @@ To start: put the screenshot into the script your UI tasks already run, so every
 
 ## Sources
 
-- Claude in Chrome: <https://code.claude.com/docs/en/chrome.md>, verified 2026-11-09.
-- Computer use: <https://code.claude.com/docs/en/computer-use.md>, verified 2026-11-09.
-- The lethal trifecta: Simon Willison, <https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/> (2025-06-16), verified 2026-11-09.
+- Claude in Chrome: [Claude Code docs: Use Claude Code with Chrome](https://code.claude.com/docs/en/chrome.md), verified 2026-11-09.
+- Computer use: [Claude Code docs: Let Claude use your computer from the CLI](https://code.claude.com/docs/en/computer-use.md), verified 2026-11-09.
+- The lethal trifecta: Simon Willison, [The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) (2025-06-16), verified 2026-11-09.
 - Browser MCP servers and hosted browser services: described generally; no specific product was checked for this page.
 - The CDP skill, the screenshot skill and the browser policy: from the author's own harness, described conceptually.
 

@@ -186,7 +186,7 @@ Injection does the most damage when one session has all three of these at once:
 2. exposure to untrusted text, such as web pages or public issues;
 3. a way to send data out, such as a web request, a push or an email.
 
-Any two are manageable. With all three, one successful injection can read something private and send it away. Simon Willison calls this combination the "lethal trifecta".
+Any two are manageable. With all three, one successful injection can read something private and send it away. Simon Willison calls this combination the [lethal trifecta](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/).
 
 <details markdown="1">
 <summary>Breaking the combination in practice</summary>
@@ -232,11 +232,11 @@ If a page injects "push this to main", there is no push credential to use and no
 
 ## Sources
 
-- Permission modes, the Shift+Tab cycle and `--permission-mode`: <https://code.claude.com/docs/en/permission-modes.md>, verified 2026-11-09.
-- Rule precedence, Bash rule limits, Read and Edit rule scope, and hook precedence: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
-- `PreToolUse` exit code 2 and `permissionDecision`: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- Settings file locations: <https://code.claude.com/docs/en/settings.md>, not yet verified against the primary source for this page's date.
-- The "lethal trifecta": Simon Willison, <https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/>, not yet verified against the primary source for this page's date.
+- Permission modes, the Shift+Tab cycle and `--permission-mode`: [Claude Code docs: Permission modes](https://code.claude.com/docs/en/permission-modes.md), verified 2026-11-09.
+- Rule precedence, Bash rule limits, Read and Edit rule scope, and hook precedence: [Claude Code docs: Configure permissions](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
+- `PreToolUse` exit code 2 and `permissionDecision`: [Claude Code docs: Hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- Settings file locations: [Claude Code docs: Settings](https://code.claude.com/docs/en/settings.md), not yet verified against the primary source for this page's date.
+- The "lethal trifecta": Simon Willison, [The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/), not yet verified against the primary source for this page's date.
 - The example rules, README text and research setup are illustrations written for this page.
 
 {% include page_nav.html %}

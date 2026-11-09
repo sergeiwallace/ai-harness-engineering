@@ -217,9 +217,9 @@ To start: a deny rule on `curl` and `wget` so the network goes through a tool wi
 
 ## Sources
 
-- Computer use flags potential prompt injection from on-screen content: <https://code.claude.com/docs/en/computer-use.md>, verified 2026-11-09.
-- The lethal trifecta: Simon Willison, <https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/> (2025-06-16), verified 2026-11-09.
-- OWASP Top 10 for LLM applications, prompt injection: <https://genai.owasp.org/llmrisk/llm01-prompt-injection/>, not yet verified against the primary source for this page.
+- Computer use flags potential prompt injection from on-screen content: [Claude Code docs: Let Claude use your computer from the CLI](https://code.claude.com/docs/en/computer-use.md), verified 2026-11-09.
+- The lethal trifecta: Simon Willison, [The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) (2025-06-16), verified 2026-11-09.
+- OWASP Top 10 for LLM applications, prompt injection: [OWASP GenAI, LLM01: Prompt injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/), not yet verified against the primary source for this page.
 - The gates and download handling: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

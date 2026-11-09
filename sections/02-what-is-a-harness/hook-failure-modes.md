@@ -206,8 +206,8 @@ A hook that adds context spends tokens every time it fires.
 
 ## Sources
 
-- Claude Code hooks, exit codes, timeouts, parallel execution and decision control: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- Search tools on macOS and Linux: <https://code.claude.com/docs/en/tools-reference.md>, verified 2026-11-09.
+- [Claude Code hooks, exit codes, timeouts, parallel execution and decision control](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- [Search tools on macOS and Linux](https://code.claude.com/docs/en/tools-reference.md), verified 2026-11-09.
 - The failure cases are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

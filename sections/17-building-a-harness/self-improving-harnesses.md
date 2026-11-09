@@ -152,15 +152,15 @@ The reports agree that the system should not approve its own change. In a person
 
 These were gathered by my own research survey in 2026-09 and are not yet verified against the primary sources for this page, except where marked.
 
-- Karpathy, autoresearch: <https://github.com/karpathy/autoresearch>, not yet verified against the primary source.
-- Self-Harness: Harnesses That Improve Themselves: <https://arxiv.org/abs/2606.09498>, not yet verified against the primary source.
-- HarnessOpt-Bench: Evaluating LLMs at Harness Optimization: <https://arxiv.org/abs/2608.06301>, not yet verified against the primary source.
-- OpenAI, Building self-improving tax agents with Codex: <https://openai.com/index/building-self-improving-tax-agents-with-codex/>, not yet verified against the primary source.
-- Automatic harness changes doing no better than running the model more: <https://arxiv.org/abs/2607.12227>, verified 2026-11-09.
-- TRACE, Getting Better at Working With You: Compiling User Corrections into Runtime Enforcement for Coding Agents: <https://arxiv.org/abs/2606.13174>, not yet verified against the primary source.
-- Instruction Stacking Collapse: <https://arxiv.org/html/2608.02639>, not yet verified against the primary source.
-- Instruction Adherence in Coding Agent Configuration Files: <https://arxiv.org/abs/2605.10039>, not yet verified against the primary source.
-- Evaluating AGENTS.md: <https://arxiv.org/abs/2602.11988>, not yet verified against the primary source.
-- Probe-and-Refine Tuning of Repository Guidance for Coding Agents: <https://arxiv.org/abs/2606.20512>, not yet verified against the primary source.
+- [Karpathy, autoresearch](https://github.com/karpathy/autoresearch), not yet verified against the primary source.
+- [Self-Harness: Harnesses That Improve Themselves](https://arxiv.org/abs/2606.09498), not yet verified against the primary source.
+- [HarnessOpt-Bench: Evaluating LLMs at Harness Optimization](https://arxiv.org/abs/2608.06301), not yet verified against the primary source.
+- [OpenAI, Building self-improving tax agents with Codex](https://openai.com/index/building-self-improving-tax-agents-with-codex/), not yet verified against the primary source.
+- Automatic harness changes doing no better than running the model more: [Rethinking the Evaluation of Harness Evolution for Agents](https://arxiv.org/abs/2607.12227), verified 2026-11-09.
+- TRACE, [Getting Better at Working With You: Compiling User Corrections into Runtime Enforcement for Coding Agents](https://arxiv.org/abs/2606.13174), not yet verified against the primary source.
+- [Instruction Stacking Collapse](https://arxiv.org/html/2608.02639), not yet verified against the primary source.
+- [Instruction Adherence in Coding Agent Configuration Files](https://arxiv.org/abs/2605.10039), not yet verified against the primary source.
+- [Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?](https://arxiv.org/abs/2602.11988), not yet verified against the primary source.
+- [Probe-and-Refine Tuning of Repository Guidance for Coding Agents](https://arxiv.org/abs/2606.20512), not yet verified against the primary source.
 
 {% include page_nav.html %}

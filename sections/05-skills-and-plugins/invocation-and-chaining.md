@@ -28,6 +28,7 @@ A skill can be started by a person, by the model, or by another skill. This page
    - It is the model that starts the skill, so this is a form of way 2.
    - That detail decides how chains behave.
 
+
 ### The settings
 
 | Frontmatter | Person | Model | In the menu | Description in the window |
@@ -185,8 +186,8 @@ When a chain breaks, the saved outputs also show which step it broke at.
 
 ## Sources
 
-- Invocation settings and several skills in one message, up to six: <https://code.claude.com/docs/en/skills.md> and <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- Codex `allow_implicit_invocation`: <https://learn.chatgpt.com/docs/build-skills.md>, verified 2026-11-08.
+- Invocation settings and several skills in one message, up to six: [Claude Code skills documentation](https://code.claude.com/docs/en/skills.md) and [Claude Code commands reference](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
+- Codex `allow_implicit_invocation`: [Codex skills documentation](https://learn.chatgpt.com/docs/build-skills.md), verified 2026-11-08.
 - The chained launch path is from the author's own harness, described conceptually. The example skills are illustrations written for this page.
 
 {% include page_nav.html %}

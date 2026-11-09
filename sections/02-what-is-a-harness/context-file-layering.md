@@ -208,8 +208,8 @@ A separate file per machine repeats the base, and the copies drift. An overlay i
 
 ## Sources
 
-- Claude Code memory, imports and rules: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- Codex `AGENTS.md` discovery: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, verified 2026-11-09.
+- [Claude Code memory, imports and rules](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- [Codex `AGENTS.md` discovery](https://learn.chatgpt.com/docs/agent-configuration/agents-md), verified 2026-11-09.
 - The machine overlay is from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

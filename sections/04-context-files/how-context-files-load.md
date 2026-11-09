@@ -248,8 +248,8 @@ See [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/clau
 
 ## Sources
 
-- <https://code.claude.com/docs/en/memory.md>, read 2026-11-09: levels, load order, on-demand loading, imports, comments, `claudeMdExcludes`, conflicts, size limits, `AGENTS.md` handling, checking and troubleshooting.
-- <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, read 2026-11-09: the Codex walk, override, cap and fallback names; Codex `/init`: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09.
+- [Claude Code: how Claude remembers your project](https://code.claude.com/docs/en/memory.md), read 2026-11-09: levels, load order, on-demand loading, imports, comments, `claudeMdExcludes`, conflicts, size limits, `AGENTS.md` handling, checking and troubleshooting.
+- [Codex: custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md), read 2026-11-09: the Codex walk, override, cap and fallback names; Codex `/init`: [Codex: CLI slash commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), read 2026-11-09.
 - The monorepo, sizes and test are illustrations written for this page.
 
 {% include page_nav.html %}

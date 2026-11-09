@@ -277,11 +277,11 @@ The script is the enforcing option in the [systems approach]({{ '/' | relative_u
 
 ## Sources
 
-- Tool definitions, `stop_reason: "tool_use"`, `tool_result` blocks, parallel calls and the tool-use system prompt sizes: <https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview>, verified 2026-11-09.
-- The `is_error` field on a failed result: <https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls>, not yet verified against the primary source for this page's date.
-- Claude Code's built-in tools, the `Glob` and `Grep` defaults, `Bash` output limits and timeout variables: <https://code.claude.com/docs/en/tools-reference.md>, verified 2026-11-09; the list changes between versions.
-- MCP tool search and `MAX_MCP_OUTPUT_TOKENS`: <https://code.claude.com/docs/en/mcp.md>, verified 2026-11-09.
-- Read and Edit rule coverage of shell file commands: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Tool definitions, `stop_reason: "tool_use"`, `tool_result` blocks, parallel calls and the tool-use system prompt sizes: [Claude API docs: Tool use with Claude](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview), verified 2026-11-09.
+- The `is_error` field on a failed result: [Claude API docs: Handle tool calls](https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls), not yet verified against the primary source for this page's date.
+- Claude Code's built-in tools, the `Glob` and `Grep` defaults, `Bash` output limits and timeout variables: [Claude Code docs: Tools reference](https://code.claude.com/docs/en/tools-reference.md), verified 2026-11-09; the list changes between versions.
+- MCP tool search and `MAX_MCP_OUTPUT_TOKENS`: [Claude Code docs: MCP](https://code.claude.com/docs/en/mcp.md), verified 2026-11-09.
+- Read and Edit rule coverage of shell file commands: [Claude Code docs: Configure permissions](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
 - The tool definitions, log tool and examples are illustrations written for this page.
 
 {% include page_nav.html %}

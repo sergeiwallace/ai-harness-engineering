@@ -207,8 +207,8 @@ The lead does not resolve B's conflict in its own checkout. It hands it back to 
 
 ## Sources
 
-- `git worktree` reference: <https://git-scm.com/docs/git-worktree>.
-- `isolation: worktree`: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
+- `git worktree` reference: [git-worktree manual page](https://git-scm.com/docs/git-worktree).
+- `isolation: worktree`: [Claude Code docs: sub-agents](https://code.claude.com/docs/en/sub-agents.md), verified 2026-11-09.
 - The launch guard and removal audit are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

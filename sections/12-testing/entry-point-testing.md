@@ -52,7 +52,7 @@ For a library, the public function is the entry point, so a behaviour-first test
 
 <figure>
   <img src="{{ '/assets/images/12-testing/classic-testing-pyramid.png' | relative_url }}" style="max-width: 381px; width: 100%;" alt="The classic testing pyramid: a wide base labelled Unit, a middle band labelled Integration, and a small top labelled E2E.">
-  <figcaption>The classic testing pyramid: most tests at the unit level, few end to end. Image by Mike Wacker, public domain, via Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Testing_Pyramid.png">File:Testing_Pyramid.png</a>, from the Google Testing Blog post <a href="https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html">"Just Say No to More End-to-End Tests"</a> (2015).</figcaption>
+  <figcaption>The classic testing pyramid: most tests at the unit level, few end to end. Image by Mike Wacker, public domain, via <a href="https://commons.wikimedia.org/wiki/File:Testing_Pyramid.png">the Testing Pyramid file page on Wikimedia Commons</a>, from the Google Testing Blog post <a href="https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html">"Just Say No to More End-to-End Tests"</a> (2015).</figcaption>
 </figure>
 
 The pyramid was drawn for human teams, where unit tests were cheap to write and end-to-end tests were slow and flaky. Two things change when an agent writes the tests:
@@ -329,15 +329,15 @@ The old rules produced the wide unit base of the [classic pyramid](#the-classic-
 
 ## Sources
 
-- Claude Code best practices: <https://code.claude.com/docs/en/best-practices>, verified 2026-10-08.
-- Claude Code hooks reference (exit codes, payload, JSON decisions): <https://code.claude.com/docs/en/hooks>, verified 2026-11-09.
-- OpenClaw test-audit skill: <https://github.com/openclaw/openclaw/blob/main/.agents/skills/test-audit/SKILL.md>, verified 2026-10-08.
-- Maintainability sensors (13 surviving mutants): <https://martinfowler.com/articles/sensors-for-coding-agents.html>, verified 2026-10-08.
-- TDD inside the agent loop: <https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html>, verified 2026-10-08.
-- Spec-driven test generation (9.8 points): <https://arxiv.org/abs/2608.17177>, verified 2026-10-08.
-- LLM vs. human unit tests (69% against 17.2%): <https://arxiv.org/abs/2606.08588>, verified 2026-10-08.
-- Agentic property-based testing: <https://arxiv.org/abs/2510.09907>, verified 2026-10-08.
-- Write tests, not too many, mostly integration: <https://kentcdodds.com/blog/write-tests>, verified 2026-10-08.
-- Hypothesis: <https://hypothesis.readthedocs.io/>, API as commonly documented; not re-verified for this page.
+- [Claude Code best practices](https://code.claude.com/docs/en/best-practices), verified 2026-10-08.
+- [Claude Code hooks reference (exit codes, payload, JSON decisions)](https://code.claude.com/docs/en/hooks), verified 2026-11-09.
+- [OpenClaw test-audit skill](https://github.com/openclaw/openclaw/blob/main/.agents/skills/test-audit/SKILL.md), verified 2026-10-08.
+- [Maintainability sensors (13 surviving mutants)](https://martinfowler.com/articles/sensors-for-coding-agents.html), verified 2026-10-08.
+- [TDD inside the agent loop](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html), verified 2026-10-08.
+- [Spec-driven test generation (9.8 points)](https://arxiv.org/abs/2608.17177), verified 2026-10-08.
+- [LLM vs. human unit tests (69% against 17.2%)](https://arxiv.org/abs/2606.08588), verified 2026-10-08.
+- [Agentic property-based testing](https://arxiv.org/abs/2510.09907), verified 2026-10-08.
+- [Write tests, not too many, mostly integration](https://kentcdodds.com/blog/write-tests), verified 2026-10-08.
+- [Hypothesis](https://hypothesis.readthedocs.io/), API as commonly documented; not re-verified for this page.
 
 {% include page_nav.html %}

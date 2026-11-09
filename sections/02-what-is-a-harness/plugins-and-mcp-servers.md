@@ -55,8 +55,8 @@ The Model Context Protocol (MCP) is an open standard for connecting a model to o
 ### Claude Code
 
 ```text
-claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
-claude mcp add --env NOTES_DIR=/srv/notes notes -- python3 tools/notes_server.py
+$ claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
+$ claude mcp add --env NOTES_DIR=/srv/notes notes -- python3 tools/notes_server.py
 ```
 
 For a stdio server, everything after `--` is the command that starts it; the options before `--` belong to Claude Code.
@@ -203,11 +203,11 @@ On a machine where the native web search tool is unavailable, an MCP server that
 
 ## Sources
 
-- Model Context Protocol: <https://modelcontextprotocol.io/>.
-- Claude Code MCP and plugins: <https://code.claude.com/docs/en/mcp.md>, <https://code.claude.com/docs/en/plugins.md>, verified 2026-11-09.
-- Claude Code permission rules for MCP tools: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
-- Hook matchers for MCP tools: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- Codex MCP configuration: <https://learn.chatgpt.com/docs/config-file/config-reference>, verified 2026-11-09.
+- [Model Context Protocol](https://modelcontextprotocol.io/).
+- Claude Code [MCP docs](https://code.claude.com/docs/en/mcp.md) and [plugins docs](https://code.claude.com/docs/en/plugins.md), verified 2026-11-09.
+- [Claude Code permission rules for MCP tools](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
+- [Hook matchers for MCP tools](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- [Codex MCP configuration](https://learn.chatgpt.com/docs/config-file/config-reference), verified 2026-11-09.
 - The messaging and search examples are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

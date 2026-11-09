@@ -239,7 +239,7 @@ Workers keep running when the coordinator exits or crashes; nothing is lost if t
 
 ## Examples from my own harness
 
-- A coordination layer built on firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>).
+- A coordination layer built on [firstmate](https://github.com/kunchenguid/firstmate), an open-source project by GitHub user kunchenguid. I use [my own public fork](https://github.com/sergeiwallace/firstmate) with customizations for my setup.
   - One firstmate session takes my requests and supervises a chief-of-staff session on each machine.
 - Each chief enrols the sessions it finds on its machine, routes work to them, and runs pushes and merges one at a time.
 - A fleet briefing, generated from live state, that lists each session, what it drives, whether it is busy or idle, and what needs me.
@@ -248,8 +248,8 @@ To start: one coordinator session started with edits denied and a context file t
 
 ## Sources
 
-- Cross-session messaging (`ListAgents`, `SendMessage`, `notify_when_idle`, `crossSessionInbound`, `dialogExpiry`): <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
-- Permission deny rules and `--settings`: <https://code.claude.com/docs/en/permissions.md>.
-- firstmate: <https://github.com/kunchenguid/firstmate>, verified 2026-11-08. My fork: <https://github.com/sergeiwallace/firstmate>.
+- Cross-session messaging (`ListAgents`, `SendMessage`, `notify_when_idle`, `crossSessionInbound`, `dialogExpiry`): [Message your other Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/cross-session-messaging.md), verified 2026-11-09.
+- Permission deny rules and `--settings`: [Permissions (Claude Code docs)](https://code.claude.com/docs/en/permissions.md).
+- firstmate: [kunchenguid/firstmate on GitHub](https://github.com/kunchenguid/firstmate), verified 2026-11-08. My fork: [sergeiwallace/firstmate on GitHub](https://github.com/sergeiwallace/firstmate).
 
 {% include page_nav.html %}

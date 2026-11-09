@@ -332,8 +332,8 @@ To start: add `Model:` and `Agent:` trailers to agent commits, and one JSONL led
 
 ## Sources
 
-- Claude Code monitoring and OpenTelemetry: <https://code.claude.com/docs/en/monitoring-usage.md>, verified 2026-11-09.
-- The per-run "operating record" fields: a reader comment by Armorer Labs on ShipWithAI, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)", <https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j>, read 2026-11-09. A design suggestion, not a vendor feature.
+- Claude Code monitoring and OpenTelemetry: [Claude Code docs: Monitoring](https://code.claude.com/docs/en/monitoring-usage.md), verified 2026-11-09.
+- The per-run "operating record" fields: a reader comment by Armorer Labs on ShipWithAI, ["The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)"](https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j), read 2026-11-09. A design suggestion, not a vendor feature.
 - Commit trailers, ledgers and gate timing: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

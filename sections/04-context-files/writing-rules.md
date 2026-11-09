@@ -168,10 +168,10 @@ The workflow change, in the `Makefile`:
 
 ```make
 test:        ## changed tests only, the default
- files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
- if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
+	files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
+	if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
 test-all:    ## the full suite; runs in the pre-push gate
- pytest tests -q
+	pytest tests -q
 ```
 
 The hook, in `.claude/settings.json`:
@@ -246,7 +246,7 @@ Context files go stale when the mechanisms they describe change.
 
 ## Sources
 
-- The 200-line target, "context, not enforced configuration", writing effective instructions, the settings-versus-`CLAUDE.md` table, `includeGitInstructions` and `/doctor prompt-audit`: <https://code.claude.com/docs/en/memory.md>, read 2026-11-09.
+- The 200-line target, "context, not enforced configuration", writing effective instructions, the settings-versus-`CLAUDE.md` table, `includeGitInstructions` and `/doctor prompt-audit`: [Claude Code: how Claude remembers your project](https://code.claude.com/docs/en/memory.md), read 2026-11-09.
 - The method and examples are from the author's own harness, described conceptually, and written for this page.
 
 {% include page_nav.html %}

@@ -273,12 +273,12 @@ Without this step, an injection that typed but never submitted looks the same as
 
 ## Sources
 
-- Goal check-ins and `CLAUDE_CODE_GOAL_CHECKIN_MINUTES`: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- Goal check-ins and `CLAUDE_CODE_GOAL_CHECKIN_MINUTES`: [Claude Code docs: Keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
 - A background shell or sub-agent started by the session waking it on completion, with or without a goal: Claude Code behaviour as used by the author.
-- Cross-session messaging, delivery, `crossSessionInbound`, `notify_when_idle`, commands arriving as text: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
-- `SessionStart` and `PreCompact` matchers and output: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09. The hooks reference documents no way for a hook to run a slash command; that is an absence in the docs as read, not a stated limit.
-- Channels: <https://code.claude.com/docs/en/channels.md>, verified 2026-11-09.
-- Built-in commands in scheduled `/loop` fires arrive as text: <https://code.claude.com/docs/en/scheduled-tasks.md>, verified 2026-11-09.
+- Cross-session messaging, delivery, `crossSessionInbound`, `notify_when_idle`, commands arriving as text: [Claude Code docs: Message your other Claude Code sessions](https://code.claude.com/docs/en/cross-session-messaging.md), verified 2026-11-09.
+- `SessionStart` and `PreCompact` matchers and output: [Claude Code docs: hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09. The hooks reference documents no way for a hook to run a slash command; that is an absence in the docs as read, not a stated limit.
+- Channels: [Claude Code docs: Push events into a running session with channels](https://code.claude.com/docs/en/channels.md), verified 2026-11-09.
+- Built-in commands in scheduled `/loop` fires arrive as text: [Claude Code docs: scheduled tasks and /loop](https://code.claude.com/docs/en/scheduled-tasks.md), verified 2026-11-09.
 - `tmux send-keys -l` and `capture-pane -p`: the tmux manual page.
 - The injection library, its four parts and its callers are from the author's own harness, described conceptually. The transcripts are illustrations written for this page.
 

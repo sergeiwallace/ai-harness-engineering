@@ -180,7 +180,7 @@ To start: add the notes-block instruction to one chat project and keep a notes f
 
 ## Sources
 
-- Surfaces and what they share: <https://code.claude.com/docs/en/platforms.md>, verified 2026-11-08.
+- Surfaces and what they share: [Claude Code docs: Platforms](https://code.claude.com/docs/en/platforms.md), verified 2026-11-08.
 - Project instructions and files as the chat app's context: unverified; check the claude.ai help pages.
 
 {% include page_nav.html %}

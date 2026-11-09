@@ -155,9 +155,9 @@ A verifier step per must-fix finding would be the next layer, built into the rev
 
 ## Sources
 
-- Code review at Anthropic (separate agents verify each finding): <https://claude.dev/blog/solving-code-review-at-anthropic/>, verified 2026-11-09.
-- Claude Code best practices (fresh-context reviewer): <https://code.claude.com/docs/en/best-practices>, verified 2026-10-08.
-- Large language models cannot self-correct reasoning yet (ICLR 2024): <https://proceedings.iclr.cc/paper_files/paper/2024/hash/8b4add8b0aa8749d80a34ca5d941c355-Abstract-Conference.html>, verified 2026-07-26.
-- CRITIC: self-correction with tool-interactive critiquing (ICLR 2024): <https://proceedings.iclr.cc/paper_files/paper/2024/hash/fef126561bbf9d4467dbb8d27334b8fe-Abstract-Conference.html>, verified 2026-07-26.
+- [Code review at Anthropic (separate agents verify each finding)](https://claude.dev/blog/solving-code-review-at-anthropic/), verified 2026-11-09.
+- [Claude Code best practices (fresh-context reviewer)](https://code.claude.com/docs/en/best-practices), verified 2026-10-08.
+- [Large language models cannot self-correct reasoning yet (ICLR 2024)](https://proceedings.iclr.cc/paper_files/paper/2024/hash/8b4add8b0aa8749d80a34ca5d941c355-Abstract-Conference.html), verified 2026-07-26.
+- [CRITIC: self-correction with tool-interactive critiquing (ICLR 2024)](https://proceedings.iclr.cc/paper_files/paper/2024/hash/fef126561bbf9d4467dbb8d27334b8fe-Abstract-Conference.html), verified 2026-07-26.
 
 {% include page_nav.html %}

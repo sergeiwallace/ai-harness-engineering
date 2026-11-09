@@ -159,8 +159,8 @@ See [Context window and memory]({{ '/sections/11-context-window/' | relative_url
 
 ## Sources
 
-- <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09: what is re-injected after compaction.
-- <https://code.claude.com/docs/en/memory.md>, read 2026-11-09: when nested files and path rules load (including reads with `cat` or `head`), and instructions lost after `/compact`.
+- [Claude Code: the context window](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09: what is re-injected after compaction.
+- [Claude Code: how Claude remembers your project](https://code.claude.com/docs/en/memory.md), read 2026-11-09: when nested files and path rules load (including reads with `cat` or `head`), and instructions lost after `/compact`.
 - Failure cases and examples are written for this page.
 
 {% include page_nav.html %}

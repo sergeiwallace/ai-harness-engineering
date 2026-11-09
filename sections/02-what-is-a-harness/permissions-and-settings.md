@@ -235,9 +235,9 @@ My harness keeps settings in source and installs them, like its [compiled contex
 
 ## Sources
 
-- Claude Code settings and precedence: <https://code.claude.com/docs/en/settings.md>, verified 2026-11-09.
-- Claude Code permissions, rule syntax and modes: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
-- Codex `approval_policy` and `sandbox_mode`: <https://learn.chatgpt.com/docs/config-file/config-reference>, verified 2026-11-09.
+- [Claude Code settings and precedence](https://code.claude.com/docs/en/settings.md), verified 2026-11-09.
+- [Claude Code permissions, rule syntax and modes](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
+- [Codex `approval_policy` and `sandbox_mode`](https://learn.chatgpt.com/docs/config-file/config-reference), verified 2026-11-09.
 - The settings install and overlays are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

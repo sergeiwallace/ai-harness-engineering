@@ -304,9 +304,9 @@ See [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/clau
 
 ## Sources
 
-- Settings files, precedence, merging, trust and troubleshooting: <https://code.claude.com/docs/en/settings.md>, read 2026-11-09.
-- Default approvals, rule wildcards, compound commands, wrappers, workspace trust and modes: <https://code.claude.com/docs/en/permissions.md>, read 2026-11-09; <https://code.claude.com/docs/en/permission-modes.md>, verified 2026-11-09; `--permission-mode`: <https://code.claude.com/docs/en/cli-reference.md>, read 2026-11-09.
-- Codex: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, <https://learn.chatgpt.com/docs/hooks.md>, <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09.
+- Settings files, precedence, merging, trust and troubleshooting: [Claude Code: settings files and precedence](https://code.claude.com/docs/en/settings.md), read 2026-11-09.
+- Default approvals, rule wildcards, compound commands, wrappers, workspace trust and modes: [Claude Code: configure permissions](https://code.claude.com/docs/en/permissions.md), read 2026-11-09; [Claude Code: permission modes](https://code.claude.com/docs/en/permission-modes.md), verified 2026-11-09; `--permission-mode`: [Claude Code: CLI reference](https://code.claude.com/docs/en/cli-reference.md), read 2026-11-09.
+- Codex: [Codex: custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [Codex: hooks](https://learn.chatgpt.com/docs/hooks.md), [Codex: subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents.md), [Codex: CLI slash commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), read 2026-11-09.
 - Example files are illustrations written for this page.
 
 {% include page_nav.html %}

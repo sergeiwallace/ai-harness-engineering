@@ -189,9 +189,9 @@ Clients add features quickly. A coordination layer, a memory system or a review 
 
 ## Sources
 
-- Context engineering: <https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents>, verified 2026-11-08.
-- Parallel agents in Claude Code: <https://code.claude.com/docs/en/agents.md>, verified 2026-11-08.
-- Codex `/import`: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, verified 2026-11-08.
-- Anthropic merged-changes figures and the bottleneck quote: <https://www.anthropic.com/research/redesigning-source-control>, verified 2026-11-09.
+- Context engineering: [Anthropic, Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), verified 2026-11-08.
+- Parallel agents in Claude Code: [Claude Code docs: Agents](https://code.claude.com/docs/en/agents.md), verified 2026-11-08.
+- Codex `/import`: [Codex docs: Developer commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), verified 2026-11-08.
+- Anthropic merged-changes figures and the bottleneck quote: [Anthropic, Redesigning source control](https://www.anthropic.com/research/redesigning-source-control), verified 2026-11-09.
 
 {% include page_nav.html %}

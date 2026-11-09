@@ -269,9 +269,9 @@ A feature that needs a claude.ai sign-in does not always fail loudly on a cloud 
 
 ## Sources
 
-- Claude Code: <https://code.claude.com/docs/en/commands.md>, <https://code.claude.com/docs/en/memory.md>, <https://code.claude.com/docs/en/settings.md>, <https://code.claude.com/docs/en/cross-session-messaging.md>, <https://code.claude.com/docs/en/remote-control.md>, <https://code.claude.com/docs/en/advisor.md>, <https://code.claude.com/docs/en/chrome.md>, verified 2026-11-08 and 2026-11-09.
-- Claude Code permissions and workspace trust: <https://code.claude.com/docs/en/permissions.md>, read 2026-11-09.
-- Codex: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, <https://learn.chatgpt.com/docs/hooks.md> (locations, events, handler types, blocking), <https://learn.chatgpt.com/docs/agent-configuration/subagents.md> (keys, inheritance), all read 2026-11-09; <https://learn.chatgpt.com/docs/build-skills.md>, verified 2026-11-08.
+- Claude Code: [Claude Code: commands reference](https://code.claude.com/docs/en/commands.md), [Claude Code: how Claude remembers your project](https://code.claude.com/docs/en/memory.md), [Claude Code: settings files and precedence](https://code.claude.com/docs/en/settings.md), [Claude Code: cross-session messaging](https://code.claude.com/docs/en/cross-session-messaging.md), [Claude Code: Remote Control](https://code.claude.com/docs/en/remote-control.md), [Claude Code: the advisor](https://code.claude.com/docs/en/advisor.md), [Claude Code: Claude in Chrome](https://code.claude.com/docs/en/chrome.md), verified 2026-11-08 and 2026-11-09.
+- Claude Code permissions and workspace trust: [Claude Code: configure permissions](https://code.claude.com/docs/en/permissions.md), read 2026-11-09.
+- Codex: [Codex: custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [Codex: CLI slash commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), [Codex: hooks](https://learn.chatgpt.com/docs/hooks.md) (locations, events, handler types, blocking), [Codex: subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents.md) (keys, inheritance), all read 2026-11-09; [Codex: build skills](https://learn.chatgpt.com/docs/build-skills.md), verified 2026-11-08.
 - The profile files, layout and sequence are illustrations written for this page; the two-family review is from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

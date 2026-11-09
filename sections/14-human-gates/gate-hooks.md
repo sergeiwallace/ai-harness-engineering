@@ -219,8 +219,8 @@ To start: take the one rule in your context file that agents break most often, a
 
 ## Sources
 
-- PreToolUse hooks, their precedence with permission rules, exit code 2 blocking before rules are evaluated, and `disableAllHooks` turning hooks off for a run: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
-- Hook input and output fields: <https://code.claude.com/docs/en/hooks.md>, not yet verified against the primary source for this page.
+- PreToolUse hooks, their precedence with permission rules, exit code 2 blocking before rules are evaluated, and `disableAllHooks` turning hooks off for a run: [Claude Code docs: Configure permissions](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
+- Hook input and output fields: [Claude Code docs: Hooks reference](https://code.claude.com/docs/en/hooks.md), not yet verified against the primary source for this page.
 - The guard design rules: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

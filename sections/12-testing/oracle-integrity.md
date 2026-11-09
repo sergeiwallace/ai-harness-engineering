@@ -270,13 +270,14 @@ The [sub-topic page]({{ '/sections/12-testing/test-edit-detection.html' | relati
 
 ## Sources
 
-- Escalation channels and reward hacking: <https://arxiv.org/abs/2608.29460>, verified 2026-11-09.
-- ImpossibleBench: <https://arxiv.org/abs/2510.20270>, verified 2026-10-08.
-- EvilGenie reward-hacking benchmark: <https://arxiv.org/abs/2511.21654>, verified 2026-10-08.
-- Test overfitting on SWE-bench: <https://arxiv.org/abs/2511.16858>, verified 2026-10-08.
-- Claude Opus 5.5 system card (impossible tasks, grader awareness): <https://www.anthropic.com/claude-opus-5-5-system-card>, verified 2026-10-08.
-- Prompting Claude Opus 5 (verification instructions): <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5>, verified 2026-10-08.
-- Claude Code hooks reference and guide: <https://code.claude.com/docs/en/hooks> (verified 2026-11-09) and <https://code.claude.com/docs/en/hooks-guide> (verified 2026-10-08).
-- Effective harnesses for long-running agents: <https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents>, verified 2026-10-08.
+- [Escalation channels and reward hacking](https://arxiv.org/abs/2608.29460), verified 2026-11-09.
+- [ImpossibleBench](https://arxiv.org/abs/2510.20270), verified 2026-10-08.
+- [EvilGenie reward-hacking benchmark](https://arxiv.org/abs/2511.21654), verified 2026-10-08.
+- [Test overfitting on SWE-bench](https://arxiv.org/abs/2511.16858), verified 2026-10-08.
+- [Claude Opus 5.5 system card (impossible tasks, grader awareness)](https://www.anthropic.com/claude-opus-5-5-system-card), verified 2026-10-08.
+- [Prompting Claude Opus 5 (verification instructions)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5), verified 2026-10-08.
+- [Claude Code hooks reference](https://code.claude.com/docs/en/hooks), verified 2026-11-09.
+- [Claude Code hooks guide: block edits to protected files](https://code.claude.com/docs/en/hooks-guide), verified 2026-10-08.
+- [Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents), verified 2026-10-08.
 
 {% include page_nav.html %}

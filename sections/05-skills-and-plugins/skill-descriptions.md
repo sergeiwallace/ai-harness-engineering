@@ -134,7 +134,7 @@ Steps 1 to 4 check that the model picks the right skill; step 5 checks the text 
 
 ## Sources
 
-- Skill descriptions and how the model chooses a skill: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
+- Skill descriptions and how the model chooses a skill: [Claude Code skills documentation](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
 - The example descriptions and the wrong-pick case are illustrations written for this page.
 
 {% include page_nav.html %}

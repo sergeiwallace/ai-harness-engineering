@@ -155,7 +155,7 @@ A compile step is machinery to maintain. The tools now offer simpler ways to sha
 
 ## Sources
 
-- Imports, personal rules and symlinked rules: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- [Imports, personal rules and symlinked rules](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
 - The compile, generation, drift check and re-rooting design are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

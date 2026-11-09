@@ -245,10 +245,10 @@ To start: ten tasks taken from your own past failures, run before and after one 
 
 ## Sources
 
-- Anthropic on agent evals: <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents> (2026-01-09), verified 2026-11-08.
-- OpenAI evaluation best practices: <https://developers.openai.com/api/docs/guides/evaluation-best-practices>, verified 2026-11-08.
-- `claude plugin eval`: <https://code.claude.com/docs/en/plugin-evals.md>, verified 2026-11-08.
-- LangChain, "Improving deep agents with harness engineering" (2026-02-17): 52.8% to 66.5% on Terminal Bench 2.0 with `gpt-5.2-codex` fixed, and 53.9% at `xhigh` against 63.6% at `high`, "due to agent timeouts": <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09. Found through ShipWithAI's "The Complete Claude Code Harness Engineering Guide", which omits the model name.
-- The broken-benchmark figure: <https://openai.com/index/separating-signal-from-noise-coding-evaluations/>; the page returned HTTP 403 to a fetch on 2026-11-09, so the figure is not yet verified.
+- Anthropic on agent evals: [Anthropic, Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) (2026-01-09), verified 2026-11-08.
+- OpenAI evaluation best practices: [OpenAI, Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices), verified 2026-11-08.
+- `claude plugin eval`: [Claude Code docs: Plugin evals](https://code.claude.com/docs/en/plugin-evals.md), verified 2026-11-08.
+- [LangChain, "Improving deep agents with harness engineering"](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering) (2026-02-17): 52.8% to 66.5% on Terminal Bench 2.0 with `gpt-5.2-codex` fixed, and 53.9% at `xhigh` against 63.6% at `high`, "due to agent timeouts", verified 2026-11-09. Found through ShipWithAI's "The Complete Claude Code Harness Engineering Guide", which omits the model name.
+- The broken-benchmark figure: [OpenAI, Separating signal from noise in coding evaluations](https://openai.com/index/separating-signal-from-noise-coding-evaluations/); the page returned HTTP 403 to a fetch on 2026-11-09, so the figure is not yet verified.
 
 {% include page_nav.html %}

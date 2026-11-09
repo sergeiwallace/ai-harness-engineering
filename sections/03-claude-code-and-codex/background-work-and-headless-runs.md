@@ -208,12 +208,12 @@ See [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluat
 
 ## Sources
 
-- Monitor tool and background commands: <https://code.claude.com/docs/en/tools-reference>, verified 2026-11-02.
-- CLI flags, `--bare` and print mode: <https://code.claude.com/docs/en/cli-reference.md>, read 2026-11-09; <https://code.claude.com/docs/en/headless.md>, verified 2026-11-09.
-- `/goal` in `-p` mode and background work during a goal: <https://code.claude.com/docs/en/goal.md>, read 2026-11-09.
-- Background commands not restarted on resume: <https://code.claude.com/docs/en/scheduled-tasks.md>, read 2026-11-09.
-- Settings errors in `-p` runs: <https://code.claude.com/docs/en/settings.md>, read 2026-11-09.
-- Codex `/ps` and `/stop`: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09.
+- Monitor tool and background commands: [Claude Code: tools reference](https://code.claude.com/docs/en/tools-reference), verified 2026-11-02.
+- CLI flags, `--bare` and print mode: [Claude Code: CLI reference](https://code.claude.com/docs/en/cli-reference.md), read 2026-11-09; [Claude Code: headless mode](https://code.claude.com/docs/en/headless.md), verified 2026-11-09.
+- `/goal` in `-p` mode and background work during a goal: [Claude Code: keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), read 2026-11-09.
+- Background commands not restarted on resume: [Claude Code: run prompts on a schedule](https://code.claude.com/docs/en/scheduled-tasks.md), read 2026-11-09.
+- Settings errors in `-p` runs: [Claude Code: settings files and precedence](https://code.claude.com/docs/en/settings.md), read 2026-11-09.
+- Codex `/ps` and `/stop`: [Codex: CLI slash commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), read 2026-11-09.
 - Commands and scripts are illustrations written for this page.
 
 {% include page_nav.html %}

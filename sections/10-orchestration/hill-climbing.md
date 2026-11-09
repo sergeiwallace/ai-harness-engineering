@@ -36,7 +36,7 @@ A sub-topic of [goals and loops]({{ '/sections/10-orchestration/goals-and-loops.
 
 ![A surface with two peaks: a lower peak near the origin and a higher peak further along. A climb that starts near the lower peak and only accepts improvements stops on top of it.]({{ '/assets/images/10-orchestration/local-maximum.png' | relative_url }}){: style="width:100%"}
 
-*Figure: two peaks on one surface. Image by Headlessplatter, released into the public domain. Source: <https://commons.wikimedia.org/wiki/File:Local_maximum.png>.*
+*Figure: two peaks on one surface. Image by Headlessplatter, released into the public domain. Source: [File:Local maximum.png on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Local_maximum.png).*
 
 Hill-climbing accepts only changes that improve the measure, one small step at a time. Starting near the lower peak, every small step away from its top makes the measure worse, so the loop stops there even though a higher peak exists.
 
@@ -172,8 +172,8 @@ To start: record one number your linter prints today, and fail any change that r
 
 ## Sources
 
-- Workflow prompt pattern ("until ... two rounds in a row make no progress"): <https://code.claude.com/docs/en/workflows.md>, verified 2026-11-09.
-- `/goal` turn clauses: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
-- Local maximum image: <https://commons.wikimedia.org/wiki/File:Local_maximum.png>, public domain, fetched 2026-11-09.
+- Workflow prompt pattern ("until ... two rounds in a row make no progress"): [Orchestrate subagents at scale with dynamic workflows (Claude Code docs)](https://code.claude.com/docs/en/workflows.md), verified 2026-11-09.
+- `/goal` turn clauses: [Keep Claude working toward a goal (Claude Code docs)](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
+- Local maximum image: [File:Local maximum.png on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Local_maximum.png), public domain, fetched 2026-11-09.
 
 {% include page_nav.html %}

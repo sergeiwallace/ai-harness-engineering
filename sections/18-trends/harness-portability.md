@@ -134,9 +134,9 @@ To start: take one hook you rely on, move its logic into a plain script, and mak
 
 ## Sources
 
-- Codex `/import`: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, verified 2026-11-08.
-- Codex `AGENTS.md`: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, not re-checked for this page.
-- Codex hooks: <https://learn.chatgpt.com/docs/hooks.md>, not re-checked for this page.
-- Claude Code memory files and `@` imports: <https://code.claude.com/docs/en/memory.md>, not re-checked for this page.
+- Codex `/import`: [Codex docs: Developer commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), verified 2026-11-08.
+- Codex `AGENTS.md`: [Codex docs: AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md), not re-checked for this page.
+- Codex hooks: [Codex docs: Hooks](https://learn.chatgpt.com/docs/hooks.md), not re-checked for this page.
+- Claude Code memory files and `@` imports: [Claude Code docs: Memory](https://code.claude.com/docs/en/memory.md), not re-checked for this page.
 
 {% include page_nav.html %}

@@ -185,8 +185,8 @@ A lead plans a database migration with these bounds: up to four engineers, resea
 
 ## Sources
 
-- Nesting depth and `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
-- Agent teams, enabling them, task list, hooks and limitations: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-09.
+- Nesting depth and `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`: [Claude Code docs: sub-agents](https://code.claude.com/docs/en/sub-agents.md), verified 2026-11-09.
+- Agent teams, enabling them, task list, hooks and limitations: [Claude Code docs: Orchestrate teams of Claude Code sessions](https://code.claude.com/docs/en/agent-teams.md), verified 2026-11-09.
 - The role limits and the contention check are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

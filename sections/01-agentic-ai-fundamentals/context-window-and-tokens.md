@@ -253,11 +253,11 @@ Picking the model and effort at the start of a session, and compacting at breaks
 
 ## Sources
 
-- What loads at start and during a session, what survives compaction, `/compact`, `/rewind`, `/autocompact`, `/clear`, `/context`, and one-million-token windows: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
-- `CLAUDE.md` and auto memory loading, the 200-line and 25 KB limit, and "context, not enforced configuration": <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- Prompt caching in Claude Code: request layers, what invalidates the cache, TTLs, `promptCacheTtl` and `/usage`: <https://code.claude.com/docs/en/prompt-caching.md>, verified 2026-11-09.
-- `Bash` output limits: <https://code.claude.com/docs/en/tools-reference.md>, verified 2026-11-09.
-- Position effects in long contexts: Liu et al., "Lost in the Middle: How Language Models Use Long Contexts", 2023, <https://arxiv.org/abs/2307.03172>, not yet verified against the primary source for this page's date.
+- What loads at start and during a session, what survives compaction, `/compact`, `/rewind`, `/autocompact`, `/clear`, `/context`, and one-million-token windows: [Claude Code docs: Explore the context window](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
+- `CLAUDE.md` and auto memory loading, the 200-line and 25 KB limit, and "context, not enforced configuration": [Claude Code docs: How Claude remembers your project](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- Prompt caching in Claude Code: request layers, what invalidates the cache, TTLs, `promptCacheTtl` and `/usage`: [Claude Code docs: How Claude Code uses prompt caching](https://code.claude.com/docs/en/prompt-caching.md), verified 2026-11-09.
+- `Bash` output limits: [Claude Code docs: Tools reference](https://code.claude.com/docs/en/tools-reference.md), verified 2026-11-09.
+- Position effects in long contexts: Liu et al., [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172), 2023, not yet verified against the primary source for this page's date.
 - The token sizes and the session budget are illustrative estimates written for this page.
 
 {% include page_nav.html %}

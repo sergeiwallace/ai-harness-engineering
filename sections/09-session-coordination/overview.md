@@ -256,12 +256,12 @@ A minimal setup on one machine:
 
 ## Examples from my own harness
 
-- A coordination layer built on firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>).
+- A coordination layer built on [firstmate](https://github.com/kunchenguid/firstmate), an open-source project by GitHub user kunchenguid. I use [my own public fork](https://github.com/sergeiwallace/firstmate) with customizations for my setup.
   - One firstmate session takes my requests and supervises a chief-of-staff session on each machine.
   - Each chief routes work to the sessions on its machine and runs pushes and merges one at a time.
   - Workers that finish a change send their chief "ready to merge" instead of merging.
 - A fixed order of message channels.
-  - `SendMessage` first, then Agent Mail (<https://github.com/Dicklesworthstone/mcp_agent_mail>), then Buzz (<https://github.com/block/buzz>), then a git-based inbox for other machines.
+  - `SendMessage` first, then [Agent Mail](https://github.com/Dicklesworthstone/mcp_agent_mail), then [Buzz](https://github.com/block/buzz), then a git-based inbox for other machines.
   - Each channel is probed for the target before use.
 
 To start: two named sessions and one shared notes file. Each session appends what it is doing and what it needs, and you read one file instead of two tabs.
@@ -278,10 +278,10 @@ To start: two named sessions and one shared notes file. Each session appends wha
 
 ## Sources
 
-- Cross-session messaging (`ListAgents`, `SendMessage`, `/list-agents`, naming, reach, `notify_when_idle`, `crossSessionInbound`): <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
-- Agent teams: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-09.
-- Remote Control requirements: <https://code.claude.com/docs/en/remote-control.md>, verified 2026-11-08.
-- firstmate: <https://github.com/kunchenguid/firstmate>, verified 2026-11-08. My fork: <https://github.com/sergeiwallace/firstmate>.
-- Agent Mail: <https://github.com/Dicklesworthstone/mcp_agent_mail>. Buzz: <https://github.com/block/buzz>.
+- Cross-session messaging (`ListAgents`, `SendMessage`, `/list-agents`, naming, reach, `notify_when_idle`, `crossSessionInbound`): [Message your other Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/cross-session-messaging.md), verified 2026-11-09.
+- Agent teams: [Orchestrate teams of Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/agent-teams.md), verified 2026-11-09.
+- Remote Control requirements: [Remote Control (Claude Code docs)](https://code.claude.com/docs/en/remote-control.md), verified 2026-11-08.
+- firstmate: [kunchenguid/firstmate on GitHub](https://github.com/kunchenguid/firstmate), verified 2026-11-08. My fork: [sergeiwallace/firstmate on GitHub](https://github.com/sergeiwallace/firstmate).
+- Agent Mail: [Dicklesworthstone/mcp_agent_mail on GitHub](https://github.com/Dicklesworthstone/mcp_agent_mail). Buzz: [block/buzz on GitHub](https://github.com/block/buzz).
 
 {% include page_nav.html %}

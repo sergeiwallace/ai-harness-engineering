@@ -189,7 +189,7 @@ Demos come later, after the talk and these pages are settled.
 ## Sources
 
 - The meeting description I wrote for this talk.
-- "Context, not enforced configuration": Claude Code's documentation on memory, <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- "Context, not enforced configuration": Claude Code's documentation on memory, [Claude Code docs: How Claude remembers your project](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
 
 ## Licence and credits
 
@@ -200,7 +200,7 @@ Demos come later, after the talk and these pages are settled.
 
 The [repository README](https://github.com/sergeiwallace/ai-harness-engineering#licences) maps each licence to its files.
 
-The coordination examples use firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>).
+The coordination examples use [firstmate](https://github.com/kunchenguid/firstmate), an open-source project by GitHub user kunchenguid. I use [my own public fork of firstmate](https://github.com/sergeiwallace/firstmate) with customizations for my setup.
 
 ## Contents
 

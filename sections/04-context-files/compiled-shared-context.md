@@ -185,6 +185,6 @@ If the client's config location links to a file inside a temporary working copy,
 ## Sources
 
 - The pattern is from the author's own harness, described conceptually. Commands, sizes and directory names are illustrations written for this page.
-- Built-in sharing options (user files and rules, imports, symlinked rules, managed `CLAUDE.md`, `AGENTS.md`): <https://code.claude.com/docs/en/memory.md>, read 2026-11-09.
+- Built-in sharing options (user files and rules, imports, symlinked rules, managed `CLAUDE.md`, `AGENTS.md`): [Claude Code: how Claude remembers your project](https://code.claude.com/docs/en/memory.md), read 2026-11-09.
 
 {% include page_nav.html %}

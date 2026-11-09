@@ -296,7 +296,7 @@ Templates drift too: a heading nobody fills becomes noise, and a heading everyon
 
 ## Sources
 
-- `/goal` commands, evaluator, verdicts, condition advice, limits and edge cases: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- `/goal` commands, evaluator, verdicts, condition advice, limits and edge cases: [Claude Code docs: Keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
 - The document templates and goal template are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

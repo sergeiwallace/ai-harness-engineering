@@ -198,10 +198,10 @@ A session works on a feature for three hours.
 
 ## Sources
 
-- Claude Code memory, auto memory and compaction: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- Claude Code `/context` and `/compact`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- `PreCompact` behaviour: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- Beads: <https://github.com/steveyegge/beads>.
+- [Claude Code memory, auto memory and compaction](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- [Claude Code `/context` and `/compact`](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
+- [`PreCompact` behaviour](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- [Beads](https://github.com/steveyegge/beads).
 - The context reading, resume message, memory index rules and tracker rules are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

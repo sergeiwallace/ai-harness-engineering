@@ -207,9 +207,9 @@ To start: one lead agent, two parallel read-only sub-agents, and a brief that fi
 
 ## Sources
 
-- Sub-agents, background sub-agents and `isolation`: <https://code.claude.com/docs/en/sub-agents.md>.
-- Named sub-agents messaging and agent teams: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-09.
-- When to use a workflow: <https://code.claude.com/docs/en/workflows.md>, verified 2026-11-09.
-- Opus 5.5 harness guidance: <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5>, verified 2026-11-08.
+- Sub-agents, background sub-agents and `isolation`: [Create custom subagents (Claude Code docs)](https://code.claude.com/docs/en/sub-agents.md).
+- Named sub-agents messaging and agent teams: [Orchestrate teams of Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/agent-teams.md), verified 2026-11-09.
+- When to use a workflow: [Orchestrate subagents at scale with dynamic workflows (Claude Code docs)](https://code.claude.com/docs/en/workflows.md), verified 2026-11-09.
+- Opus 5.5 harness guidance: [Prompting Claude Opus 5.5 (Claude Platform docs)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5), verified 2026-11-08.
 
 {% include page_nav.html %}

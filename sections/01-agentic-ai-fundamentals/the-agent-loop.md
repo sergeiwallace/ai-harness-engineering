@@ -243,11 +243,11 @@ Delegation saves the parent's context because of step 4, and the same step is wh
 
 ## Sources
 
-- Tool use with the Messages API, content blocks and parallel calls: <https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview>, verified 2026-11-09.
-- The seven stop reasons: <https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons>, verified 2026-11-09.
-- `PreToolUse` exit code 2 and the error text the model sees; `Stop` hooks preventing a stop: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- `--output-format stream-json`, sub-agent `maxTurns` and `/subtask`: <https://code.claude.com/docs/en/cli-reference.md>, <https://code.claude.com/docs/en/tools-reference.md> and <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- Sub-agent results returning as a summary with a metadata trailer: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
+- Tool use with the Messages API, content blocks and parallel calls: [Claude API docs: Tool use with Claude](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview), verified 2026-11-09.
+- The seven stop reasons: [Claude API docs: Handling stop reasons](https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons), verified 2026-11-09.
+- `PreToolUse` exit code 2 and the error text the model sees; `Stop` hooks preventing a stop: [Claude Code docs: Hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- `--output-format stream-json`, sub-agent `maxTurns` and `/subtask`: [Claude Code docs: CLI reference](https://code.claude.com/docs/en/cli-reference.md), [Claude Code docs: Tools reference](https://code.claude.com/docs/en/tools-reference.md) and [Claude Code docs: Commands](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
+- Sub-agent results returning as a summary with a metadata trailer: [Claude Code docs: Explore the context window](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
 - The code sketch and JSON excerpt are illustrations written for this page.
 
 {% include page_nav.html %}

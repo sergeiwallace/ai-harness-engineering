@@ -119,7 +119,7 @@ To start: take the refusal message of one guard you have, and add the reason and
 
 ## Sources
 
-- Claude Code hooks and exit code 2: <https://code.claude.com/docs/en/hooks.md>, not re-checked for this page.
+- Claude Code hooks and exit code 2: [Claude Code docs: Hooks](https://code.claude.com/docs/en/hooks.md), not re-checked for this page.
 - From the author's own harness, described conceptually.
 
 {% include page_nav.html %}

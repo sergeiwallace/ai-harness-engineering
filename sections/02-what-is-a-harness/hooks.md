@@ -308,9 +308,9 @@ Codex declares hooks in a `[hooks]` table in `config.toml`.
 
 ## Sources
 
-- Claude Code hooks reference: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- Hooks and permission rules: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
-- Codex hooks configuration: <https://learn.chatgpt.com/docs/config-file/config-reference>, verified 2026-11-09.
+- [Claude Code hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- [Hooks and permission rules](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
+- [Codex hooks configuration](https://learn.chatgpt.com/docs/config-file/config-reference), verified 2026-11-09.
 - The hook kinds and refusal texts are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

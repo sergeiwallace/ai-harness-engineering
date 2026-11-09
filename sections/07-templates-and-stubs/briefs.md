@@ -327,8 +327,8 @@ Checks 4 and 5 are judgment, so a reader makes them, or the lead before it sends
 
 ## Sources
 
-- Sub-agent context, profiles and `@` mentions: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
-- Skills and argument placeholders: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
+- Sub-agent context, profiles and `@` mentions: [Claude Code docs: sub-agents](https://code.claude.com/docs/en/sub-agents.md), verified 2026-11-09.
+- Skills and argument placeholders: [Claude Code docs: skills](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
 - The brief stub, its fixed boundaries and the brief check are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

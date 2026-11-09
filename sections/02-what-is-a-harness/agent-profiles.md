@@ -193,8 +193,8 @@ The main session's context holds the plan, three summaries and the decisions. Th
 
 ## Sources
 
-- Claude Code sub-agents, fields, starting context and nesting: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
-- Codex `agents` configuration: <https://learn.chatgpt.com/docs/config-file/config-reference>, verified 2026-11-09.
+- [Claude Code sub-agents, fields, starting context and nesting](https://code.claude.com/docs/en/sub-agents.md), verified 2026-11-09.
+- [Codex `agents` configuration](https://learn.chatgpt.com/docs/config-file/config-reference), verified 2026-11-09.
 - The roles and launch tracking are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

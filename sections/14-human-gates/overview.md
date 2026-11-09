@@ -282,7 +282,7 @@ To start: write the list of actions an agent must never take alone, then enforce
 
 ## Sources
 
-- Permission rules, their order, the permission modes and how hooks interact with them: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Permission rules, their order, the permission modes and how hooks interact with them: [Claude Code docs: Configure permissions](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
 - Codex approval policy and sandbox mode: not yet verified against the primary source for this page.
 - The decision procedure, the stored request and held decisions: from the author's own harness, described conceptually.
 

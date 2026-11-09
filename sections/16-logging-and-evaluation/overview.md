@@ -225,11 +225,11 @@ To start: ten tasks taken from your own past failures, run before and after one 
 
 - `/insights`: described from the Claude Code command list; not re-checked against the docs for this page.
 
-- Anthropic on agent evals: <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents> (2026-01-09), verified 2026-11-08.
-- OpenAI evaluation best practices: <https://developers.openai.com/api/docs/guides/evaluation-best-practices>, verified 2026-11-08.
-- `claude plugin eval`: <https://code.claude.com/docs/en/plugin-evals.md>, verified 2026-11-08.
-- Claude Code monitoring and OpenTelemetry: <https://code.claude.com/docs/en/monitoring-usage.md>, verified 2026-11-09.
-- The broken-benchmark figure: <https://openai.com/index/separating-signal-from-noise-coding-evaluations/>; the page returned HTTP 403 to a fetch on 2026-11-09, so the figure is not yet verified.
+- Anthropic on agent evals: [Anthropic, Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) (2026-01-09), verified 2026-11-08.
+- OpenAI evaluation best practices: [OpenAI, Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices), verified 2026-11-08.
+- `claude plugin eval`: [Claude Code docs: Plugin evals](https://code.claude.com/docs/en/plugin-evals.md), verified 2026-11-08.
+- Claude Code monitoring and OpenTelemetry: [Claude Code docs: Monitoring](https://code.claude.com/docs/en/monitoring-usage.md), verified 2026-11-09.
+- The broken-benchmark figure: [OpenAI, Separating signal from noise in coding evaluations](https://openai.com/index/separating-signal-from-noise-coding-evaluations/); the page returned HTTP 403 to a fetch on 2026-11-09, so the figure is not yet verified.
 - Commit provenance, ledgers, spend estimates and gate timing: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

@@ -268,8 +268,8 @@ A hook script shared by both clients keeps its check in one function and adds a 
 
 ## Sources
 
-- Claude Code hooks, events, handler types, exit codes and JSON output: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09 (partial read of a long page).
-- Codex hooks: <https://learn.chatgpt.com/docs/hooks.md>, verified 2026-11-08.
+- Claude Code hooks, events, handler types, exit codes and JSON output: [Claude Code hooks reference](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09 (partial read of a long page).
+- Codex hooks: [Codex hooks documentation](https://learn.chatgpt.com/docs/hooks.md), verified 2026-11-08.
 - The manifest is from the author's own harness, described conceptually. The scripts, settings and transcripts are illustrations written for this page. The timeline diagram was drawn for this page.
 
 {% include page_nav.html %}

@@ -183,7 +183,7 @@ Tell me when the migration session finishes what it's working on
 | Rapid bursts to one session | Refused at the sender once the receiver's inbox limit is reached |
 | Messages queued for the receiving Claude | At most 50 accepted messages |
 | Repeats | Identical repeats in a short window are dropped, so a message loop between two sessions stops on its own |
-| Replies from a cloud session to another machine | Not possible with `SendMessage`; read its transcript at claude.ai/code |
+| Replies from a cloud session to another machine | Not possible with `SendMessage`; read its transcript in [Claude Code on the web](https://claude.ai/code) |
 
 ## Patterns
 
@@ -253,8 +253,8 @@ The agent teams docs suggest starting with three to five teammates, and they add
 
 ## Sources
 
-- Cross-session messaging: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
-- Agent teams: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-09.
-- Remote Control requirements: <https://code.claude.com/docs/en/remote-control.md>, verified 2026-11-08.
+- Cross-session messaging: [Message your other Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/cross-session-messaging.md), verified 2026-11-09.
+- Agent teams: [Orchestrate teams of Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/agent-teams.md), verified 2026-11-09.
+- Remote Control requirements: [Remote Control (Claude Code docs)](https://code.claude.com/docs/en/remote-control.md), verified 2026-11-08.
 
 {% include page_nav.html %}

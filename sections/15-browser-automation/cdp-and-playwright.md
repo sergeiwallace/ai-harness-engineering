@@ -234,9 +234,9 @@ To start: save the check script above and make it part of the command your front
 
 ## Sources
 
-- Chrome 136 stops honouring the remote debugging switches on the default data directory: <https://developer.chrome.com/blog/remote-debugging-port> (2025-03-17), verified 2026-11-09.
-- Chrome DevTools Protocol: <https://chromedevtools.github.io/devtools-protocol/>, not yet verified against the primary source for this page.
-- Playwright `connect_over_cdp` and locators: <https://playwright.dev/python/docs/api/class-browsertype>, not yet verified against the primary source for this page.
+- Chrome 136 stops honouring the remote debugging switches on the default data directory: [Chrome for Developers blog: changes to the remote debugging switches](https://developer.chrome.com/blog/remote-debugging-port) (2025-03-17), verified 2026-11-09.
+- Chrome DevTools Protocol: [Chrome DevTools Protocol reference](https://chromedevtools.github.io/devtools-protocol/), not yet verified against the primary source for this page.
+- Playwright `connect_over_cdp` and locators: [Playwright for Python: BrowserType API](https://playwright.dev/python/docs/api/class-browsertype), not yet verified against the primary source for this page.
 - The CDP skill and script library: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

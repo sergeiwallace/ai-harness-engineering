@@ -366,10 +366,10 @@ See [Compiled shared context files]({{ '/sections/04-context-files/compiled-shar
 
 ## Sources
 
-- Claude Code levels, load order, imports, HTML comments, `AGENTS.md` handling, path rules, size limits, auto memory, `/doctor prompt-audit` and troubleshooting: <https://code.claude.com/docs/en/memory.md>, read 2026-11-09.
-- Path rules and nested files after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
-- `/init` and `/memory`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- Codex `AGENTS.md`, the global file, overrides and the 32 KiB cap: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, read 2026-11-09.
+- Claude Code levels, load order, imports, HTML comments, `AGENTS.md` handling, path rules, size limits, auto memory, `/doctor prompt-audit` and troubleshooting: [Claude Code: how Claude remembers your project](https://code.claude.com/docs/en/memory.md), read 2026-11-09.
+- Path rules and nested files after compaction: [Claude Code: the context window](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
+- `/init` and `/memory`: [Claude Code: commands reference](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
+- Codex `AGENTS.md`, the global file, overrides and the 32 KiB cap: [Codex: custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md), read 2026-11-09.
 - The three layers and the compiled file are from the author's own harness, described conceptually. Example files are illustrations written for this page.
 
 {% include page_nav.html %}

@@ -224,10 +224,10 @@ To start: one notes file the agent updates before each compaction, and a `Sessio
 
 ## Sources
 
-- What fills the window, what survives compaction, `/autocompact`, `/rewind`, 1M-token models: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
-- `CLAUDE.md` and auto memory, load limits: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- `SessionStart` hook with the `compact` matcher: <https://code.claude.com/docs/en/hooks-guide.md>, verified 2026-11-09.
-- Codex compaction threshold: <https://learn.chatgpt.com/docs/config-file/config-reference.md>, fetched 2026-11-08 (no default number given).
-- Codex pricing: <https://learn.chatgpt.com/docs/pricing.md>, fetched 2026-11-08.
+- What fills the window, what survives compaction, `/autocompact`, `/rewind`, 1M-token models: [Explore the context window (Claude Code docs)](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
+- `CLAUDE.md` and auto memory, load limits: [How Claude remembers your project (Claude Code docs)](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- `SessionStart` hook with the `compact` matcher: [Automate actions with hooks (Claude Code docs)](https://code.claude.com/docs/en/hooks-guide.md), verified 2026-11-09.
+- Codex compaction threshold: [Codex configuration reference (OpenAI)](https://learn.chatgpt.com/docs/config-file/config-reference.md), fetched 2026-11-08 (no default number given).
+- Codex pricing: [Codex pricing (OpenAI)](https://learn.chatgpt.com/docs/pricing.md), fetched 2026-11-08.
 
 {% include page_nav.html %}

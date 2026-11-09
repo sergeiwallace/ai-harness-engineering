@@ -192,8 +192,8 @@ To start: write one launcher like the script above and make it the only way your
 
 ## Sources
 
-- Since Chrome 136, the remote debugging switches need `--user-data-dir` pointing at a non-default directory: <https://developer.chrome.com/blog/remote-debugging-port> (2025-03-17), verified 2026-11-09.
-- Chrome command-line flags (`--headless`, `--remote-debugging-port=0` and the `DevToolsActivePort` file): <https://developer.chrome.com/docs/chromium/headless>, not yet verified against the primary source for this page.
+- Since Chrome 136, the remote debugging switches need `--user-data-dir` pointing at a non-default directory: [Chrome for Developers blog: changes to the remote debugging switches](https://developer.chrome.com/blog/remote-debugging-port) (2025-03-17), verified 2026-11-09.
+- Chrome command-line flags (`--headless`, `--remote-debugging-port=0` and the `DevToolsActivePort` file): [Chrome for Developers: Chrome headless mode](https://developer.chrome.com/docs/chromium/headless), not yet verified against the primary source for this page.
 - The background-profile and focus rules: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

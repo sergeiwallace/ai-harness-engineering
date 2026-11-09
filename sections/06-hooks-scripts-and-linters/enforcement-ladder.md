@@ -195,9 +195,9 @@ A guard that refuses safe work often, or that the harness has outgrown, can be n
 
 ## Sources
 
-- "context, not enforced configuration": <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- Path-scoped rules in `.claude/rules/`: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- Moving a must-hold rule into a hook: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
+- "context, not enforced configuration": [Claude Code memory documentation](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- Path-scoped rules in `.claude/rules/`: [Claude Code memory documentation](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- Moving a must-hold rule into a hook: [Claude Code skills documentation](https://code.claude.com/docs/en/skills.md), verified 2026-11-09.
 - The test-lock example is from the author's own harness, described conceptually. The ladder diagram was drawn for this page; the sequence diagram was made with archify.
 
 {% include page_nav.html %}

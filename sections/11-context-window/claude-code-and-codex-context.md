@@ -95,10 +95,10 @@ When Claude Code and Codex work on the same repository:
 
 ## Sources
 
-- Claude Code: what survives compaction, `/autocompact`, `/rewind`, 1M-token models: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
-- Claude Code reading `AGENTS.md`: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- Codex configuration keys (`model_auto_compact_token_limit`, `model_post_turn_compact_threshold_percent`, `compact_prompt`, `model_context_window`, `project_doc_max_bytes`): <https://learn.chatgpt.com/docs/config-file/config-reference.md>, verified 2026-11-09.
-- Codex slash commands (`/compact`, `/status`, `/new`, `/clear`, `/recap`): <https://learn.chatgpt.com/docs/cli/slash-commands.md>, verified 2026-11-09.
-- Codex pricing: <https://learn.chatgpt.com/docs/pricing.md>, fetched 2026-11-08.
+- Claude Code: what survives compaction, `/autocompact`, `/rewind`, 1M-token models: [Explore the context window (Claude Code docs)](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
+- Claude Code reading `AGENTS.md`: [How Claude remembers your project (Claude Code docs)](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- Codex configuration keys (`model_auto_compact_token_limit`, `model_post_turn_compact_threshold_percent`, `compact_prompt`, `model_context_window`, `project_doc_max_bytes`): [Codex configuration reference (OpenAI)](https://learn.chatgpt.com/docs/config-file/config-reference.md), verified 2026-11-09.
+- Codex slash commands (`/compact`, `/status`, `/new`, `/clear`, `/recap`): [Codex CLI slash commands (OpenAI)](https://learn.chatgpt.com/docs/cli/slash-commands.md), verified 2026-11-09.
+- Codex pricing: [Codex pricing (OpenAI)](https://learn.chatgpt.com/docs/pricing.md), fetched 2026-11-08.
 
 {% include page_nav.html %}

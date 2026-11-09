@@ -466,13 +466,13 @@ Memory and plan files carry state across sessions ([Context window and memory]({
 
 ## Sources
 
-- Context window sizes, what survives compaction, `/context`, `/compact`, `/clear` and `/rewind`: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
-- `/goal` and its evaluator: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
-- Permission modes and Shift+Tab: <https://code.claude.com/docs/en/permission-modes.md>, verified 2026-11-09.
-- Rule precedence and what Bash rules miss: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
-- `--max-turns`, `--max-budget-usd`, `-c` and `-r`: <https://code.claude.com/docs/en/cli-reference.md>, verified 2026-11-09.
-- Tool search and `Bash` output limits: <https://code.claude.com/docs/en/mcp.md> and <https://code.claude.com/docs/en/tools-reference.md>, verified 2026-11-09.
-- Tool definitions and `tool_use` calls: <https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview>, verified 2026-11-09.
+- Context window sizes, what survives compaction, `/context`, `/compact`, `/clear` and `/rewind`: [Claude Code docs: Explore the context window](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
+- `/goal` and its evaluator: [Claude Code docs: Keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
+- Permission modes and Shift+Tab: [Claude Code docs: Permission modes](https://code.claude.com/docs/en/permission-modes.md), verified 2026-11-09.
+- Rule precedence and what Bash rules miss: [Claude Code docs: Configure permissions](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
+- `--max-turns`, `--max-budget-usd`, `-c` and `-r`: [Claude Code docs: CLI reference](https://code.claude.com/docs/en/cli-reference.md), verified 2026-11-09.
+- Tool search and `Bash` output limits: [Claude Code docs: MCP](https://code.claude.com/docs/en/mcp.md) and [Claude Code docs: Tools reference](https://code.claude.com/docs/en/tools-reference.md), verified 2026-11-09.
+- Tool definitions and `tool_use` calls: [Claude API docs: Tool use with Claude](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview), verified 2026-11-09.
 - The tool definition, session excerpt and worked examples are illustrations written for this page.
 
 {% include page_nav.html %}

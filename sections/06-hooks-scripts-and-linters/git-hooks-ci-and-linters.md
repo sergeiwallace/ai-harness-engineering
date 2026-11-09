@@ -247,8 +247,8 @@ json.dump({k: min(v, baseline[k]) for k, v in current.items()}, open("quality-ba
 
 ## Sources
 
-- Git hooks and `core.hooksPath`: <https://git-scm.com/docs/githooks> (general reference, not re-read for this page).
-- The pre-commit framework: <https://pre-commit.com/> (general reference, not re-read for this page).
+- Git hooks and `core.hooksPath`: [Git documentation for githooks](https://git-scm.com/docs/githooks) (general reference, not re-read for this page).
+- The pre-commit framework: [pre-commit framework site](https://pre-commit.com/) (general reference, not re-read for this page).
 - The commit trailer check and the guard on skipped hooks are from the author's own harness, described conceptually. The configs, transcripts and ratchet code are illustrations written for this page.
 
 {% include page_nav.html %}

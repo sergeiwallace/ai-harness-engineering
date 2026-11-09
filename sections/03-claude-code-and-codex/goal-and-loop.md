@@ -242,9 +242,9 @@ Each iteration is a turn, and each turn adds to the context.
 
 ## Sources
 
-- `/goal`: <https://code.claude.com/docs/en/goal.md>, read 2026-11-09.
-- `/loop`, scheduling options, limits and jitter: <https://code.claude.com/docs/en/scheduled-tasks.md>, read 2026-11-09.
-- Codex `/goal` and the absence of `/loop`: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09.
+- `/goal`: [Claude Code: keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), read 2026-11-09.
+- `/loop`, scheduling options, limits and jitter: [Claude Code: run prompts on a schedule](https://code.claude.com/docs/en/scheduled-tasks.md), read 2026-11-09.
+- Codex `/goal` and the absence of `/loop`: [Codex: CLI slash commands](https://learn.chatgpt.com/docs/developer-commands.md?surface=cli), read 2026-11-09.
 - The example conditions and the failure-mode table are written for this page from those docs.
 
 {% include page_nav.html %}

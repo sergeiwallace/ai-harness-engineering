@@ -160,7 +160,7 @@ Version B improves both, but the reliability gain (pass^3 nearly doubles) is muc
 
 ## Sources
 
-- pass@k, pass^k, capability and regression evals: Anthropic, <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents> (2026-01-09), verified 2026-11-08.
-- The per-task pass@k estimator is the unbiased estimator introduced for code-generation evaluation in Chen et al., "Evaluating Large Language Models Trained on Code" (2021), <https://arxiv.org/abs/2107.03374>, not re-checked for this page. The pass^k analogue and the other formulas on this page are standard combinatorics.
+- pass@k, pass^k, capability and regression evals: Anthropic, [Anthropic, Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) (2026-01-09), verified 2026-11-08.
+- The per-task pass@k estimator is the unbiased estimator introduced for code-generation evaluation in Chen et al., ["Evaluating Large Language Models Trained on Code"](https://arxiv.org/abs/2107.03374) (2021), not re-checked for this page. The pass^k analogue and the other formulas on this page are standard combinatorics.
 
 {% include page_nav.html %}

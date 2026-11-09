@@ -283,8 +283,8 @@ A rule that helped one model generation can hurt the next. Re-test your rules wh
 ## Sources
 
 - Self-improving harness research (mine failures, propose small bounded edits, keep only changes that do not regress, keep the evaluator outside the thing being changed): sources listed on [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}); not yet verified against the primary sources.
-- Automatic harness changes doing no better than running the model more: <https://arxiv.org/abs/2607.12227>, verified 2026-11-09.
-- LangChain's Terminal Bench 2.0 result with the model fixed: LangChain, "Improving Deep Agents with harness engineering", 2026-02-17, <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09. Found through ShipWithAI's "The Complete Claude Code Harness Engineering Guide", <https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j>.
-- Claude Code hooks, including the `Stop` event, `timeout` and exit code 2: <https://code.claude.com/docs/en/hooks.md>, not re-checked for this page.
+- Automatic harness changes doing no better than running the model more: [Rethinking the Evaluation of Harness Evolution for Agents](https://arxiv.org/abs/2607.12227), verified 2026-11-09.
+- LangChain's Terminal Bench 2.0 result with the model fixed: [LangChain, Improving Deep Agents with harness engineering](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering) (2026-02-17), verified 2026-11-09. Found through [ShipWithAI's Complete Claude Code Harness Engineering Guide](https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j).
+- Claude Code hooks, including the `Stop` event, `timeout` and exit code 2: [Claude Code docs: Hooks](https://code.claude.com/docs/en/hooks.md), not re-checked for this page.
 
 {% include page_nav.html %}

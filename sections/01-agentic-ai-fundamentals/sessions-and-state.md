@@ -211,12 +211,12 @@ Writing only a new context-file rule ("run `make reset-test-db` before `make tes
 
 ## Sources
 
-- `--continue`, `--resume`, `--fork-session`, `--name`, and system prompts in resumed conversations: <https://code.claude.com/docs/en/cli-reference.md>, verified 2026-11-09.
-- `/resume`, `/branch`, `/fork`, `/rename`, `/clear`, `/rewind`, `/memory`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- `CLAUDE.md` levels, `CLAUDE.local.md`, auto memory and its loading limit: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
-- A goal restored on resume: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
-- `CLAUDE.md` edits taking effect after `/clear`, `/compact` or restart: <https://code.claude.com/docs/en/prompt-caching.md>, verified 2026-11-09.
-- The plan-mode plan re-injected after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
+- `--continue`, `--resume`, `--fork-session`, `--name`, and system prompts in resumed conversations: [Claude Code docs: CLI reference](https://code.claude.com/docs/en/cli-reference.md), verified 2026-11-09.
+- `/resume`, `/branch`, `/fork`, `/rename`, `/clear`, `/rewind`, `/memory`: [Claude Code docs: Commands](https://code.claude.com/docs/en/commands.md), verified 2026-11-09.
+- `CLAUDE.md` levels, `CLAUDE.local.md`, auto memory and its loading limit: [Claude Code docs: How Claude remembers your project](https://code.claude.com/docs/en/memory.md), verified 2026-11-09.
+- A goal restored on resume: [Claude Code docs: Keep Claude working toward a goal](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
+- `CLAUDE.md` edits taking effect after `/clear`, `/compact` or restart: [Claude Code docs: How Claude Code uses prompt caching](https://code.claude.com/docs/en/prompt-caching.md), verified 2026-11-09.
+- The plan-mode plan re-injected after compaction: [Claude Code docs: Explore the context window](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
 - The handoff note, hook script, transcript sketch and examples are illustrations written for this page.
 
 {% include page_nav.html %}

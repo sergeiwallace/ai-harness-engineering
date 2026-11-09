@@ -224,10 +224,10 @@ To start: one `/goal` with a clear finish condition and a turn clause.
 
 ## Sources
 
-- `/goal` and Stop hooks: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
-- `/loop` and scheduled tasks: <https://code.claude.com/docs/en/scheduled-tasks.md>, verified 2026-11-09.
-- Dynamic workflows: <https://code.claude.com/docs/en/workflows.md>, verified 2026-11-09.
-- LangGraph: <https://docs.langchain.com/oss/python/langgraph/overview>, verified 2026-11-08.
-- Opus 5.5 harness guidance: <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5>, verified 2026-11-08.
+- `/goal` and Stop hooks: [Keep Claude working toward a goal (Claude Code docs)](https://code.claude.com/docs/en/goal.md), verified 2026-11-09.
+- `/loop` and scheduled tasks: [Run prompts on a schedule (Claude Code docs)](https://code.claude.com/docs/en/scheduled-tasks.md), verified 2026-11-09.
+- Dynamic workflows: [Orchestrate subagents at scale with dynamic workflows (Claude Code docs)](https://code.claude.com/docs/en/workflows.md), verified 2026-11-09.
+- LangGraph: [LangGraph overview (LangChain docs)](https://docs.langchain.com/oss/python/langgraph/overview), verified 2026-11-08.
+- Opus 5.5 harness guidance: [Prompting Claude Opus 5.5 (Claude Platform docs)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5), verified 2026-11-08.
 
 {% include page_nav.html %}

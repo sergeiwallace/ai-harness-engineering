@@ -156,7 +156,7 @@ To start: before your next batch job, run it on 50 items and multiply. Then put 
 
 ## Sources
 
-- Claude Code cost metric: <https://code.claude.com/docs/en/monitoring-usage.md>, verified 2026-11-09.
+- Claude Code cost metric: [Claude Code docs: Monitoring](https://code.claude.com/docs/en/monitoring-usage.md), verified 2026-11-09.
 - The prices in the snippets are placeholders, not current list prices.
 - Spend estimates and preflight checks: from the author's own harness, described conceptually.
 

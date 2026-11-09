@@ -105,6 +105,6 @@ To start: write three tasks from your friction log in the format above, each wit
 
 ## Sources
 
-- Starting with 20 to 50 simple tasks from real failures: Anthropic, <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents>, not re-checked for this page.
+- Starting with 20 to 50 simple tasks from real failures: Anthropic, [Anthropic, Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents), not re-checked for this page.
 
 {% include page_nav.html %}

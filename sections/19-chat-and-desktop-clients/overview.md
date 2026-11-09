@@ -139,7 +139,7 @@ To start: copy the project instructions example above into a chat project and us
 
 ## Sources
 
-- Surfaces and what they share: <https://code.claude.com/docs/en/platforms.md>, verified 2026-11-08.
-- Plugins on claude.ai and cloud sessions: <https://code.claude.com/docs/en/plugins/overview.md>, verified 2026-11-08.
+- Surfaces and what they share: [Claude Code docs: Platforms](https://code.claude.com/docs/en/platforms.md), verified 2026-11-08.
+- Plugins on claude.ai and cloud sessions: [Claude Code docs: Plugins](https://code.claude.com/docs/en/plugins/overview.md), verified 2026-11-08.
 
 {% include page_nav.html %}

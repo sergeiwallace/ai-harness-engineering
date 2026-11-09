@@ -149,7 +149,7 @@ To start: decide which one session may merge to `main`, enforce it with branch p
 
 ## Sources
 
-- Hooks, `PreToolUse` and exit code 2: <https://code.claude.com/docs/en/hooks.md>.
-- `flock(1)`: <https://man7.org/linux/man-pages/man1/flock.1.html>.
+- Hooks, `PreToolUse` and exit code 2: [Hooks reference (Claude Code docs)](https://code.claude.com/docs/en/hooks.md).
+- `flock(1)`: [flock(1) manual page](https://man7.org/linux/man-pages/man1/flock.1.html).
 
 {% include page_nav.html %}

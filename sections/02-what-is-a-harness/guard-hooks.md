@@ -25,7 +25,7 @@ A guard is a `PreToolUse` hook that refuses an action as the agent tries it. Thi
 ![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
 *Figure: one agent action moving down the four layers. A guard is layer 3, between the workflows above it and the tests below. Made with archify.*
 
-*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
+*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: [Swiss cheese model of accident causation on Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png), by Davidmack, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). Resized for this page.*
 
 A guard is layer 3: it acts at the moment of action, after the instructions and workflows of layers 1 and 2, and before the tests of layer 4. The [full ladder]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#the-layers) shows what each layer catches and misses.
 
@@ -190,9 +190,9 @@ The agent was deep in a long task, the line was one of many, and the action look
 
 ## Sources
 
-- Claude Code hooks, `PreToolUse` decision control: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
-- Hooks and permission rules: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
-- Swiss cheese model image: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0.
+- [Claude Code hooks, `PreToolUse` decision control](https://code.claude.com/docs/en/hooks.md), verified 2026-11-09.
+- [Hooks and permission rules](https://code.claude.com/docs/en/permissions.md), verified 2026-11-09.
+- [Swiss cheese model of accident causation](https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png), Wikimedia Commons, by Davidmack, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
 - The incident, guards and refusal texts are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

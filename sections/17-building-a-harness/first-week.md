@@ -247,8 +247,8 @@ To start: copy the four examples above, change the commands to your project's, a
 
 ## Sources
 
-- Claude Code hooks, events, matchers and exit codes: <https://code.claude.com/docs/en/hooks.md>, not re-checked for this page.
-- Claude Code settings and permission rules: <https://code.claude.com/docs/en/settings.md>, not re-checked for this page.
-- Agent Skills format: <https://code.claude.com/docs/en/skills.md>, not re-checked for this page.
+- Claude Code hooks, events, matchers and exit codes: [Claude Code docs: Hooks](https://code.claude.com/docs/en/hooks.md), not re-checked for this page.
+- Claude Code settings and permission rules: [Claude Code docs: Settings](https://code.claude.com/docs/en/settings.md), not re-checked for this page.
+- Agent Skills format: [Claude Code docs: Skills](https://code.claude.com/docs/en/skills.md), not re-checked for this page.
 
 {% include page_nav.html %}

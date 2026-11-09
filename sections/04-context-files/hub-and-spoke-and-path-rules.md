@@ -185,7 +185,7 @@ Use a path rule when the rule applies to one kind of file: tests, docs, migratio
 
 ## Sources
 
-- Path rules (loading, glob syntax, base directories, frontmatter, symlinks, user-level rules, size limits) and the recommendation to use skills for task-specific instructions: <https://code.claude.com/docs/en/memory.md>, read 2026-11-09; after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
+- Path rules (loading, glob syntax, base directories, frontmatter, symlinks, user-level rules, size limits) and the recommendation to use skills for task-specific instructions: [Claude Code: how Claude remembers your project](https://code.claude.com/docs/en/memory.md), read 2026-11-09; after compaction: [Claude Code: the context window](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
 - Hub and spoke is from the author's own harness, described conceptually. Example files are illustrations written for this page.
 
 {% include page_nav.html %}

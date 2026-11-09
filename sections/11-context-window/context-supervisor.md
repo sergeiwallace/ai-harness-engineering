@@ -158,9 +158,9 @@ To start: a hook that prints a reminder at one threshold.
 
 ## Sources
 
-- Hooks, `PostToolUse` and `additionalContext`, `SessionStart`: <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>, verified 2026-11-09.
-- `/autocompact` and what survives compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
-- Commands in cross-session messages arrive as text: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
-- Built-in commands in `/loop` prompts arrive as text: <https://code.claude.com/docs/en/scheduled-tasks.md>, verified 2026-11-09.
+- Hooks, `PostToolUse` and `additionalContext`, `SessionStart`: [Hooks reference (Claude Code docs)](https://code.claude.com/docs/en/hooks.md) and [Automate actions with hooks (Claude Code docs)](https://code.claude.com/docs/en/hooks-guide.md), verified 2026-11-09.
+- `/autocompact` and what survives compaction: [Explore the context window (Claude Code docs)](https://code.claude.com/docs/en/context-window.md), verified 2026-11-09.
+- Commands in cross-session messages arrive as text: [Message your other Claude Code sessions (Claude Code docs)](https://code.claude.com/docs/en/cross-session-messaging.md), verified 2026-11-09.
+- Built-in commands in `/loop` prompts arrive as text: [Run prompts on a schedule (Claude Code docs)](https://code.claude.com/docs/en/scheduled-tasks.md), verified 2026-11-09.
 
 {% include page_nav.html %}
