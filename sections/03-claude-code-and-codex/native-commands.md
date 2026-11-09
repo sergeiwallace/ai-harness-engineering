@@ -40,8 +40,10 @@ Typing `/` lists everything you can run. The list mixes three sources:
 | Source | Example | Where it is defined |
 |---|---|---|
 | Built-in command | `/compact`, `/context`, `/hooks` | Ships with the client |
-| Your skill | `/release` | `.claude/skills/release/SKILL.md` or `~/.claude/skills/` |
+| Your skill | `/release` | `.claude/skills/<name>/SKILL.md`, in the project or in `~/.claude/` |
 | A plugin's skill or command | a plugin's `/deploy` | The installed plugin; see `/plugin` |
+
+<!-- IMAGE NEEDED: the Claude Code slash-command menu that opens when you type "/", showing built-in commands and skills together; search: "Claude Code slash commands menu", "Claude Code / commands screenshot" -->
 
 - A built-in command is part of the client: you cannot edit it, and its meaning can change between releases.
 - A skill is yours: you write it, version it and test it like any other file. See [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).

@@ -44,6 +44,22 @@ You do not need a harness to start. The site shows what one is, how the parts fi
 - In a more advanced setup, agents coordinate among themselves on long tasks. The person gives the starting direction and steps in on key decisions, blockers and feedback.
 - The aim is to show what is possible and how to start, so each reader can build a harness that fits how they work.
 
+## What a harness is
+
+A coding agent is a model in a loop: it reads its context, asks for an action, and reads the result ([Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }})). The harness is everything you put around that loop so the agent works the way you need it to.
+
+| Part | What it does | Example | Covered in |
+|---|---|---|---|
+| Context files | tell every session the project's facts and conventions | a `CLAUDE.md` naming the test command | [Context files]({{ '/sections/04-context-files/' | relative_url }}) |
+| Skills and templates | give the agent procedures and structures to follow | a release skill that runs the steps in order | [Skills]({{ '/sections/05-skills-and-plugins/' | relative_url }}), [Templates]({{ '/sections/07-templates-and-stubs/' | relative_url }}) |
+| Tools | decide what the agent can do | an MCP server for the issue tracker | [Fundamentals: tools]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}) |
+| Permissions and hooks | check each action as it happens, and refuse the wrong ones | a hook that refuses a commit while tests fail | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
+| Tests and validation | catch what got past the earlier parts, before a change lands | a CI job on every merge | [Testing]({{ '/sections/12-testing/' | relative_url }}) |
+| Memory and plans | carry state from one session to the next | a plan file with done, next and watch out | [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) |
+| Coordination | split work across agents and bring it back together | a coordinator that briefs sub-agents | [Delegation]({{ '/sections/08-delegation/' | relative_url }}), [Orchestration]({{ '/sections/10-orchestration/' | relative_url }}) |
+
+The model is the same in every setup; the harness decides what it sees, what it may do, and what gets checked before its work lands. [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) takes the parts in turn.
+
 ## The conductor model
 
 ![Diagram: the conductor model. You give the goal and direction to a coordinating agent, which sends briefs to a code agent, a tests agent and a review agent; they commit to, run against and read the repository; the coordinator sends decisions and blockers back to you; you adjust the harness after each friction, and the harness is loaded into every agent's session]({{ '/assets/images/00-introduction/conductor-model.svg' | relative_url }}){: style="width: 100%" }
@@ -73,11 +89,15 @@ The talk runs from the basics to building your own harness.
 
 The basics move fast on the talk path. Most of the time goes to how the blocks combine, because that is where a harness differs from a default setup.
 
-### A systems approach
+## A systems approach
 
-The talk takes a systems approach to harness engineering and to working with agentic AI. The model, its instructions, its tools, its checks and the person directing it form one system. When the output is wrong or a gap shows up, the fix goes into the system, and the same approach is applied again to each new issue, often by the agents themselves. The harness improves with use, and the output gets better in a way the system enforces.
+The talk takes a systems approach to harness engineering and to working with agentic AI:
 
-Context files and instructions guide the model, but the model applies them unevenly. It drops rules more often when it handles several things at once, when it switches tasks, and when its context window is nearly full. Adding another detailed rule to a context file each time the model does something wrong is therefore an anti-pattern. The fix belongs in a layer that enforces it.
+- the model, its instructions, its tools, its checks and the person directing it form one system;
+- when the output is wrong or a gap shows up, the fix goes into the system;
+- the same approach is applied again to each new issue, often by the agents themselves, so the harness improves with use and the output gets better in a way the system enforces.
+
+Context files and instructions guide the model, but the model applies them unevenly. It drops rules more often when it handles several things at once, when it switches tasks, and when its context window is nearly full. Claude Code's own documentation says it treats `CLAUDE.md` "as context, not enforced configuration". Adding another detailed rule to a context file each time the model does something wrong is therefore an anti-pattern. The fix belongs in a layer that enforces it.
 
 ![Diagram: the systems approach as a loop. A work session hits an issue or gap; you or the agent ask which layer can enforce the fix; the fix goes into layer 2, workflows and tools, layer 3, hooks, scripts and linters, or layer 4, validation and tests, with a context-file line as layer 1, the second line of defence; the next session runs inside the improved system]({{ '/assets/images/00-introduction/systems-approach-loop.svg' | relative_url }}){: style="width: 100%" }
 *Figure: each issue goes back into the system. The enforcing layers carry the fix; the instruction layer repeats it for the model.*
@@ -151,15 +171,26 @@ Conventions used on every page:
 | | 3 | | Questions |
 | | 45 | | Session total |
 
-[Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}) and [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}) are read-only sections, off the talk path. Stop 9 mentions screenshots in one line, and stop 1 mentions chat and desktop users in one line. Demos come later, after the talk and these pages are settled.
+Two sections are for reading only, off the talk path:
+
+- [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}), which stop 9 mentions in one line about screenshots;
+- [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}), which stop 1 mentions in one line for chat and desktop users.
+
+Demos come later, after the talk and these pages are settled.
 
 ## Pitfalls and lessons
 
-- A copied harness brings its author's habits and problems with it. Build from the problems you hit yourself.
+| Pitfall | What happens | Instead |
+|---|---|---|
+| Copying someone else's harness | it brings its author's habits and problems with it | build from the problems you hit yourself |
+| A new context-file rule for every mistake | the file grows, and the model follows each rule less reliably | put the fix in an enforcing layer, and keep one line explaining it |
+| Adding mechanisms faster than you remove them | nobody can follow the harness, including its agents | remove what no longer earns its place ([Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }})) |
+| Trusting an agent's summary of its own work | reported work that was never done goes unnoticed | check the tool calls, the files and the test results |
 
 ## Sources
 
-The meeting description I wrote for this talk.
+- The meeting description I wrote for this talk.
+- "Context, not enforced configuration": Claude Code's documentation on memory, <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
 
 ## Licence and credits
 

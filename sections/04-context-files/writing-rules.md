@@ -12,6 +12,12 @@ As of 2026-11-09. Part of [Context files]({{ '/sections/04-context-files/' | rel
 
 A context file is read and interpreted by the model, so how a rule is written decides how often it is followed. This page covers what a context file can and cannot do, what to put in one, how to phrase each rule, what to do when a mistake repeats, and how to keep the file small and true.
 
+## Contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ## What a context file can do
 
 A context file guides the model's general behaviour. It is applied unevenly, and it never enforces anything.
@@ -30,13 +36,18 @@ A context file guides the model's general behaviour. It is applied unevenly, and
 | 3. Hooks, scripts and linters | Refuse or flag at the moment of action | A PreToolUse hook refuses `make test-all` outside a push |
 | 4. Validation and tests | Catch what slips through before a change lands | The pre-push gate runs the full suite once |
 
-Layers 2 to 4 do the enforcing. A context-file line is at most a second layer on top of them; the rest of this page is about writing that layer well. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3.
+Layers 2 to 4 do the enforcing. A context-file line is at most a second layer on top of them; the rest of this page is about writing that layer well.
 
-## Contents
-{: .no_toc .text-delta }
+Claude Code's own documentation draws the same line for organizations:
 
-1. TOC
-{:toc}
+| To do this | Use |
+|---|---|
+| Block specific tools, commands or file paths | Settings: `permissions.deny` |
+| Enforce sandbox isolation | Settings: `sandbox.enabled` |
+| Code style and quality guidelines | A `CLAUDE.md` file |
+| Behavioural instructions for the agent | A `CLAUDE.md` file |
+
+For anything that must run at a fixed point, such as before every commit or after each edit, the docs point to a hook. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3.
 
 ## What to write
 
@@ -87,6 +98,12 @@ A rule with its reason is applied more sensibly to cases it did not name.
 ```
 
 Faced with a currency-conversion function the rule did not mention, the agent still keeps integer cents, because it knows why.
+
+### Structure and consistency
+
+- Group related rules under Markdown headings and bullets; organised sections are followed more reliably than dense paragraphs.
+- Two rules that contradict each other get one picked arbitrarily. Check the root file, subdirectory files and `.claude/rules/` together.
+- Check whether a rule competes with guidance the client adds on its own. If your file sets commit or pull request rules, Claude Code's `includeGitInstructions` setting turns its built-in ones off.
 
 ### Be specific about commands
 
@@ -148,10 +165,10 @@ The workflow change, in the `Makefile`:
 
 ```make
 test:        ## changed tests only, the default
- files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
- if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
+	files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
+	if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
 test-all:    ## the full suite; runs in the pre-push gate
- pytest tests -q
+	pytest tests -q
 ```
 
 The hook, in `.claude/settings.json`:
@@ -210,6 +227,8 @@ Context files go stale when the mechanisms they describe change.
 1. A file that still names a retired script or an old test command sends every session the wrong way.
 2. Treat the line as part of the mechanism it describes, and change both in one commit.
 3. Where you can, let a check find stale lines, for example a test that every command named in `CLAUDE.md` exists in the `Makefile`.
+4. Run `/doctor prompt-audit` in Claude Code. It reports instructions written for older models, references to files or commands that do not exist, and files that contradict each other, and changes nothing until you ask.
+5. The `/doctor` checkup also proposes trims for a checked-in `CLAUDE.md`: it cuts what the agent can derive from the code (layouts, dependency lists, architecture overviews) and keeps pitfalls, reasons and conventions that differ from defaults.
 
 <details markdown="1">
 <summary>A review checklist for a context-file change</summary>
@@ -224,7 +243,7 @@ Context files go stale when the mechanisms they describe change.
 
 ## Sources
 
-- The 200-line suggestion and "context, not enforced configuration": <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08.
+- The 200-line target, "context, not enforced configuration", writing effective instructions, the settings-versus-`CLAUDE.md` table, `includeGitInstructions` and `/doctor prompt-audit`: <https://code.claude.com/docs/en/memory.md>, read 2026-11-09.
 - The method and examples are from the author's own harness, described conceptually, and written for this page.
 
 {% include page_nav.html %}

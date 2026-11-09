@@ -161,7 +161,7 @@ Treat a server like a dependency you install:
 1. check who maintains it and how widely it is used;
 2. pin its version in the configuration;
 3. give it the narrowest credentials that work, such as a read-only token;
-4. put ask rules on its write tools (`mcp__<server>__<tool>` in permission rules).
+4. put ask rules on its write tools: `mcp__<server>__<tool>` names one tool, and `mcp__<server>__*` covers every tool from that server.
 
 ### Reliability
 
@@ -198,7 +198,7 @@ A command-line tool the shell already runs is often enough:
 
 - Claude Code MCP: `claude mcp add` syntax, scopes and storage, `.mcp.json` variable expansion, project-server approval, `/mcp`, tool search and `MAX_MCP_OUTPUT_TOKENS`: <https://code.claude.com/docs/en/mcp.md>, verified 2026-11-09.
 - The Model Context Protocol specification, transports and primitives: <https://modelcontextprotocol.io/specification>, not yet verified against the primary source for this page's date.
-- The `mcp__<server>__<tool>` rule form: <https://code.claude.com/docs/en/permissions.md>, not yet verified against the primary source for this page's date.
+- The `mcp__<server>__<tool>` and `mcp__<server>__*` rule forms: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
 - The server names, URL and configuration values are illustrations; `example-db-mcp-server` is not a real package.
 
 {% include page_nav.html %}

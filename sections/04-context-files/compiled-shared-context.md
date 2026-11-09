@@ -29,6 +29,20 @@ Once you work across several repositories, machines or clients, one hand-edited 
 
 To start: one hand-written `CLAUDE.md` per repository. Add a user-level file when you notice the same lines in every repository. Compile when you have two clients or two machines to keep in step.
 
+### Built-in options to try first
+
+Claude Code already has ways to share instructions without a build step. Try them before writing a compiler.
+
+| Need | Built-in option | Limit |
+|---|---|---|
+| The same personal lines in every project | `~/.claude/CLAUDE.md` and `~/.claude/rules/` | One machine, one client |
+| One file shared across projects or worktrees | `@~/path/shared.md` import from each project's `CLAUDE.md` | Needs approval once per project; no size gate |
+| A shared set of rules | Symlink the files into each project's `.claude/rules/` | Links outside the project need approval; no size gate |
+| Organization-wide instructions | A managed `CLAUDE.md` (or the `claudeMd` managed setting) deployed by IT | Same text everywhere; no per-machine part |
+| One file for Claude Code and Codex | `AGENTS.md`, imported from a short `CLAUDE.md` | No per-client part beyond the importing file |
+
+Compile when you need what none of these give: a per-client and per-machine part, a size budget that fails the build, and a rollback.
+
 ## The pattern
 
 ### One change, start to finish
@@ -169,6 +183,7 @@ If the client's config location links to a file inside a temporary working copy,
 
 ## Sources
 
-- From the author's own harness, described conceptually. Commands, sizes and directory names are illustrations written for this page.
+- The pattern is from the author's own harness, described conceptually. Commands, sizes and directory names are illustrations written for this page.
+- Built-in sharing options (user files and rules, imports, symlinked rules, managed `CLAUDE.md`, `AGENTS.md`): <https://code.claude.com/docs/en/memory.md>, read 2026-11-09.
 
 {% include page_nav.html %}

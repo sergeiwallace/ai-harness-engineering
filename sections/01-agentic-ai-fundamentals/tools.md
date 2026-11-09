@@ -142,7 +142,7 @@ An `Edit` call names one file and one change, so a rule on the path decides it e
 |---|---|
 | `Edit(build/app.js)` | yes |
 | `Bash(sed -i 's/a/b/' build/app.js)` | yes: Claude Code recognises `sed`, `cat`, `tee` and similar file commands, and redirections such as `> build/app.js` |
-| `Bash(python scripts/regen.py)`, where the script writes `build/app.js` | no: the command does not name the file |
+| `Bash(python tools/regen.py)`, where the program writes `build/app.js` | no: the command does not name the file |
 
 The last row needs a lower layer: a `PreToolUse` hook that knows which scripts write `build/`, or the sandbox, which can make `build/` read-only for every process.
 

@@ -90,10 +90,24 @@ The map at the top of this page is the loop drawn as parts. As steps, in order:
 3. Run the tool. The client program, such as Claude Code or Codex, runs the tool on your machine. The model only asked.
 4. Add the result. The tool's output, or its error, is appended to the context as a tool result, and the loop goes back to step 1.
 
+### Worked example: a test fix, turn by turn
+
+You ask an agent to find out why a test fails and fix it. A typical run:
+
+| Turn | The model asks for | The result it reads next |
+|---|---|---|
+| 1 | `Bash`: run the failing test | the failure: `ValueError: day is out of range for month` |
+| 2 | `Read`: open `src/dates.py`, where the failure points | the file, with line numbers |
+| 3 | `Edit`: move the month-length check, then `Bash`: run the test again | the edit applied; the test passes |
+| 4 | `Bash`: run the whole suite | all tests pass |
+| 5 | no tool: a final answer | the client reports to you what changed and why |
+
+Each turn's tool call was chosen from the result of the turn before.
+
 ### Who does what
 
 ![Sequence diagram: an agent fixes a failing test in three turns. You give the task to the client; the client sends context to the model; the model asks to run the test, the client checks permissions and runs it in the shell, and the failure returns to the model; the model asks to read the file, then to edit it; a PreToolUse hook allows the edit, the client applies it and re-runs the tests; the model gives a final answer, a Stop hook confirms the suite is green, and the client reports back to you]({{ '/assets/images/01-agentic-ai-fundamentals/test-fix-sequence.svg' | relative_url }}){: style="width: 100%" }
-*Figure: the test-fixing run below, message by message. Red arrows are where the harness checks; dashed arrows are results flowing back into the model's context.*
+*Figure: the test-fixing run above, message by message. Red arrows are where the harness checks; dashed arrows are results flowing back into the model's context.*
 
 Later pages build on the split in step 3. The model never touches your files directly:
 
@@ -131,23 +145,16 @@ Each `●` line is a tool call the model asked for and the client ran. The inden
 
 ### How the loop ends
 
-The loop ends in one of these ways. [How an agent run ends]({{ '/sections/01-agentic-ai-fundamentals/how-a-run-ends.html' | relative_url }}) covers each in depth.
+The loop ends in one of four ways. [How an agent run ends]({{ '/sections/01-agentic-ai-fundamentals/how-a-run-ends.html' | relative_url }}) covers each in depth.
 
-- The model writes a final answer with no tool call. It judged the task done, or decided it is blocked and should ask.
-- A person interrupts it.
-- A limit fires: a turn limit, a time limit, a spending limit or a full context window.
-- A check refuses to let it stop. Claude Code's `/goal`, for example, has a small model judge after each turn whether a stated condition is met, and sends the agent back to work if not (see [Orchestration and workflows]({{ '/sections/10-orchestration/' | relative_url }})).
+| Exit | What happens | In Claude Code |
+|---|---|---|
+| Final answer | the model writes a reply with no tool call: it judged the task done, or decided it is blocked | stop reason `end_turn` |
+| Interrupt | a person stops it | Esc in a session; Ctrl+C for `claude -p` |
+| Limit | turns or money run out, or a command times out | `--max-turns`, `--max-budget-usd` (both for `claude -p`) |
+| Completion check | a check refuses to let it stop until a condition holds | a `Stop` hook, or `/goal`, where a small model judges after each turn whether the condition is met |
 
-### Worked example: a test fix, turn by turn
-
-Suppose you ask an agent to find out why a test fails and fix it. A typical run looks like this.
-
-1. The agent runs the test suite with its shell tool. The output, with the failure message, goes into the context.
-2. It searches the code for the function named in the failure and reads that file.
-3. It edits the function, then runs the one failing test again.
-4. The test passes. It runs the whole suite to check nothing else broke, and reports what it changed.
-
-That is four turns of the loop, each one a tool call whose result shaped the next choice.
+A full context window does not end a Claude Code session: the client compacts the history and carries on ([below](#the-context-window)). [Orchestration and workflows]({{ '/sections/10-orchestration/' | relative_url }}) uses `/goal` for longer work.
 
 ### Worked example: a loop that never ends
 
@@ -160,7 +167,7 @@ An agent is asked to "make the build green", and the build fails because a crede
 Two settings prevent this:
 
 - an exit condition in the task: "stop and report after three failed attempts at the same error";
-- an outside limit on the run: a turn cap, a time limit or a spending limit.
+- an outside limit on the run, such as `claude -p --max-turns 30` or `--max-budget-usd 5` for a headless run.
 
 [How an agent run ends]({{ '/sections/01-agentic-ai-fundamentals/how-a-run-ends.html' | relative_url }}) covers both.
 
@@ -190,6 +197,16 @@ A simplified tool definition looks like this:
 
 The model never runs this. It reads the description, and when it wants a file it emits a call such as `{"name": "read_file", "input": {"path": "src/dates.py"}}`.
 
+<!-- IMAGE NEEDED: anatomy of one tool call: a tool definition (name, description, schema) in the context, the model's tool_use block, the client running it, and the tool_result coming back with the same id; search: llm tool calling diagram, function calling flow anthropic, tool_use tool_result diagram -->
+
+| Built-in tools in Claude Code | What they do |
+|---|---|
+| `Read` | open a file with line numbers; also images and PDFs |
+| `Edit`, `Write` | change part of a file, or write a whole one |
+| `Bash` | run shell commands; on macOS and Linux, searches with `find` and `grep` also run here |
+| `WebFetch`, `WebSearch` | fetch a page, search the web |
+| `Agent` | start a sub-agent with its own context window |
+
 ### How the model picks a tool
 
 The model reads the tool descriptions in its context and picks a tool by name, much as a person picks a command from a menu.
@@ -207,18 +224,22 @@ The model reads the tool descriptions in its context and picks a tool by name, m
 
 More tools are not always better.
 
-- Every tool definition takes up context on every turn, whether or not it is used. A dozen MCP servers can take a large share of the window before the task starts.
-- Tool output takes context too. A command that prints ten thousand lines puts ten thousand lines into the window. Good harnesses trim or summarise long output.
-- A tool that can do anything, like a shell, is powerful and hard to check. Narrow tools are easier to permit or refuse.
+| Cost | What it is | How Claude Code limits it |
+|---|---|---|
+| Definitions | every loaded tool's description is sent on every turn | MCP tool search, on by default, loads only tool names until a tool is needed |
+| Output | every result stays in the history for the rest of the session | one `Bash` result is cut off at about 30,000 characters inline; the rest goes to a file |
+| Reach | a tool that can do anything, like a shell, is hard to check | narrow tools such as `Edit` can be permitted or refused by path |
 
 ### Worked example: trimming tool output
 
 An agent runs a test suite that prints a line per test. On a large project that is thousands of lines on every run, most of them "passed".
 
 ```text
-pytest                 # about 2,400 lines, roughly 30,000 tokens per run
+pytest                 # about 2,400 lines: fills the inline limit, the rest is saved to a file
 pytest -q --tb=short   # the failures and a one-line summary, a few hundred tokens
 ```
+
+The verbose run also hides the failures among the "passed" lines, so the agent may have to read the saved file to find them.
 
 The same idea applies elsewhere:
 
@@ -235,7 +256,7 @@ The context window is everything the model can see on one turn: its instructions
 ![Diagram: six sources flow into one context window, system instructions, context files, tool definitions, conversation history, tool results and the newest message; the window is sent to the model every turn; near the limit it goes to compaction, which replaces history with a summary while context files reload from disk]({{ '/assets/images/01-agentic-ai-fundamentals/context-sources.svg' | relative_url }}){: style="width: 100%" }
 *Figure: what the client sends on every turn. The top three are a fixed cost; history and tool results grow.*
 
-Everything above counts against one fixed budget, measured in tokens. A token is a piece of a word; English prose runs at roughly four characters, or three quarters of a word, per token. Several current Claude models support a window of one million tokens, which is a lot, but an agent that reads large files and long command outputs fills it faster than you would expect.
+Everything above counts against one fixed budget, measured in tokens. A token is a piece of a word; English prose runs at roughly four characters, or three quarters of a word, per token. Several current Claude models support a one-million-token window, selected in Claude Code as a `[1m]` model variant. An agent that reads large files and long command outputs still fills it faster than you would expect.
 
 Two facts about the window drive most of what a harness does.
 
@@ -260,11 +281,16 @@ As the window fills, quality drops well before the hard limit:
 
 [The context window and tokens]({{ '/sections/01-agentic-ai-fundamentals/context-window-and-tokens.html' | relative_url }}#why-quality-drops-before-the-limit) has the detail, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers how to manage it.
 
-### Habits that keep the window useful
+### Commands that keep the window useful
 
-- If the agent ignores a rule, first check whether the rule was in its context at that moment. Was it loaded? Was it summarised away?
-- Prefer reading the part of a file you need over reading all of it.
-- Start a fresh session for unrelated work, so the old task's history does not crowd the new one.
+| Command | What it does | When |
+|---|---|---|
+| `/context` | shows what fills the window, by category, with suggestions | when the agent starts missing instructions |
+| `/compact focus on <task>` | summarises the history now, keeping what you name | at a natural break between tasks |
+| `/clear` | starts a new conversation; project memory and `CLAUDE.md` still load | switching to unrelated work |
+| `/rewind` | rolls the conversation, and optionally the code, back to a checkpoint | after a wrong turn |
+
+When an agent ignores a rule, check first whether the rule was in its context at that moment: was it loaded, and was it summarised away?
 
 ### Worked example: the rule that vanished
 
@@ -277,8 +303,11 @@ What would have held:
 | Where the rule lived | Survives compaction? | Why |
 |---|---|---|
 | A chat message | sometimes | only if the summary keeps it |
-| The project's `CLAUDE.md` | yes | Claude Code reloads the project-root `CLAUDE.md` from disk after compaction |
-| A deny rule `Edit(build/**)` | yes | the client checks it on every call, whatever the context holds |
+| A rule file with `paths:` frontmatter | not until the agent touches a matching file again | path-scoped rules are summarised away with the history |
+| The project-root `CLAUDE.md` | yes | Claude Code re-injects it from disk after compaction |
+| A deny rule `Edit(build/**)` | yes | it is not in the context at all; the client checks it on every call |
+
+The deny rule enforces the rule, and the `CLAUDE.md` line explains it to the model, as in the [systems approach]({{ '/' | relative_url }}#a-systems-approach).
 
 ## Sessions and state
 
@@ -297,14 +326,29 @@ The model itself keeps nothing between calls.
 
 ### Where lasting state lives
 
-Anything that must outlive a session goes into files the next session reads:
+Anything that must outlive a session goes somewhere the next session reads, or into a check that runs regardless:
 
-- Context files (`CLAUDE.md`, `AGENTS.md`) for rules and project knowledge.
-- Memory files for lessons learned and preferences.
-- A task tracker or plan document for what is done and what is next.
-- The code and its git history, which are the most reliable record of all.
+| State | Where it lives |
+|---|---|
+| A rule that must always hold | a hook, a test or a CI check, with a `CLAUDE.md` line explaining it |
+| Project knowledge and conventions | context files: `CLAUDE.md` or `AGENTS.md` |
+| Corrections and preferences Claude picks up | auto memory, which Claude writes itself and loads at every start |
+| What is done and what is next | a plan file or task tracker |
+| What changed and why | the code and its git history |
+
+### Picking a session up again
+
+| Command | What it does |
+|---|---|
+| `claude -c` | continues the most recent session in this directory |
+| `claude -r` | opens a picker of earlier sessions, or resumes one by ID or name |
+| `/branch` | branches the conversation to try another direction, keeping the original |
+| `/clear` | starts a new conversation; context files and memory still load |
 
 ### Worked example: resuming the next morning
+
+![Sequence diagram: in the afternoon you ask session 1 to migrate the orders schema; context files load; it commits tables A and B; you ask it to wrap up and it writes the plan file with done, next and watch out. The next morning you ask session 2 to continue; it loads the context files and the plan file, so it knows the next table and the nullable column; it runs make migrate for orders and updates the plan file]({{ '/assets/images/01-agentic-ai-fundamentals/session-handoff.svg' | relative_url }}){: style="width: 100%" }
+*Figure: two sessions on one task. The only link between them is what session 1 wrote to disk.*
 
 An agent spends an afternoon on a migration and stops halfway. Before stopping, it writes a plan file:
 
@@ -325,15 +369,30 @@ Watch out: C has a nullable foreign key.
 
 ### Permissions
 
-Because the client runs every tool, it can ask first. Claude Code manages permissions with `/permissions` and `settings.json`.
+![Diagram: the path of one tool call, top to bottom. The model writes a tool call; if a deny rule matches it is refused; otherwise a PreToolUse hook may block it; otherwise, if an allow rule or the permission mode permits it, the tool runs; if nothing covers it, the client asks you, and an approval lets the tool run while a rejection is a refusal]({{ '/assets/images/01-agentic-ai-fundamentals/permission-decision-path.svg' | relative_url }}){: style="width: 100%" }
+*Figure: one tool call's path through the client's checks, simplified; [Permissions and untrusted input]({{ '/sections/01-agentic-ai-fundamentals/permissions-and-untrusted-input.html' | relative_url }}#the-order-claude-code-uses) gives the exact order.*
+
+Because the client runs every tool, it can ask first. Claude Code has two controls:
+
+- a permission mode, which sets the default for everything else;
+- allow, ask and deny rules in `settings.json`, managed with `/permissions`.
 
 | Rule list | Effect | Example |
 |---|---|---|
-| allow | runs without asking | `Bash(npm run test:*)` |
-| ask | always asks you | `Bash(git push:*)` |
-| deny | refused outright | `Edit(build/**)` |
+| deny | refused outright; checked first | `Edit(build/**)` |
+| ask | always asks you | `Bash(git push *)` |
+| allow | runs without asking | `Bash(npm run test *)` |
 
-Tight permissions mean many prompts, and loose ones mean more risk. Hooks and an approval classifier let long runs proceed with fewer prompts (see [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }})).
+| Mode | Runs without asking |
+|---|---|
+| `default` (Manual) | reads only |
+| `acceptEdits` | file edits and common filesystem commands |
+| `plan` | nothing; the agent researches and proposes |
+| `auto` | what a classifier model judges safe |
+| `dontAsk` | nothing; anything that would ask is denied, for CI |
+| `bypassPermissions` | everything; isolated containers only |
+
+Shift+Tab cycles the common modes in a session. Tight permissions mean many prompts, and loose ones mean more risk; `auto` mode and hooks let long runs proceed with fewer prompts (see [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }})).
 
 ### Untrusted input
 
@@ -358,33 +417,43 @@ You allow `git commit` without a prompt but want every `git push` to ask first.
 2. A permission rule enforces it on every call:
 
    ```json
-   { "permissions": { "allow": ["Bash(git commit:*)"], "ask": ["Bash(git push:*)"] } }
+   { "permissions": { "allow": ["Bash(git commit *)"], "ask": ["Bash(git push *)"] } }
    ```
 
-3. Keep the context-file line too. It tells the model why, so it stops attempting the push without asking.
+3. The rule matches the command text, so a form such as `git -C . push` gets past it. Branch protection on the remote, or a hook that parses `git` commands, covers those.
+4. Keep the context-file line too. It tells the model why, so it stops attempting the push without asking.
 
 ## Common failure modes
 
-| Failure | What it looks like | First thing to check |
-|---|---|---|
-| Missing context | The agent breaks a rule you never told it, or told it only in chat | Is the rule in a file the client loads? |
-| Too much context | The agent misses an instruction it was given | How full is the window, and what is filling it? |
-| Wrong tool | The agent edits with a shell command when a file tool would be checked | Are the tool descriptions clear? |
-| No exit | The agent repeats the same failing step | Does the task have a stop condition and a limit? |
-| False report | The agent says it ran the tests when it did not | Check the tool calls and the files, never the summary alone |
+| Failure | What it looks like | First thing to check | Fix that holds |
+|---|---|---|---|
+| Missing context | the agent breaks a rule you never told it, or told it only in chat | is the rule in a file the client loads? | a check that enforces it, plus a `CLAUDE.md` line |
+| Too much context | the agent misses an instruction it was given | `/context`: how full is the window, and what fills it? | trimmed output, `/clear` between tasks, sub-agents for large reads |
+| Wrong tool | the agent edits with a shell command where a file tool can be checked | are the tool descriptions clear? | deny rules by path, and a hook for scripts that write files |
+| No exit | the agent repeats the same failing step | does the task have a stop condition and a limit? | a capped completion check and `--max-turns` |
+| False report | the agent says it ran the tests when it did not | the tool calls and the files, never the summary alone | a `Stop` hook or CI job that runs the tests itself |
 
-Most agent mistakes look like the first row: the agent did something reasonable with the context it had, and the context was missing something. Suppose your project has a rule that every change needs a new regression test. If that rule is written in a file the agent loaded at the start, it will usually follow it. If the rule lives only in your head, or in a document the agent never opened, it cannot.
+Most agent mistakes look like the first row: the agent did something reasonable with the context it had, and the context was missing something.
+
+### Worked example: the missing regression test
+
+1. Your project requires a new regression test with every bug fix, and the agent fixes a bug without one.
+2. Writing the rule in `CLAUDE.md` makes the agent follow it most of the time.
+3. A CI check that fails a bug-fix change with no change under `tests/` enforces it every time.
+4. The `CLAUDE.md` line stays, so the agent writes the test before the check has to refuse the change.
 
 ## How the rest of the site builds on this
 
-A harness is the set of things you put around this loop. Each part attaches at one point of it:
+A harness is the set of things you put around this loop. Its parts follow the four layers of the [systems approach]({{ '/' | relative_url }}#a-systems-approach), and each attaches at one point of the loop:
 
-1. Context files decide what is in the window at the start of every session ([Context files]({{ '/sections/04-context-files/' | relative_url }})).
-2. Tools and skills decide what the agent can do ([Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }})).
-3. Permissions, hooks and checks run where the client handles each tool call, and can refuse an action ([Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }})).
-4. Memory and plan files carry state across sessions ([Context window and memory]({{ '/sections/11-context-window/' | relative_url }})).
+| Layer | Attaches at | Covered in |
+|---|---|---|
+| 1. Instructions: context files, skills' text, prompts | what is in the window at the start | [Context files]({{ '/sections/04-context-files/' | relative_url }}), [Templates]({{ '/sections/07-templates-and-stubs/' | relative_url }}) |
+| 2. Workflows and tools | what the agent can do, and in what order | [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}) |
+| 3. Hooks, scripts and linters | the moment the client handles a tool call, or the agent tries to stop | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
+| 4. Validation and tests | before a change lands | [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}) |
 
-[AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) puts the parts together.
+Memory and plan files carry state across sessions ([Context window and memory]({{ '/sections/11-context-window/' | relative_url }})). [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) puts the parts together.
 
 ## Topic pages
 
@@ -398,10 +467,13 @@ A harness is the set of things you put around this loop. Each part attaches at o
 
 ## Sources
 
-- Context window sizes and compaction behaviour: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-08.
+- Context window sizes, what survives compaction, `/context`, `/compact`, `/clear` and `/rewind`: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
 - `/goal` and its evaluator: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
-- `/permissions` and permission modes: <https://code.claude.com/docs/en/permission-modes.md>, verified 2026-11-09.
-- The agent loop as a general description: not yet verified against <https://code.claude.com/docs/en/overview.md>.
-- The tool definition and session excerpt above are illustrations written for this page.
+- Permission modes and Shift+Tab: <https://code.claude.com/docs/en/permission-modes.md>, verified 2026-11-09.
+- Rule precedence and what Bash rules miss: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- `--max-turns`, `--max-budget-usd`, `-c` and `-r`: <https://code.claude.com/docs/en/cli-reference.md>, verified 2026-11-09.
+- Tool search and `Bash` output limits: <https://code.claude.com/docs/en/mcp.md> and <https://code.claude.com/docs/en/tools-reference.md>, verified 2026-11-09.
+- Tool definitions and `tool_use` calls: <https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview>, verified 2026-11-09.
+- The tool definition, session excerpt and worked examples are illustrations written for this page.
 
 {% include page_nav.html %}

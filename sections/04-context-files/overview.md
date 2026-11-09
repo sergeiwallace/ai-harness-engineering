@@ -12,7 +12,16 @@ permalink: /sections/04-context-files/
 
 As of 2026-11-09. Slide: [stop 4 on the talk page]({{ '/talk/' | relative_url }}#stop-4-6-minutes), "Context files".
 
-A context file is a plain Markdown file of instructions that the client loads into the model's context: `CLAUDE.md` for Claude Code, `AGENTS.md` for Codex and several other tools. Whatever you write there, the agent sees at the start of every session: how to build and test, the conventions, the commands to avoid, the mistakes you have corrected before. It is the cheapest part of a harness to write and the first one to add. This overview covers what goes in one, how the files load and unload during a session, how to keep the always-loaded part short, and how to stop the files going stale. Each part links down to a topic page.
+A context file is a plain Markdown file of instructions that the client loads into the model's context: `CLAUDE.md` for Claude Code, `AGENTS.md` for Codex and several other tools. The agent sees it at the start of every session: how to build and test, the conventions, the commands to avoid. It is the cheapest part of a harness to write and the first one to add, and it guides behaviour without enforcing anything.
+
+This overview covers, in order:
+
+1. What a context file is for, and where it sits among the layers of a harness.
+2. How the files load and unload during a session, in Claude Code and in Codex.
+3. How to keep the always-loaded part short, and how to write rules that get followed.
+4. What to do when a mistake repeats, how to keep the files current, and how to check what loaded.
+
+Each part links down to a topic page; the [pages in this section](#pages-in-this-section) are listed at the end.
 
 ![Sequence of one session: the client loads user, project, local and parent files at launch; reading a file in api loads api/CLAUDE.md; editing a test loads the tests path rule; a shell write loads nothing; compaction re-reads only the root file and unscoped rules, and the nested file returns when api is touched again]({{ '/assets/images/04-context-files/loading-sequence.svg' | relative_url }})
 
@@ -68,24 +77,42 @@ See [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) for the sy
 
 ### The stack for one working directory
 
-The files that apply when the agent works in `repo/api` differ by client. In both, files closer to the working directory are read later and take precedence. The sequence at the top of this page shows when each Claude Code file enters the window.
+The files that apply when the agent works in `repo/api` differ by client.
+
+- In both, files closer to the working directory are read later.
+- Codex documents that the later files take precedence; Claude Code concatenates them, and when two lines contradict each other the model may follow either.
+- The sequence at the top of this page shows when each Claude Code file enters the window.
 
 #### Claude Code
 
 | Level | Location | Loads |
 |---|---|---|
-| User | `~/.claude/CLAUDE.md` | At launch, every project |
+| Managed policy | `/etc/claude-code/CLAUDE.md` (Linux), `/Library/Application Support/ClaudeCode/CLAUDE.md` (macOS) | At launch, every user on the machine; cannot be excluded |
+| User | `~/.claude/CLAUDE.md`, and `~/.claude/rules/` | At launch, every project |
 | Project | `CLAUDE.md` or `.claude/CLAUDE.md` at the root | At launch |
 | Local | `CLAUDE.local.md` | At launch; personal, not committed |
 | Parent directories | `CLAUDE.md` above the working directory | At launch |
-| Subdirectory | `CLAUDE.md` below the working directory | When the agent reads or edits a file there |
-| Path rule | `.claude/rules/*.md` with `paths:` | When a file tool touches a matching path |
+| Unscoped rule | `.claude/rules/*.md` without `paths:` | At launch |
+| Subdirectory | `CLAUDE.md` below the working directory | When the agent reads, writes or edits a file there; `cat` or `head` on one file counts as a read |
+| Path rule | `.claude/rules/*.md` with `paths:` | When the agent reads, writes or edits a matching file |
 
-A file can import another with `@path`, up to four levels deep.
+- The files are concatenated, root first, so instructions nearer the working directory are read last; within a directory, `CLAUDE.local.md` comes after `CLAUDE.md`.
+- A file can import another with `@path`; paths resolve from the importing file, up to four hops, and an `@path` inside backticks is left as text.
+- Block-level HTML comments (`<!-- maintainer notes -->`) are stripped before the content reaches the model.
 
 #### Codex
 
 Codex reads a global `AGENTS.md` from its home directory, then walks from the project root to the working directory and includes at most one file per directory, checking `AGENTS.override.md` first. It stops at 32 KiB in total by default (`project_doc_max_bytes`).
+
+#### AGENTS.md in Claude Code
+
+| Your repository has | Claude Code reads |
+|---|---|
+| An `AGENTS.md`, and no `CLAUDE.md` or `CLAUDE.local.md` in the working directory or above | The `AGENTS.md` |
+| An `AGENTS.md` and a `CLAUDE.md` | The `CLAUDE.md` files only |
+| A `CLAUDE.md` that imports `@AGENTS.md` | Both, through the import |
+
+The Project instructions setting in `/config` changes this, for example to read both files (`claude-md-and-agents-md`).
 
 The full rules, the Codex walk and running both clients on one repository are on [How context files load]({{ '/sections/04-context-files/how-context-files-load.html' | relative_url }}).
 
@@ -95,13 +122,18 @@ When the window fills and the history is summarised, Claude Code re-reads the pr
 
 #### Why a rule disappeared
 
-A rule in `api/CLAUDE.md` says "every handler returns a typed error". The agent follows it all morning. After a compaction, it writes a new handler with a shell command, without reading any existing file in `api/`. The nested file never loads again, and the new handler returns a plain string.
+1. A rule in `api/CLAUDE.md` says "every handler returns a typed error", and the agent follows it all morning.
+2. Compaction runs, and the nested file is summarised away.
+3. The agent writes a new handler with a shell command (`cat > api/refund.py`), without reading any file in `api/`.
+4. The nested file never loads again, and the new handler returns a plain string.
 
-| Fix | Why it works |
-|---|---|
-| Move the rule to a path rule on `api/**` | Loads when any file tool touches a file in `api/`, the new one included |
-| Move it to the root file, if it is short | The root file survives compaction |
-| Back it with a hook that checks handlers | Holds even in shell-only work |
+| Fix | What it covers | What it misses |
+|---|---|---|
+| A check in the test suite or a linter that rejects a handler without a typed error | Every handler, however it was written | Nothing it can detect |
+| Move the rule to the root file, if it is short | Survives compaction | Costs context on every turn |
+| A path rule on `api/**` | Loads on the next read, write or edit of a file in `api/` | A file created with a shell write |
+
+The check enforces the rule; a line in the context file explains it.
 
 [Context files after compaction]({{ '/sections/04-context-files/after-compaction.html' | relative_url }}) goes through each case.
 
@@ -113,7 +145,9 @@ A rule in `api/CLAUDE.md` says "every handler returns a typed error". The agent 
 |---|---|
 | Context on every turn | Every always-loaded line is in the window for every request |
 | Uneven following | A long file is followed less reliably than a short one |
-| Claude Code guidance | Keep each `CLAUDE.md` under 200 lines |
+| Claude Code guidance | Target under 200 lines per `CLAUDE.md`; Claude Code warns at startup and in `/status` when a file is over the recommended length |
+| Claude Code hard limits | A file over 4 MiB is skipped; a subdirectory file or path rule over 40,000 characters (200K window) is cut, and the agent sees only its start |
+| Imports | Help organise a file but do not reduce its cost; an imported file loads with the file that imports it |
 | Codex limit | Reading stops at 32 KiB in total (`project_doc_max_bytes`) |
 
 Two techniques keep the always-loaded part short: hub and spoke, and path-scoped rules.
@@ -146,7 +180,11 @@ paths: ["tests/**/*.py"]
 - Name tests test_<given>_<when>_<then>.
 ```
 
-> Path rules load only when a file tool touches a matching path. An agent that writes a file with `cat > file` never sees them.
+- A path rule loads when the agent reads, writes or edits a matching file; `cat` or `head` on one file counts as a read.
+- A file created with a shell write (`cat > file`, a generator) does not load it.
+- `paths` takes a YAML list or a comma-separated string, with globs such as `src/**/*.{ts,tsx}`.
+
+> For a procedure used only on some tasks, such as a release, a [skill]({{ '/sections/05-skills-and-plugins/' | relative_url }}) is the better home: it loads only when invoked or matched, where a rule loads on every matching file.
 
 The pattern, its trade-offs and the limits of path rules are on [Hub and spoke and path rules]({{ '/sections/04-context-files/hub-and-spoke-and-path-rules.html' | relative_url }}).
 
@@ -159,8 +197,12 @@ The pattern, its trade-offs and the limits of path rules are on [Hub and spoke a
 | Be careful with the database. | Never run migrations against production. Use `make migrate-staging`. |
 | Write good tests. | Every bug fix starts with a failing test that reproduces the bug. |
 | Don't break the build. | Run `make check` before every commit; it must pass. |
+| Format code properly. | Use 2-space indentation. |
+| Keep files organized. | API handlers live in `src/api/handlers/`. |
 
-A rule the agent can act on names the action, the condition and the alternative.
+- A rule the agent can act on names the action, the condition and the alternative, concretely enough to check.
+- Group related rules under headings and bullets; organised sections are followed more reliably than dense paragraphs.
+- Two rules that contradict each other get one picked arbitrarily; look for conflicts across the root file, subdirectory files and rules.
 
 ### When a mistake repeats
 
@@ -236,6 +278,35 @@ Context files go stale when the mechanisms they describe change, and they grow f
 2. Now and then, read the always-loaded file and ask, line by line, whether a recent session needed it.
 3. Move detail into spokes; delete lines for problems newer models no longer have.
 4. When an agent repeats a mistake, fix it in a workflow, hook or test in the same session, and replace any detailed rule about it with one explaining line.
+5. Run `/doctor prompt-audit` in Claude Code: it reports instructions written for older models, references to files or commands that no longer exist, and files that contradict each other, and changes nothing until you ask.
+
+## Context files and auto memory
+
+Claude Code has a second memory, which the agent writes itself.
+
+| | Context files | Auto memory |
+|---|---|---|
+| Who writes it | You | The agent |
+| What it holds | Instructions and rules | Notes of four kinds: about you, your corrections and confirmed approaches, ongoing project facts, and where to find outside references |
+| Where | `CLAUDE.md` files and rules | `~/.claude/projects/<project>/memory/`, shared by all worktrees of a repository, local to the machine |
+| What loads at start | Each file in full (up to 4 MiB) | The first 200 lines or 25 KB of the `MEMORY.md` index; topic files are read on demand |
+| Turn off | | The toggle in `/memory`, `"autoMemoryEnabled": false`, or `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` |
+
+- Asking "remember that the API tests need a local Redis" saves to auto memory; "add this to CLAUDE.md" edits the context file.
+- Both are context; neither is enforced. Codex has `/memories` for its own memory.
+
+## Checking what loaded
+
+| Question | How to answer it |
+|---|---|
+| Which files loaded at launch? | `/context all`, the list under Memory files |
+| Did a subdirectory file load? | A `Loaded` line with its path appears in the terminal when it loads |
+| Which files and memory locations exist? | `/memory` lists them and opens any one for editing |
+| Why did a rule load, and when? | An `InstructionsLoaded` hook can log each file as it loads |
+| Did Claude Code read my `AGENTS.md`? | `/memory` lists its path |
+| Are any files too long? | Startup warnings, and `/status` |
+
+<!-- IMAGE NEEDED: the Claude Code /context output listing Memory files (CLAUDE.md, rules) with their share of the context window; search: "Claude Code /context command", "Claude Code context window usage" -->
 
 ## Examples from my own harness
 
@@ -271,7 +342,7 @@ See [Compiled shared context files]({{ '/sections/04-context-files/compiled-shar
 | A user-level file | You work with two clients or on two machines |
 | A compiled shared file | The shared file needs a size budget and a rollback |
 
-## Topic pages
+## Pages in this section
 
 | Page | What it covers |
 |---|---|
@@ -283,7 +354,7 @@ See [Compiled shared context files]({{ '/sections/04-context-files/compiled-shar
 
 ## Sources
 
-- Claude Code loading order, levels, imports, `AGENTS.md` behaviour, path rules and the 200-line suggestion: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08.
+- Claude Code levels, load order, imports, HTML comments, `AGENTS.md` handling, path rules, size limits, auto memory, `/doctor prompt-audit` and troubleshooting: <https://code.claude.com/docs/en/memory.md>, read 2026-11-09.
 - Path rules and nested files after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
 - `/init` and `/memory`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
 - Codex `AGENTS.md`, the global file, overrides and the 32 KiB cap: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, read 2026-11-09.

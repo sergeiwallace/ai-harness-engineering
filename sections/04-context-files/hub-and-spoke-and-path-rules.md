@@ -12,7 +12,12 @@ redirect_from:
 
 As of 2026-11-09. Part of [Context files]({{ '/sections/04-context-files/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
-Two techniques keep the always-loaded part of the context small without losing the detail. Hub and spoke keeps one line per rule in the context file and moves the detail to procedure documents the agent reads when a trigger fires. Path-scoped rules keep rules for one kind of file out of the window until the agent touches such a file. This page covers both, how they fail, and when to use which.
+Two techniques keep the always-loaded part of the context small without losing the detail:
+
+- Hub and spoke keeps one line per rule in the context file and moves the detail to procedure documents, or skills, that load when a task needs them.
+- Path-scoped rules keep the rules for one kind of file out of the window until the agent works on such a file.
+
+This page covers both, how they fail, and when to use which.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -87,11 +92,29 @@ A spoke is a procedure: numbered steps, the commands, the checks, what to do whe
 
 > A spoke that grows to thousands of lines is no easier to follow than a long context file. Give each spoke a size budget too, and split it when it grows.
 
+### Spoke document or skill
+
+Claude Code's documentation recommends skills for task-specific instructions that do not need to be in context all the time. A skill is a spoke with its trigger built in.
+
+| | Spoke document | Skill |
+|---|---|---|
+| What starts the read | The agent follows the trigger in the hub line | The model matches the skill's description to the task, or you type `/name` |
+| Always in context | The hub line | The skill's name and description |
+| Loads in full | When the agent reads the document | When the skill is invoked |
+| Works in both clients | Yes, any Markdown file | Both have skills, in different folders |
+| Good for | Reference material several tasks point to | A repeatable procedure with its own steps and checks |
+
+In practice a release procedure fits well as a skill, and a long style guide that several tasks consult fits well as a spoke. See [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+
 ## Path-scoped rules
 
 ### How they work
 
-A path rule is a Markdown file in `.claude/rules/` with a `paths:` list of globs in its frontmatter. It loads only when a file tool reads or edits a matching file. A rule with no `paths:` loads at launch like a context file.
+A path rule is a Markdown file in `.claude/rules/` with a `paths` field of globs in its YAML frontmatter.
+
+1. At launch, rules without `paths` load like a context file; rules with `paths` wait.
+2. When the agent reads, writes or edits a matching file, the rule loads. Viewing one file with `cat` or `head` counts as a read.
+3. It stays loaded until a compaction summarises it away, and loads again on the next matching file.
 
 ```markdown
 ---
@@ -100,6 +123,23 @@ paths: ["docs/**/*.md"]
 - Every new page gets a "Sources" section with a verification date per source.
 - No em dashes; use a comma or a full stop.
 ```
+
+### Writing the paths
+
+| Detail | Rule |
+|---|---|
+| Format | A YAML list, or a comma-separated string |
+| Base directory | Project rules: the directory that contains the rule's `.claude` folder. User rules in `~/.claude/rules/`: the session's working directory |
+| `**/*.ts` | `.ts` files anywhere under the base directory |
+| `src/**/*` | Every file under `src/` |
+| `/*.md` | `.md` files directly in the base directory only |
+| Braces | `src/**/*.{ts,tsx}` matches both extensions |
+| Other frontmatter fields | Ignored; `paths` is the only field read |
+
+### Sharing rules
+
+- `~/.claude/rules/` holds personal rules that apply in every project on the machine.
+- `.claude/rules/` supports symlinks, so one set of rules can be linked into several projects. A link whose target is outside the working directory is treated like an external import and needs approval once per project.
 
 ### When to use them
 
@@ -118,6 +158,7 @@ Use a path rule when the rule applies to one kind of file: tests, docs, migratio
 |---|---|---|
 | Shell-only work | A file written with `cat > file` or a generator never loads the rule | Enforce the important rules with a hook or linter that checks the file |
 | Compaction | A loaded rule is summarised away and returns only on the next matching touch | See [Context files after compaction]({{ '/sections/04-context-files/after-compaction.html' | relative_url }}) |
+| Size | A rule that loads on demand and is over 40,000 characters (200K window) loads only its start | Split it into several rule files; each counts on its own |
 | Codex | Path-scoped rules are not documented | Put an `AGENTS.md` in the folder that holds those files |
 
 > A path rule is still an instruction. For a convention that must hold on every file of a kind, a linter on those paths does the enforcing and the rule explains it.
@@ -126,10 +167,11 @@ Use a path rule when the rule applies to one kind of file: tests, docs, migratio
 
 | The detail is | Use |
 |---|---|
-| A procedure for an occasional task (release, migration, incident) | Hub and spoke |
+| A repeatable procedure for an occasional task (release, migration, incident) | A skill, or a spoke document with a trigger line |
+| Reference material several tasks consult | A spoke document |
 | Conventions for one kind of file, needed whenever such a file is edited | A path rule |
-| Rules for one folder, entered through file reads | A subdirectory `CLAUDE.md` |
-| A rule that must hold every time | Any of the above, plus a hook or check |
+| Rules for one folder | A subdirectory `CLAUDE.md` |
+| A rule that must hold every time | A hook, linter or test that enforces it, plus one of the above to explain it |
 
 ## Examples from my own harness
 
@@ -142,7 +184,7 @@ Use a path rule when the rule applies to one kind of file: tests, docs, migratio
 
 ## Sources
 
-- Path rules: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08; after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
+- Path rules (loading, glob syntax, base directories, frontmatter, symlinks, user-level rules, size limits) and the recommendation to use skills for task-specific instructions: <https://code.claude.com/docs/en/memory.md>, read 2026-11-09; after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
 - Hub and spoke is from the author's own harness, described conceptually. Example files are illustrations written for this page.
 
 {% include page_nav.html %}

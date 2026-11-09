@@ -40,6 +40,8 @@ This page sets the two clients side by side, building block by building block: w
 | Work in a git worktree | `/batch` units and background sessions run in their own worktrees | `/worktree` |
 | Import another setup | none | `/import` reads Claude Code or Cursor setups |
 
+<!-- IMAGE NEEDED: Claude Code and the Codex CLI side by side in two terminals on the same repository; search: "Claude Code vs Codex CLI", "Codex CLI terminal", "Claude Code terminal" -->
+
 ## Building block by building block
 
 ### Context files
@@ -48,12 +50,12 @@ This page sets the two clients side by side, building block by building block: w
 
 | Step | Claude Code | Codex |
 |---|---|---|
-| 1 | User file `~/.claude/CLAUDE.md` | Global file in `~/.codex` (or `CODEX_HOME`): `AGENTS.override.md` if present, else `AGENTS.md` |
+| 1 | Managed policy file, then user file `~/.claude/CLAUDE.md` | Global file in `~/.codex` (or `CODEX_HOME`): `AGENTS.override.md` if present, else `AGENTS.md` |
 | 2 | Every `CLAUDE.md` from the root down to the working directory, at launch | One file per directory from the project root down to the working directory |
 | 3 | `CLAUDE.local.md` and unscoped rules, at launch | In each directory: `AGENTS.override.md`, then `AGENTS.md`, then fallback names |
 | 4 | A subdirectory's file when the agent first reads or edits a file there | Stops at 32 KiB in total |
 
-In both, files closer to the working directory come later and take precedence. The whole walk is on [How context files load]({{ '/sections/04-context-files/how-context-files-load.html' | relative_url }}).
+In both, files closer to the working directory come later. Codex documents that they take precedence; Claude Code concatenates the files, and contradicting lines may be followed either way. The whole walk is on [How context files load]({{ '/sections/04-context-files/how-context-files-load.html' | relative_url }}).
 
 #### Size limits
 
@@ -67,7 +69,7 @@ In both, files closer to the working directory come later and take precedence. T
 
 #### Reading the other client's file
 
-- Claude Code reads `AGENTS.md` only when no `CLAUDE.md` exists in the working directory or above it, unless a setting changes that.
+- Claude Code reads `AGENTS.md` only when no `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` exists in the working directory or above it; the Project instructions setting can make it read both.
 - Codex adds alternate file names through `project_doc_fallback_filenames`.
 
 ### Skills

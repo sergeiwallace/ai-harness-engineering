@@ -10,7 +10,12 @@ nav_order: 4
 
 As of 2026-11-09.
 
-A model keeps nothing between calls, so everything an agent "remembers" is something the client sends again or something written to a file. A session is the client's record of one conversation. This page explains what a session holds, how to resume, continue and fork one, how to hand work from one session to the next, and which kind of state belongs where. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#sessions-and-state) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers memory systems in more depth.
+A model keeps nothing between calls, so everything an agent "remembers" is something the client sends again or something written to a file. A session is the client's record of one conversation. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#sessions-and-state) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers memory systems in more depth. This page covers:
+
+- what a session holds, and what it does not;
+- resuming, continuing, branching and forking a session in Claude Code;
+- handoff notes, and how to make sure they get written;
+- where each kind of state belongs, from a plan file to a check in CI.
 
 > The model keeps nothing between sessions. Work carries over through files the next session reads: context files, plan files, memory files and git history.
 {: style="border-left: 4px solid #0f766e; background: #f0fdfa; padding: 0.75rem 1rem;"}
@@ -60,22 +65,27 @@ The model sees a longer list each time; it has no memory of turn 1 other than tu
 
 | Goal | Claude Code | What you get |
 |---|---|---|
-| Pick up the most recent session in this directory | `claude --continue` | the same transcript, the conversation carries on |
-| Pick any earlier session | `claude --resume`, or `/resume` inside a session | a list of sessions to choose from |
-| Try another approach without losing this one | fork the session (resume with the fork option, or `/fork`) | a copy that diverges from here |
-| Start clean | a new `claude`, or `/clear` | an empty conversation; context files still load |
+| Pick up the most recent session in this directory | `claude -c` (`--continue`) | the same conversation carries on; sessions started with `claude -p` are skipped |
+| Pick a particular earlier session | `claude -r` (`--resume`) with an ID or name, `claude -r` alone for a picker, or `/resume` inside a session | the chosen conversation |
+| Name a session so it is easy to find | `claude -n "orders-migration"`, or `/rename` mid-session | the name appears in `/resume` and the terminal title |
+| Try another direction without losing this one | `/branch` | a branch of the conversation at this point; you switch into it, and the original stays available through `/resume` |
+| Resume, but as a new session | `claude -r <id> --fork-session` | a copy with a new session ID; the original is untouched |
+| Hand a copy to a background agent | `/fork` | the conversation copied into a new background session while you keep working here |
+| Start clean | `/clear`, optionally with a name for the old conversation | an empty conversation; project memory and context files still load |
 
-Exact flags change between versions; `claude --help` and the documentation list the current ones.
+Two things come back on resume without being in the transcript's text:
+
+- an active `/goal` is restored, with its turn count and timer reset;
+- the system prompt recorded on the conversation's first request is reused until the next compaction.
 
 ### When to resume and when to start fresh
 
-#### Resume
-
-The task is the same, the transcript is not too long, and the details in it (errors seen, files read) are still useful.
-
-#### Start fresh
-
-The task is different, the old session is near its window limit or has been compacted several times, or it went down a wrong path you do not want the model to keep seeing.
+| Situation | Resume | Start fresh |
+|---|---|---|
+| Same task, short transcript | yes: errors seen and files read are still useful | |
+| Different task | | yes, so the old task's history does not crowd the new one |
+| Near the window limit, or compacted several times | | yes, with a handoff note |
+| The session went down a wrong path | | yes; or `/rewind` to before the wrong turn |
 
 > A resumed session still contains its earlier mistakes. If the last session went down a wrong path, start a fresh session with a handoff note.
 {: style="border-left: 4px solid #b91c1c; background: #fef2f2; padding: 0.75rem 1rem;"}
@@ -112,7 +122,14 @@ A handoff note is a short file the next session reads first. It carries work acr
 - Kept the old column for one release so rollback stays possible.
 ```
 
-Four headings cover almost every case: what is done, what is next (with the exact command), what to watch out for, and decisions with their reasons.
+| Heading | What it holds | Why the next session needs it |
+|---|---|---|
+| Done | finished steps, with how they were checked | so it does not redo or re-verify them |
+| Next | the next step and the exact command | so it can start in the first minute |
+| Watch out | traps found along the way | so it does not rediscover them by failing |
+| Decisions | choices made and their reasons | so it does not reopen them |
+
+Plan mode writes a plan to disk too, and Claude Code re-injects that plan after compaction.
 
 ### Worked example: resuming the next morning
 
@@ -130,14 +147,30 @@ Without the note, step 3 becomes reading code and git history, and the null valu
 
 ### Making it automatic
 
+The [systems approach]({{ '/' | relative_url }}#a-systems-approach) applies here as anywhere: the note is written reliably when a layer below the instruction asks for it.
+
+| Layer | Mechanism | How reliable |
+|---|---|---|
+| Instruction | a line in `CLAUDE.md`: "before stopping, update the plan file with done, next, watch out and decisions" | most of the time |
+| Workflow | a wrap-up skill that writes the note in the fixed format | whenever it is run |
+| Hook | a `Stop` hook that blocks the stop when the plan file has not changed this session; a `PreCompact` hook that reminds the agent before compaction | every time it fires |
+
 <details markdown="1">
-<summary>Three ways to make sure the note gets written</summary>
+<summary>A Stop hook that asks for the note</summary>
 
-1. An instruction in the project's context file: "before stopping, or when asked to wrap up, update the plan file with done, next, watch out and decisions".
-2. A skill or command that writes the note in a fixed format, which you or the agent can run before a planned stop or a compaction.
-3. A `Stop` or pre-compaction hook that checks the plan file was updated in this session and reminds the agent if not.
+```bash
+#!/bin/bash
+INPUT=$(cat)
+[ "$(echo "$INPUT" | jq -r '.stop_hook_active')" = "true" ] && exit 0
+# block the stop if there is uncommitted work but PLAN.md has not changed
+other_changes=$(git status --porcelain | grep -v ' PLAN.md$')
+if [ -n "$other_changes" ] && git diff --quiet -- PLAN.md; then
+  echo '{"decision": "block", "reason": "Update PLAN.md with done, next, watch out and decisions before stopping."}'
+fi
+exit 0
+```
 
-The first works most of the time; the third works every time. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers the trade-off.
+The `stop_hook_active` check lets the agent stop on the second attempt, so the hook cannot loop. [How an agent run ends]({{ '/sections/01-agentic-ai-fundamentals/how-a-run-ends.html' | relative_url }}#a-stop-hook) explains Stop hooks.
 </details>
 
 ## Where each kind of state belongs
@@ -146,12 +179,15 @@ The first works most of the time; the third works every time. [Hooks, scripts an
 
 | Kind of state | Lifetime | Best home | Loaded how |
 |---|---|---|---|
-| Project rules and conventions | months | context file (`CLAUDE.md`, `AGENTS.md`) | automatically at every start |
-| Personal preferences | months | your user-level context file | automatically, in every project |
-| Lessons learned from mistakes | weeks to months | a memory file, or promoted into a rule | at start, or on demand |
+| A rule that must hold | as long as the project | a check: a hook, a lint rule, a test, a CI job | runs whatever the context holds |
+| Project conventions and knowledge | months | the project `CLAUDE.md` or `AGENTS.md` | automatically at every start |
+| Personal preferences | months | `~/.claude/CLAUDE.md`, or `CLAUDE.local.md` for one project | automatically |
+| Corrections and preferences Claude picks up | weeks to months | auto memory, which Claude writes itself, per repository | the first 200 lines or 25 KB at every start; `/memory` to view and edit |
 | Current task progress | days | a plan file or task tracker | read first by the next session |
 | What changed and why | permanent | git commits and their messages | `git log` when needed |
 | The detailed record of one run | as long as you keep it | the session transcript | resume, or read for an audit |
+
+A lesson learned from a mistake starts in a plan file or auto memory. If it must hold for every session, it moves up to a check, and the context-file line stays as the explanation.
 
 ### Worked example: one fact, three places
 
@@ -168,14 +204,20 @@ Writing only a new context-file rule ("run `make reset-test-db` before `make tes
 ## Pitfalls
 
 - Relying on the transcript as memory. Compaction and fresh sessions lose it; write decisions, next steps and traps to files.
-- Resuming a confused session. A clean start with a good note beats carrying the confusion.
-- Notes without commands. "Continue the migration" is weak; "run `make migrate TABLE=orders`" is a handoff.
-- State in two places that disagree. If the plan file and the tracker say different things, the next session picks one at random.
+- Resuming a confused session. Start fresh with a handoff note, or `/rewind` to before the wrong turn.
+- Notes without commands. "Continue the migration" leaves the next session to work out how; "run `make migrate TABLE=orders`" does not.
+- State in two places that disagree. If the plan file and the tracker say different things, the next session may follow either.
+- Editing `CLAUDE.md` mid-session and expecting the running session to see it. The edit loads on the next `/clear`, `/compact` or restart.
+- A gitignored `CLAUDE.local.md` exists only in the worktree where you created it; import a file from your home directory to share it across worktrees.
 
 ## Sources
 
-- Resuming and continuing sessions: <https://code.claude.com/docs/en/cli-reference.md>, not yet verified against the primary source for this page's date.
-- Memory and context files: <https://code.claude.com/docs/en/memory.md>, not yet verified against the primary source for this page's date.
-- The handoff note, transcript sketch and examples are illustrations written for this page.
+- `--continue`, `--resume`, `--fork-session`, `--name`, and system prompts in resumed conversations: <https://code.claude.com/docs/en/cli-reference.md>, verified 2026-11-09.
+- `/resume`, `/branch`, `/fork`, `/rename`, `/clear`, `/rewind`, `/memory`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
+- `CLAUDE.md` levels, `CLAUDE.local.md`, auto memory and its loading limit: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- A goal restored on resume: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- `CLAUDE.md` edits taking effect after `/clear`, `/compact` or restart: <https://code.claude.com/docs/en/prompt-caching.md>, verified 2026-11-09.
+- The plan-mode plan re-injected after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
+- The handoff note, hook script, transcript sketch and examples are illustrations written for this page.
 
 {% include page_nav.html %}

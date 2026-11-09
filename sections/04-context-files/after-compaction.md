@@ -31,13 +31,14 @@ Compaction summarises the conversation to free the window. For context files it 
 |---|---|
 | Project-root `CLAUDE.md` | Re-read from disk |
 | Unscoped rules (no `paths:`) | Re-read from disk |
+| An instruction you gave only in the conversation | Only as far as the summary keeps it; put a lasting one in `CLAUDE.md` |
 
 ### Returns only on a touch
 
 | File | After compaction |
 |---|---|
-| Subdirectory `CLAUDE.md` | Summarised away; loads again when a file tool touches that folder |
-| Path rule | Summarised away; loads again when a file tool touches a matching path |
+| Subdirectory `CLAUDE.md` | Summarised away; loads again when the agent reads, writes or edits a file in that folder |
+| Path rule | Summarised away; loads again when the agent reads, writes or edits a matching file |
 
 ### In short
 
@@ -45,8 +46,8 @@ Compaction summarises the conversation to free the window. For context files it 
 |---|---|---|---|
 | Project-root `CLAUDE.md` | Yes | Re-read from disk | Already back |
 | Unscoped rule | Yes | Re-read from disk | Already back |
-| Subdirectory `CLAUDE.md` | No, on first touch | Gone | A file tool touches that folder |
-| Path rule | No, on first match | Gone | A file tool touches a matching path |
+| Subdirectory `CLAUDE.md` | No, on first touch | Gone | The agent reads, writes or edits a file in that folder (`cat` of one file counts) |
+| Path rule | No, on first match | Gone | The agent reads, writes or edits a matching file |
 
 The on-demand files come back the same way they came in the first time.
 
@@ -54,7 +55,10 @@ The on-demand files come back the same way they came in the first time.
 
 ### The shell write
 
-The agent's next action after compaction is a shell command that creates a file. No file tool touched the folder, so the folder's rules never return. This is the most common case.
+1. Compaction runs while the agent is working in `api/`.
+2. The agent's next action is a shell command that creates a file there.
+3. A shell write is not a read, write or edit through the file tools, so `api/CLAUDE.md` does not load.
+4. The new file is written without the folder's rules.
 
 ```text
   ... compaction ...
@@ -85,18 +89,20 @@ The summary may keep a version of a rule.
 
 ### Decision steps
 
-1. Does the rule apply everywhere in the repository? Put it in the root file.
-2. Does it apply to one kind of file (tests, migrations, docs)? Put it in a path rule with a glob for those files.
-3. Does it apply to one folder only, and is the folder always entered through file reads? A subdirectory `CLAUDE.md` is enough.
-4. Must it hold even when the agent works through the shell? Add a hook or a check that enforces it.
+1. Must the rule hold every time? Enforce it in the system: a test, a linter or a hook that checks the result. Then write a short line that explains the check, and place that line with the steps below.
+2. Does the line apply everywhere in the repository? Put it in the root file, which survives compaction.
+3. Does it apply to one kind of file (tests, migrations, docs)? Put it in a path rule with a glob for those files.
+4. Does it apply to one folder only? A subdirectory `CLAUDE.md` is enough for guidance that may lapse after a compaction.
 
 ### The typed-error rule, three ways
 
 | Placement | Holds after compaction when the agent… |
 |---|---|
+| A test or linter that rejects a handler without a typed error, run before every commit | …does anything at all; the check runs whatever is in the window |
+| Path rule on `api/**` | …reads, writes or edits any file in `api/`, including a new file created with the Write tool; a shell write still skips it |
 | `api/CLAUDE.md` | …reads or edits an existing file in `api/` first |
-| Path rule on `api/**` | …touches any file in `api/` with a file tool, a new one included |
-| Hook that checks handler return types on commit | …does anything at all; the check runs regardless |
+
+<!-- IMAGE NEEDED: a Claude Code session just after /compact, showing the compaction summary line and the context usage dropping; search: "Claude Code /compact", "Claude Code compaction summary", "context window compaction" -->
 
 ### Steering the summary
 
@@ -123,7 +129,7 @@ A focus lasts for one compaction in one session. The placements in the table abo
 |---|---|---|
 | 2 | `api/CLAUDE.md` on first touch | On-demand loading works |
 | 4 | Nothing new | Compaction removed it and the shell does not bring it back |
-| 5 | `api/CLAUDE.md` again | A file tool touch restores it |
+| 5 | `api/CLAUDE.md` again | A read or edit restores it |
 
 ### Doing the same for a path rule
 
@@ -153,7 +159,7 @@ See [Context window and memory]({{ '/sections/11-context-window/' | relative_url
 ## Sources
 
 - <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09: what is re-injected after compaction.
-- <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08: when nested files and path rules load.
+- <https://code.claude.com/docs/en/memory.md>, read 2026-11-09: when nested files and path rules load (including reads with `cat` or `head`), and instructions lost after `/compact`.
 - Failure cases and examples are written for this page.
 
 {% include page_nav.html %}

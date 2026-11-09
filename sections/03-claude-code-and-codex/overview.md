@@ -344,14 +344,14 @@ Each time the agent tried to stop before the twentieth pass, the evaluator sent 
 
 ### Background commands and Monitor
 
-Without these, an agent that starts a forty-minute test suite checks on it every few turns and spends context on "still running". With them:
+A forty-minute test suite does not have to block the session.
 
 1. The agent starts the command with `run_in_background: true` and gets a handle at once.
-2. It attaches the Monitor tool to the output, filtered to the lines that matter.
-3. It keeps working on something else.
-4. Each matching line arrives as a message the moment it is printed.
+2. It keeps working on something else, or the session goes idle.
+3. When the command finishes, its result wakes the session as a new turn. No goal, loop or polling is needed; a sub-agent's result arrives the same way.
+4. To react before it finishes, the agent can attach the Monitor tool to the output, filtered to the lines that matter.
    - A failure line lets it start on the failing test while the suite finishes.
-   - The exit line tells it the run is over.
+   - Monitor or a scheduled check also covers work the session did not start, such as another process's log.
 
 ```text
 ● Bash(python -m pytest tests -q > /tmp/run.log 2>&1; echo "EXIT $?" >> /tmp/run.log)

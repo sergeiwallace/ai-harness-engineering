@@ -109,6 +109,8 @@ Before you write any rule, Claude Code already asks for some actions and not oth
 | Web fetch | WebFetch | Yes, except preapproved documentation domains | Permanently, per repository and domain |
 | Web search | WebSearch | Yes | Permanently, per repository |
 
+<!-- IMAGE NEEDED: a Claude Code permission prompt for a Bash command, showing the command and the Yes / Yes and don't ask again / No options; search: "Claude Code permission prompt", "Claude Code allow command dialog" -->
+
 ### Rule syntax
 
 A rule names a tool and, in parentheses, what it may do.
@@ -201,7 +203,15 @@ A repository you clone cannot widen your permissions until you say so.
 
 ## Hooks in settings
 
-Hooks are configured in the same files, under `hooks`, keyed by event, with a matcher for the tool name. Two common shapes follow.
+Hooks are configured in the same settings files, under `hooks`.
+
+| Key | Holds | Example |
+|---|---|---|
+| Event name | A list of matcher groups for that event | `PreToolUse`, `PostToolUse`, `Stop`, `SessionStart` |
+| `matcher` | Which tools the group applies to | `"Bash"`, `"Edit\|Write"` |
+| `hooks` | The handlers to run | `{ "type": "command", "command": "..." }` |
+
+Two common shapes follow.
 
 ### After an edit: format the file
 

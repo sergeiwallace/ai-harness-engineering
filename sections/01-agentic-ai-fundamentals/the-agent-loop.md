@@ -12,7 +12,15 @@ has_toc: false
 
 As of 2026-11-09.
 
-The agent loop is the small program that turns a language model into an agent: send the context, read back a request for an action, carry the action out, add the result, repeat. This page takes the loop apart at the level of the messages that pass between a client and a model, shows a minimal loop in code, and marks the points where a harness attaches. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}) is the short version, and [How an agent run ends]({{ '/sections/01-agentic-ai-fundamentals/how-a-run-ends.html' | relative_url }}) covers stopping.
+The agent loop is the small program that turns a language model into an agent: send the context, read back a request for an action, carry the action out, add the result, repeat. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#the-agent-loop) is the short version. This page covers:
+
+- the messages and content blocks that pass between a client and a model, and the stop reasons the client acts on;
+- a minimal loop in code, and where it would go wrong;
+- parallel tool calls;
+- the points where each part of a harness attaches;
+- sub-agents, which are loops started from inside a loop.
+
+[How an agent run ends]({{ '/sections/01-agentic-ai-fundamentals/how-a-run-ends.html' | relative_url }}), a sub-topic of this page, covers stopping.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -25,7 +33,14 @@ The agent loop is the small program that turns a language model into an agent: s
 ![Diagram: a coding agent as one tall map. You give the task to the client; the client loads context files and memory and sends the whole context to the model; the model's tool call passes a permission gate, which consults hooks; the tool runner edits files, runs the shell or fetches from the web and MCP servers; the tool result returns to the model]({{ '/assets/images/01-agentic-ai-fundamentals/agent-loop-map.svg' | relative_url }}){: style="width: 100%" }
 *Figure: the loop as parts, top to bottom. The dashed arrow on the right closes the loop: each tool result goes back into the model's context.*
 
-Read the figure from the top. The model only ever does one thing: it reads the context and writes the next message. Everything else, running tools, checking permissions, firing hooks, trimming output, saving the transcript, is the client's work. The client's half of the loop is software you can configure, and harness engineering is the work of configuring it.
+Read the figure from the top. The model does one thing: it reads the context and writes the next message. The client does everything else:
+
+- assembles the context from instructions, context files, history and results;
+- checks each tool call against permissions and hooks;
+- runs the tool and trims its output;
+- saves the transcript.
+
+The client's half of the loop is software you can configure, and harness engineering is the work of configuring it.
 
 ## Messages and content blocks
 
@@ -72,10 +87,23 @@ Each model reply also says why it stopped writing. The client branches on that v
 |---|---|---|
 | `tool_use` | the reply ends with one or more tool calls | run them, append the results, call again |
 | `end_turn` | the model finished its message | treat the text as the answer, unless a check sends it back |
-| `max_tokens` | the reply hit its length cap mid-message | continue or fail, depending on the client |
+| `max_tokens` | the reply hit the request's `max_tokens` limit mid-message | continue the reply or report an error |
 | `stop_sequence` | a configured stop string appeared | client-specific |
+| `pause_turn` | a loop of server-run tools, such as web search, reached its iteration limit | send the reply back to let it continue |
+| `refusal` | the model declined to respond | show the refusal; do not retry blindly |
+| `model_context_window_exceeded` | the reply filled the context window | compact or end the session |
 
 A coding agent's loop is, at heart, "while the stop reason is `tool_use`, run the tools and call again".
+
+### Watching the loop in Claude Code
+
+The terminal shows each tool call and a short form of its result. To see every message as the loop runs, use print mode with streamed JSON:
+
+```bash
+claude -p --output-format stream-json --verbose "run the date tests and report failures"
+```
+
+Each line of output is one event: an `assistant` message with its `tool_use` blocks, a `user` message with the `tool_result`, and a final `result`. Session transcripts on disk hold the same messages for later reading.
 
 ## A minimal loop in code
 
@@ -143,7 +171,7 @@ A real client replaces the string match with permission rules, hooks and a sandb
 
 ## Parallel and sequential tool calls
 
-A model can ask for several tools in one reply. Reading three files at once costs one round trip instead of three, and clients run independent calls in parallel. The model is told, in the client's system instructions, to batch calls that do not depend on each other, and to make dependent calls one at a time.
+A model can ask for several tools in one reply. Reading three files at once costs one round trip instead of three, and clients run independent calls at the same time. The Messages API allows parallel calls by default; `tool_choice` with `disable_parallel_tool_use: true` limits the model to one call per reply.
 
 A turn with parallel calls, step by step:
 
@@ -158,7 +186,7 @@ A turn with parallel calls, step by step:
 | When the model decides | before any result is seen | after each result |
 | Fits | independent reads and searches | a call whose input depends on an earlier result |
 
-The trade-off is that parallel calls are decided together, before any result is seen. If the second call depends on what the first returns, it has to wait for the next turn.
+Each `tool_result` must carry the id of the call it answers. A client that returns results without matching ids, or drops one, leaves the model unsure which output belongs to which call.
 
 ## Where a harness attaches
 
@@ -174,12 +202,14 @@ Every part of a harness hooks into one of the loop's steps.
 
 ### Worked example: one rule, attached at three steps
 
-Take the rule "never commit with a failing test suite".
+Take the rule "never commit with a failing test suite". In the [systems approach]({{ '/' | relative_url }}#a-systems-approach), the enforcing layers carry it and the instruction repeats it.
 
-1. At the read step it is a line in `CLAUDE.md`. The model usually follows it.
-2. At the run step it is a `PreToolUse` hook on `git commit` that runs the tests and refuses the commit on a failure. It runs on every commit attempt.
-3. At the stop step it is a `Stop` hook that refuses to let the agent finish while the suite fails.
-   - This covers a run where the agent never tried to commit at all, which the hook in step 2 never sees.
+1. At the read step it is a line in `CLAUDE.md`. The model usually follows it; on its own it slips on long sessions.
+2. At the run step it is a `PreToolUse` hook on `Bash` that runs the tests when the command is a `git commit`, and exits with code 2 on a failure.
+   - Exit code 2 stops the call, and the hook's message reaches the model as the tool error, such as "tests failing: fix test_dates.py before committing".
+3. At the stop step it is a `Stop` hook that blocks the agent from finishing while the suite fails.
+   - This covers a run where the agent never tried to commit, which the hook in step 2 never sees.
+4. After the loop, a CI job runs the same suite before a merge, for anything committed outside the hooks.
 
 ## Loops inside loops
 
@@ -193,9 +223,17 @@ A sub-agent is the same loop, started by a tool call in another loop.
    - Its context holds the brief and the context files, and nothing from the parent's conversation.
 3. The sub-agent runs its own turns: tool calls, results, more tool calls.
 4. When the sub-agent writes a final answer, the client returns that answer to the parent as the `Agent` call's tool result.
-   - The parent never sees the sub-agent's intermediate turns.
+   - The parent never sees the sub-agent's intermediate turns, only the summary and a small metadata trailer.
 
-Delegation saves the parent's context because of step 4, and the same step is where detail is lost: the sub-agent's caveats survive only if its final answer states them. [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}) builds on this.
+Delegation saves the parent's context because of step 4, and the same step is where detail is lost: the sub-agent's caveats survive only if its final answer states them.
+
+| Variation in Claude Code | How it differs |
+|---|---|
+| A sub-agent defined with `maxTurns` | stops after that many turns; the result is marked partial and the parent can resume it |
+| `/subtask <task>` | starts a forked sub-agent that inherits the full conversation instead of a fresh context |
+| A background sub-agent | keeps running while the parent continues; its result arrives later |
+
+[Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}) builds on this.
 
 ## Pitfalls
 
@@ -206,8 +244,11 @@ Delegation saves the parent's context because of step 4, and the same step is wh
 
 ## Sources
 
-- Tool use with the Messages API, content blocks and stop reasons: <https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview>, not yet verified against the primary source for this page's date.
-- Hook events and where they fire: <https://code.claude.com/docs/en/hooks.md>, not yet verified against the primary source for this page's date.
-- The code sketch, JSON excerpt and figure are illustrations written for this page.
+- Tool use with the Messages API, content blocks and parallel calls: <https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview>, verified 2026-11-09.
+- The seven stop reasons: <https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons>, verified 2026-11-09.
+- `PreToolUse` exit code 2 and the error text the model sees; `Stop` hooks preventing a stop: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
+- `--output-format stream-json`, sub-agent `maxTurns` and `/subtask`: <https://code.claude.com/docs/en/cli-reference.md>, <https://code.claude.com/docs/en/tools-reference.md> and <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
+- Sub-agent results returning as a summary with a metadata trailer: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
+- The code sketch and JSON excerpt are illustrations written for this page.
 
 {% include page_nav.html %}
