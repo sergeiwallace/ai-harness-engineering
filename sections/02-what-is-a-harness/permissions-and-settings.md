@@ -76,7 +76,8 @@ Lists such as `permissions.allow` merge across all levels; no level removes anot
 
 ## Permission rules
 
-![A sequence diagram of one tool call through the permission checks. The model asks the harness to run git push. The harness sends the event to the PreToolUse hooks first; a deny there ends the call, and here the hook exits 0 with no decision. The harness then matches the permission rules from every scope, where deny beats ask beats allow, and the rule Bash(git push:*) says ask. The harness prompts the person, who approves. The harness runs the command and returns the output to the model as the tool result.]({{ '/assets/images/02-ai-harnesses/permission-decision.png' | relative_url }})
+![A vertical flow chart of one tool call, for example git push, through the permission checks. PreToolUse hooks run first, before any rule; a deny there refuses the call and the hook says why. With no decision from the hooks, the rules are checked in order from every scope. If a deny rule matches, the call is refused and never runs. If an ask rule matches, such as Bash(git push *), the person is prompted and the call runs if they approve. If an allow rule matches, such as tests, linters or git status, it runs with no prompt. If no rule matches, the permission mode set by defaultMode decides.]({{ '/assets/images/diagrams/02-ai-harnesses/permission-path-flow.svg' | relative_url }})
+*Figure: one tool call, checked by hooks first and rules second: deny, then ask, then allow. Made with archify.*
 
 *One push, checked by hooks first and rules second. The diagram writes the rule as `Bash(git push:*)`, an equivalent form of `Bash(git push *)`. Our own diagram, made with archify.*
 

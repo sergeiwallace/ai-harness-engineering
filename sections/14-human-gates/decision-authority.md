@@ -40,7 +40,8 @@ The authority test is a short set of questions an agent answers about a decision
 | 3 | Would it drop, narrow or change something the person asked for? | the person decides | next question |
 | 4 | Is it a design call beyond this model's tier? | a stronger model decides | the agent decides and records why |
 
-![Sequence diagram. A small-model agent asks the authority test three questions in turn: claimed by the person, outward or architectural, drops a requirement. Each answer is no, but the last notes it is a design call. The agent sends two options and context to the coordinator on the strongest model, which returns a decision and reason. The agent writes the decision log into the pull request for the person, who may overrule later.]({{ '/assets/images/14-human-gates/authority-test-sequence.svg' | relative_url }}){: style="width:100%"}
+![A vertical flow chart of the authority test. A decision to make, before the agent acts, meets four questions in order. Question 1: did the person claim it? Question 2: is it outward, destructive, spending or architectural? Question 3: does it drop or narrow what the person asked for? A yes to any of these sends it to the person, who decides; for question 2, unless a program has proved the action reversible. Question 4: is it a design call beyond this model's tier? A yes sends options and context to a stronger model, which decides. If all four answers are no, the agent decides and records why.]({{ '/assets/images/diagrams/14-human-gates/authority-test-flow.svg' | relative_url }})
+*Figure: the authority test. A yes to any of the first three questions sends the decision to the person; the fourth sends a design call up a model tier instead. Made with archify.*
 
 *The authority test on one design question. A yes to any of the first three questions sends the decision to the person; the fourth sends a design call up a model tier instead.*
 

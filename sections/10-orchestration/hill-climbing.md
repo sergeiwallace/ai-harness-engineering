@@ -20,7 +20,8 @@ A sub-topic of [goals and loops]({{ '/sections/10-orchestration/goals-and-loops.
 
 ## The loop
 
-![A sequence diagram. The agent measures a baseline on the benchmark and gets 38 of 50. Inside a loop fragment it commits a change, measures again, gets 42 of 50 and keeps the change; then commits another change, measures 41 of 50, and reverts it.]({{ '/assets/images/10-orchestration/hill-climb-rounds.svg' | relative_url }}){: style="width:100%"}
+![A flow chart of hill-climbing. Once, at the start, the agent measures a baseline, for example 38 of 50. Each round it changes one thing and commits it, measures again on the same tasks with the same check, and asks whether the result is better than the best so far. If yes, it keeps the change, so 42 of 50 becomes the new best. If no, for example 41 of 50, it reverts to the best. Either way it goes back to change one thing for the next round.]({{ '/assets/images/diagrams/10-orchestration/hill-climb-flow.svg' | relative_url }})
+*Figure: hill-climbing keeps a change only when the measure improves. Made with archify.*
 
 *Figure: hill-climbing keeps a change only when the measure improves. Made with archify.*
 

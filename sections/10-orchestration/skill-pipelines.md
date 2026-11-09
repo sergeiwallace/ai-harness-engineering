@@ -20,7 +20,8 @@ A sub-topic of [prompt-driven orchestration]({{ '/sections/10-orchestration/prom
 
 ## The stages
 
-![A sequence diagram. The research agent writes research to files. The decide agent reads it and writes a plan. Inside a loop fragment the audit agent reads the plan and sends must-fix findings to the decide agent, which revises the plan, until the audit finds nothing new. The build agent then reads the plan and writes code.]({{ '/assets/images/10-orchestration/pipeline-stages.svg' | relative_url }}){: style="width:100%"}
+![A vertical flow chart of a four-stage pipeline. Stage 1, the research agent, writes a research file. Stage 2, the decide agent, reads it and writes the plan file. Stage 3, a fresh audit agent, reads the plan; if it finds must-fix findings it writes them to a file and the decide agent revises the plan, which goes back to audit. When the audit finds nothing new, stage 4, the build agent, reads the plan and writes code.]({{ '/assets/images/diagrams/10-orchestration/pipeline-stages-flow.svg' | relative_url }})
+*Figure: stages hand files to each other; the audit loop ends when nothing new turns up. Made with archify.*
 
 *Figure: stages hand files to each other; the audit loop ends when nothing new turns up. Made with archify.*
 
