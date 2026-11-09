@@ -22,9 +22,30 @@
   /* Page metadata (last updated, talk stop, slide): small, muted, right-aligned, under the top bar. */
   .page-meta { font-size: 0.8rem !important; color: #6b6b6b; text-align: right; margin: 0 0 1rem; padding: 0; border: 0; }
   .page-meta a { color: #6b6b6b; }
-  /* tables-fit */
+  /* tables-fit v2 */
   .main-content .table-wrapper { overflow-x: visible; }
   .main-content table { width: 100%; min-width: 0; table-layout: auto; display: table; }
-  .main-content th, .main-content td { min-width: 0; max-width: none; white-space: normal; overflow-wrap: anywhere; word-break: normal; }
-  .main-content td code, .main-content th code { white-space: normal; overflow-wrap: anywhere; }
+  .main-content th, .main-content td { min-width: 0; max-width: none; white-space: normal; overflow-wrap: break-word; word-break: normal; hyphens: none; }
+  .main-content td code, .main-content th code { white-space: normal; overflow-wrap: anywhere; word-break: normal; }
+  .main-content td.cell-nowrap, .main-content th.cell-nowrap { white-space: nowrap; }
+  .main-content table.table-tight th, .main-content table.table-tight td { padding: 0.35rem 0.45rem; font-size: 0.8125rem; }
+  .main-content table.table-squeeze th, .main-content table.table-squeeze td { overflow-wrap: anywhere; }
 </style>
+<script>/* tables-fit v2: keep a short first column on one line; step down only where a table still overflows */
+(function () {
+  function over(t) { var w = t.closest('.table-wrapper') || t.parentElement; return w.scrollWidth > w.clientWidth + 1; }
+  function fit() {
+    document.querySelectorAll('.main-content table').forEach(function (t) {
+      t.classList.remove('table-tight', 'table-squeeze');
+      var cells = Array.prototype.map.call(t.rows, function (r) { return r.cells[0]; }).filter(Boolean);
+      cells.forEach(function (c) { c.classList.remove('cell-nowrap'); });
+      var ok = cells.length && cells.every(function (c) { return c.textContent.trim().length <= 28 && !c.querySelector('code'); });
+      if (ok) cells.forEach(function (c) { c.classList.add('cell-nowrap'); });
+      if (over(t)) cells.forEach(function (c) { c.classList.remove('cell-nowrap'); });
+      if (over(t)) t.classList.add('table-tight');
+      if (over(t)) t.classList.add('table-squeeze');
+    });
+  }
+  document.addEventListener('DOMContentLoaded', fit);
+  var tm; window.addEventListener('resize', function () { clearTimeout(tm); tm = setTimeout(fit, 150); });
+})();</script>
