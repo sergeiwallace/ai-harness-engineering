@@ -635,6 +635,21 @@ Step 4 of the walk-through above shows the approach:
 3. The fix was a `PreToolUse` guard that refuses pattern kills and names the safe form.
 4. Every later session runs with the guard. The context-file rule stays, and the guard's refusal message repeats it at the moment it applies.
 
+#### When to change the harness
+
+A rule of thumb decides most cases: when you type the same correction or the same prompt a second time, change the harness so you do not type it a third.
+
+- A repeated prompt becomes a skill or a template.
+- A repeated correction becomes a fix in the system: a workflow step, a hook, a script or a test, with a short context-file line as a second layer.
+
+Use judgement too. Fix it the first time when the context shows it will recur, or when a repeat would be costly or risky.
+
+| Signal | Example | Act after |
+|---|---|---|
+| the same prompt or correction, typed again | retyping the bug-fix steps | the second time |
+| the mistake follows from how the work is set up, so it will come back | an agent edits generated files because nothing marks them | the first time |
+| one repeat would be costly or hard to undo | the pattern kill above stopped other sessions' test runs | the first time |
+
 ## What a harness costs
 
 Every component that loads into the context costs tokens on every turn.

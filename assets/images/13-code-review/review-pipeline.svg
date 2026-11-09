@@ -9,7 +9,7 @@ svg { font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 
       --text: #ffffff;
       --text-muted: #94a3b8;
       --text-dim: #475569;
-      
+
       --text-faint: #7d8da1;
 
       --panel: rgba(15, 23, 42, 0.5);
@@ -20,7 +20,7 @@ svg { font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 
       --arrow: #94a3b8;
       --arrow-emphasis: #34d399;
 
-      
+
       --mask: #0f172a;
 
       --frontend-fill:    rgba(8, 51, 68, 0.4);
@@ -840,7 +840,7 @@ svg[data-theme="light"] {
       --toolbar-text:     #334155;
       --toolbar-hover:    #ffffff;
       --toolbar-menu-bg:  #ffffff;
-    
+
       --bg: #f4f9fc;
       --grid: #d4e5ee;
       --panel: rgba(255, 255, 255, 0.82);
@@ -868,7 +868,7 @@ svg[data-theme="light"] {
       --external-stroke: #607a8c;
       --arrow: #7b97aa;
       --arrow-emphasis: #0d9488;
-    
+
       --bg: #edf7fa;
       --grid: #b5d5e1;
       --panel: rgba(249, 253, 255, 0.94);
@@ -901,7 +901,7 @@ svg[data-theme="light"] {
       --toolbar-text: #294f61;
       --toolbar-hover: #ffffff;
       --toolbar-menu-bg: #f9fdff;
-    
+
       --bg: #f2eee5;
       --grid: #d8d0c2;
       --panel: rgba(251, 248, 241, 0.97);

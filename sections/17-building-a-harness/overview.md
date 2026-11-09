@@ -61,6 +61,9 @@ A skill can sit in either layer. A skill whose text describes how to review code
 
 1. Notice the gap.
    - A failure, a stall, or a correction you have given twice.
+   - Rule of thumb: if you have typed the same correction or prompt twice, consider building it into the harness.
+   - Use judgement to fix it the first time when the context shows it will recur, such as a mistake with generated files in a repository where most tasks touch the schema, or when a repeat would be costly or risky, such as a force push to a shared branch.
+   - The fix goes into the system first; see [When friction is worth a harness change]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}#when-friction-is-worth-a-harness-change).
 2. Record it.
    - One dated line in a friction log, with a count of how often it happened.
 3. Find the layer that should have caught it.

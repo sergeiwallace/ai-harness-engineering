@@ -208,6 +208,17 @@ The pattern, its trade-offs and the limits of path rules are on [Hub and spoke a
 
 Adding another detailed rule to the context file each time the agent gets something wrong is an anti-pattern: the file grows, and each new line is applied as unevenly as the rest. The fix goes into the system, and the context file gets a short line that explains it.
 
+When to change the harness:
+
+| Signal | What to do |
+|---|---|
+| You have typed the same correction or the same prompt twice | Consider building it into the harness |
+| It happened once, but the context shows it will recur (a step every task needs, a convention the agent cannot see in the code) | Use judgement and fix it the first time |
+| It happened once, and a repeat would be costly (a deleted file, a push to the wrong branch, a production command) | Fix it the first time |
+| It happened once, in a one-off task | A correction in the conversation is enough |
+
+In each case the fix goes into the system first (workflow, tool, hook, script, linter or test), and the context-file line comes second.
+
 ![Sequence: the agent runs the full suite for one test twice; you change make test to run changed tests by default, add a hook that refuses test-all outside a push, and add one explaining line; next week, after a task switch with the window 85% full, the agent tries test-all and the hook refuses it]({{ '/assets/images/04-context-files/correction-to-rule-sequence.svg' | relative_url }})
 
 *A repeated mistake fixed in the system. The workflow change and the hook do the enforcing; the context-file line explains the check. Diagram made with archify; timings are illustrative.*

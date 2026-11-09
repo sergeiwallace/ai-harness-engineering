@@ -149,7 +149,9 @@ Adding another detailed rule to the context file each time the agent does someth
 
 *A repeated mistake fixed in the system. The workflow change and the hook do the enforcing; the context-file line explains the check. In the last step the rule was missed and the hook held. Diagram made with archify; the timings are illustrative.*
 
-1. Notice the pattern: the same mistake twice.
+1. Notice the pattern. A rule of thumb: if you have typed the same correction or the same prompt twice, consider building it into the harness.
+   - Use judgement to fix it the first time when the context shows it will recur, or when a repeat would be costly, such as a deleted file or a push to the wrong branch.
+   - A one-off correction in a one-off task can stay in the conversation.
 2. Change the system at the lowest layer that can prevent it.
    - Workflow or tool: make the right path the default one.
    - Hook, script or linter: refuse the wrong action and print the right one.

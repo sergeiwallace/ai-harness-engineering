@@ -41,6 +41,18 @@ Friction is any of these:
 
 The last kind is easy to miss because it does not look like a failure. It costs you time on every run, and a [skill]({{ '/sections/05-skills-and-plugins/' | relative_url }}) removes it.
 
+#### When friction is worth a harness change
+
+Rule of thumb: if you have typed the same correction or the same prompt twice, consider building it into the harness. Use judgement as well, and fix it the first time when the context shows it will happen again, or when a repeat would be costly or risky.
+
+| Trigger | Example | First fix |
+|---|---|---|
+| The second time you type the same correction or prompt | You ask for the same review steps in two sessions | A skill that runs those steps |
+| The context shows it will recur | An agent hand-edits a generated file in a repository where most tasks touch the schema, so every later task can hit the same mistake | A PreToolUse hook that refuses edits under `generated/` and names the schema file |
+| A repeat would be costly or risky | An agent force-pushes to a shared branch once and overwrites a colleague's commits | A permission rule that denies force pushes, added the same day |
+
+In each case the fix goes into the system first: a workflow, a hook, a check or a permission rule. A context-file line, if you add one, only points at it.
+
 ### 2. Record
 
 Write it down before fixing it. Each entry is short and dated, and a repeat raises the count on the existing entry.
@@ -60,7 +72,7 @@ What each entry needs:
 <details markdown="1">
 <summary>Why record before fixing</summary>
 
-A fix made in the moment is shaped by the last failure. A fix made after a week of records is shaped by the pattern. Recording also stops you from fixing a one-off that will never happen again, which is how complexity creep starts (see [Complexity creep and pruning]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }})).
+A fix made in the moment is shaped by the last failure. A fix made after a week of records is shaped by the pattern. Recording also stops you from fixing a one-off that will never happen again, which is how complexity creep starts (see [Complexity creep and pruning]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }})). When you do fix something the first time, because it will recur or a repeat would be risky, record it anyway, so the log shows why the mechanism exists.
 
 </details>
 

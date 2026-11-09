@@ -200,7 +200,7 @@ A rule nobody breaks any more may be compensating for an older model.
 
 ### When an agent makes a mistake
 
-Adding another detailed rule to the context file each time an agent does something wrong is an anti-pattern. The file grows, each rule gets less attention, and the model still applies them unevenly when it juggles several things, switches tasks or works with a nearly full window. Following the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering), the fix goes into the system first:
+Adding another detailed rule to the context file each time an agent does something wrong is an anti-pattern. The file grows, each rule gets less attention, and the model still applies them unevenly when it juggles several things, switches tasks or works with a nearly full window. A rule of thumb for when: the second time you type the same correction, change the harness; act on the first occurrence when it will clearly recur or a repeat would be costly ([when to change the harness]({{ '/sections/02-ai-harnesses/' | relative_url }}#when-to-change-the-harness)). Following the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering), the fix goes into the system first:
 
 1. Ask which part of the system let the mistake through.
 2. Build the fix into a workflow or tool where you can: a skill step, a script that does the fiddly part, a template with the right fields.
