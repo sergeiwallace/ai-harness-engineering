@@ -93,7 +93,7 @@ Start from the numbers the vendors publish.
 | `AGENTS.md` text Codex reads | 32 KiB by default (`project_doc_max_bytes`) | Codex `AGENTS.md` docs |
 | A skill's description in the listing | cut at 1,536 characters | Claude Code skills docs |
 
-Your own budget is usually tighter than these, because the limits say when text stops loading, not when it stops being followed.
+Your own budget is usually tighter than these. The limits say only when text stops loading; a file well under them can still be followed poorly.
 
 ### Two thresholds
 
@@ -123,7 +123,7 @@ A per-file budget counts the files you write. Other parts of the harness also lo
 | text added by hooks | add context only when its condition holds |
 | rules without `paths` | give each rule a `paths` pattern unless it applies everywhere |
 
-Measure the total with `/context` in a fresh session, not only the files.
+Measure the total, files and everything else, with `/context` in a fresh session.
 
 ## The trim ladder
 

@@ -11,7 +11,7 @@ nav_order: 2
 
 As of 2026-11-09. A sub-topic of [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}), in [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
-A guard is a `PreToolUse` hook that refuses an action. It acts on the agent's action as it happens, and a guard that refuses too much blocks good work. This page covers when to write a guard, how to write its refusal, and how to keep it from blocking good work.
+A guard is a `PreToolUse` hook that refuses an action as the agent tries it. This page covers when to write a guard, the ways a guard can answer, how to word its refusal, patterns that keep it accurate, and a worked example from my harness.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -21,14 +21,41 @@ A guard is a `PreToolUse` hook that refuses an action. It acts on the agent's ac
 
 ## When a rule becomes a guard
 
-![The enforcement ladder, from context rule to path rule to skill to hook or guard to test or CI gate.]({{ '/assets/images/02-ai-harnesses/enforcement-ladder.svg' | relative_url }})
+![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled hazards passes through holes that line up in every slice and comes out as losses. Each slice stands for one layer of defence; a mistake gets through only where the holes in every layer line up.]({{ '/assets/images/02-ai-harnesses/swiss-cheese-model.png' | relative_url }})
+
+*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
+
+A guard is layer 3: it acts at the moment of action, after the instructions and workflows of layers 1 and 2, and before the tests of layer 4. The [full ladder]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#the-layers) shows what each layer catches and misses.
 
 Under the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering), a rule that matters is enforced in code from the start where it can be, without waiting for agents to break it. A guard is the right place when both of these are true.
 
 1. Breaking it is costly or hard to undo: lost work, a leaked secret, someone else's process stopped.
 2. The bad action can be recognised from the tool input alone, reliably enough that false refusals are rare.
 
-If the second is false, the rule belongs further up the [enforcement ladder]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#the-enforcement-ladder), in a test or a review step that sees the whole result.
+If the second is false, the rule belongs in a later layer of the [enforcement ladder]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#the-enforcement-ladder): a test or a review step that sees the whole result.
+
+## Refuse, ask or rewrite
+
+A guard has more than one way to answer.
+
+| Answer | How | When |
+|---|---|---|
+| refuse | exit 2 with the reason on standard error, or JSON `permissionDecision: "deny"` with `permissionDecisionReason` | the action is wrong in every case |
+| ask the person | JSON `permissionDecision: "ask"` | the action is risky only in some cases the hook cannot tell apart |
+| rewrite | JSON `updatedInput` with safer arguments, such as an added `--dry-run` | a safe form of the same action exists |
+| let it through | exit 0 with no output | everything else |
+
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "deny",
+    "permissionDecisionReason": "Refused: pkill can stop processes that are not yours. Find the PID with `ps -eo pid,etime,args`, then `kill <pid>`."
+  }
+}
+```
+
+A guard's allow never overrides a permission deny or ask rule, so a guard can only make the harness stricter.
 
 ## The refusal message
 
@@ -64,7 +91,11 @@ A guard that searches the raw command string misses spellings and blocks innocen
 | `echo "never rm -rf"` | wrongly refused | allowed: the program is `echo` |
 | `cd x && rm -rf y` | caught | caught: each segment checked |
 
-Split the command on `;`, `&&`, `||` and `|`, find the program in each segment, and judge its flags.
+1. Split the command on `;`, `&&`, `||`, `|`, `&` and newlines.
+2. In each segment, skip `sudo`, `env` and variable assignments to find the program.
+3. Strip its path, so `/usr/bin/pkill` reads as `pkill`.
+4. Judge the program and its flags.
+5. Refuse what you cannot parse, such as `eval` or a command substitution, if the guard protects something costly.
 
 ### Allowlist the safe form
 
@@ -114,9 +145,12 @@ On a shared machine, an agent ran a pattern kill to stop its own test run.
 A `PreToolUse` hook on Bash, shown in full on the [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}#a-complete-guard) page.
 
 1. It splits the command into segments.
-2. It refuses any segment whose program is `pkill` or `killall`.
-3. Its refusal tells the agent to find the process ID and kill that one process.
-4. It exits 0 for everything else.
+2. It finds each segment's program, past `sudo`, `env` and a full path.
+3. It refuses any segment whose program is `pkill` or `killall`.
+4. Its refusal tells the agent to find the process ID and kill that one process.
+5. It exits 0 for everything else.
+
+Its tests cover both arms: `pkill -f pytest`, `cd x && pkill y`, `sudo /usr/bin/pkill node` and a pattern kill after a newline are refused; `kill 41822`, `echo 'pkill is banned'` and `git status; npm test` are allowed.
 
 ### The result
 
@@ -135,16 +169,28 @@ The agent was deep in a long task, the line was one of many, and the action look
 
 ## Guards and permissions together
 
-| Need | Better tool |
-|---|---|
-| Never read `.env` | permission `deny` rule |
-| Never kill by pattern, in any spelling | guard hook (needs parsing) |
-| Ask before any push | permission `ask` rule |
-| Never push to `main` from a sub-agent's worktree | guard hook (needs git state) |
+| Need | Better tool | Why |
+|---|---|---|
+| never read `.env` with the `Read` tool | permission `deny` rule `Read(./.env)` | a pattern on a path is enough |
+| never read `.env` by any route, `cat` included | the sandbox's read limits | it acts on the file, whatever the command |
+| never kill by pattern, in any spelling | guard hook | needs parsing |
+| ask before any push | permission `ask` rule `Bash(git push *)` | a prefix is enough |
+| never push to `main` from a sub-agent's worktree | guard hook | needs the git state and the session's role |
+
+## Pitfalls
+
+| Pitfall | Result | See |
+|---|---|---|
+| the guard crashes with exit 1 | the action runs | [fail open by accident]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#fail-open-by-accident) |
+| the guard is merged but not installed | nothing runs it | [never installed]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#never-installed) |
+| the same action through another tool | the guard never sees it | [matcher misses]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#matcher-misses) |
+| a vague refusal | the agent tries the next way around | [the refusal message](#the-refusal-message) |
 
 ## Sources
 
-- Claude Code hooks, `PreToolUse` decision control: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-08.
+- Claude Code hooks, `PreToolUse` decision control: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
+- Hooks and permission rules: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Swiss cheese model image: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0.
 - The incident, guards and refusal texts are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

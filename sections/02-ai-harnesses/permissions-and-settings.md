@@ -190,7 +190,7 @@ Codex has the same idea in two settings:
 
 ## Sandboxing
 
-A sandbox limits what a command can reach at the operating-system level. It holds even when a rule or hook misses a spelling, because it acts on the effect of the command, not its text.
+A sandbox limits what a command can reach at the operating-system level. It holds even when a rule or hook misses a spelling, because it acts on what the command touches, whatever its text.
 
 | Limit | Typical setting |
 |---|---|

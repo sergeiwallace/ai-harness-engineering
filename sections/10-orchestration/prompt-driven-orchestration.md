@@ -12,7 +12,7 @@ has_toc: false
 
 As of 2026-11-09.
 
-In prompt-driven orchestration a lead agent, or a coordinator session, holds the plan and directs other agents through briefs and agent profiles. This page covers the lead's job, how it splits work, how it joins results, when it should hand off to a script, and how it fails. The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with programmatic orchestration. A sub-topic page covers [chaining skills into a pipeline]({{ '/sections/10-orchestration/skill-pipelines.html' | relative_url }}).
+In prompt-driven orchestration a lead agent, or a coordinator session, holds the plan and directs other agents through briefs and agent profiles. This page covers the lead's job, the Claude Code tools it uses, how it splits work, briefs, how it joins and checks results, when it should hand off to a script, and how it fails. The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with programmatic orchestration. A sub-topic page covers [chaining skills into a pipeline]({{ '/sections/10-orchestration/skill-pipelines.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -28,7 +28,7 @@ In prompt-driven orchestration a lead agent, or a coordinator session, holds the
 
 The lead does four things, in a loop: plan the next steps, write a brief for each, start the agents, then read and check what came back. It does not do the leaf work itself. That keeps its context for the plan and the results, the same reason a [coordinator session]({{ '/sections/09-session-coordination/coordinator-sessions.html' | relative_url }}) routes instead of working.
 
-### Planning in steps, not all at once
+### Planning in rounds
 
 A prompt-driven plan can change as results come in.
 
@@ -47,6 +47,18 @@ A script can only do this where its author wrote the decision point in.
 | Directs | Its own sub-agents | Other sessions, and sub-agents |
 | Plan held in | Its context | Files and a task tracker, since it compacts often |
 | Typical work | A research question, a feature | A stream of requests from a person |
+
+## The tools in Claude Code
+
+| Tool or feature | Role in prompt-driven orchestration |
+|---|---|
+| The `Agent` tool | Starts a sub-agent with a brief and, optionally, an agent profile; `isolation: worktree` gives a writer its own checkout ([delegation]({{ '/sections/08-delegation/' | relative_url }})) |
+| Background sub-agents | Run while the lead keeps working; `/tasks` lists them, and the lead hears when each finishes |
+| Named sub-agents | Sub-agents that Claude named when it spawned them can message each other with `SendMessage` |
+| Agent teams (experimental) | Teammates with a shared task list and direct messages, under one lead; see [SendMessage and ListAgents]({{ '/sections/09-session-coordination/sendmessage-and-listagents.html' | relative_url }}#agent-teams) |
+| Skills | A fixed procedure the lead follows, such as a review checklist or a pipeline stage ([skills]({{ '/sections/05-skills-and-plugins/' | relative_url }})) |
+
+In all of these the plan stays with Claude, turn by turn. That is what separates them from a [dynamic workflow]({{ '/sections/10-orchestration/programmatic-workflows.html' | relative_url }}), where the script holds it.
 
 ## Splitting the work
 
@@ -105,11 +117,18 @@ When every sub-agent returns the same shape, joining is mechanical.
 ## Joining and checking results
 
 <details markdown="1">
-<summary>Why the lead must check, not only merge</summary>
+<summary>Why the lead checks before it joins results</summary>
 
-The lead treats each sub-agent's summary as unverified until checked. Agents report work they did not do, and a summary can drop the caveat that changes the conclusion. The lead checks the evidence the brief asked for: the commit exists, the test output shows the test passing, the match count makes sense. A lead that only merges summaries passes every sub-agent's mistake on as its own conclusion.
+The lead treats each sub-agent's summary as unverified until checked. Agents report work they did not do, and a summary can drop the caveat that changes the conclusion. A lead that only merges summaries passes every sub-agent's mistake on as its own conclusion.
 
 </details>
+
+| The sub-agent reports | The lead checks | How |
+|---|---|---|
+| "Committed abc123 in my worktree" | The commit exists and touches the files named | `git -C <worktree> show --stat abc123` |
+| "All tests pass" | The test run happened after the last edit | Run the named tests itself |
+| "Found 12 callers" | The search covered the whole question | Read the command it ran, and rerun it if the scope looks narrow |
+| "No changes needed" | The sub-agent read the target | Ask for the file and line it based that on |
 
 ### Conflicts between results
 
@@ -127,9 +146,11 @@ Agreement can hide the same gap: two reports of "nine" from different population
 Signs that a prompt-driven chain should become a [programmatic workflow]({{ '/sections/10-orchestration/programmatic-workflows.html' | relative_url }}):
 
 1. The same steps run in the same order every time.
-2. The number of agents grows past what the lead can track.
+2. The task needs more agents than one conversation can coordinate.
+   - The Claude Code docs give a 500-file migration and a codebase-wide bug sweep as examples.
 3. A failure halfway means starting over, and that is expensive.
-4. The lead's context fills with bookkeeping rather than judgment.
+4. The lead's context fills with bookkeeping: lists of agents, their states, their results.
+5. You want the orchestration itself saved and rerun, such as a review run on every branch.
 
 ## Failure modes
 
@@ -137,6 +158,18 @@ Signs that a prompt-driven chain should become a [programmatic workflow]({{ '/se
 
 - What happens: it starts reading files "to save a step", fills its context and loses the plan.
 - What helps: a lead profile without edit tools, so the narrow role is enforced by the tool list.
+
+```markdown
+---
+name: lead
+description: Plans, delegates and checks. Starts sub-agents for all reading and writing.
+tools: Agent, Read, Bash
+---
+Split the request into parts. Brief a sub-agent for each part and check its
+evidence before you combine results.
+```
+
+The `tools` list has no `Edit` or `Write`, so the lead cannot make the change itself; `Bash` stays for running checks.
 
 ### Brief drift
 
@@ -148,6 +181,23 @@ Signs that a prompt-driven chain should become a [programmatic workflow]({{ '/se
 > Adding a fix for each failure grows an orchestration engine until the fixes cause failures. Cutting steps can work better than adding them.
 {: .warning }
 
+- What happens: each failure gets a new instruction, a new step or a new special case in the lead's brief, and the brief becomes long enough that the lead follows parts of it.
+- What helps:
+  - Before adding a step, ask whether an existing one can be removed or merged.
+  - Move a repeated check out of the brief and into a tool or hook that runs every time.
+  - Keep the brief template short, and put detail in files the sub-agent reads when it needs them.
+
+## Pitfalls and lessons
+
+| Pitfall | What helps |
+|---|---|
+| The lead does leaf work | No edit tools in its profile |
+| Paraphrase drift across layers | The original request verbatim in every brief |
+| Results that cannot be joined | A fixed output shape in every brief |
+| Summaries taken on trust | The evidence check table above |
+| Two writers in one checkout | A worktree per writer |
+| A growing brief | Cut steps; move checks into tools |
+
 ## Examples from my own harness
 
 - Coordinator agents run each stage of a pipeline ([chaining skills into a pipeline]({{ '/sections/10-orchestration/skill-pipelines.html' | relative_url }})).
@@ -158,7 +208,9 @@ To start: one lead agent, two parallel read-only sub-agents, and a brief that fi
 
 ## Sources
 
-- Sub-agents in Claude Code: <https://code.claude.com/docs/en/sub-agents.md>.
+- Sub-agents, background sub-agents and `isolation`: <https://code.claude.com/docs/en/sub-agents.md>.
+- Named sub-agents messaging and agent teams: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-09.
+- When to use a workflow: <https://code.claude.com/docs/en/workflows.md>, verified 2026-11-09.
 - Opus 5.5 harness guidance: <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5>, verified 2026-11-08.
 
 {% include page_nav.html %}

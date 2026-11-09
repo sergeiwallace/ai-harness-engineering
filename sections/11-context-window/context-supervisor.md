@@ -13,7 +13,7 @@ redirect_from:
 
 As of 2026-11-09.
 
-A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}). A context supervisor is a small piece of automation that watches how full a session's context is and, past a threshold, saves state and compacts, so a long autonomous run does not depend on the agent noticing in time.
+A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}). A context supervisor is a small piece of automation that watches how full a session's context is and, past a threshold, saves state and compacts, so a long autonomous run does not depend on the agent noticing in time. This page covers the built-in options to try first, the parts of a supervisor, how they fit together, a minimal hook, and the failure modes.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -30,6 +30,18 @@ A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/com
 | The routine varies run to run | The same steps every time |
 
 A written instruction to "save state at 55%" competes with the task for the agent's attention. A hook applies it the same way every time, which is the systems approach to this problem.
+
+## Built-in options first
+
+Claude Code's own settings cover much of what a supervisor does. Try them before building one.
+
+| Need | Built-in option |
+|---|---|
+| Compact earlier than near the limit | `/autocompact` with a token count, such as `/autocompact 500k` on a 1M-token window |
+| Bring the state back after any compaction | A `SessionStart` hook with the `compact` matcher that prints the state note ([compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}#a-sessionstart-hook-on-compact)) |
+| Remind the agent to save before the threshold | A `PostToolUse` hook that adds a note to Claude's context (below) |
+
+A full supervisor adds one thing these do not: it makes sure the save finishes before the compaction starts, and checks afterwards that the compaction happened.
 
 ## The parts
 
@@ -68,10 +80,12 @@ The numbers follow my own practice of compacting at about 50 to 60 percent; tune
 
 ### Why `/compact` has to be typed in
 
-- Slash commands such as `/compact` are typed into the session's prompt; a hook cannot call them as a function.
+- Slash commands such as `/compact` run only when typed at the session's prompt.
+  - A `SendMessage` message containing `/compact` arrives as plain text and does not run.
+  - A `/loop` prompt that is a built-in command also reaches Claude as plain text.
 - So the supervisor types the command into the session's terminal, the way a person would.
 - It goes through a small library that:
-  - targets the right session,
+  - targets the right session by name,
   - refuses to type into a pane a person is using,
   - and lets the supervisor check afterwards that the fill level dropped.
 
@@ -79,7 +93,7 @@ The numbers follow my own practice of compacting at about 50 to 60 percent; tune
 
 ## A minimal hook
 
-A sketch of the measurement step as a Claude Code hook script. The way you read the percentage depends on your setup; this one calls a command that prints it.
+A sketch of the reminder step as a `PostToolUse` hook. A `PostToolUse` hook reaches Claude through JSON output: `hookSpecificOutput.additionalContext` is added to Claude's context next to the tool result. How you read the percentage depends on your setup; this one calls a command that prints it.
 
 ```bash
 #!/usr/bin/env bash
@@ -90,8 +104,22 @@ if [[ "$pct" == unavailable ]]; then
   exit 0            # no reading: say nothing rather than guess
 fi
 if (( pct >= 55 )); then
-  echo "Context is at ${pct}%. Finish this step, save state, then compact."
+  jq -n --arg msg "Context is at ${pct}%. Finish this step, save state, then compact." \
+    '{hookSpecificOutput: {hookEventName: "PostToolUse", additionalContext: $msg}}'
 fi
+```
+
+Registered for every tool in `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "*",
+        "hooks": [ { "type": "command", "command": "tools/context-reminder.sh" } ] }
+    ]
+  }
+}
 ```
 
 > When the measurement is unavailable, the hook says nothing. A guess dressed as a reading is worse than no reading.
@@ -107,27 +135,33 @@ fi
 
 #### Compaction that never fires
 
-The injection can fail: the session is busy, the terminal is not where expected. The supervisor should notice that the fill level did not drop and retry or raise it, not assume success.
+- Sign: the fill level did not drop after the injection.
+- Causes: the session was mid-turn, or the terminal was not where the library expected.
+- Response: retry once after the turn ends, then raise it to a person or the coordinator.
 
 #### Saving the wrong state
 
-If the save runs mid-step, the note describes a half-finished action. Ask the agent to finish its current step before saving, which is what the middle band is for.
+- Sign: the note describes a half-finished action.
+- Response: ask the agent to finish its current step before saving, which is what the middle band is for.
 
 #### Over-eager reminders
 
-A reminder on every tool call above 40 percent fills the context with reminders. Remind once per band.
+- Sign: a reminder on every tool call above 40 percent fills the window with reminders.
+- Response: remind once per band, and record in a small state file which band was last announced.
 
 ## Examples from my own harness
 
 - My context supervisor: hooks read how full the context is and, past a threshold, run save-state and then send `/compact` into the session through the prompt-injection library.
 - A separate command reports the actual context percentage and the band it is in.
-  - A session quotes that reading, not a guess, before it talks about saving or compacting.
+  - A session quotes that reading before it talks about saving or compacting.
 
 To start: a hook that prints a reminder at one threshold.
 
 ## Sources
 
-- Hooks: <https://code.claude.com/docs/en/hooks.md>.
-- Compaction and `/compact`: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-08.
+- Hooks, `PostToolUse` and `additionalContext`, `SessionStart`: <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>, verified 2026-11-09.
+- `/autocompact` and what survives compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
+- Commands in cross-session messages arrive as text: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
+- Built-in commands in `/loop` prompts arrive as text: <https://code.claude.com/docs/en/scheduled-tasks.md>, verified 2026-11-09.
 
 {% include page_nav.html %}

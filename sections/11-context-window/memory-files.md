@@ -10,7 +10,7 @@ nav_order: 2
 
 As of 2026-11-09.
 
-Memory files carry what a session learned into the next session. This page covers what memory is for, how to write a lesson that transfers, how to lay out an index that stays inside its load limit, and how memory differs from context files and the task tracker. The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version.
+Memory files carry what a session learned into the next session. This page covers what memory is for, Claude Code's auto memory, how to write a lesson that transfers, how to lay out an index that stays inside its load limit, where a fix for a repeated mistake belongs, and how memory differs from context files and the task tracker. The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -22,18 +22,50 @@ Memory files carry what a session learned into the next session. This page cover
 
 | Store | Holds | Loads | Changes |
 |---|---|---|---|
-| [Context files]({{ '/sections/04-context-files/' | relative_url }}) | Standing rules for the project | Every session | Rarely, reviewed |
+| [Context files]({{ '/sections/04-context-files/' | relative_url }}) | Standing rules for the project | Every session, in full | Rarely, reviewed |
 | Memory files | Lessons and current state | Every session (the index), on demand (lesson files) | Often, by the agent |
 | Task tracker | What work exists and its status | When read | With every task |
 
-A rule that should bind every session belongs in a context file. A lesson the agent learned the hard way, with its story, belongs in memory. A task belongs in the tracker. Mixing them makes each harder to keep short.
+- A rule that should bind every session belongs in a context file.
+- A lesson the agent learned the hard way, with its story, belongs in memory.
+- A task belongs in the tracker.
+- Anything that must hold no matter what the model decides belongs in a hook, script or test; the [section below](#where-a-fix-belongs) covers this.
 
 ## Auto memory
 
-- Claude Code's auto memory is a memory file the agent writes.
-- It loads at session start and again after compaction.
-- Because it loads every time, its size is a cost every session pays.
-  - Keep it to an index and current state; put detail in files it points to.
+Claude Code's auto memory is a set of notes Claude writes for itself from your corrections and preferences.
+
+| Property | Value |
+|---|---|
+| Where | `~/.claude/projects/<project>/memory/`: a `MEMORY.md` index and one topic file per memory |
+| Scope | One git repository, shared by all its worktrees and subdirectories, on one machine |
+| Loaded at session start | The first 200 lines or 25KB of `MEMORY.md`, whichever comes first |
+| Topic files | Read on demand, when Claude needs them |
+| After compaction | Re-injected from disk |
+| In sub-agents | Not loaded, except in a fork of the conversation |
+| Near the limit | After Claude writes `MEMORY.md`, Claude Code measures it and reminds Claude to shorten it |
+
+### What Claude saves
+
+Each memory file records its kind in a `type` frontmatter field:
+
+| `type` | Holds |
+|---|---|
+| `user` | Your role, expertise and working preferences |
+| `feedback` | Corrections you gave and approaches you confirmed |
+| `project` | Ongoing work, deadlines and decisions that the code and git history do not show |
+| `reference` | Where to find things outside the project, such as a tracker or dashboard |
+
+Claude skips what it can derive from the code, and what your `CLAUDE.md` already says.
+
+### Controls
+
+| Control | Effect |
+|---|---|
+| `/memory` | Opens memory and `CLAUDE.md` files; toggles auto memory |
+| `"autoMemoryEnabled": false` | Turns it off, in user or project settings |
+| `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` | Turns it off for a process |
+| `"autoMemoryDirectory": "<path>"` | Stores it somewhere else |
 
 ## Writing a lesson
 
@@ -54,9 +86,11 @@ A rule that should bind every session belongs in a context file. A lesson the ag
 
 #### Example: rule alone versus rule with story
 
-Rule alone: "Never re-send after a timeout." The agent later sees a push that timed out and assumes the rule is only about messages.
-
-Rule with story: the agent sees that the general point is "a timeout is unknown, not failure", checks whether the push landed, and finds it did.
+1. The lesson file says only "Never re-send after a timeout."
+2. Days later the agent's `git push` times out.
+3. With the rule alone, it reads the rule as being about messages, and pushes again blind.
+4. With the story attached ("a send timed out; the first one had arrived; the target got it twice"), it sees the general point: a timeout is unknown.
+   - It checks whether the push landed, and finds it did.
 
 ## The index
 
@@ -71,28 +105,56 @@ The index loads every session, so it holds only a one-line pointer per lesson. T
 ```markdown
 # Memory index
 
-- [Delivered means replied](lesson-delivered-means-replied.md): a timeout is unknown
-- [Test the merged result](lesson-test-the-merged-result.md): two green branches can break main
+- [Delivered means replied](feedback_delivered_means_replied.md): a timeout is unknown
+- [Test the merged result](feedback_test_merged_result.md): two green branches can break main
 - [Earlier lessons](lessons-archive.md): older lines, read on demand
+```
+
+A lesson file:
+
+```markdown
+---
+type: feedback
+---
+# Count a message as delivered only when the target replies
+
+What happened: a send timed out, I re-sent through the fallback, and the
+target got the task twice. The first send had arrived.
+Rule: treat a timeout as unknown. Ask the target before re-sending.
+Applies to: any channel with a timeout or no delivery receipt.
+Enforced by: the send tool refuses a second send of the same task id.
 ```
 
 ### Keep it under the load limit
 
-> An index that grows past what loads drops its oldest lines without a warning. Keep indexes short and archive old entries.
+> Lines of `MEMORY.md` past 200 lines or 25KB are not loaded at session start, so the lessons there stop applying. Keep one line per entry and archive old ones.
 {: .warning }
 
-A memory index usually has a load limit, in lines or bytes. Past it, the rest is not loaded, and nothing tells the agent. The lessons at the end, often the newest or the oldest depending on where you append, silently stop applying.
+| Index | Load limit | Warning when near it |
+|---|---|---|
+| Claude Code's `MEMORY.md` | 200 lines or 25KB | Yes: Claude Code reminds Claude after it writes the file |
+| An index you build yourself and load from a context file or hook | Whatever loads it allows | Only if you add one |
 
 #### Archiving
 
-Move older lines to an archive index that is itself linked from the main index. The archive is read on demand, so its lessons are still reachable when a related problem comes up.
+1. Move older lines to an archive index.
+2. Link the archive from the main index.
+3. The archive is read on demand, so its lessons are still reachable when a related problem comes up.
 
-<details markdown="1">
-<summary>A check that catches the silent drop</summary>
+#### A size check
 
-Count the index's lines or bytes on every change and fail when it passes a margin below the limit, say 80 percent of it. The check costs nothing and turns a silent loss into a visible task: archive some lines.
+For any index, a check on every change turns a silent loss into a visible task. Fail at a margin below the limit, such as 80 percent:
 
-</details>
+```bash
+#!/usr/bin/env bash
+# fail when the memory index nears its load limit (200 lines or 25KB)
+f="${1:-MEMORY.md}"
+lines=$(wc -l < "$f"); bytes=$(wc -c < "$f")
+if (( lines > 160 || bytes > 20480 )); then
+  echo "$f is at $lines lines, $bytes bytes: archive old entries" >&2
+  exit 1
+fi
+```
 
 ## Where a fix belongs
 
@@ -144,11 +206,13 @@ To start: one notes file for state. When the agent repeats a mistake, look first
 |---|---|
 | Lessons that only restate a rule do not transfer | Record the failure behind it |
 | A new rule for every mistake | Put the fix in a workflow, hook or test; keep the rule as the second layer |
-| An index past its load limit drops lines silently | A size check, and an archive index |
+| An index past its load limit | One line per entry, an archive index, and a size check |
 | Several sessions writing one memory file | One section or file per session |
+| Expecting sub-agents to know the lessons | Auto memory is not loaded into sub-agents; put what they need in the brief |
 
 ## Sources
 
-- Memory and what reloads after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-08.
+- Auto memory: location, load limit, note types, controls, sub-agents: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- What reloads after compaction: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-09.
 
 {% include page_nav.html %}

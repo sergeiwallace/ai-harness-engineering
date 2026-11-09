@@ -31,7 +31,9 @@ The context window is what the model can hold in one session. Memory is what car
 | Memory index | at start | when the agent writes memory |
 | Messages and tool results | every turn | grows until compaction |
 
-### Why it matters
+<!-- IMAGE NEEDED: a context window filling over one session, with the standing parts at the bottom (system prompt, tools, context files) and messages growing until compaction; search: LLM context window filling diagram, context window compaction, context engineering diagram -->
+
+### What the size does to the work
 
 - The window is finite, and use degrades before it is full: instructions are followed less consistently as more text competes for attention.
 - Long tool results are the fastest way to fill it: a full test log, a large file read whole, a verbose command.
@@ -41,7 +43,7 @@ The context window is what the model can hold in one session. Memory is what car
 
 | Tool | Command | Shows |
 |---|---|---|
-| Claude Code | `/context` | the split between system prompt, tools, memory, skills and messages |
+| Claude Code | `/context`, `/context all` | a coloured grid of the split between system prompt, tools, MCP tools, memory files, skills and messages, with suggestions for heavy items |
 | Codex | `/status` | context used and remaining |
 | my harness | a small context-percent command | the percentage and a band: fine, plan a save, save now |
 
@@ -51,10 +53,11 @@ My harness has a rule that any claim about context must quote the current readin
 
 ### What happens
 
-1. The window nears its limit, or you run `/compact`.
-2. The harness replaces the conversation with a summary.
-3. Context files and the memory index reload.
-4. Detail that was only in the conversation is gone: exact error text, half-made decisions, which files were read.
+1. The window nears its limit, or you run `/compact`, optionally with instructions for what to keep.
+2. `PreCompact` hooks run: one can block the compaction with exit 2, and plain text it prints steers the summary.
+3. The harness replaces the conversation with a summary.
+4. The project-root `CLAUDE.md` is re-read from disk. Folder `CLAUDE.md` files and path rules load again the next time a matching file is touched.
+5. Detail that was only in the conversation is gone: exact error text, half-made decisions, which files were read, and any instruction you gave only in chat.
 
 ### Choosing the moment
 
@@ -84,12 +87,18 @@ A `PreCompact` [hook]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' 
 
 ### Claude Code's auto memory
 
-Claude Code keeps a memory folder per project.
+Claude Code keeps a memory folder per repository at `~/.claude/projects/<project>/memory/`.
 
-- A `MEMORY.md` index loads at the start of each session.
-- Individual memory files are linked from the index and read when relevant.
-- The agent writes to it when it learns something worth keeping.
-- You can open and edit it with `/memory`.
+| Fact | Detail |
+|---|---|
+| what loads at start | the first 200 lines or 25 KB of `MEMORY.md`, whichever comes first |
+| topic files | not loaded at start; read with the normal file tools when needed |
+| worktrees | every worktree and subfolder of one repository shares one memory folder |
+| machines | machine-local; not shared across machines or cloud sessions |
+| size | near a limit, Claude Code reminds the agent to shorten the index |
+| who writes it | the agent, when it learns something; "remember that..." saves there, "add this to CLAUDE.md" goes to the context file |
+| control | `/memory` to browse and toggle it; `autoMemoryEnabled: false` in settings to turn it off for a project |
+| sub-agents | a profile's `memory` field gives a sub-agent memory of its own |
 
 ### The index
 
@@ -103,7 +112,12 @@ One line each: past the read limit drops silently, tail first.
 - [Never type into a peer's terminal](never-type-into-peer.md): message it instead
 ```
 
-Only the first part of the index loads. My harness keeps one short line per lesson, moves older lines to an archive file the index links to, and puts the most important lessons near the top.
+Only the first 200 lines or 25 KB of the index load, and nothing warns the agent about the lines it did not see. My harness:
+
+1. keeps one short line per lesson;
+2. moves older lines to an archive file the index links to;
+3. puts the most important lessons near the top;
+4. writes the read limit at the top of the index, so every editor sees it.
 
 ### A lesson file
 
@@ -124,11 +138,11 @@ A good lesson says what happened, how to recognise it next time, and what to do.
 
 | Put it in | When |
 |---|---|
-| a context file | it is a rule for every session, decided and stable |
 | memory | it is a lesson from experience, still being proven |
-| a hook | it must hold every time |
+| a context file | it is short guidance for every session, decided and stable |
+| a workflow, hook or test | it must hold every time |
 
-A lesson that keeps proving itself graduates into a context file or a [hook]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}).
+A lesson that keeps proving itself moves into the system, following the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering): a skill step, a [hook]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) or a test enforces it, and a short context-file line stays as a second layer.
 
 ## Task tracking
 
@@ -158,6 +172,16 @@ $ bd update <id> --claim
 2. A new request that arrives mid-task is filed as an issue, and the current step is finished first.
 3. Every sub-agent launch gets its own child issue, closed when its work is collected.
 
+## Pitfalls
+
+| Pitfall | Result | Fix |
+|---|---|---|
+| an index past its read limit | the newest lessons silently stop loading | keep it short; archive old lines |
+| two lessons that contradict | the agent follows either one | merge or delete the stale one |
+| a secret or a host name in a lesson | it loads into every session | keep memory free of credentials; review it like code |
+| a lesson that names a fixed bug | the agent works around a problem that no longer exists | prune lessons when the cause is fixed |
+| state kept only in chat | lost at compaction | the tracker and a resume note |
+
 ## Worked example
 
 A session works on a feature for three hours.
@@ -171,7 +195,9 @@ A session works on a feature for three hours.
 
 ## Sources
 
-- Claude Code memory: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08.
+- Claude Code memory, auto memory and compaction: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- Claude Code `/context` and `/compact`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
+- `PreCompact` behaviour: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
 - Beads: <https://github.com/steveyegge/beads>.
 - The context reading, resume message, memory index rules and tracker rules are from the author's own harness, described conceptually.
 

@@ -36,20 +36,39 @@ the date you read it. Say plainly what you could not verify. Never edit files.
 
 ### The fields
 
+Only `name` and `description` are required in Claude Code.
+
 | Field | Does |
 |---|---|
 | `name` | the id the main session uses to pick the profile |
-| `description` | tells the main session when to use it; like a skill's, it is a trigger |
-| `tools` | the only tools the sub-agent may use; omit to inherit all |
-| `model` | which model runs it: a cheaper one for bulk work, the strongest for judgment |
-| body | the sub-agent's standing instructions, added to every brief |
+| `description` | when to delegate to it; like a skill's, it is a trigger |
+| `tools` | the tools the sub-agent may use; omit to inherit all |
+| `disallowedTools` | tools removed from the inherited or listed set |
+| `model` | `sonnet`, `opus`, `haiku`, `fable`, a full model id, or `inherit` for the main session's model |
+| `permissionMode` | the sub-agent's own permission mode, such as `plan` for a read-only role |
+| `skills` | skills whose full text is loaded into the sub-agent at start |
+| `hooks` | hooks scoped to this sub-agent |
+| `isolation` | `worktree` runs it in a temporary git worktree |
+| `memory` | `user`, `project` or `local`: its own memory across sessions |
+| `maxTurns`, `effort`, `mcpServers`, `omitClaudeMd` | turn limit, effort, extra MCP servers, skipping the `CLAUDE.md` files |
+| body | the sub-agent's standing instructions |
 
 ### Where profiles live
 
 | Tool | Location |
 |---|---|
-| Claude Code | `.claude/agents/<name>.md` in the project, or `~/.claude/agents/` for all projects |
-| Codex | `.codex/agents/` |
+| Claude Code | in order of precedence: managed settings, the `--agents` flag for one session, `.claude/agents/` in the project, `~/.claude/agents/`, a plugin's `agents/` folder |
+| Codex | custom roles declared in the `agents` table of `config.toml`, each pointing at its own TOML config layer with `config_file` |
+
+When two Claude Code profiles share a name, the one from the higher-precedence location wins. Both folders are scanned recursively.
+
+### Built-in agents
+
+| Agent | Tools | Used for |
+|---|---|---|
+| `Explore` | read-only; skips `CLAUDE.md` and git status for speed | searching and reading a codebase |
+| `Plan` | read-only | gathering context in plan mode |
+| `general-purpose` | every tool available to sub-agents | multi-step tasks that read and act |
 
 ## How a sub-agent runs
 
@@ -59,13 +78,17 @@ the date you read it. Say plainly what you could not verify. Never edit files.
 
 ### Its own context
 
-A sub-agent starts fresh.
+A Claude Code sub-agent starts with a fresh context window.
 
-| It sees | It does not see |
+| It starts with | It does not see |
 |---|---|
-| its profile's body | the main session's conversation |
-| the project's context files | earlier sub-agents' work, unless the brief includes it |
-| the brief | the person's earlier corrections |
+| its profile's body as its system prompt, plus environment details | the main session's conversation |
+| every level of `CLAUDE.md` the main session loads (not for `Explore` and `Plan`) | skills the main session has already used |
+| a git status snapshot | files the main session has already read |
+| skills named in its `skills` field | earlier sub-agents' work, unless the brief includes it |
+| the brief the main session writes | the person's earlier corrections |
+
+A fork is the exception: it inherits the parent conversation.
 
 Its exploration stays out of the main session's window, and only its summary comes back.
 
@@ -86,9 +109,17 @@ A short brief produces a confident answer to a different question. See [Template
 
 A sub-agent that edits files should work in its own git worktree.
 
+- `isolation: worktree` in the profile gives it a temporary worktree, branched from the default branch, cleaned up automatically if it changes nothing.
 - Its changes cannot collide with the main session's or another sub-agent's.
 - Its branch can be reviewed and merged, or thrown away, as one unit.
 - My harness enforces this with a [guard hook]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) that keeps an isolated agent's git commands and edits inside its own worktree, and refuses commands too complex to check.
+
+### Nesting
+
+- By default a sub-agent can start sub-agents of its own, up to three layers below the main conversation.
+- A sub-agent at the limit does its work itself and returns one summary.
+- `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` changes the limit; `1` turns nesting off.
+- Every layer costs a fresh context and tokens, so a brief should say whether delegating further is allowed.
 
 ## Roles
 
@@ -140,6 +171,16 @@ Add a new export format to a reporting tool.
 
 The main session's context holds the plan, three summaries and the decisions. The pages of specification and the exploration of the code stayed in the sub-agents' windows.
 
+## Pitfalls
+
+| Pitfall | Result | Fix |
+|---|---|---|
+| a brief that assumes shared context | a confident answer to a different question | write the brief as if to a new colleague |
+| a reviewer with edit tools | it fixes what it should judge | drop `Edit` and `Write` from `tools` |
+| several editing sub-agents in one folder | their changes collide | `isolation: worktree` |
+| delegating a small task | more tokens and waiting than doing it | keep small tasks in the main session |
+| trusting a sub-agent's summary without checking | its mistakes arrive in the same confident tone as its findings | verify the claims that matter before acting on them |
+
 ## Profiles in my harness
 
 - Profiles live in one source folder and install everywhere, so a role means the same thing on every machine.
@@ -149,7 +190,8 @@ The main session's context holds the plan, three summaries and the decisions. Th
 
 ## Sources
 
-- Claude Code sub-agents: <https://code.claude.com/docs/en/sub-agents.md>.
+- Claude Code sub-agents, fields, starting context and nesting: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
+- Codex `agents` configuration: <https://learn.chatgpt.com/docs/config-file/config-reference>, verified 2026-11-09.
 - The roles and launch tracking are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

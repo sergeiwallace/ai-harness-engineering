@@ -119,7 +119,7 @@ The imported text loads as if it were written in place. This is how one `AGENTS.
 
 | Rule | Detail |
 |---|---|
-| Relative paths | resolve from the file that contains the import, not the working folder |
+| Relative paths | resolve from the folder of the file that contains the import |
 | Depth | imports can import, up to four hops |
 | Backticks | `` `@README` `` in backticks is literal text and is not imported |
 | Spaces in a path | escape each space with a backslash |
@@ -170,7 +170,7 @@ My harness keeps its test standards, its public writing rules and its skill-auth
 
 ![A sequence diagram of context loading over one session. At session start the harness reads the user file and the project file with its imports and loads both, with the system prompt, into the model's window, where they stay all session. During the task the model edits tests/test_api.py; the harness finds a path rule matching tests and its test rules reach the model fresh, absent until then. The model reads web/app.tsx; the harness finds web/CLAUDE.md and its frontend rules reach the model. At compaction the harness sends a summary and reloads the files: chat detail is lost and the files return.]({{ '/assets/images/02-ai-harnesses/context-loading.png' | relative_url }})
 
-*Which context files reach the model, and when. Our own diagram, made with archify.*
+*Which context files reach the model, and when. The diagram simplifies compaction: the project-root `CLAUDE.md` is re-read from disk at once, while folder files and path rules come back the next time a matching file is touched. Our own diagram, made with archify.*
 
 An agent spends an hour on documentation, then switches to tests. A test-style rule written in the project file has been in the context all that hour, buried under an hour of messages. The same rule as a path rule arrives fresh at the moment the agent opens the first test file.
 

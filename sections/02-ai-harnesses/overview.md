@@ -103,7 +103,18 @@ Some parts are text the model reads and interprets. Others are code that runs th
 
 Claude Code's docs describe `CLAUDE.md` as "context, not enforced configuration", and point to a `PreToolUse` hook "to block an action regardless of what Claude decides".
 
-![The enforcement ladder. Five steps from soft to hard: context rule, path rule, skill, hook or guard, test or CI gate.]({{ '/assets/images/02-ai-harnesses/enforcement-ladder.svg' | relative_url }})
+![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled hazards passes through holes that line up in every slice and comes out as losses. Each slice stands for one layer of defence; a mistake gets through only where the holes in every layer line up.]({{ '/assets/images/02-ai-harnesses/swiss-cheese-model.png' | relative_url }})
+
+*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
+
+The ladder, from the layer that guides to the layers that enforce:
+
+| Layer | What it is | Enforced by | Example from my harness | What it misses, for the next layer to catch |
+|---|---|---|---|---|
+| 1. Instructions | context files, path rules, skill text, prompts | the model, reading it | "never kill processes by name pattern" in the context file | a model juggling tasks or near a full window drops the line |
+| 2. Workflows and tools | skills with fixed steps, scripts, templates, tools that accept only valid input | the program the agent runs | a commit script that builds the message and refuses one without the delegation line | actions the agent takes outside the workflow, such as a raw shell command |
+| 3. Hooks, scripts and linters | checks at the moment of action | the harness, every time | a `PreToolUse` guard that refuses `pkill` and names the safe form | spellings the guard does not parse, and mistakes only visible in the finished result |
+| 4. Validation and tests | tests, CI, link checkers, review before a change lands | programs and reviewers on the result | a link checker that walks the built site before publish | design and judgment problems no check encodes; those go to a person |
 
 My harness puts each rule as high on this ladder as it can be checked, and keeps the context-file line as a second layer. Rules that cannot be checked from an action, such as design judgment, stay as guidance with a review step behind them. The [systems approach](#a-systems-approach-to-harness-engineering) section below explains the layers, and [Guides, sensors and enforcement]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#one-rule-moved-into-the-system) follows one rule into the system.
 
@@ -350,7 +361,9 @@ You approve `npm run test` forty times in one afternoon. An `allow` rule for it 
 
 A hook is a command the harness runs at a fixed point in a session: before a tool call, after one, when a prompt is submitted, when the agent tries to stop, before the context is compacted. The hook receives the event as JSON on standard input. It can allow the action, block it with a message the model reads, or add context to the conversation.
 
-![Where hooks fire in a session: SessionStart, UserPromptSubmit, then PreToolUse, the tool, and PostToolUse in a loop, then Stop, with PreCompact, SubagentStop and SessionEnd alongside.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle.svg' | relative_url }})
+![The Claude Code hook lifecycle, simplified, top to bottom. SessionStart once per session injects context. Inside the turn, once per user prompt, UserPromptSubmit validates or blocks the prompt. Inside it, the agentic loop runs once per tool call: PreToolUse can allow, deny, ask the user or rewrite the tool input; the tool executes; PostToolUse reacts to the result, gives feedback or rewrites the output; then the loop repeats. Stop can block the stop until tests pass. SessionEnd once per session does cleanup and logging.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle-ran-the-builder.png' | relative_url }})
+
+*Placeholder image: the Claude Code hook lifecycle. Source: Ran the Builder, <https://ranthebuilder.cloud/blog/agentic-coding-hooks-deterministic-ai-guardrails/>, used with credit.*
 
 #### Why they matter
 
@@ -389,7 +402,7 @@ equivalent from <its worktree> without the redirect.
 
 #### What they are
 
-An agent profile fixes a role: its name, a description of when to use it, its model, and the tools it may use. Claude Code reads profiles from `.claude/agents/<name>.md`; Codex from `.codex/agents/`. The main session starts a sub-agent from a profile, gives it a brief, and receives its summary. A Claude Code sub-agent starts with the project's `CLAUDE.md` files and a git status snapshot, and without the main conversation's history.
+An agent profile fixes a role: its name, a description of when to use it, its model, and the tools it may use. Claude Code reads profiles from `.claude/agents/<name>.md`; Codex declares custom roles in the `agents` table of `config.toml`. The main session starts a sub-agent from a profile, gives it a brief, and receives its summary. A Claude Code sub-agent starts with the project's `CLAUDE.md` files and a git status snapshot, and without the main conversation's history.
 
 ![A sequence diagram of one change delegated to sub-agents. The main session briefs a researcher, which returns three rules with sources. It briefs an engineer with the plan, scope and report shape; the engineer writes tests then code in its own worktree, where a guard keeps its edits inside, and reports the head commit, checks and gaps. The main session sends the diff and the original ask to a read-only reviewer from another model family, which returns two findings. The main session fixes one, answers the other, and the change is ready to merge.]({{ '/assets/images/02-ai-harnesses/delegation.png' | relative_url }})
 

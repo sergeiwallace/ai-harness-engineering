@@ -48,7 +48,7 @@ The harness reads the files when the session starts and places their text in the
 
 ![A sequence diagram of context loading over one session. At session start the harness reads the user file and the project file with its imports and loads both, with the system prompt, into the model's window, where they stay all session. During the task the model edits tests/test_api.py; the harness finds a path rule matching tests and its test rules reach the model fresh, absent until then. The model reads web/app.tsx; the harness finds web/CLAUDE.md and its frontend rules reach the model. At compaction the harness sends a summary and reloads the files: chat detail is lost and the files return.]({{ '/assets/images/02-ai-harnesses/context-loading.png' | relative_url }})
 
-*Which context files reach the model, and when. Our own diagram, made with archify.*
+*Which context files reach the model, and when. The diagram simplifies compaction: the project-root `CLAUDE.md` is re-read from disk at once, while folder files and path rules come back the next time a matching file is touched. Our own diagram, made with archify.*
 
 > Claude Code's documentation describes `CLAUDE.md` as "context, not enforced configuration", and says that to block an action regardless of what Claude decides, you use a `PreToolUse` hook. The model reads the file and usually follows it. Nothing checks that it did.
 {: .important }

@@ -29,6 +29,9 @@ A hook is code, and code fails. A failed guard leaves everyone believing the rul
 | False positives | good commands refused, agents learn to route around | log refusals and read them |
 | Bypass | the same action, spelled differently | parse, and test the alternate spellings |
 | Loops | a Stop hook that never lets go | honour the already-sent-back flag |
+| Hangs | a guard waits on the network and holds every call | set a short `timeout` |
+| Order | one hook depends on another that runs at the same time | make each hook stand alone |
+| Silent rewrite | `updatedInput` changes a call and the model does not know | say what changed in `additionalContext` |
 | Cost | a slow hook on every tool call | time it; keep it in milliseconds |
 | Noise | context hooks that add text every turn | measure what they add |
 
@@ -40,7 +43,7 @@ A hook is code, and code fails. A failed guard leaves everyone believing the rul
 
 ### The mechanism
 
-Only exit code 2, or an explicit deny in JSON, blocks. A Python guard that raises an exception exits with 1, which the harness treats as the hook failing, and the action continues.
+Only exit code 2, or an explicit deny in JSON, blocks. A Python guard that raises an exception exits with 1, which the harness treats as a non-blocking hook error, and the action continues. Claude Code's hooks reference warns about exactly this: "If your hook is meant to enforce a policy, use `exit 2`."
 
 ```text
 $ echo 'not json' | python3 guard.py; echo "rc=$?"
@@ -97,6 +100,11 @@ A guard on `Bash` refuses deleting files with `rm`. The same action has other ro
 | an MCP server's file-delete tool | no |
 | `Write` with empty content | no |
 
+Two matcher traps catch people often:
+
+- On macOS and Linux, Claude Code's file searches run as `find` and `grep` through `Bash`, so a hook on `Grep` or `Glob` never fires there.
+- A hook matcher of `mcp__files` matches no tool; write `mcp__files__.*` for every tool from that server.
+
 ### The check
 
 1. For each guarded action, list every tool that can perform it, MCP tools included.
@@ -138,8 +146,40 @@ A Stop hook that blocks whenever tests fail traps an agent that cannot fix the t
 2. The agent tries, fails, and tries to stop again.
 3. Without a limit, this repeats until the session runs out of room.
 
-> The Stop event carries a flag saying a stop hook already sent the agent back once. Check it, and on the second stop let the agent through with a note to the person.
+> The Stop event's input carries `stop_hook_active`, true when a stop hook already sent the agent back. Check it, and on that stop let the agent through with a note to the person.
 {: .warning }
+
+## Hangs and timeouts
+
+A command hook's default timeout is 600 seconds. A guard that calls a slow service, or waits on a lock, can hold every tool call for that long.
+
+```json
+{ "type": "command", "command": "python3 tools/guards/no_pattern_kill.py", "timeout": 5 }
+```
+
+- Set an explicit `timeout` of a few seconds on every guard.
+- Keep network calls out of guards on `Bash` and `Edit`; check a local cache instead.
+- Test what the guard does when its timeout fires, and decide whether that case should refuse.
+
+## Hooks that depend on each other
+
+All hooks that match one event run in parallel.
+
+- A hook cannot rely on another hook's side effect, such as a file the other one writes.
+- Two hooks that both rewrite the same input give an unclear result; keep one rewriter per tool.
+- Put shared logic in one script that both settings entries call, or merge them into one hook.
+
+## Silent rewrites
+
+A `PreToolUse` hook can return `updatedInput`, which replaces the tool's arguments before it runs.
+
+| Use | Risk |
+|---|---|
+| add `--dry-run` to a risky command | the model believes the real command ran |
+| redirect a write to a scratch path | the model reports a file that is not where it says |
+| strip a flag | the next step depends on behaviour that did not happen |
+
+Say what you changed in `additionalContext`, or refuse with a reason.
 
 ## Cost and noise
 
@@ -147,7 +187,7 @@ A Stop hook that blocks whenever tests fail traps an agent that cannot fix the t
 
 A hook on `PreToolUse` with an empty matcher runs before every tool call in every session.
 
-| Hook run time | Effect |
+| Hook run time (rough guidance) | Effect |
 |---|---|
 | under 50 ms | not noticed |
 | around 100 ms | felt on busy sessions |
@@ -165,7 +205,8 @@ A hook that adds context spends tokens every time it fires.
 
 ## Sources
 
-- Claude Code hooks, exit codes and decision control: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-08.
+- Claude Code hooks, exit codes, timeouts, parallel execution and decision control: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
+- Search tools on macOS and Linux: <https://code.claude.com/docs/en/tools-reference.md>, verified 2026-11-09.
 - The failure cases are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

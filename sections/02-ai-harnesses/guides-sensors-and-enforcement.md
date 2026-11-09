@@ -61,7 +61,7 @@ A context-file line, a skill or a template is text the model reads and usually f
 - when the agent juggles several tasks;
 - when it switches to something else and forgets to come back.
 
-> Claude Code's docs describe `CLAUDE.md` as "context, not enforced configuration".
+> Claude Code's docs describe `CLAUDE.md` as "context, not enforced configuration". They add two pieces of guidance: "The more specific and concise your instructions, the more consistently Claude follows them", and, to block an action regardless of what Claude decides, use a `PreToolUse` hook.
 {: .note }
 
 ### Code that always runs
@@ -77,19 +77,32 @@ A hook, script, linter, test or CI gate runs the same way every time. It cannot 
 
 ## The enforcement ladder
 
-![The enforcement ladder: context rule, path rule, skill, hook or guard, test or CI gate, from soft and cheap to hard and costly.]({{ '/assets/images/02-ai-harnesses/enforcement-ladder.svg' | relative_url }})
+![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled hazards passes through holes that line up in every slice and comes out as losses. Each slice stands for one layer of defence; a mistake gets through only where the holes in every layer line up.]({{ '/assets/images/02-ai-harnesses/swiss-cheese-model.png' | relative_url }})
 
-### The steps
+*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
 
-| Step | Example | Checked when |
-|---|---|---|
-| Context rule | "Run the tests before committing." | if the model remembers |
-| Path rule | test standards in `.claude/rules/` for test files | when the agent opens a matching file |
-| Skill | a commit procedure with a test step | when the skill is used |
-| Hook or guard | a `PreToolUse` hook that refuses the commit command until tests pass | as the agent acts |
-| Test or CI gate | a pre-push hook and CI job that run the suite | at push and merge |
+### The layers
 
-The ladder lines up with the layers of the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering): the context rule and path rule are instructions (layer 1), skills and templates build the steps into the workflow (layer 2), hooks and guards refuse at the moment of action (layer 3), and tests and CI gates validate before a change lands (layer 4). My harness puts each rule as high on the ladder as it can be checked, and keeps a context-file line only as a second layer. Actions only a person may take, such as publishing or deleting, sit beside the ladder as human approvals; see [Human gates]({{ '/sections/14-human-gates/' | relative_url }}).
+| Layer | What it is | Enforced by | Example from my harness | What it misses, for the next layer to catch |
+|---|---|---|---|---|
+| 1. Instructions | context files, path rules, skill text, prompts | the model, reading it | "never kill processes by name pattern" in the context file | a model juggling tasks or near a full window drops the line |
+| 2. Workflows and tools | skills with fixed steps, scripts, templates, tools that accept only valid input | the program the agent runs | a commit script that builds the message and refuses one without the delegation line | actions the agent takes outside the workflow, such as a raw shell command |
+| 3. Hooks, scripts and linters | checks at the moment of action | the harness, every time | a `PreToolUse` guard that refuses `pkill` and names the safe form | spellings the guard does not parse, and mistakes only visible in the finished result |
+| 4. Validation and tests | tests, CI, link checkers, review before a change lands | programs and reviewers on the result | a link checker that walks the built site before publish | design and judgment problems no check encodes; those go to a person |
+
+### The steps in Claude Code
+
+The same ladder, as the concrete places a rule can live:
+
+| Step | Layer | Example | Checked when |
+|---|---|---|---|
+| context rule | 1 | "Run the tests before committing." | if the model remembers |
+| path rule | 1 | test standards in `.claude/rules/` for test files | when the agent opens a matching file |
+| skill or script | 2 | a commit procedure with a test step, or a commit script that runs the tests | when the workflow runs |
+| hook or guard | 3 | a `PreToolUse` hook that refuses the commit command until tests pass | as the agent acts |
+| test or CI gate | 4 | a git pre-push hook and a CI job that run the suite | at push and merge |
+
+These are the layers of the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering). My harness enforces each rule in the latest layer that can check it, and keeps a context-file line only as a second layer. Actions only a person may take, such as publishing or deleting, sit beside the ladder as human approvals; see [Human gates]({{ '/sections/14-human-gates/' | relative_url }}).
 
 ### One rule moved into the system
 
@@ -106,7 +119,7 @@ The rule: never cite a file that is not committed as evidence.
 In hindsight the rule could have gone to the hook first: the bad action is visible in the tool input, and a wrong citation is costly to find later.
 
 <details markdown="1">
-<summary>When a rule should not climb</summary>
+<summary>When a rule stays a guide</summary>
 
 Some rules cannot be checked from the action alone: "prefer the simpler design", "ask when the requirement is unclear". Forcing them into a hook produces a guard that refuses good work or passes bad work. Leave them as guides and add a sensor that sees the whole result, such as a review step with the rule in its checklist.
 
@@ -135,6 +148,7 @@ Fast sensors that run on every file the agent writes.
 ```
 
 - Run from a `PostToolUse` [hook]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}#posttooluse), so the model sees the problem while the edit is fresh.
+- Lint only the file just written: a script reads `tool_input.file_path` from the hook's input and passes it to the linter, so a large repository does not slow every edit.
 - Run again at commit, so nothing that skipped the hook lands.
 
 ### Tests and gates
@@ -143,8 +157,8 @@ The slowest and strongest sensors.
 
 | Gate | Runs | Typical content |
 |---|---|---|
-| pre-commit hook | on `git commit` | lint, fast tests |
-| pre-push hook | on `git push` | the full suite |
+| git pre-commit hook | on `git commit` | lint, fast tests |
+| git pre-push hook | on `git push` | the full suite |
 | CI | on every change | the full suite on a clean machine |
 
 A test that pins a rule ("no live link points into a temporary worktree") keeps the rule true after everyone has forgotten why it exists. See [Testing]({{ '/sections/12-testing/' | relative_url }}).
@@ -220,7 +234,8 @@ When you adopt someone else's setup, or open your own after a few months, three 
 ## Sources
 
 - Böckeler, "Harness engineering": <https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html> (2026-04-02), verified 2026-11-08.
-- "context, not enforced configuration": <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08.
+- "context, not enforced configuration" and the guidance quoted with it: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- Swiss cheese model image: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0. The model is James Reason's.
 - Harness cost measurements: reported by HarnessTax (UC Berkeley and Arena, 2026), <https://harnesstax.github.io/>; not yet verified against the primary source.
 - The enforcement ladder, the citation example and the commit script are from the author's own harness, described conceptually.
 

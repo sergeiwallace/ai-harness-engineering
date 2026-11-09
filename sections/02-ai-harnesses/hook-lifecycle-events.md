@@ -21,9 +21,9 @@ Each hook event is a moment in the session where the harness pauses and asks you
 
 ## The events in order
 
-![Where hooks fire in a session.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle.svg' | relative_url }})
+![The Claude Code hook lifecycle, simplified, top to bottom. SessionStart once per session injects context. Inside the turn, once per user prompt, UserPromptSubmit validates or blocks the prompt. Inside it, the agentic loop runs once per tool call: PreToolUse can allow, deny, ask the user or rewrite the tool input; the tool executes; PostToolUse reacts to the result, gives feedback or rewrites the output; then the loop repeats. Stop can block the stop until tests pass. SessionEnd once per session does cleanup and logging.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle-ran-the-builder.png' | relative_url }})
 
-*The main events in session order. Our own diagram.*
+*Placeholder image: the Claude Code hook lifecycle. Source: Ran the Builder, <https://ranthebuilder.cloud/blog/agentic-coding-hooks-deterministic-ai-guardrails/>, used with credit.*
 
 ### The main events
 
