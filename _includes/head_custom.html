@@ -43,22 +43,54 @@
     .main { margin-left: Max(16.5rem, calc((100% - 91.5rem) / 2 + 16.5rem)); max-width: 75rem; }
   }
   @media (min-width: 2200px) { html { font-size: 112.5% !important; } }
+  /* tables-fit v3 */
+  .main-content :not(pre) > code { white-space: nowrap !important; overflow-wrap: normal !important; word-break: normal !important; }
+  .main-content td code, .main-content th code { white-space: nowrap !important; overflow-wrap: normal !important; }
+  .main-content table.table-squeeze th, .main-content table.table-squeeze td { overflow-wrap: normal !important; }
+  .main-content .table-wrapper.table-scroll { overflow-x: auto !important; }
+  .main-content .table-wrapper.table-wide { max-width: none !important; position: relative; z-index: 1; background: #fff; }
 </style>
-<script>/* tables-fit v2: keep a short first column on one line; step down only where a table still overflows */
+<script>/* tables-fit v3: prose columns get room; wide tables widen, then tighten, then scroll; never break a word */
 (function () {
-  function over(t) { var w = t.closest('.table-wrapper') || t.parentElement; return w.scrollWidth > w.clientWidth + 1; }
+  function wrap(t) { return t.closest('.table-wrapper') || t.parentElement; }
+  function over(t) { var w = wrap(t); return t.scrollWidth > w.clientWidth + 1; }
   function fit() {
     document.querySelectorAll('.main-content table').forEach(function (t) {
-      t.classList.remove('table-tight', 'table-squeeze');
-      var cells = Array.prototype.map.call(t.rows, function (r) { return r.cells[0]; }).filter(Boolean);
-      cells.forEach(function (c) { c.classList.remove('cell-nowrap'); });
-      var ok = cells.length && cells.every(function (c) { return c.textContent.trim().length <= 28 && !c.querySelector('code'); });
-      if (ok) cells.forEach(function (c) { c.classList.add('cell-nowrap'); });
-      if (over(t)) cells.forEach(function (c) { c.classList.remove('cell-nowrap'); });
+      var w = wrap(t);
+      t.classList.remove('table-tight', 'table-squeeze'); w.classList.remove('table-wide', 'table-scroll'); w.style.width = '';
+      var rows = Array.prototype.slice.call(t.rows); if (!rows.length) return;
+      var ncol = Math.max.apply(null, rows.map(function (r) { return r.cells.length; }));
+      for (var c = 0; c < ncol; c++) {
+        var cells = rows.map(function (r) { return r.cells[c]; }).filter(Boolean);
+        cells.forEach(function (x) { x.style.minWidth = ''; x.classList.remove('cell-nowrap'); });
+        var body = cells.slice(1); if (!body.length) continue;
+        var avg = body.reduce(function (s, x) { return s + x.textContent.trim().length; }, 0) / body.length;
+        if (avg > 40) cells.forEach(function (x) { x.style.minWidth = '13em'; });
+        if (c === 0 && cells.every(function (x) { return x.textContent.trim().length <= 28 && !x.querySelector('code'); })) cells.forEach(function (x) { x.classList.add('cell-nowrap'); });
+      }
+      if (over(t)) rows.forEach(function (r) { if (r.cells[0]) r.cells[0].classList.remove('cell-nowrap'); });
+      if (over(t)) {
+        var main = document.querySelector('.main') || document.body; var mr = main.getBoundingClientRect(); var wr = w.getBoundingClientRect();
+        var avail = Math.min(mr.right, document.documentElement.clientWidth) - wr.left - 24;
+        if (avail > wr.width + 8) { w.classList.add('table-wide'); w.style.width = Math.min(avail, t.scrollWidth + 2) + 'px'; }
+      }
       if (over(t)) t.classList.add('table-tight');
-      if (over(t)) t.classList.add('table-squeeze');
+      if (over(t)) w.classList.add('table-scroll');
     });
   }
-  document.addEventListener('DOMContentLoaded', fit);
+  function keepHyphenated() {
+    var mc = document.querySelector('.main-content'); if (!mc) return;
+    var tw = document.createTreeWalker(mc, NodeFilter.SHOW_TEXT, null), n, list = [];
+    while ((n = tw.nextNode())) { if (!n.parentElement.closest('pre,code,script,style,.nb-word') && /\S-\S/.test(n.data)) list.push(n); }
+    list.forEach(function (n) {
+      var frag = document.createDocumentFragment();
+      n.data.split(/(\s+)/).forEach(function (part) {
+        if (/\S-\S/.test(part)) { var s = document.createElement('span'); s.className = 'nb-word'; s.style.whiteSpace = 'nowrap'; s.textContent = part; frag.appendChild(s); }
+        else frag.appendChild(document.createTextNode(part));
+      });
+      n.parentNode.replaceChild(frag, n);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () { keepHyphenated(); fit(); });
   var tm; window.addEventListener('resize', function () { clearTimeout(tm); tm = setTimeout(fit, 150); });
 })();</script>

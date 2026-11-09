@@ -78,7 +78,8 @@ deck:
   - { index: 62, id: "advanced-topics", title: "Advanced topics", part: "Appendix" }
   - { index: 63, id: "mods-and-function-hooks", title: "Mods and function hooks", part: "Appendix" }
   - { index: 64, id: "mcp-apps", title: "MCP Apps in the desktop and web apps", part: "Appendix" }
-  - { index: 65, id: "taste-detail", title: "Taste in practice", part: "Appendix" }
+  - { index: 65, id: "remote-control", title: "Remote Control and mobile", part: "Appendix" }
+  - { index: 66, id: "taste-detail", title: "Taste in practice", part: "Appendix" }
 
 sections:
   "landing":
@@ -173,3 +174,4 @@ sections:
   "19-chat-and-desktop-clients":
     - { index: 61, title: "Desktop, Web & Mobile Apps" }
     - { index: 64, title: "MCP Apps in the desktop and web apps" }
+    - { index: 65, title: "Remote Control and mobile" }

@@ -61,7 +61,7 @@ The PDF has one page per slide, for showing the talk without a browser or for pr
 | 12 | 4 | 4 | Building your own harness |
 | 13 | 2 | 3 | Trends and model changes, taste |
 
-The stops add up to 42 minutes for 41 main slides. Questions take the last 3 minutes, using the 25 appendix slides.
+The stops add up to 42 minutes for 41 main slides. Questions take the last 3 minutes, using the 26 appendix slides.
 
 ## Main slides
 
@@ -198,6 +198,7 @@ One backup slide per section, used during questions. The [appendix index slide](
 21. [Advanced topics]({{ slides_url }}#/62){:target="_blank" rel="noopener"}
 22. [Mods and function hooks]({{ slides_url }}#/63){:target="_blank" rel="noopener"}, page: [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }})
 23. [MCP Apps in the desktop and web apps]({{ slides_url }}#/64){:target="_blank" rel="noopener"}, page: [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }})
-24. [Taste in practice]({{ slides_url }}#/65){:target="_blank" rel="noopener"}, page: [Taste and spiky capabilities]({{ '/sections/18-trends/taste-and-spiky-capabilities.html' | relative_url }})
+24. [Remote Control and mobile]({{ slides_url }}#/65){:target="_blank" rel="noopener"}, page: [Tabs and surfaces]({{ '/sections/19-chat-and-desktop-clients/tabs-and-surfaces.html' | relative_url }})
+25. [Taste in practice]({{ slides_url }}#/66){:target="_blank" rel="noopener"}, page: [Taste and spiky capabilities]({{ '/sections/18-trends/taste-and-spiky-capabilities.html' | relative_url }})
 
 {% include page_nav.html %}
