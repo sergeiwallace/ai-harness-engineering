@@ -46,11 +46,23 @@ This page covers each, then the stories of five guards in my harness that starte
 
 A refusal goes back to the agent as text, and the agent's next call depends on what that text says.
 
-| Refusal message | Likely next call |
-|---|---|
-| `Blocked.` | The same command again, or a variation that dodges the guard |
-| `Pattern kills are not allowed.` | A different pattern kill, such as `killall` |
-| `Pattern kills are refused on shared machines. Find the PID with pgrep -a <name> and run kill <pid>, or kill your own process group with kill -- -<pgid>.` | `pgrep -a pytest`, then `kill 4121` |
+| Refusal | What it says | Likely next call |
+|---|---|---|
+| A | Only that the call was blocked | The same command again, or a variation that dodges the guard |
+| B | What is refused, with no fix | A different pattern kill, such as `killall` |
+| C | What is refused, why, and the allowed form | `pgrep -a pytest`, then `kill 4121` |
+
+The three messages in full:
+
+```text
+A: Blocked.
+
+B: Pattern kills are not allowed.
+
+C: Pattern kills are refused on shared machines. Find the PID with
+   pgrep -a <name> and run kill <pid>, or kill your own process group
+   with kill -- -<pgid>.
+```
 
 ### What a good message contains
 

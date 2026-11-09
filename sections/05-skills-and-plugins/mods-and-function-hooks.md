@@ -89,18 +89,35 @@ The full list, with every field, is in the [mods reference](#references); the ty
 
 ## Function hooks and shell hooks
 
-| | Function hook (mod) | Command hook | HTTP hook | Prompt hook | Agent hook |
-|---|---|---|---|---|---|
-| Process model | A function inside Claude Code's process | A new process for each event | A request to a URL | A model call | A sub-agent with tools |
-| Latency | No process start per event (no published figure) | Process start on every event | Network round trip | Model latency | Slowest of the five |
-| State between events | Module variables shared by the mod's hooks; `$.store` shared across sessions; variables reset on reload | None, unless the script writes files | Whatever the server keeps | None | None |
-| Can change | Tool calls, prompts, commands, turns, settings, what the interface draws | Whether a call or prompt goes ahead, a tool call's input and result, added context | The same as a command hook | The same, decided by a model | The same, decided by an agent |
-| Can draw | Yes | No | No | No | No |
-| Failure | Throw, timeout or wrong shape before `next`: skipped, the event goes on (fails open) unless a `.catch` handler answers | Exit 2 blocks; another non-zero exit shows an error and the action proceeds | See the hooks reference | See the hooks reference | See the hooks reference |
-| Time limit | 10 seconds of the hook's own execution, 50 ms for `prompt.edit`; 1 second for a `.catch` handler | The `timeout` you register | The `timeout` you register | The `timeout` you register | The `timeout` you register |
-| Written in | JavaScript or TypeScript | Any language | Any server | A prompt | A prompt and tools |
-| Trust | Runs with your permissions, not sandboxed; sees every prompt and tool call | Runs with your permissions | Sends event data to the server | Sends event data to a model | Runs tools |
-| Use it for | Interface, rewriting events, state across events, commands that run instantly | A guard or check with a script you already have | A central policy service | A judgment a pattern cannot make | A check that must read files |
+The two kinds a harness uses most, side by side:
+
+| | Function hook (mod) | Command hook |
+|---|---|---|
+| Process model | A function inside Claude Code's process | A new process for each event |
+| Latency | No process start per event (no published figure) | Process start on every event |
+| State between events | Module variables shared by the mod's hooks; `$.store` shared across sessions; variables reset on reload | None, unless the script writes files |
+| Can change | Tool calls, prompts, commands, turns, settings, what the interface draws | Whether a call or prompt goes ahead, a tool call's input and result, added context |
+| Can draw | Yes | No |
+| Failure | Throw, timeout or wrong shape before `next`: skipped, the event goes on (fails open) unless a `.catch` handler answers | Exit 2 blocks; another non-zero exit shows an error and the action proceeds |
+| Time limit | 10 seconds of the hook's own execution, 50 ms for `prompt.edit`, 1 second for a `.catch` handler | The `timeout` you register |
+| Written in | JavaScript or TypeScript | Any language |
+| Trust | Runs with your permissions, not sandboxed; sees every prompt and tool call | Runs with your permissions |
+| Use it for | Interface, rewriting events, state across events, commands that run instantly | A guard or check with a script you already have |
+
+The other three settings hook types:
+
+| Hook type | How it runs | Trust | Use it for |
+|---|---|---|---|
+| HTTP hook | A request to a URL, served by any server. Latency is a network round trip, and state is whatever the server keeps | Sends event data to the server | A central policy service |
+| Prompt hook | A model call, written as a prompt. Latency is model latency, and it keeps no state | Sends event data to a model | A judgment a pattern cannot make |
+| Agent hook | A sub-agent with tools, written as a prompt and tools. The slowest of the five, and it keeps no state | Runs tools | A check that must read files |
+
+What the three share:
+
+- They can change the same things as a command hook, decided by the server, a model or an agent.
+- They cannot draw.
+- Their time limit is the `timeout` you register.
+- Their failure behaviour is in the [hooks reference](#references).
 
 Where the two kinds meet in one tool call:
 

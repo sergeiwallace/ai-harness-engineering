@@ -117,13 +117,15 @@ A project thread can run on your machine through Remote Control. That thread use
 
 ### How the harness maps onto Projects
 
-| Concept | Classic Projects | New Projects, cloud thread | New Projects, thread on your computer |
-|---|---|---|---|
-| Context files | Project instructions | Project instructions, project memory, `CLAUDE.md` | Project instructions, `CLAUDE.md` |
-| Skills | Your claude.ai skills | Not the repository's skills | Your local skills |
-| Enforcement | None by program | No local hooks or permission rules | Your local hooks and permission rules |
-| Connectors and MCP | claude.ai connectors | claude.ai connectors | Your local MCP servers |
-| Delegation | None you control | One thread per task, in parallel | One thread per task |
+Classic Projects map like Chat: project instructions, your claude.ai skills and connectors, and no enforcement by program or delegation you control (see [Chat and classic Projects](#chat-and-classic-projects) below). New Projects differ by where the thread runs:
+
+| Concept | Cloud thread | Thread on your computer |
+|---|---|---|
+| Context files | Project instructions, project memory, `CLAUDE.md` | Project instructions, `CLAUDE.md` |
+| Skills | Not the repository's skills | Your local skills |
+| Enforcement | No local hooks or permission rules | Your local hooks and permission rules |
+| Connectors and MCP | claude.ai connectors | Your local MCP servers |
+| Delegation | One thread per task, in parallel | One thread per task |
 
 ## Cowork
 
@@ -260,14 +262,62 @@ So on a company setup that reaches the model through an API key, a cloud provide
 
 ## How the harness maps across surfaces
 
-| Concept | Chat and classic Projects | New Projects, cloud thread | Cowork | Code tab, local | Remote Control from mobile |
-|---|---|---|---|---|---|
-| Context files | Preferences, memory, project instructions | Project instructions and memory, `CLAUDE.md` | Memory, claude.ai settings | `CLAUDE.md` | Your local `CLAUDE.md` |
-| Skills | claude.ai skills | Not the repository's skills | claude.ai skills and plugins | `~/.claude/skills/` and plugins | Your local skills |
-| Enforcement (hooks, linters, tests) | None by program | No local hooks; CI still runs | Approval modes and isolation | Full | Your local hooks |
-| Connectors and MCP | claude.ai connectors | claude.ai connectors | Connectors | Local and remote MCP servers | Your local MCP servers |
-| Delegation | None you control | A thread per task | Sub-agents | Sub-agents and parallel sessions | Sub-agents, in sync across devices |
-| Human gates | Your review | Approvals inside each thread | Manual mode, deletion prompts | Permission rules | Prompts answered from any device |
+Each surface below lists the same six harness concepts, so you can compare them one surface at a time.
+
+### Chat and classic Projects
+
+| Concept | How it maps |
+|---|---|
+| Context files | Preferences, memory and project instructions |
+| Skills | Skills from your claude.ai settings |
+| Enforcement (hooks, linters, tests) | None by program |
+| Connectors and MCP | claude.ai connectors |
+| Delegation | None you control |
+| Human gates | Your review |
+
+### New Projects, cloud thread
+
+| Concept | How it maps |
+|---|---|
+| Context files | Project instructions and memory, plus `CLAUDE.md` |
+| Skills | Not the repository's skills |
+| Enforcement (hooks, linters, tests) | No local hooks; CI still runs |
+| Connectors and MCP | claude.ai connectors |
+| Delegation | A thread per task |
+| Human gates | Approvals inside each thread |
+
+### Cowork
+
+| Concept | How it maps |
+|---|---|
+| Context files | Memory, and your claude.ai settings |
+| Skills | Skills and plugins from your claude.ai settings |
+| Enforcement (hooks, linters, tests) | Approval modes and the isolated environment |
+| Connectors and MCP | Connectors |
+| Delegation | Sub-agents |
+| Human gates | Manual approval mode and deletion prompts |
+
+### Code tab, local session
+
+| Concept | How it maps |
+|---|---|
+| Context files | `CLAUDE.md` |
+| Skills | `~/.claude/skills/` and plugins |
+| Enforcement (hooks, linters, tests) | Full |
+| Connectors and MCP | Local and remote MCP servers |
+| Delegation | Sub-agents and parallel sessions |
+| Human gates | Permission rules |
+
+### Remote Control from mobile
+
+| Concept | How it maps |
+|---|---|
+| Context files | Your local `CLAUDE.md` |
+| Skills | Your local skills |
+| Enforcement (hooks, linters, tests) | Your local hooks |
+| Connectors and MCP | Your local MCP servers |
+| Delegation | Sub-agents, in sync across devices |
+| Human gates | Prompts answered from any device |
 
 <!-- IMAGE NEEDED: a screenshot of the Claude desktop app showing the Chat, Cowork and Code tabs, or the Remote Control session view on a phone. -->
 

@@ -84,8 +84,18 @@ Two ways to run the loop without driving each round yourself:
 
 | Way | How | Bound |
 |---|---|---|
-| A `/goal` | `/goal tests/test_classify.py pass rate printed after each change reaches 46/50, keeping only changes that raise it; or stop after 8 turns` | The turn clause |
-| A dynamic workflow | "use a workflow to run the benchmark, change one thing, keep it only if the score rises, and stop when two rounds in a row make no progress" | The no-progress rule, and the 1,000-agent run cap |
+| A `/goal` | Command A below | The turn clause |
+| A dynamic workflow | Prompt B below, typed in plain words | The no-progress rule, and the 1,000-agent run cap |
+
+```text
+# A: a /goal with a turn clause
+/goal tests/test_classify.py pass rate printed after each change reaches
+46/50, keeping only changes that raise it; or stop after 8 turns
+
+# B: a dynamic workflow prompt
+use a workflow to run the benchmark, change one thing, keep it only if the
+score rises, and stop when two rounds in a row make no progress
+```
 
 The second phrasing follows an example prompt in the Claude Code workflows docs ("keep fixing the reported errors until the type check passes or two rounds in a row make no progress").
 

@@ -134,12 +134,18 @@ The lead agent fills in the angle-bracket fields.
 
 A template is only useful if the agent that needs it gets it the same way every time. Both tools store reusable prompts as files with argument placeholders.
 
-| Tool | Location | How it is invoked | Placeholders |
+| Tool | Folder | How it is invoked | Placeholders |
 |---|---|---|---|
-| Claude Code skill | `.claude/skills/<name>/SKILL.md` (project) or `~/.claude/skills/<name>/SKILL.md` (personal) | `/<name> args`, or by Claude when the description matches | `$ARGUMENTS`, `$0`, `$1`, or named `arguments` in frontmatter |
-| Claude Code command (older format, still works) | `.claude/commands/<name>.md` | `/<name> args` | Same as skills |
-| Codex skill | Codex skills replace custom prompts | By name, or by Codex when it fits | See the Codex skills documentation |
-| Codex custom prompt (deprecated) | `~/.codex/prompts/<name>.md` | `/prompts:<name> KEY=value` | `$1` to `$9`, `$ARGUMENTS`, named `$NAME` |
+| Claude Code skill | Skills folder | `/<name> args`, or by Claude when the description matches | `$ARGUMENTS`, `$0`, `$1`, or named `arguments` in frontmatter |
+| Claude Code command (older format, still works) | Commands folder | `/<name> args` | Same as skills |
+| Codex skill (replaces custom prompts) | Not covered here | By name, or by Codex when it fits | See the Codex skills documentation |
+| Codex custom prompt (deprecated) | Prompts folder | `/prompts:<name> KEY=value` | `$1` to `$9`, `$ARGUMENTS`, named `$NAME` |
+
+The folders, with the file each template lives in:
+
+- Skills folder: `.claude/skills/<name>/SKILL.md` in the project, or `~/.claude/skills/<name>/SKILL.md` for one person
+- Commands folder: `.claude/commands/<name>.md`
+- Prompts folder: `~/.codex/prompts/<name>.md`
 
 ### Worked example: a brief stub as a skill
 

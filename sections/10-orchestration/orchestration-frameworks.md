@@ -98,13 +98,25 @@ A fixed plan and model judgment can be combined in one tree of agents.
 
 ## Side by side
 
-| | LangGraph | OpenAI Agents SDK | CrewAI | Google ADK | Microsoft Agent Framework |
-|---|---|---|---|---|---|
-| The plan is | A graph | Agents and handoffs | A crew and a process, or a flow | A tree of agents and workflow templates | A graph of agents |
-| Pause for a person | Checkpointer | Human-in-the-loop support | Human review steps | Not checked here | Human in the loop |
-| Resume a long run | From a checkpoint | Sessions keep context | Flows persist and resume | Not checked here | Checkpointing |
-| Languages | Python, JavaScript | Python | Python | Python, TypeScript, Go, Java, Kotlin | Python, .NET, Go |
-| PyPI version, 2026-11-08 | 1.2.20 | 0.24.0 | 1.15.38 | 2.14.0 | |
+### How each one models a plan
+
+| Framework | The plan is | Languages | PyPI version, 2026-11-08 |
+|---|---|---|---|
+| LangGraph | A graph | Python, JavaScript | 1.2.20 |
+| OpenAI Agents SDK | Agents and handoffs | Python | 0.24.0 |
+| CrewAI | A crew and a process, or a flow | Python | 1.15.38 |
+| Google ADK | A tree of agents and workflow templates | Python, TypeScript, Go, Java, Kotlin | 2.14.0 |
+| Microsoft Agent Framework | A graph of agents | Python, .NET, Go | Not checked here |
+
+### Pausing and resuming
+
+| Framework | Pause for a person | Resume a long run |
+|---|---|---|
+| LangGraph | Checkpointer | From a checkpoint |
+| OpenAI Agents SDK | Human-in-the-loop support | Sessions keep context |
+| CrewAI | Human review steps | Flows persist and resume |
+| Google ADK | Not checked here | Not checked here |
+| Microsoft Agent Framework | Human in the loop | Checkpointing |
 
 Versions were not re-checked since 2026-11-08. These projects release often; read the changelog before relying on an example.
 
