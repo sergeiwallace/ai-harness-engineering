@@ -81,7 +81,7 @@ See [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relat
 
 ### 2.3 Every rule is an instruction
 
-In a chat app there is no hook, no test and no gate between the model and you, so every rule sits in layer 1 of the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers).
+In a chat app there is no hook, no test and no gate between the model and you, so every rule sits in layer 1 of the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the-four-layers).
 
 - Expect each rule to be followed less consistently than a rule a hook enforces.
   - Most of all in a long conversation, or one that switches between tasks.

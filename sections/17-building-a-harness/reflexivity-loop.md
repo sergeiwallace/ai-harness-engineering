@@ -90,7 +90,7 @@ Make the smallest change that would have stopped this case, at a layer that enfo
 3. A test or validation that catches the result before it lands (layer 4).
 4. Then, at most, one context-file line that names the guard (layer 1, the second line of defence).
 
-> Warning: answering each mistake with a new, detailed context-file rule is an anti-pattern. The rule set grows, the agent applies it less consistently in long or busy sessions, and the same failure comes back. See [Ad hoc rules after every mistake]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}#the-four-usual-paths).
+> Warning: answering each mistake with a new, detailed context-file rule is an anti-pattern. The rule set grows, the agent applies it less consistently in long or busy sessions, and the same failure comes back. See [Ad hoc rules after every mistake]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}#ad-hoc-rules-after-every-mistake).
 
 The ladder, from soft to hard:
 
@@ -122,7 +122,7 @@ Treat the change as a trial. Check it against the next sessions, or against a sm
 
 ## A full worked example
 
-This is the "forgot to run the tests before saying done" entry from the [overview's friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#keep-a-friction-log), taken through all five steps. The example is illustrative: the failure is a common one, and the dates, counts and file names are made up for this page.
+This is the "forgot to run the tests before saying done" entry from the [overview's friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#21-keep-a-friction-log), taken through all five steps. The example is illustrative: the failure is a common one, and the dates, counts and file names are made up for this page.
 
 | Step | Outcome |
 |---|---|

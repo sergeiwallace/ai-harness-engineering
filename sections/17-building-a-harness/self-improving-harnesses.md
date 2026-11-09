@@ -60,7 +60,7 @@ Both put the evaluation protocol at the centre of the method.
 
 ### Production practice
 
-OpenAI described building self-improving agents with Codex for a production domain. The progression it reports maps onto the [layers of a harness]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers):
+OpenAI described building self-improving agents with Codex for a production domain. The progression it reports maps onto the [layers of a harness]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the-four-layers):
 
 1. Feedback from reviewers becomes documentation the agent reads (layer 1).
 2. Rules that need enforcement become tooling (layers 2 to 4).
@@ -79,7 +79,7 @@ If the two arms score the same, keep the simpler baseline.
 
 ## Evidence for enforcing over instructing
 
-Several 2026 studies measured what the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers) assume: that instructions alone hold less well than checks, and hold worse as they multiply and as a session goes on.
+Several 2026 studies measured what the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the-four-layers) assume: that instructions alone hold less well than checks, and hold worse as they multiply and as a session goes on.
 
 | Study | What it measured | Finding |
 |---|---|---|

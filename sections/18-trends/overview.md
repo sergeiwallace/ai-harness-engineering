@@ -74,7 +74,7 @@ The [re-testing page]({{ '/sections/18-trends/retesting-after-a-model-change.htm
 
 ### 1.4 Which layers a model change affects
 
-The [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers) differ in how much a new model changes them.
+The [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the-four-layers) differ in how much a new model changes them.
 
 | Layer | Effect of a model change | What to re-check |
 |---|---|---|

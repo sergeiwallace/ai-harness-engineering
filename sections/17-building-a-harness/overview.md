@@ -55,7 +55,7 @@ A skill can sit in either layer. A skill whose text describes how to review code
 
 <!-- IMAGE NEEDED: the four layers as a vertical stack around one agent action, such as an edit or a push, showing where each layer acts: instructions before the action, workflows shaping it, hooks at the moment it runs, tests before the result lands. -->
 
-> Warning: adding a new, detailed rule to a context file every time an agent does something wrong is an anti-pattern. The rules pile up, the agent applies them less consistently as they grow, and the same failure returns in a long or busy session. Put the fix into a workflow, a tool, a hook or a test, and keep at most one context-file line that names it. The [complexity creep page]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}#the-four-usual-paths) covers this in detail.
+> Warning: adding a new, detailed rule to a context file every time an agent does something wrong is an anti-pattern. The rules pile up, the agent applies them less consistently as they grow, and the same failure returns in a long or busy session. Put the fix into a workflow, a tool, a hook or a test, and keep at most one context-file line that names it. The [complexity creep page]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}#ad-hoc-rules-after-every-mistake) covers this in detail.
 
 ### 1.2 Applying it to each gap
 

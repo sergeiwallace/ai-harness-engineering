@@ -34,7 +34,7 @@ Most rules in a harness exist because of something the model got wrong. A new mo
 
 ### 1. Keep a task set
 
-A task set is a small list of real tasks with a way to tell whether each one went well. Draw it from your [friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#keep-a-friction-log): each past failure becomes a task. Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures. [Building a task set]({{ '/sections/18-trends/building-a-task-set.html' | relative_url }}) covers how to write and read one.
+A task set is a small list of real tasks with a way to tell whether each one went well. Draw it from your [friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#21-keep-a-friction-log): each past failure becomes a task. Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures. [Building a task set]({{ '/sections/18-trends/building-a-task-set.html' | relative_url }}) covers how to write and read one.
 
 ```yaml
 # tasks.yaml: one entry per past failure
@@ -83,7 +83,7 @@ A pass rate shows that something changed. The transcripts show what changed, and
 1. For each idle rule, remove it and re-run the tasks it covers.
    - Keep the removal if nothing regresses.
 2. For each new failure, put the fix into the system.
-   - A workflow step, a hook or a test where a program can detect the failure; see [the four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers).
+   - A workflow step, a hook or a test where a program can detect the failure; see [the four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the-four-layers).
    - A short context-file line only where it cannot, or as a pointer to the new guard.
 3. Re-run the task set after each change, so each result belongs to one change.
 

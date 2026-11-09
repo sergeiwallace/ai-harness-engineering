@@ -185,7 +185,7 @@ fi
 <details markdown="1">
 <summary>Why a PostToolUse hook and not a PreToolUse one</summary>
 
-A PreToolUse hook runs before the tool and can stop it, which is right for a dangerous command such as a force push. A PostToolUse hook runs after the edit has happened, so it cannot undo it, but it can fix the result and tell the agent what is still wrong. Formatting changes the file and does not need to stop anything, so it fits after the edit. The [enforcement ladder]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}#change-the-system) shows a PreToolUse example.
+A PreToolUse hook runs before the tool and can stop it, which is right for a dangerous command such as a force push. A PostToolUse hook runs after the edit has happened, so it cannot undo it, but it can fix the result and tell the agent what is still wrong. Formatting changes the file and does not need to stop anything, so it fits after the edit. The [enforcement ladder]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}#4-change-the-system) shows a PreToolUse example.
 
 </details>
 
@@ -226,7 +226,7 @@ A `Bash(...:*)` rule matches commands that start with that text, so each spellin
 
 ## Day 5: read the friction log
 
-Do not add a fifth file. Read the week's [friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#keep-a-friction-log) instead, and ask two questions:
+Do not add a fifth file. Read the week's [friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#21-keep-a-friction-log) instead, and ask two questions:
 
 1. Which rule does the agent still break? That is next week's hook.
 2. Which prompt do you still retype? That is next week's skill.

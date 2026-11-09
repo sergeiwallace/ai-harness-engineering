@@ -137,7 +137,7 @@ $ echo $?
 
 - `tail` succeeded, so the pipeline reports 0 even though the push failed.
 - Behind a pipe, a failed push and a failed issue filing were both reported to me as successes.
-- `set -o pipefail` makes the pipeline report the first failure; the pipe-status guard above refuses the pipe where it matters.
+- With `set -o pipefail` the pipeline fails if any command in it fails; the pipe-status guard above refuses the pipe where the result matters.
 
 ## Use the tool that already exists
 
