@@ -29,8 +29,8 @@ The agent loop is the small program that turns a language model into an agent: s
 
 ## The loop in one picture
 
-![Diagram: a coding agent as one tall map. You give the task to the client; the client loads context files and memory and sends the whole context to the model; the model's tool call passes a permission gate, which consults hooks; the tool runner edits files, runs the shell or fetches from the web and MCP servers; the tool result returns to the model]({{ '/assets/images/01-agentic-ai-fundamentals/agent-loop-map.svg' | relative_url }}){: style="width: 100%" }
-*Figure: the loop as parts, top to bottom. The dashed arrow on the right closes the loop: each tool result goes back into the model's context.*
+![Diagram: a coding agent as one tall map. You give the task to the client; the client loads context files and memory and sends the whole context to the model; the model's tool call passes a permission gate, which consults hooks; the tool runner edits files, runs the shell or fetches from the web and MCP servers; the tool result returns to the model. A bottom row lists what the agent can act on through the tool runner: files and shell; web fetch and search; MCP servers and connectors; browser control over the Chrome DevTools Protocol or Claude in Chrome; computer use on desktop apps through the screen, mouse and keyboard; and other sessions and sub-agents.]({{ '/assets/images/diagrams/01-agentic-ai-fundamentals/agent-loop-map-surfaces.svg' | relative_url }})
+*Figure: the loop as parts, top to bottom. The dashed arrow on the right closes the loop: each tool result goes back into the model's context. The bottom row lists what the agent can act on.*
 
 Read the figure from the top. The model does one thing: it reads the context and writes the next message. The client does everything else:
 
