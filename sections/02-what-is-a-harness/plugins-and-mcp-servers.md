@@ -56,8 +56,8 @@ The Model Context Protocol (MCP) is an open standard for connecting a model to o
 ### Claude Code
 
 ```text
-$ claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
-$ claude mcp add --env NOTES_DIR=/srv/notes notes -- python3 tools/notes_server.py
+claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
+claude mcp add --env NOTES_DIR=/srv/notes notes -- python3 tools/notes_server.py
 ```
 
 For a stdio server, everything after `--` is the command that starts it; the options before `--` belong to Claude Code.

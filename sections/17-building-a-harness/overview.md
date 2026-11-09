@@ -195,7 +195,7 @@ Agents write most of the prompts in a large harness, so a short trigger helps th
 | Destructive action | You | Deleting data, rewriting history |
 | Architectural choice | You | Replacing a workflow, adding a new layer |
 
-[Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}) covers how to draw that line.
+[Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}) covers how to draw that line. Decisions that depend on judgement, such as design, visual form and prose, stay with a person for a further reason: models are still weak at taste. See [Taste and spiky capabilities]({{ '/sections/18-trends/taste-and-spiky-capabilities.html' | relative_url }}).
 
 ### 4.3 What the research says
 

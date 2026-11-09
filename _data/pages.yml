@@ -342,6 +342,9 @@
 - url: "/sections/18-trends/harness-portability.html"
   title: "Moving a harness between tools"
   level: 1
+- url: "/sections/18-trends/taste-and-spiky-capabilities.html"
+  title: "Taste and spiky capabilities"
+  level: 1
 - url: "/sections/19-chat-and-desktop-clients/"
   title: "Chat, desktop and web clients"
   level: 0

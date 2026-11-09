@@ -22,7 +22,6 @@ A guard is a `PreToolUse` hook that refuses an action as the agent tries it. Thi
 
 ## When a rule becomes a guard
 
-
 ![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
 *Figure: one agent action moving down the four layers. A guard is layer 3, between the workflows above it and the tests below. Made with archify.*
 

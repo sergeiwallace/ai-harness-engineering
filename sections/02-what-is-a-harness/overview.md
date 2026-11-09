@@ -94,7 +94,6 @@ A harness strong in both steers the agent toward the right action and catches th
 
 ### Instructions and enforcement
 
-
 Some parts are text the model reads and interprets. Others are code that runs the same way every time.
 
 | | Instructions | Enforcement in code |
@@ -124,7 +123,6 @@ The ladder, from the layer that guides to the layers that enforce:
 | 4. Validation and tests | tests, CI, link checkers, review before a change lands | programs and reviewers on the result | a link checker that walks the built site before publish | design and judgment problems no check encodes; those go to a person |
 
 My harness puts each rule as high on this ladder as it can be checked, and keeps the context-file line as a second layer. Rules that cannot be checked from an action, such as design judgment, stay as guidance with a review step behind them. The [systems approach](#a-systems-approach-to-harness-engineering) section below explains the layers, and [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#one-rule-moved-into-the-system) follows one rule into the system.
-
 
 ## Context injection
 
@@ -303,7 +301,7 @@ They are how a harness reaches past the local machine, and how you share a set o
 Adding a remote server at project scope writes it to `.mcp.json`, which the team commits:
 
 ```text
-$ claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
+claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
 ```
 
 ```json

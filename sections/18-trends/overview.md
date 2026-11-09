@@ -25,6 +25,7 @@ A harness is tuned to a model, and models change every few months. The practice 
 | Agent work at scale | The system around the agents decides what lands | [Orchestration]({{ '/sections/10-orchestration/' | relative_url }}) |
 | Portable setups | Skills and context files can move between tools | [Moving a harness between tools]({{ '/sections/18-trends/harness-portability.html' | relative_url }}) |
 | Parallel agents in the client | Less need to build your own coordination | [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}) |
+| Spiky capabilities and the taste gap | Strong at hard tasks, weak at neighbouring judgement calls; a person still supplies taste | [Taste and spiky capabilities]({{ '/sections/18-trends/taste-and-spiky-capabilities.html' | relative_url }}) |
 
 ## 1. New models change what a harness needs
 
@@ -168,6 +169,7 @@ To start: the next time your model changes, run five tasks you know well on the 
 
 - [Re-testing after a model change]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}), with the sub-topic [Building a task set]({{ '/sections/18-trends/building-a-task-set.html' | relative_url }})
 - [Moving a harness between tools]({{ '/sections/18-trends/harness-portability.html' | relative_url }})
+- [Taste and spiky capabilities]({{ '/sections/18-trends/taste-and-spiky-capabilities.html' | relative_url }})
 
 ## Sources
 
