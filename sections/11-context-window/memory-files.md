@@ -9,10 +9,17 @@ last_updated: "2026-11-09"
 
 # Memory files and lessons
 
-Memory files carry what a session learned into the next session:
+Memory files carry what a session learned into the next session.
 
-- This page covers what memory is for, Claude Code's auto memory, how to write a lesson that transfers, how to lay out an index that stays inside its load limit, where a fix for a repeated mistake belongs, and how memory differs from context files and the task tracker.
-- The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version.
+This page covers:
+
+- What memory is for, and Claude Code's auto memory.
+- How to write a lesson that transfers.
+- How to lay out an index that stays inside its load limit.
+- Where a fix for a repeated mistake belongs.
+- How memory differs from context files and the task tracker.
+
+The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version.
 
 ## Contents
 {: .no_toc .text-delta }

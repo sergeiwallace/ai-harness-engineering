@@ -11,10 +11,12 @@ last_updated: "2026-11-09"
 
 # Coordinating several sessions
 
-Running several agent sessions at once multiplies output, and it multiplies the places you have to watch:
+Running several agent sessions at once multiplies output, and it multiplies the places you have to watch. A coordinator session gives you one place to talk to:
 
-- A coordinator session gives you one place to talk to.
-- It routes each request to a worker session, reaches that worker over a channel that works, checks the evidence that comes back, and reports only what needs you.
+- It routes each request to a worker session.
+- It reaches that worker over a channel that works.
+- It checks the evidence that comes back.
+- It reports to you only what needs you.
 
 ![A sequence diagram of one task. You ask the chief to fix the nightly report. The chief finds the worker is not listed by ListAgents, so in an optional fallback fragment it sends the task through Agent Mail, which delivers it to the worker, and the worker replies "taken export-01". The worker commits the fix to the git repo and reports done. The chief checks the commit in the repo, sees the commit exists and the test passes, and only then tells you "fixed, merged".]({{ '/assets/images/09-session-coordination/coordinator-routes-a-task.svg' | relative_url }}){: style="width:100%"}
 
@@ -104,10 +106,12 @@ claude --name coordinator \
   --settings '{"permissions":{"deny":["Edit","Write"]}}'
 ```
 
-The deny rule does the enforcing:
+The two layers do different jobs:
 
+- The deny rule enforces the role: the coordinator cannot edit files, whatever it decides.
 - The context-file line explains the role to the model and to anyone reading the setup.
-- [A systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) covers this layering in general.
+
+[A systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) covers this layering in general.
 
 ### What a coordinator does
 
@@ -227,8 +231,8 @@ Some actions are safe in parallel and some are not.
 
 One session per machine can own the unsafe actions:
 
-- The other sessions send it a request, and it runs them one at a time.
-- A hook or a lock can enforce this, so a worker that forgets the rule is refused at the moment it tries.
+- The other sessions send the owner a request instead of acting, and the owner runs requests one at a time.
+- A hook or a lock enforces the ownership, so a worker that tries the action itself is refused at that moment.
 
 ### Example: two pushes become a queue
 

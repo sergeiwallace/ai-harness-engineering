@@ -70,8 +70,8 @@ A context-file line, a skill or a template is text the model reads and usually f
 
 A hook, script, linter, test or CI gate runs the same way every time.
 
-- It cannot be forgotten or argued with.
-- It can be wrong, slow or too strict, so it needs maintenance like any code; [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}) lists the ways.
+- Code cannot be forgotten or argued with.
+- Code can be wrong, slow or too strict, so it needs maintenance like any other code. [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}) lists the ways.
 
 | | Soft | Hard |
 |---|---|---|
@@ -215,7 +215,7 @@ HarnessTax (UC Berkeley and Arena, 2026) compared model and harness pairs.
 
 LangChain measured what a harness can gain.
 
-- Its deepagents-cli went from 52.8% to 66.5% on Terminal Bench 2.0 with the model fixed at gpt-5.2-codex, by changing only the harness (LangChain, 2026-02-17).
+- LangChain's deepagents-cli went from 52.8% to 66.5% on Terminal Bench 2.0 with the model fixed at gpt-5.2-codex, by changing only the harness (LangChain, 2026-02-17).
 - One of the changes was a check that stops the agent before it exits and asks for a verification pass, the same idea as a `Stop` hook.
 
 > Benchmark tasks are short and self-contained. Much of what a personal harness does (memory, coordination, approvals) never shows on them, so read the figures as a warning about cost; they say little about any one harness.

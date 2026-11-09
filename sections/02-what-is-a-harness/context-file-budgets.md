@@ -27,8 +27,7 @@ Every line of an always-loaded context file is paid for on every turn of every s
 The context file sits in the context from the first turn to the last.
 
 - A file of a few thousand tokens is a few thousand tokens of every request, in every session, on every machine.
-- Prompt caching lowers the price of repeated text.
-- It does not lower the space the text takes in the window.
+- Prompt caching lowers the price of repeated text, but it does not lower the space the text takes in the window.
 
 ### Attention
 
@@ -146,7 +145,7 @@ When a file is over budget, work down this list in order. Each step keeps the ru
 A global context file has grown past its fail threshold, and the build stops.
 
 - The most recent additions were a block of test rules.
-- Those rules only matter when the agent edits tests.
+- The test rules only matter when the agent edits tests.
 - A path rule for test files does not exist yet.
 
 ### The trim

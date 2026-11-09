@@ -10,7 +10,13 @@ last_updated: "2026-11-09"
 
 # Owning shared actions
 
-A sub-topic of [coordinator and chief-of-staff sessions]({{ '/sections/09-session-coordination/coordinator-sessions.html' | relative_url }}). It covers which actions several sessions must not run at once, how one owner per machine turns races into a queue, how to enforce the ownership so a worker that forgets is refused, locks for actions that need no owner, and how to keep the owner from becoming the bottleneck.
+A sub-topic of [coordinator and chief-of-staff sessions]({{ '/sections/09-session-coordination/coordinator-sessions.html' | relative_url }}). It covers:
+
+- Which actions several sessions must not run at once.
+- How one owner per machine turns races into a queue.
+- How to enforce the ownership, so a worker that tries a shared action itself is refused.
+- Locks for actions that need no owner.
+- How to keep the owner from becoming the bottleneck.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -38,10 +44,11 @@ One way to handle these is to give each shared action one owner session per mach
 
 *Figure: two merge requests become a queue under one owner. Made with archify.*
 
-A worker that finishes a change does not merge it:
+A worker that finishes a change does not merge it. Instead:
 
-- It sends the owner a short request: the branch, what it changes, and the evidence that it passed.
-- The owner merges requests one at a time, runs the affected tests on the merged result, and replies.
+1. The worker sends the owner a short request: the branch, what it changes, and the evidence that it passed.
+2. The owner merges requests one at a time and runs the affected tests on the merged result.
+3. The owner replies to the worker with the result.
 
 ### Example: a merge request message
 

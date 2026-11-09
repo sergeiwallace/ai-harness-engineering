@@ -18,9 +18,8 @@ last_updated: "2026-11-09"
 - Stop 3 on the talk path, about 3 minutes.
 - Slides for this stop are on the [talk slides page]({{ '/talk/' | relative_url }}), under stop 3.
 
-A harness is the software around a model that gives it safe access to tools, memory and checks, set up to match one person's preferences, workflows and projects.
+A harness is the software around a model that gives it safe access to tools, memory and checks, set up to match one person's preferences, workflows and projects. Claude Code and Codex are harnesses out of the box.
 
-- Claude Code and Codex are harnesses out of the box.
 
 Harness engineering is the work of extending them:
 
@@ -270,7 +269,7 @@ A coordinator splits one large documentation job across ten parallel agents.
 
 - Each brief starts from the same template, so each agent receives the user's exact words, its own folder, the same safety limits and the same report shape.
 - When the user adds a requirement halfway through, the coordinator relays it verbatim to all ten, and every brief already has a place for it.
-- More on templates in [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}).
+- [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}) covers templates in depth.
 
 ### Skills
 
@@ -333,7 +332,7 @@ Native tools are what the harness gives the model before you add anything.
 
 Most harness extensions are built from native tools.
 
-- A skill is instructions that call them; a hook watches them; a permission rule names them.
+- A skill is instructions that call native tools, a hook watches them, and a permission rule names them.
 - Knowing what each one does, and what it costs, tells you what you need to build and what is already there.
 
 #### Snippet
@@ -397,7 +396,7 @@ Several sessions on one machine need to send each other messages.
 
 - An MCP server that wraps a small mailbox gives every session the same send and fetch tools, with no new code in any session.
 - Packaging those tools with the skill that explains when to use them, as a plugin, means a new machine gets both in one install.
-- See [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}).
+- [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}) has the full setup.
 
 ## Control
 
@@ -424,7 +423,7 @@ Settings files configure the harness itself: which model, which hooks, which env
 Permissions are the first hard control.
 
 - A denied action is refused by the harness whatever the model decides.
-- They also set how often you are interrupted, which decides whether you can leave an agent running.
+- Permissions also set how often you are interrupted, which decides whether you can leave an agent running.
 
 #### Snippet
 
@@ -440,12 +439,15 @@ Permissions are the first hard control.
 
 #### Worked example
 
-You approve `npm run test` forty times in one afternoon.
+Each list answers a different situation:
 
-- An `allow` rule for it removes the prompt.
-- You never want the agent to read the `.env` file, even by accident; a `deny` rule makes that unreachable.
-- Pushing stays on `ask`, because you want to see what leaves the machine.
-- Rules are checked deny first, then ask, then allow, and the first match decides.
+| Situation | Rule |
+|---|---|
+| you approve `npm run test` forty times in one afternoon | an `allow` rule removes the prompt |
+| the agent must never read the `.env` file, even by accident | a `deny` rule makes that unreachable |
+| you want to see what leaves the machine | pushing stays on `ask` |
+
+Rules are checked deny first, then ask, then allow, and the first match decides.
 
 <!-- IMAGE NEEDED: a screenshot of a Claude Code permission prompt for a Bash command with its Yes / Yes, and don't ask again / No options; search: claude code permission prompt screenshot, claude code bash approval dialog --> [Permissions and settings]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) covers scopes, precedence, modes and sandboxing.
 
@@ -456,7 +458,7 @@ You approve `npm run test` forty times in one afternoon.
 A hook is a command the harness runs at a fixed point in a session: before a tool call, after one, when a prompt is submitted, when the agent tries to stop, before the context is compacted.
 
 - The hook receives the event as JSON on standard input.
-- It can allow the action, block it with a message the model reads, or add context to the conversation.
+- The hook can allow the action, block it with a message the model reads, or add context to the conversation.
 
 ![The Claude Code hook lifecycle, simplified, top to bottom. SessionStart once per session injects context. Inside the turn, once per user prompt, UserPromptSubmit validates or blocks the prompt. Inside it, the agentic loop runs once per tool call: PreToolUse can allow, deny, ask the user or rewrite the tool input; the tool executes; PostToolUse reacts to the result, gives feedback or rewrites the output; then the loop repeats. Stop can block the stop until tests pass. SessionEnd once per session does cleanup and logging.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle-ran-the-builder.png' | relative_url }})
 
@@ -466,8 +468,8 @@ A hook is a command the harness runs at a fixed point in a session: before a too
 
 A hook is code, so it runs every time.
 
-- It is the step on the ladder where a rule stops depending on the model remembering it.
-- Each one also explains itself at the moment of the mistake, which teaches the model better than a line in a long file.
+- A hook is the step on the ladder where a rule stops depending on the model remembering it.
+- A hook's message also explains the rule at the moment of the mistake, which teaches the model better than a line in a long file.
 
 #### Snippet
 
@@ -550,7 +552,7 @@ The context window is the model's working memory for one session: system prompt,
 
 Agents follow instructions less consistently as the window fills.
 
-- Every component above spends some of it.
+- Every component above spends some of the window.
 - Managing the window means measuring it, writing state down before it fills, and compacting at a time you choose.
 
 #### Worked example
@@ -590,17 +592,16 @@ Everything that checks the agent's output after it acts: test suites, linters, t
 
 #### Why they matter
 
-These are the sensors.
+Scripts, linters and tests are the sensors.
 
-- They enforce how the result must look (style, structure, required sections), catch what the guides failed to prevent, and work on the result, so they apply whether a person or an agent wrote the change.
+- Sensors enforce how the result must look (style, structure, required sections) and catch what the guides failed to prevent.
+- Sensors work on the result, so they apply whether a person or an agent wrote the change.
 - A script also turns a fragile multi-step instruction into one command the agent cannot get half right.
 
 #### Worked example
 
-My harness requires a commit message to record whether a change was delegated and to whom.
+My harness requires a commit message to record whether a change was delegated and to whom. As a written instruction, agents forgot it; as a commit script that builds the message and refuses an incomplete one, it is never missing.
 
-- As an instruction, agents forgot it.
-- As a commit script that builds the message and refuses an incomplete one, it is never missing.
 
 ```text
 $ commit-with-provenance --title "docs: add hooks page" --body-file body.txt
@@ -648,11 +649,12 @@ One line each: past the read limit drops silently, tail first.
 
 #### Worked example
 
-A session learns that a release tool reports success even when one of its checks was skipped.
+1. A session learns that a release tool reports success even when one of its checks was skipped.
+2. The session writes a lesson file and one index line.
+3. The next session reads the line at startup, and when it sees the tool's success message it reads the verified line too.
 
-- It writes a lesson file and one index line.
-- The next session reads the line at startup, and when it sees the tool's success message it reads the verified line too.
-- See [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}).
+[Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) covers memory files in depth.
+
 
 ### Task tracking
 
@@ -669,8 +671,8 @@ $ bd update <id> --claim
 
 #### Why it matters
 
-- It answers "what should I work on" without the person retyping it.
-- It survives compaction, restarts and handoffs between sessions.
+- A tracker answers "what should I work on" without the person retyping it.
+- Tracked work survives compaction, restarts and handoffs between sessions.
 - Dependencies decide what is ready, so two sessions do not start the same blocked task.
 
 <!-- IMAGE NEEDED: a task board with open, in-progress and closed issues and dependency links between them; search: beads issue tracker agents, beads-ui board, kanban dependency graph -->
@@ -744,7 +746,7 @@ Harness engineering treats the model, its instructions, its tools, its checks an
 The fix should be enforced by the system wherever possible.
 
 - Context files and instructions guide the model while it works, but the model applies them unevenly.
-- It can miss or drop a rule when it handles several things at once, switches tasks, or works with a nearly full context window.
+- The model can miss or drop a rule when it handles several things at once, switches tasks, or works with a nearly full context window.
 - For that reason, adding another detailed rule to a context file each time the model does something wrong is an anti-pattern.
 
 A harness enforces its rules in layers:

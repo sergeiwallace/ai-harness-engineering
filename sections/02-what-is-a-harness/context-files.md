@@ -18,7 +18,7 @@ last_updated: "2026-11-09"
 
 A context file is the standing brief a harness hands the model at the start of every session.
 
-- It is the cheapest component to add, and a long or vague one is followed poorly.
+- A context file is the cheapest component to add, and a long or vague one is followed poorly.
 - This page covers what a context file is for, what belongs in one, how to write rules a model follows, and how a context file relates to the rest of the harness.
 - Three sub-topic pages go deeper: [layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}), [size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}) and [compiling]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
 
@@ -42,7 +42,7 @@ A context file is the standing brief a harness hands the model at the start of e
 `AGENTS.md` began as a shared convention so one file could serve several tools.
 
 - If a project has only `AGENTS.md`, Claude Code reads it.
-- If it has both, Claude Code reads only the `CLAUDE.md` files.
+- If a project has both, Claude Code reads only the `CLAUDE.md` files.
 - A common pattern is a `CLAUDE.md` whose first line is `@AGENTS.md`, so the content lives in one file and both tools read it.
 
 ### How it reaches the model

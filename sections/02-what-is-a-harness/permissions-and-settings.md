@@ -15,7 +15,7 @@ Settings configure the harness itself.
 
 - Permissions are the part of settings that decide which actions the agent may take without asking.
 - Claude Code's docs put it plainly: "Permission rules are enforced by Claude Code, not by the model."
-- They are the first hard control in the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), and the allow list decides how often you are interrupted.
+- Permission rules are the first hard control in the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), and the allow list decides how often you are interrupted.
 
 ## Contents
 {: .no_toc .text-delta }

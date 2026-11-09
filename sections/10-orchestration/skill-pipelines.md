@@ -10,10 +10,14 @@ last_updated: "2026-11-09"
 
 # Chaining skills into a pipeline
 
-A sub-topic of [prompt-driven orchestration]({{ '/sections/10-orchestration/prompt-driven-orchestration.html' | relative_url }}):
+A sub-topic of [prompt-driven orchestration]({{ '/sections/10-orchestration/prompt-driven-orchestration.html' | relative_url }}). A pipeline is a fixed order of stages, each run by a [skill]({{ '/sections/05-skills-and-plugins/' | relative_url }}) and usually by its own agent, where each stage's output is a file the next stage reads.
 
-- A pipeline is a fixed order of stages, each run by a [skill]({{ '/sections/05-skills-and-plugins/' | relative_url }}) and usually by its own agent, where each stage's output is a file the next stage reads.
-- This page covers the stages, files and state between them, how a stage is run, a worked example, how to design your own, and when to turn a pipeline into a workflow script.
+This page covers:
+
+- The stages, and the files and state between them.
+- How a stage is run.
+- A worked example.
+- How to design your own, and when to turn a pipeline into a workflow script.
 
 ## Contents
 {: .no_toc .text-delta }

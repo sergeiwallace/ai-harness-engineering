@@ -10,10 +10,13 @@ last_updated: "2026-11-09"
 
 # Context in Claude Code and Codex
 
-A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}):
+A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}). Claude Code and Codex handle a filling context window in similar ways, with different commands, settings and defaults.
 
-- Claude Code and Codex handle a filling context window in similar ways, with different commands, settings and defaults.
-- This page compares what each one documents, what I have observed, and what to check for your own plan.
+This page compares:
+
+- What each one documents.
+- What I have observed.
+- What to check for your own plan.
 
 ## Contents
 {: .no_toc .text-delta }

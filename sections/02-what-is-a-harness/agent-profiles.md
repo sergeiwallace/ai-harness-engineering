@@ -117,8 +117,8 @@ A short brief produces a confident answer to a different question. See [Template
 A sub-agent that edits files should work in its own git worktree.
 
 - `isolation: worktree` in the profile gives it a temporary worktree, branched from the default branch, cleaned up automatically if it changes nothing.
-- Its changes cannot collide with the main session's or another sub-agent's.
-- Its branch can be reviewed and merged, or thrown away, as one unit.
+- The sub-agent's changes cannot collide with the main session's or another sub-agent's.
+- The sub-agent's branch can be reviewed and merged, or thrown away, as one unit.
 - My harness enforces this with a [guard hook]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) that keeps an isolated agent's git commands and edits inside its own worktree, and refuses commands too complex to check.
 
 ### Nesting
@@ -155,8 +155,8 @@ Taking the tools away in the profile makes the role hold whatever the brief says
 A model reviewing its own family's work tends to share its blind spots.
 
 - My harness prefers a reviewer from a different model family for any change.
-- It records which family reviewed, in the change's description.
-- It does not block a merge when no other family is available; a same-family review is weaker and still useful.
+- My harness records which family reviewed, in the change's description.
+- A missing other-family reviewer does not block a merge; a same-family review is weaker and still useful.
 
 ## Worked example
 

@@ -13,10 +13,15 @@ last_updated: "2026-11-09"
 
 # Programmatic workflows
 
-Programmatic orchestration holds the plan in code: a script or a graph decides which agent runs when, with what input, and what happens after:
+Programmatic orchestration holds the plan in code: a script or a graph decides which agent runs when, with what input, and what happens after.
 
-- This page covers Claude Code's dynamic workflows in depth (starting, the script, limits, resume, saving, cost), graph frameworks such as LangGraph, and how to design a workflow that resumes cleanly.
-- The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with [prompt-driven orchestration]({{ '/sections/10-orchestration/prompt-driven-orchestration.html' | relative_url }}); the sub-topic page compares [orchestration frameworks]({{ '/sections/10-orchestration/orchestration-frameworks.html' | relative_url }}).
+This page covers:
+
+- Claude Code's dynamic workflows in depth: starting one, the script, limits, resume, saving and cost.
+- Graph frameworks such as LangGraph.
+- How to design a workflow that resumes cleanly.
+
+The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with [prompt-driven orchestration]({{ '/sections/10-orchestration/prompt-driven-orchestration.html' | relative_url }}). The sub-topic page [orchestration frameworks]({{ '/sections/10-orchestration/orchestration-frameworks.html' | relative_url }}) compares the frameworks.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -223,10 +228,11 @@ Claude Code's runtime tracks each agent's result for you. A script you write you
 
 #### Make each step idempotent
 
-Running a step twice gives the same result as running it once:
+Running a step twice gives the same result as running it once.
 
-- A step that writes "batch 14 done" with its output can be skipped on resume; a step that appends to a shared file without a marker duplicates on resume.
-- An agent that stalls and restarts leaves the files it already changed, so the same rule applies inside a dynamic workflow.
+- A step that writes "batch 14 done" with its output can be skipped on resume.
+- A step that appends to a shared file without a marker duplicates its output on resume.
+- An agent that stalls and restarts keeps the files it already changed, so the same rule applies inside a dynamic workflow.
 
 #### Persist state between steps
 
@@ -234,7 +240,7 @@ Write each step's output to a file or a checkpoint store before the next step st
 
 #### Keep judgment in named places
 
-Where a step needs a model to decide, make it a node or an `agent()` call with a clear input and a constrained output (a `schema` such as `pass` or `fail` with a reason), so the script can branch on it.
+Where a step needs a model to decide, make it a node or an `agent()` call with a clear input and a constrained output. A `schema` such as `pass` or `fail` with a reason lets the script branch on the answer.
 
 <details markdown="1">
 <summary>Worked example: resuming a 200-file review in your own script</summary>
@@ -255,7 +261,7 @@ Where a step needs a model to decide, make it a node or an `agent()` call with a
 - The pieces that became code are the ones that ran the same way many times.
   - A pipeline whose state lives in a validated state file, so any agent that reads it can resume a stage.
 
-To start: ask Claude Code to "use a workflow" for one task you would otherwise run by hand over many files, watch it in `/workflows`, and save it with `s` if it did what you wanted.
+To start: ask Claude Code to "use a workflow" for one task you would otherwise run by hand over many files. Watch it in `/workflows`, and save it with `s` if it did what you wanted.
 
 ## Sources
 

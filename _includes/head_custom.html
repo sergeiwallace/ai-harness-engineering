@@ -61,32 +61,34 @@
     .main { margin-left: Max(16.5rem, calc((100% - 91.5rem) / 2 + 16.5rem)); max-width: min(75rem, calc(100vw - 18.5rem)); }
   }
 </style>
-<script>/* tables-fit v3: prose columns get room; wide tables widen, then tighten, then scroll; never break a word */
+<script>/* tables-fit v4: prose columns keep readable widths; tighten, relax, then scroll */
 (function () {
   function wrap(t) { return t.closest('.table-wrapper') || t.parentElement; }
   function over(t) { var w = wrap(t); return t.scrollWidth > w.clientWidth + 1; }
+  function codeShare(c) { var all = c.textContent.length || 1, code = 0; c.querySelectorAll('code').forEach(function (k) { code += k.textContent.length; }); return code / all; }
   function fit() {
     document.querySelectorAll('.main-content table').forEach(function (t) {
       var w = wrap(t);
       t.classList.remove('table-tight', 'table-squeeze'); w.classList.remove('table-wide', 'table-scroll'); w.style.width = '';
       var rows = Array.prototype.slice.call(t.rows); if (!rows.length) return;
       var ncol = Math.max.apply(null, rows.map(function (r) { return r.cells.length; }));
+      var prose = [];
       for (var c = 0; c < ncol; c++) {
         var cells = rows.map(function (r) { return r.cells[c]; }).filter(Boolean);
-        cells.forEach(function (x) { x.style.minWidth = ''; x.classList.remove('cell-nowrap'); });
-        var body = cells.slice(1); if (!body.length) continue;
+        cells.forEach(function (x) { x.style.minWidth = ''; x.style.width = ''; x.classList.remove('cell-nowrap'); var sp = x.querySelector(':scope > .tf-spacer'); if (sp) sp.remove(); });
+        var body = cells.filter(function (x) { return x.tagName === 'TD'; }); if (!body.length) continue;
         var avg = body.reduce(function (s, x) { return s + x.textContent.trim().length; }, 0) / body.length;
-        if (avg > 40) cells.forEach(function (x) { x.style.minWidth = '13em'; });
+        var cs = body.reduce(function (s, x) { return s + codeShare(x); }, 0) / body.length;
+        if (avg > 12 && cs < 0.5) prose.push({cells: cells, em: avg > 60 ? 18 : (avg > 35 ? 16 : (avg > 20 ? 14 : 10))});
         if (c === 0 && cells.every(function (x) { return x.textContent.trim().length <= 28 && !x.querySelector('code'); })) cells.forEach(function (x) { x.classList.add('cell-nowrap'); });
       }
-      if (over(t)) rows.forEach(function (r) { if (r.cells[0]) r.cells[0].classList.remove('cell-nowrap'); });
-      if (over(t)) {
-        var main = document.querySelector('.main') || document.body; var mr = main.getBoundingClientRect(); var wr = w.getBoundingClientRect();
-        var avail = Math.min(mr.right, document.documentElement.clientWidth) - wr.left - 24;
-        if (avail > wr.width + 8) { w.classList.add('table-wide'); w.style.width = Math.min(avail, t.scrollWidth + 2) + 'px'; }
-      }
+      function apply(scale) { prose.forEach(function (p) { var em = Math.max(Math.min(p.em, 10), Math.round(p.em * scale * 10) / 10); var sp = p.cells[0].querySelector(':scope > .tf-spacer'); if (!sp) { sp = document.createElement('div'); sp.className = 'tf-spacer'; sp.setAttribute('aria-hidden', 'true'); sp.style.height = '0'; sp.style.overflow = 'hidden'; p.cells[0].appendChild(sp); } sp.style.width = em + 'em'; }); }
+      apply(1);
       if (over(t)) t.classList.add('table-tight');
-      if (over(t)) w.classList.add('table-scroll');
+      if (over(t)) apply(0.85);
+      if (over(t)) apply(0.7);
+      if (over(t)) rows.forEach(function (r) { if (r.cells[0]) r.cells[0].classList.remove('cell-nowrap'); });
+      if (over(t)) { w.classList.add('table-scroll'); apply(1); }
     });
   }
   function keepHyphenated() {

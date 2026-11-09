@@ -13,11 +13,17 @@ last_updated: "2026-11-09"
 
 # Coordinator and chief-of-staff sessions
 
-A coordinator session is a long-running session whose job is routing work to other sessions and checking what comes back:
+A coordinator session is a long-running session whose job is routing work to other sessions and checking what comes back.
 
-- This page covers the roles in a coordination layer, the coordinator's working cycle, what it keeps in its context and what it keeps in files, how it checks reports, the ways it goes wrong, and what to do when the coordinator itself stops.
-- The [section overview]({{ '/sections/09-session-coordination/' | relative_url }}) is the short version.
-- A sub-topic page covers [owning shared actions]({{ '/sections/09-session-coordination/shared-action-ownership.html' | relative_url }}).
+This page covers:
+
+- The roles in a coordination layer.
+- The coordinator's working cycle, from request to report.
+- What it keeps in its context and what it keeps in files.
+- How it checks reports.
+- The ways it goes wrong, and what to do when the coordinator itself stops.
+
+The [section overview]({{ '/sections/09-session-coordination/' | relative_url }}) is the short version. The sub-topic page [owning shared actions]({{ '/sections/09-session-coordination/shared-action-ownership.html' | relative_url }}) goes deeper on merges, pushes and installs.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -117,7 +123,7 @@ The coordinator keeps one row per task in flight, in the tracker:
 
 - A task with no acknowledgement after a few minutes gets a delivery check.
 - A task past its expected time gets a status question.
-- For a long task on the same machine, the coordinator can ask for an idle notice instead of polling: Claude Code's `SendMessage` takes a `notify_when_idle` input, and one notice arrives when that session next goes idle or exits (the subscription lapses after 12 hours).
+- For a long task on the same machine, the coordinator can ask for an idle notice and skip polling. Claude Code's `SendMessage` takes a `notify_when_idle` input; one notice arrives when that session next goes idle or exits, and the subscription lapses after 12 hours.
 
 ### 5. Check the report
 

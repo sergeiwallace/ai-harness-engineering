@@ -12,10 +12,8 @@ last_updated: "2026-11-09"
 
 # Context file layering
 
-A session rarely reads one context file.
+A session rarely reads one context file: it reads several, from broad to narrow, and combines them. Knowing which files load, when, and which wins when two disagree is what lets you put each rule exactly where it applies.
 
-- It reads several, from broad to narrow, and combines them.
-- Knowing which files load, when, and which wins when two disagree is what lets you put each rule exactly where it applies.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -37,26 +35,26 @@ A managed file set by an administrator, deployed with MDM, Group Policy or a sim
 | Linux and WSL | `/etc/claude-code/CLAUDE.md` |
 | Windows | `C:\Program Files\ClaudeCode\CLAUDE.md` |
 
-- It is read for every user on the machine, in every project, and loads before user and project files.
+- The managed file is read for every user on the machine, in every project, and loads before user and project files.
 - A developer cannot exclude it with `claudeMdExcludes`.
-- Its content can also live in a `claudeMd` key inside managed settings.
+- The managed file's content can also live in a `claudeMd` key inside managed settings.
 - Claude Code's docs split the job: managed settings do the technical enforcement (`permissions.deny`, `sandbox.enabled`), and the managed `CLAUDE.md` carries behavioural guidance. That is the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) at organisation scale.
 
 ### User file
 
 `~/.claude/CLAUDE.md` for Claude Code, `~/.codex/AGENTS.md` (or `AGENTS.override.md`) for Codex.
 
-- Applies to every project you open.
+- The user file applies to every project you open.
 - Claude Code also reads personal rules from `~/.claude/rules/`, which apply to every project on the machine.
-- Holds your writing style, your safety rules, how you like to be asked questions.
-- Never committed to a project, so it is the place for preferences your teammates do not share.
+- The user file holds your writing style, your safety rules and how you like to be asked questions.
+- The user file is never committed to a project, so it is the place for preferences your teammates do not share.
 
 ### Project file
 
 `./CLAUDE.md` or `./.claude/CLAUDE.md` for Claude Code, `AGENTS.md` for Codex, at the repository root, committed and shared.
 
-- Holds the build and test commands and the project's conventions.
-- Reviewed like code, because it changes how every teammate's agent behaves.
+- The project file holds the build and test commands and the project's conventions.
+- The project file is reviewed like code, because it changes how every teammate's agent behaves.
 - A `CLAUDE.local.md` beside it holds your own notes for the project. Add it to `.gitignore` yourself; nothing ignores it for you.
 - Files in folders above the working folder load too, so starting in `packages/api/` still loads the repository's root file.
 
@@ -67,7 +65,7 @@ Markdown files in `.claude/rules/`, found recursively, one topic per file.
 - A rule with a `paths` pattern in its front matter loads only when the agent reads or edits a matching file, and costs nothing while the agent works elsewhere.
 - A rule without `paths` loads at launch, with the same priority as `.claude/CLAUDE.md`.
 - The folder can hold symlinks to a shared set of rules; links that point outside the project need a one-time approval.
-- Covered in depth under [Anatomy](#anatomy) below.
+- The [Anatomy](#anatomy) section below covers path rules in depth.
 
 ### Subfolder files
 
@@ -193,7 +191,7 @@ My harness runs on several machines with different tools and access.
 A separate file per machine repeats the base, and the copies drift.
 
 - An overlay is a short section that says only what differs, and the build places it after the base so it reads as the narrower layer.
-- See [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
+- [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}) shows how the build places the overlay.
 
 </details>
 

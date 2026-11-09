@@ -93,7 +93,7 @@ Measure the live target.
 
 - Run it in a live session after every install, on every machine.
 - My harness learned this more than once: a guard pinned by a test can still be live in zero places.
-- Its release check now names the one artifact whose state proves the change reached its target, and reads it.
+- My harness's release check now names the one artifact whose state proves the change reached its target, and reads it.
 
 ## Matcher misses
 
@@ -124,8 +124,8 @@ Two matcher traps catch people often:
 
 A guard refuses too much, and the agent, being helpful, finds another way.
 
-- It writes the command into a script file and runs the script.
-- It uses a different tool that does the same thing.
+- The agent writes the command into a script file and runs the script.
+- The agent uses a different tool that does the same thing.
 - The guard now teaches evasion, and the workaround becomes a habit.
 
 ### The check

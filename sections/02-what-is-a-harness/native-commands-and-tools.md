@@ -51,8 +51,8 @@ assistant  tool_use  Read  {"file_path": "src/util/dates.py", "offset": 10, "lim
 The tool names are the exact strings three other parts of the harness use:
 
 - permission rules, such as `Bash(npm test *)` or `Read(./.env)`
-- hook matchers, such as `Bash` or `Edit|Write`;
-- a sub-agent's `tools` list, such as `Read, Grep, Bash`.
+- hook matchers, such as `Bash` or `Edit|Write`
+- a sub-agent's `tools` list, such as `Read, Grep, Bash`
 
 A rule for `Bash` sees every shell command; a rule for `Edit` sees every file edit. The label a tool shows in the transcript can differ from its name, so check the [tools reference](https://code.claude.com/docs/en/tools-reference.md) when a rule does not match.
 
@@ -157,7 +157,7 @@ A skill you write appears as `/name` next to the built-in commands.
 - The person sees one menu; the harness knows which entries are built in and which are yours.
 - A project skill named like a built-in command can replace it, so avoid the built-in names.
 - Up to six skills can start one message: `/skill-a /skill-b do this`.
-- See [Harness skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}).
+- [Harness skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}) covers writing them.
 
 ## Worked examples
 
@@ -169,7 +169,7 @@ You want the agent to "summarise the session so far, keeping the open decisions"
 > /compact keep the open decisions and the test commands
 ```
 
-- It uses the harness's own summariser.
+- `/compact` uses the harness's own summariser.
 - The summary becomes the new context, and the project-root `CLAUDE.md` is re-read from disk.
 - A `PreCompact` hook can check that state was written down first, and its exit code 2 blocks the compaction until it is.
 

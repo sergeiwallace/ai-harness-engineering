@@ -14,7 +14,7 @@ last_updated: "2026-11-09"
 MCP servers connect a harness to services beyond the local machine.
 
 - Plugins package skills, agent profiles, hooks and MCP servers so they install together.
-- One extends what the agent can reach; the other makes a set of extensions shareable.
+- MCP servers extend what the agent can reach; plugins make a set of extensions shareable.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -28,7 +28,7 @@ MCP servers connect a harness to services beyond the local machine.
 
 The Model Context Protocol (MCP) is an open standard for connecting a model to outside services.
 
-- Introduced by Anthropic in 2024; supported by Claude Code, Codex and many other clients.
+- Anthropic introduced it in 2024, and Claude Code, Codex and many other clients support it.
 - A server exposes tools, and optionally resources and prompts.
 - The harness lists the server's tools next to its native ones, and the model calls them the same way.
 - The protocol is JSON-RPC: the client sends `tools/list` to learn the tools and `tools/call` to run one.
@@ -206,7 +206,7 @@ My harness runs a setup of this shape as a fallback for when the harness's built
 On a machine where the native web search tool is unavailable, an MCP server that calls an approved search service fills the gap.
 
 - The context file names the server, so the agent uses it.
-- It also says that queries leave the machine, so the agent puts no secrets in a query.
+- The context file also says that queries leave the machine, so the agent puts no secrets in a query.
 - A hook on `mcp__search__.*` can scan the query for credential patterns and refuse, which enforces the second point in code.
 
 ## Sources

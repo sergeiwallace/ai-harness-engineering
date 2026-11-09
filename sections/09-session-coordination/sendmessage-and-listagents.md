@@ -10,10 +10,15 @@ last_updated: "2026-11-09"
 
 # SendMessage and ListAgents
 
-A sub-topic of [message channels and fallbacks]({{ '/sections/09-session-coordination/message-channels.html' | relative_url }}):
+A sub-topic of [message channels and fallbacks]({{ '/sections/09-session-coordination/message-channels.html' | relative_url }}). Claude Code's cross-session messaging lets one of your sessions send another a plain-text message.
 
-- Claude Code's cross-session messaging lets one of your sessions send another a plain-text message.
-- This page covers what the two tools do, how sessions are named and addressed, how a message is delivered, the settings that control incoming messages, what a message cannot do, the limits, and how agent teams compare.
+This page covers:
+
+- What the two tools do.
+- How sessions are named and addressed.
+- How a message is delivered, and the settings that control incoming messages.
+- What a message cannot do, and the limits.
+- How agent teams compare.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -38,10 +43,7 @@ You do not call either tool yourself. Claude finds the target and sends when it 
 Explain what we just did to the session working on the payments API
 ```
 
-Claude writes the message itself:
-
-- A message carries text only, never the sender's conversation or files.
-- To move a whole conversation, resume that session instead.
+Claude writes the message itself. A message carries text only, never the sender's conversation or files; to move a whole conversation, resume that session instead.
 
 ### Requirements
 
@@ -133,10 +135,9 @@ Claude Code decides per message from the two sessions' permission modes:
 | Bypasses prompts | Bypasses too | Delivered |
 | Bypasses prompts | Prompts | Held for your approval |
 
-A held message opens an approval dialog in an interactive session:
+A held message opens an approval dialog in an interactive session. If nobody answers, the message is dropped after `dialogExpiry`, five minutes by default.
 
-- Unanswered, it is dropped after `dialogExpiry`, five minutes by default.
-- A session holds at most 100 messages and drops the oldest past that.
+A session holds at most 100 held messages and drops the oldest past that.
 
 #### Example: a headless worker that takes messages
 
@@ -258,7 +259,10 @@ Agent teams are a separate, experimental feature for a group of agents working o
 | Nesting | Any session can message any listed one | One team per session; teammates cannot spawn their own teammates |
 | Cost | One session's tokens each | Each teammate is a separate instance; tokens scale with team size |
 
-The agent teams docs suggest starting with three to five teammates, and they add hooks that enforce quality gates at team events: `TeammateIdle`, `TaskCreated` and `TaskCompleted`, each of which can exit with code 2 to keep a teammate working or block a task change.
+The agent teams docs suggest starting with three to five teammates. They also add hooks that enforce quality gates at team events:
+
+- `TeammateIdle` can exit with code 2 to keep a teammate working.
+- `TaskCreated` and `TaskCompleted` can exit with code 2 to block the task change.
 
 ## Sources
 

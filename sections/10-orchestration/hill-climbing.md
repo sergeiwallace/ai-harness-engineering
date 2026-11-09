@@ -10,11 +10,13 @@ last_updated: "2026-11-09"
 
 # Hill-climbing and quality ratchets
 
-A sub-topic of [goals and loops]({{ '/sections/10-orchestration/goals-and-loops.html' | relative_url }}):
+A sub-topic of [goals and loops]({{ '/sections/10-orchestration/goals-and-loops.html' | relative_url }}). Hill-climbing is a loop with a measurement in it:
 
-- Hill-climbing is a loop with a measurement in it: run, measure, change one thing, and keep the change only if the measure improved.
-- A quality ratchet applies the same rule to a whole codebase over time: a number may improve, and a change that makes it worse is refused.
-- This page covers the loop, local maxima, choosing a measure, running a climb in Claude Code, and ratchets.
+1. Run and measure.
+2. Change one thing.
+3. Keep the change only if the measure improved.
+
+A quality ratchet applies the same rule to a whole codebase over time: a number may improve, and a change that makes it worse is refused. This page covers the loop, local maxima, choosing a measure, running a climb in Claude Code, and ratchets.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -55,7 +57,7 @@ For agent work this shows up as a run of rounds with no gain, as in the prompt e
 | Good measure | Why | Weak measure | Why |
 |---|---|---|---|
 | Test suite wall time | Objective, cheap to rerun | "Code looks cleaner" | No number |
-| Pass rate of a prompt on 50 fixed examples | Fixed set, comparable | Pass rate on new examples each round | The set changes, not the prompt |
+| Pass rate of a prompt on 50 fixed examples | Fixed set, comparable | Pass rate on new examples each round | A change in score can come from the new examples |
 | Count of lint warnings | Exact | Lines of code | Fewer lines can be worse code |
 
 > An agent can raise a measure without improving the behaviour behind it, for example by special-casing the benchmark's examples. Pair every measure with a check that the real behaviour still works, such as the full test suite.

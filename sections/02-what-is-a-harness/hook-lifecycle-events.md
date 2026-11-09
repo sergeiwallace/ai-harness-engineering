@@ -148,7 +148,7 @@ Fires when the harness is about to show a permission prompt.
 
 - A hook here can approve or refuse by code, through its `decision` object.
 - Exit 2 does not refuse here, unlike `PreToolUse`.
-- It suits rules too subtle for a [permission pattern]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}), such as "allow `git push` only to branches this session created".
+- A `PermissionRequest` hook suits rules too subtle for a [permission pattern]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}), such as "allow `git push` only to branches this session created".
 
 ## Turn events
 
@@ -164,7 +164,7 @@ Fires when the agent decides it is done. A hook that returns `"decision": "block
 
 A Stop hook runs the fast test suite.
 
-- If any test fails, it blocks the stop with the failing test names.
+- If any test fails, the hook blocks the stop with the failing test names.
 - The agent cannot end its turn claiming success while the tests are red.
 
 > A Stop hook that always blocks traps the agent in a loop. The input field `stop_hook_active` is true when a stop hook already sent the agent back; check it and let that stop through, with a note to the person.
@@ -191,7 +191,7 @@ Fires before the harness summarises the context, for both a manual `/compact` an
 - Plain text it prints becomes instructions for the summary, such as "keep the list of open decisions".
 - Write the current task, open decisions and git state somewhere durable.
 - `PostCompact` fires after, and a `SessionStart` hook with the `compact` matcher can put state back.
-- See [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}#compaction).
+- [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}#compaction) covers compaction and resume notes.
 
 ## Choosing the event
 

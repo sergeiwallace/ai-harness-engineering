@@ -12,10 +12,13 @@ last_updated: "2026-11-09"
 
 # A context supervisor
 
-A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}):
+A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}). A context supervisor is a small piece of automation that watches how full a session's context is, and saves state and compacts past a threshold, so a long run does not depend on the agent noticing.
 
-- A context supervisor is a small piece of automation that watches how full a session's context is and, past a threshold, saves state and compacts, so a long autonomous run does not depend on the agent noticing in time.
-- This page covers the built-in options to try first, the parts of a supervisor, how they fit together, a minimal hook, and the failure modes.
+This page covers:
+
+- The built-in options to try first.
+- The parts of a supervisor, and how they fit together.
+- A minimal hook, and the failure modes.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -88,17 +91,16 @@ The numbers follow my own practice of compacting at about 50 to 60 percent; tune
 - So the supervisor types the command into the session's terminal, the way a person would.
 - It goes through a small library that:
   - targets the right session by name,
-  - refuses to type into a pane a person is using,
+  - skips any pane a person is using,
   - and lets the supervisor check afterwards that the fill level dropped.
 
 [Templates and stubs]({{ '/sections/07-templates-and-stubs/' | relative_url }}) covers injected prompts.
 
 ## A minimal hook
 
-A sketch of the reminder step as a `PostToolUse` hook:
+A sketch of the reminder step as a `PostToolUse` hook. This kind of hook reaches Claude through JSON output: `hookSpecificOutput.additionalContext` is added to Claude's context next to the tool result.
 
-- A `PostToolUse` hook reaches Claude through JSON output: `hookSpecificOutput.additionalContext` is added to Claude's context next to the tool result.
-- How you read the percentage depends on your setup; this one calls a command that prints it.
+How you read the percentage depends on your setup; this one calls a command that prints it.
 
 ```bash
 #!/usr/bin/env bash

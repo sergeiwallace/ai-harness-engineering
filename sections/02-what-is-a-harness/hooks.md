@@ -18,7 +18,7 @@ last_updated: "2026-11-09"
 
 A hook is a command the harness runs at a fixed point in a session.
 
-- It sees what the agent is about to do or has just done, and it can let the action through, refuse it with a reason, or add text to the conversation.
+- A hook sees what the agent is about to do or has just done, and it can let the action through, refuse it with a reason, or add text to the conversation.
 - A rule in a hook holds whether or not the model remembers it.
 - This page covers how a hook is configured, what it receives, what it can return, and how to write one.
 - Three sub-topic pages go further: [Hook lifecycle events]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}), [Guard hooks]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) and [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}).
@@ -307,7 +307,7 @@ The refusal names the safe form of the same action, so the agent's next try succ
 
 Codex declares hooks in a `[hooks]` table in `config.toml`.
 
-- Its documented events include `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`, `SubagentStart`, `SubagentStop`, `Stop` and `SessionEnd`, plus model-request and interrupt events of its own.
+- The documented Codex events include `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`, `SubagentStart`, `SubagentStop`, `Stop` and `SessionEnd`, plus model-request and interrupt events of its own.
 - A separate `notify` key runs a command with a JSON payload for notifications.
 - The event names match Claude Code's closely. This page has not verified that the input and output formats match, so check the Codex configuration reference before porting a hook.
 
