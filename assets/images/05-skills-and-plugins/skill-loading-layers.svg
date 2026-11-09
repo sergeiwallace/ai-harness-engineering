@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <title id="t">Three loading layers of a skill</title>
+  <desc id="d">Layer one, the name and description of every skill, is always in the context window. Layer two, the SKILL.md body, loads when the skill is used. Layer three, reference files and scripts, loads only when a step needs them.</desc>
+  <rect width="760" height="360" fill="#ffffff"/>
+  <text x="380" y="34" text-anchor="middle" font-size="20" font-weight="600" fill="#1f2937">What a skill costs in the context window</text>
+  <rect x="40" y="60" width="680" height="76" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="60" y="90" font-size="17" font-weight="600" fill="#1e3a8a">Layer 1: name and description</text>
+  <text x="60" y="116" font-size="14" fill="#1e3a8a">Every model-invocable skill, every turn. Tens of tokens each.</text>
+  <text x="700" y="104" text-anchor="end" font-size="14" font-weight="600" fill="#1e3a8a">always loaded</text>
+  <rect x="100" y="152" width="560" height="76" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="120" y="182" font-size="17" font-weight="600" fill="#14532d">Layer 2: SKILL.md body</text>
+  <text x="120" y="208" font-size="14" fill="#14532d">The steps. Loads when you type /name or the model picks it.</text>
+  <text x="640" y="196" text-anchor="end" font-size="14" font-weight="600" fill="#14532d">on use</text>
+  <rect x="160" y="244" width="440" height="76" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="180" y="274" font-size="17" font-weight="600" fill="#78350f">Layer 3: files in the folder</text>
+  <text x="180" y="300" font-size="14" fill="#78350f">Checklists, templates, scripts. Read or run at one step.</text>
+  <text x="580" y="288" text-anchor="end" font-size="14" font-weight="600" fill="#78350f">on demand</text>
+</svg>

@@ -1,15 +1,45 @@
+{%- comment -%}
+  Previous, next, table of contents and the matching talk slide, shown at the top and bottom
+  of every page. Reading order comes from _data/pages.yml. The slide comes from the page's
+  "slide" front matter key (a slide number or slide id from _data/slides.yml) if it has one,
+  otherwise from the first slide _data/slides.yml maps to the page's section, taken from the
+  /sections/<NN-slug>/ prefix of the page URL. The landing page links the title slide.
+{%- endcomment -%}
 {%- assign order = site.data.pages -%}
 {%- assign here = nil -%}
 {%- for entry in order -%}
   {%- if entry.url == page.url -%}{%- assign here = forloop.index0 -%}{%- endif -%}
 {%- endfor -%}
-{%- if here != nil -%}
-  {%- assign last = order.size | minus: 1 -%}
-  {%- assign prev_i = here | minus: 1 -%}
-  {%- assign next_i = here | plus: 1 -%}
-<nav class="page-nav" aria-label="Previous and next pages">
-  <span class="page-nav-prev">{%- if here > 0 -%}{%- assign prev = order[prev_i] -%}<a href="{{ prev.url | relative_url }}" rel="prev">&larr; Previous: {{ prev.title }}</a>{%- endif -%}</span>
-  <span class="page-nav-toc"><a href="{{ '/' | relative_url }}#contents">Table of contents</a></span>
-  <span class="page-nav-next">{%- if here < last -%}{%- assign next = order[next_i] -%}<a href="{{ next.url | relative_url }}" rel="next">Next: {{ next.title }} &rarr;</a>{%- endif -%}</span>
+{%- assign deck = site.data.slides -%}
+{%- assign nav_slide = nil -%}
+{%- if page.slide != nil -%}
+  {%- assign wanted = page.slide | append: "" -%}
+  {%- for s in deck.deck -%}
+    {%- assign s_index = s.index | append: "" -%}
+    {%- if s_index == wanted or s.id == wanted -%}{%- assign nav_slide = s -%}{%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- if nav_slide == nil -%}
+  {%- assign slide_key = nil -%}
+  {%- if page.url == "/" or page.url == "/index.html" -%}
+    {%- assign slide_key = "landing" -%}
+  {%- else -%}
+    {%- assign url_parts = page.url | split: "/" -%}
+    {%- if url_parts[1] == "sections" and url_parts.size > 2 -%}
+      {%- assign slide_key = url_parts[2] -%}
+    {%- elsif url_parts[1] == "talk" -%}
+      {%- assign slide_key = "talk" -%}
+    {%- endif -%}
+  {%- endif -%}
+  {%- if slide_key != nil -%}
+    {%- assign mapped = deck.sections[slide_key] -%}
+    {%- if mapped and mapped.size > 0 -%}{%- assign nav_slide = mapped[0] -%}{%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if here != nil or nav_slide != nil -%}
+<nav class="page-nav" aria-label="Previous and next pages, and the matching talk slide">
+  <span class="page-nav-prev">{%- if here != nil -%}{%- if here > 0 -%}{%- assign prev_i = here | minus: 1 -%}{%- assign prev = order[prev_i] -%}<a href="{{ prev.url | relative_url }}" rel="prev">&larr; Previous: {{ prev.title }}</a>{%- endif -%}{%- endif -%}</span>
+  <span class="page-nav-toc"><a href="{{ '/' | relative_url }}#contents">Table of contents</a>{%- if nav_slide != nil %}<span class="page-nav-sep" aria-hidden="true"> &middot; </span><a class="page-nav-slide" href="{{ deck.url | relative_url }}#/{{ nav_slide.index }}" target="_blank" rel="noopener" title="Opens the talk slide in a new tab">Slide: {{ nav_slide.title | escape }}</a>{%- endif -%}</span>
+  <span class="page-nav-next">{%- if here != nil -%}{%- assign last = order.size | minus: 1 -%}{%- if here < last -%}{%- assign next_i = here | plus: 1 -%}{%- assign next = order[next_i] -%}<a href="{{ next.url | relative_url }}" rel="next">Next: {{ next.title }} &rarr;</a>{%- endif -%}{%- endif -%}</span>
 </nav>
 {%- endif -%}

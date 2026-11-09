@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" role="img" aria-labelledby="t d" font-family="Helvetica, Arial, sans-serif">
+  <title id="t">How a skill loads in three stages</title>
+  <desc id="d">Stage one: only the skill's name and one-line description sit in the context on every turn. Stage two: when a task matches, or the user types its slash command, the full SKILL.md body loads. Stage three: the body points at reference files and scripts, which load or run only when a step needs them.</desc>
+  <rect width="880" height="360" fill="#ffffff"/>
+  <text x="440" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1f2933">How a skill loads in three stages</text>
+  <defs><marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#52606d"/></marker></defs>
+  <g font-size="14" fill="#1f2933">
+    <rect x="30" y="70" width="240" height="230" rx="12" fill="#e8f1fb" stroke="#4a7ab8"/>
+    <text x="150" y="98" text-anchor="middle" font-weight="bold">1. Always loaded</text>
+    <text x="150" y="130" text-anchor="middle" font-size="13">name and description</text>
+    <text x="150" y="150" text-anchor="middle" font-size="13">from front matter</text>
+    <text x="150" y="190" text-anchor="middle" font-size="12" fill="#52606d">a short summary</text>
+    <text x="150" y="208" text-anchor="middle" font-size="12" fill="#52606d">per skill, every turn</text>
+    <rect x="320" y="70" width="240" height="230" rx="12" fill="#d5e4f6" stroke="#4a7ab8"/>
+    <text x="440" y="98" text-anchor="middle" font-weight="bold">2. Loaded on use</text>
+    <text x="440" y="130" text-anchor="middle" font-size="13">SKILL.md body with</text>
+    <text x="440" y="150" text-anchor="middle" font-size="13">steps, rules, examples</text>
+    <text x="440" y="190" text-anchor="middle" font-size="12" fill="#52606d">when a task matches</text>
+    <text x="440" y="208" text-anchor="middle" font-size="12" fill="#52606d">or /name is typed</text>
+    <rect x="610" y="70" width="240" height="230" rx="12" fill="#fdf0e6" stroke="#c0712f"/>
+    <text x="730" y="98" text-anchor="middle" font-weight="bold">3. Loaded per step</text>
+    <text x="730" y="130" text-anchor="middle" font-size="13">reference files,</text>
+    <text x="730" y="150" text-anchor="middle" font-size="13">templates, scripts</text>
+    <text x="730" y="190" text-anchor="middle" font-size="12" fill="#52606d">read or run only</text>
+    <text x="730" y="208" text-anchor="middle" font-size="12" fill="#52606d">when a step needs them</text>
+  </g>
+  <line x1="272" y1="185" x2="316" y2="185" stroke="#52606d" stroke-width="2" marker-end="url(#m)"/>
+  <line x1="562" y1="185" x2="606" y2="185" stroke="#52606d" stroke-width="2" marker-end="url(#m)"/>
+  <text x="440" y="335" text-anchor="middle" font-size="13" fill="#52606d">The context pays for the full text only while the skill is in use</text>
+</svg>

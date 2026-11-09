@@ -1,0 +1,243 @@
+---
+title: "The improvement loop"
+parent: "Building your own harness"
+nav_order: 1
+has_children: true
+has_toc: false
+redirect_from:
+  - /sections/17-building-a-harness/detail.html
+  - /sections/17-building-a-harness/advanced.html
+---
+
+{% include page_nav.html %}
+
+# The improvement loop
+
+As of 2026-11-09. Topic page in [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}). Slide: [Stop 12, "Building your own harness"]({{ '/talk/' | relative_url }}#stop-12-5-minutes).
+
+The improvement loop is the [systems approach]({{ '/sections/17-building-a-harness/' | relative_url }}#1-a-systems-approach-to-building-a-harness) applied again to each gap the agents expose. Each friction point becomes a change to the system, enforced where possible by a workflow or tool, a hook, script or linter, or a test, and the loop keeps the change only if it helped.
+
+- Input: one friction point, such as a failure, a stall or a repeated correction.
+- Output: one change to the system, measured on the next sessions.
+  - The change sits at layer 2, 3 or 4 where it can.
+  - A context-file line, if any, names the guard as a second layer.
+
+![Sequence diagram of the improvement loop on the tests-skipped task: friction, record, find the part, change the harness with a Stop hook, then measure on the next task, where the hook blocks an untested finish and the agent fixes a real failure.]({{ '/assets/images/17-building-a-harness/reflexivity-loop-sequence.svg' | relative_url }}){: style="width:100%"}
+
+*Figure 1. The five steps on one real task, which the [worked example](#a-full-worked-example) below walks through in full. Diagram made with archify.*
+
+## The five steps
+
+### 1. Friction
+
+Friction is any of these:
+
+| Kind | What it looks like |
+|---|---|
+| Failure | The agent produced something wrong and said it was done |
+| Stall | The agent looped, waited, or asked a question it could have answered itself |
+| Repeated correction | You told it the same thing in two different sessions |
+| Your own repetition | You typed the same long prompt again |
+
+The last kind is easy to miss because it does not look like a failure. It costs you time on every run, and a [skill]({{ '/sections/05-skills-and-plugins/' | relative_url }}) removes it.
+
+### 2. Record
+
+Write it down before fixing it. A friction log can be a text file, an issue tracker, or a label on existing issues. What matters is that each entry is short and dated, and that you count repeats instead of adding duplicates.
+
+<details markdown="1">
+<summary>Why record before fixing</summary>
+
+A fix made in the moment is shaped by the last failure. A fix made after a week of records is shaped by the pattern. Recording also stops you from fixing a one-off that will never happen again, which is how complexity creep starts (see [Complexity creep and pruning]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }})).
+
+</details>
+
+### 3. Find the part that let it through
+
+Ask which part of the system was missing or unclear. A useful order is to ask, in turn:
+
+1. Did the agent have the information?
+   - If not, ask first whether a workflow step or a check can supply it (a script that reads the setting, a template field). Use a context-file line only for knowledge no check can encode.
+2. Did it have the information and ignore it?
+   - Then the gap is a check: a hook, a linter or a test.
+3. Was the content right and the shape wrong?
+   - Then the gap is a template or a validator for the output's format.
+4. Was a step slow or manual?
+   - Then the gap is a tool or a skill.
+5. Was it an action you would have refused?
+   - Then the gap is an approval rule.
+
+Read the transcript as well as the result. The transcript usually shows the exact step where the agent took the wrong branch, and whether a rule was in its context at that moment.
+
+### 4. Change the harness
+
+Make the smallest change that would have stopped this case, at a layer that enforces it:
+
+1. A workflow or tool that builds the right step in (layer 2).
+2. A hook, script or linter that refuses or flags the action as it happens (layer 3).
+3. A test or validation that catches the result before it lands (layer 4).
+4. Then, at most, one context-file line that names the guard (layer 1, the second line of defence).
+
+> Warning: answering each mistake with a new, detailed context-file rule is an anti-pattern. The rule set grows, the agent applies it less consistently in long or busy sessions, and the same failure comes back. See [Ad hoc rules after every mistake]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}#the-four-usual-paths).
+
+The ladder, from soft to hard:
+
+| Rung | The rule lives in | It holds when |
+|---|---|---|
+| 1 | An instruction in a context file | The agent remembers and chooses to follow it |
+| 2 | A skill or template | The agent loads it for this task |
+| 3 | A script or linter | Someone runs it |
+| 4 | A hook | Always, on every matching event |
+| 5 | A test or merge gate | Always, before the result lands |
+| 6 | A permission rule | Always; the action is unreachable |
+
+![Sequence diagram of a never-force-push rule moving from an instruction, which the agent breaks, to a PreToolUse hook that refuses with a next step, to a permission rule that denies the command before it runs.]({{ '/assets/images/17-building-a-harness/enforcement-ladder-sequence.svg' | relative_url }}){: style="width:100%"}
+
+*Figure 2. One rule moving down three rungs. Diagram made with archify.*
+
+Start at the softest step that works. Move down when agents keep breaking the rule. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers each step's mechanics.
+
+### 5. Measure, then keep or revert
+
+Treat the change as a trial. Check it against the next sessions, or against a small task set made from past failures (see [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }})). Keep it if the friction stops and nothing else got worse. Revert it if it blocked correct work or did not change the outcome.
+
+| Result after a week | Decision |
+|---|---|
+| Friction gone, no false blocks | Keep |
+| Friction gone, some false blocks | Keep, narrow the rule |
+| Friction still there | Revert, look again at step 3 |
+| Friction gone, but another failure appeared | Revert, then fix both together |
+
+## A full worked example
+
+This is the "forgot to run the tests before saying done" entry from the [overview's friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#keep-a-friction-log), taken through all five steps.
+
+| Step | Outcome |
+|---|---|
+| Friction and record | Four "done" endings with a failing test in one week |
+| Find the part | A missing check at layer 3 |
+| Change | A `Stop` hook, plus a one-line pointer in `CLAUDE.md` |
+| Measure | Five fires in the next week, all on real failures; no false blocks |
+
+### Friction and record
+
+```text
+2026-11-03  agent said done with a failing test   seen 4   cost medium
+  sessions: Mon (parse_date), Tue (config loader), Thu twice (CLI flags)
+  caught by: my review each time
+```
+
+### Find the part
+
+1. Was the rule in context?
+   - Yes. `CLAUDE.md` already said "Run the tests before you finish."
+2. Did the agent read it?
+   - Yes. Each transcript shows a test run early in the task.
+3. Where did it go wrong?
+   - After the test run it made one more edit and did not run the tests again.
+4. Which part was missing?
+   - A check at layer 3. Another context-file line would sit on the same layer that had already failed four times.
+
+### Change: a Stop hook
+
+How the pieces act together at the end of a turn (Figure 1, step 5):
+
+1. The agent tries to end its turn, and Claude Code runs the `Stop` hook.
+2. The hook compares two times.
+   - The time of the last passing test run, from a stamp file that the test wrapper touches on success.
+   - The time of the newest edit in the working tree.
+3. If an edit is newer, the hook exits with code 2.
+   - Claude Code keeps the agent working and passes the hook's message back to it.
+   - The message names the next step: run the tests and fix any failure.
+4. The agent runs the tests. On a pass, the stamp is newer than every edit, and the next attempt to finish succeeds.
+
+```bash
+#!/usr/bin/env bash
+# Stop hook: refuse to finish while edits are newer than the last passing test run.
+set -euo pipefail
+stamp=".test-pass-stamp"          # the test wrapper touches this file on success
+newest_edit=$(git ls-files -m -o --exclude-standard | xargs -r stat -c %Y 2>/dev/null | sort -n | tail -1 || true)
+last_pass=$(stat -c %Y "$stamp" 2>/dev/null || echo 0)
+if [[ -n "${newest_edit:-}" && "$newest_edit" -gt "$last_pass" ]]; then
+  echo "Tests have not passed since your last edit. Run the test command, fix any failure, then finish." >&2
+  exit 2
+fi
+exit 0
+```
+
+The settings entry that registers it:
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "$CLAUDE_PROJECT_DIR/tools/require-fresh-tests.sh", "timeout": 10 } ] }
+    ]
+  }
+}
+```
+
+The hook also receives a `stop_hook_active` field on its input when the agent is already continuing because of a Stop hook; a production version reads it so that a test suite that cannot pass does not trap the session in a loop.
+
+Then I shortened the line in `CLAUDE.md` to "Tests must pass after your last edit; a Stop hook enforces this." The context file now names the guard that enforces the rule.
+
+### Measure
+
+The next week had no "done with a failing test" endings. The hook fired five times, and each time the agent ran the tests and fixed a real failure. It never blocked a correct finish, so I kept it.
+
+> Note: the hook's message tells the agent what to do next. [Writing refusal messages]({{ '/sections/17-building-a-harness/refusal-messages.html' | relative_url }}) covers how to write one. A refusal that only says "blocked" gets retried in the same wrong way.
+
+## Who runs the loop
+
+Early on, you do. Later, agents can run most of it:
+
+| Step | Early | Later |
+|---|---|---|
+| Friction | You notice it | Agents report it in a fixed format |
+| Record | You write the log | Agents file issues |
+| Find the part | You read the transcript | An agent reads it and proposes the part |
+| Change | You write it | An agent writes the change and its test |
+| Measure | You watch | An evaluation run compares before and after |
+| Keep or revert | You decide | You still decide |
+
+The last row stays with a person. The research reports the same split: the evaluator and the final decision stay outside the thing being changed. See [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}).
+
+## Examples from my own harness
+
+- Guards that started as written rules.
+  - The pattern matched the worked example: the rule was in context, the transcript showed the agent had read it, and the fix was a check that runs without the agent's cooperation.
+- Sessions that report their own friction.
+  - When a session hits a blocker the harness should have prevented, it files an issue with the transcript excerpt.
+  - A later session fixes the harness and adds a regression test for the fix.
+
+To start: pick the item at the top of your friction log and take it through all five steps, including the measure step.
+
+## Pitfalls
+
+<details markdown="1">
+<summary>A new context-file rule for every mistake</summary>
+
+Each rule is small, but together they grow into a long list the agent applies unevenly, and the list starts to contradict itself. Put the fix into a workflow, hook or test instead, and keep the context file to lines that name the guards.
+
+</details>
+
+<details markdown="1">
+<summary>Fixing the symptom in the prompt</summary>
+
+Adding "IMPORTANT: always run the tests" in capital letters keeps the rule on the softest rung. If the agent already had the rule, more emphasis rarely helps for long. Move to a check.
+
+</details>
+
+<details markdown="1">
+<summary>Skipping the measure step</summary>
+
+A change that is never measured stays forever, whether it helped or not. That is the main source of complexity creep.
+
+</details>
+
+## Sources
+
+- Claude Code hooks, the `Stop` event and exit code 2: <https://code.claude.com/docs/en/hooks.md>, not re-checked for this page.
+- From the author's own harness, described conceptually.
+
+{% include page_nav.html %}

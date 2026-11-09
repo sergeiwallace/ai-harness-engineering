@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" role="img" width="1180" height="260" viewBox="0 0 1180 260" font-family="Lato, Arial, 'Liberation Sans', Helvetica, sans-serif">
+<title>Where the time to merge goes, an illustration</title>
+<desc>An illustrative timeline of one change from first commit to merge: writing the change, a short focused test run, review, a long wait for a slot, and a long final full test run. The waits and the final run take most of the time. The proportions are an illustration, not a measurement.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5763"/></marker></defs>
+<rect x="0" y="0" width="1180" height="260" fill="#f5f6f8"/>
+<rect x="30" y="90" width="150" height="70" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="105" y="131" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Write</text>
+<rect x="180" y="90" width="110" height="70" rx="10" fill="#eef3e8" stroke="#3f6b2a" stroke-width="2"/>
+<text x="235" y="120" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Focused</text>
+<text x="235" y="141" font-size="16" fill="#15181d" text-anchor="middle">tests</text>
+<rect x="290" y="90" width="160" height="70" rx="10" fill="#fdf1e3" stroke="#9a5b13" stroke-width="2"/>
+<text x="370" y="131" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Review</text>
+<rect x="450" y="90" width="280" height="70" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="590" y="131" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Wait for a slot</text>
+<rect x="730" y="90" width="420" height="70" rx="10" fill="#f9e9e9" stroke="#8a2d2d" stroke-width="2"/>
+<text x="940" y="131" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Final full test run</text>
+<text x="30" y="50" font-size="15" fill="#15181d" text-anchor="start" font-weight="700">One change, first commit to merge (illustration, not a measurement)</text>
+<text x="30" y="205" font-size="15" fill="#15181d" text-anchor="start" font-weight="400">Measure each stage before optimising: the step that feels slow is often not the one that is.</text>
+</svg>

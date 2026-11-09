@@ -1,12 +1,13 @@
 ---
 title: "Introduction"
 nav_order: 1
-has_children: true
 has_toc: false
 permalink: /
 redirect_from:
   - /sections/00-landing-page/
   - /sections/00-introduction/
+  - /sections/00-landing-page/detail.html
+  - /sections/00-introduction/detail.html
 ---
 
 {% include page_nav.html %}
@@ -26,38 +27,119 @@ This site teaches how to work with AI coding agents such as Claude Code and Code
 
 Anyone who uses AI models for work. The examples come from software engineering, where agents run in a terminal and change code, but most of the ideas also apply, in adapted form, to people who use the chat and desktop apps (see [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }})). You do not need a harness to start; the site shows what one is, how the parts fit, and a first week of steps to build your own.
 
+### Key points
+
+- The audience ranges from engineers running coding agents to technical and non-technical workers who use desktop or web chat interfaces.
+   - To leverage all the tools at one's disposal for AI harness engineering, it's recommended to use Claude Code / Code or other agentic AI CLI clients, though some of what is discussed will apply to desktop and web interfaces to varying degrees.
+- The methods apply to personal projects and goals as well as to professional work. As a person's skill and harness grow, the amount of work they can direct grows with them.
+  - The main tools are Claude Code, then optionally Codex.
+- In a more advanced setup, agents coordinate among themselves on long tasks. The person gives the starting direction and steps in on key decisions, blockers and feedback.
+- The aim is to show what is possible and how to start, so each reader can build a harness that fits how they work.
+
 ## The conductor model
 
-```mermaid
-flowchart TB
-    You["You<br/>direction, decisions, feedback"] --> Coord["A coordinating agent"]
-    Coord --> A1["Agent: code"]
-    Coord --> A2["Agent: tests"]
-    Coord --> A3["Agent: review"]
-    H["The harness<br/>context, skills, checks, memory"] -. "shapes every agent" .-> A1
-    H -.-> A2
-    H -.-> A3
-    You -. "adjusts after each friction" .-> H
-```
+![Diagram: the conductor model. You give the goal and direction to a coordinating agent, which sends briefs to a code agent, a tests agent and a review agent; they commit to, run against and read the repository; the coordinator sends decisions and blockers back to you; you adjust the harness after each friction, and the harness is loaded into every agent's session]({{ '/assets/images/00-introduction/conductor-model.svg' | relative_url }}){: style="width: 100%" }
+*Figure: the conductor model. Solid arrows are work; dashed arrows are what comes back to you and what you feed into the harness.*
 
-Think of yourself as a conductor with an orchestra. You direct a group of agents through workflows, and you keep adjusting the harness so they need less direction. In a more advanced setup, agents coordinate among themselves on long tasks; you give the starting direction and step in on decisions, blockers and feedback.
+Think of yourself as a conductor with an orchestra. On a long task the parts work together like this:
+
+1. You give a coordinating agent the goal and the direction.
+2. The coordinator splits the work and sends each agent a brief.
+   - One agent may write the change, another the tests, another a review; the split depends on the task.
+3. Each agent works in its own session, and the harness is loaded into every one of them.
+4. The coordinator collects the results and sends decisions and blockers back to you.
+5. When something goes wrong in a way that could repeat, you adjust the harness, so the next session starts with the fix.
+
+In a simpler setup you are the coordinator yourself and run one agent at a time; the same harness applies.
 
 My own harness appears throughout as one example of what is possible. It is described conceptually: what each mechanism does and how it is wired, without the code itself. A copied harness brings its author's habits and problems with it, so take the ideas and build from the problems you hit yourself.
 
-## How the site is organised
+## The story
 
 The talk runs from the basics to building your own harness.
 
 1. What makes a model agentic, and what a harness is ([fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}), [harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }})).
-2. The building blocks that Claude Code and Codex provide: [the clients]({{ '/sections/03-claude-code-and-codex/' | relative_url }}), [context files]({{ '/sections/04-context-files/' | relative_url }}), [skills and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}), [hooks and checks]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) and [templates]({{ '/sections/07-templates-and-stubs/' | relative_url }}).
-3. How the blocks combine: [delegation]({{ '/sections/08-delegation/' | relative_url }}), [coordination]({{ '/sections/09-session-coordination/' | relative_url }}), [orchestration]({{ '/sections/10-orchestration/' | relative_url }}), [context management]({{ '/sections/11-context-window/' | relative_url }}), [testing]({{ '/sections/12-testing/' | relative_url }}), [review]({{ '/sections/13-code-review/' | relative_url }}), [human gates]({{ '/sections/14-human-gates/' | relative_url }}) and [measurement]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
-4. How to [build your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}) and keep it current [as models change]({{ '/sections/18-trends/' | relative_url }}).
+2. A quick tour of the building blocks that Claude Code and Codex provide: [the clients]({{ '/sections/03-claude-code-and-codex/' | relative_url }}), [context files]({{ '/sections/04-context-files/' | relative_url }}), [skills and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}), [hooks and checks]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) and [templates]({{ '/sections/07-templates-and-stubs/' | relative_url }}).
+3. How the blocks combine into a harness: [delegation]({{ '/sections/08-delegation/' | relative_url }}), [coordination]({{ '/sections/09-session-coordination/' | relative_url }}), [orchestration]({{ '/sections/10-orchestration/' | relative_url }}), [context management]({{ '/sections/11-context-window/' | relative_url }}), [testing]({{ '/sections/12-testing/' | relative_url }}), [review]({{ '/sections/13-code-review/' | relative_url }}), [human gates]({{ '/sections/14-human-gates/' | relative_url }}) and [measurement]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
+4. How to [build your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}) with a systems approach, and how to keep it current [as models change]({{ '/sections/18-trends/' | relative_url }}).
 
-Each topic has two pages. The section page is an overview you can learn from on its own, with a worked example for each idea. The detail page is a deep dive with diagrams, snippets, real examples and sources. Every page has previous and next links at the top and bottom, and a link back to the contents below. The [talk slides]({{ '/talk/' | relative_url }}) page lists the slides in order, and [Introduction in detail]({{ '/sections/00-landing-page/detail.html' | relative_url }}) has the full story of the talk, the talk path with its minutes, and the credits.
+The basics move fast on the talk path. Most of the time goes to how the blocks combine, because that is where a harness differs from a default setup.
 
-## One idea to take away
+### A systems approach
 
-Enforce as much as possible in code, and rely on written instructions only where code cannot do the job. An agent follows an instruction most of the time and slips more as its context fills; a hook, test or check runs the same way every time. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) shows how.
+The talk takes a systems approach to harness engineering and to working with agentic AI. The model, its instructions, its tools, its checks and the person directing it form one system. When the output is wrong or a gap shows up, the fix goes into the system, and the same approach is applied again to each new issue, often by the agents themselves. The harness improves with use, and the output gets better in a way the system enforces.
+
+Context files and instructions guide the model, but the model applies them unevenly. It drops rules more often when it handles several things at once, when it switches tasks, and when its context window is nearly full. Adding another detailed rule to a context file each time the model does something wrong is therefore an anti-pattern. The fix belongs in a layer that enforces it.
+
+![Diagram: the systems approach as a loop. A work session hits an issue or gap; you or the agent ask which layer can enforce the fix; the fix goes into layer 2, workflows and tools, layer 3, hooks, scripts and linters, or layer 4, validation and tests, with a context-file line as layer 1, the second line of defence; the next session runs inside the improved system]({{ '/assets/images/00-introduction/systems-approach-loop.svg' | relative_url }}){: style="width: 100%" }
+*Figure: each issue goes back into the system. The enforcing layers carry the fix; the instruction layer repeats it for the model.*
+
+A harness enforces its rules in four layers:
+
+1. Instructions in context files, skills and prompts describe the expected behaviour.
+   - They shape what the model does by default.
+   - Over many sessions they are never enough on their own.
+2. Workflows and tools build the steps into what the agent runs.
+   - A skill runs the steps in a fixed order; a tool accepts only valid input; a template gives the structure to fill in.
+3. Hooks, scripts and linters refuse or flag an action at the moment the model tries it.
+4. Validation and tests run before a change lands and catch what got past the earlier layers.
+
+Layers 2 to 4 do the enforcing. Layer 1 stays as a second line of defence, so the model's default behaviour already matches what the checks require. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3 in depth, and [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}) covers the opposite risk: a harness that keeps adding mechanisms until nobody can follow it.
+
+### Worked example: commits with a failing test suite
+
+1. The issue: agents sometimes commit while tests fail, usually late in a long session.
+2. The ad hoc fix would be a new context-file line, "run the tests before committing". It holds most days and slips on the long ones.
+3. The systems fix goes into the enforcing layers:
+   - layer 3: a pre-commit hook runs the suite and refuses the commit on a failure, with a message naming the failing tests;
+   - layer 4: the CI gate runs the same suite before a merge, for anything committed outside the hook.
+4. The context-file line stays as layer 1, and the hook's refusal message repeats it at the moment it applies.
+5. Every later session, by any agent, runs inside the same checks.
+
+## How the site is organised
+
+Each section starts with an overview you can learn from on its own, with a worked example for each idea. Where a concept, tool or technique deserves depth, the section adds one or more topic pages that go further: diagrams, snippets, fuller examples, pitfalls and sources. Some sections have several topic pages, and some have none because the overview covers the subject. Every page has previous and next links at the top and bottom, and a link back to the contents below. The [talk slides]({{ '/talk/' | relative_url }}) page lists the slides in order.
+
+The talk path and the linked pages are the same content at two depths. During the talk I can open any page when a question or the room calls for it, and listeners can read the pages afterwards.
+
+Examples from my own harness are described conceptually: what a subsystem does, how it fits, and what you could build. A source marked "verified" with a date was fetched that day and supports the claim. A claim marked "unverified" or "not yet verified against the primary source" has not yet been checked against its primary source.
+
+## Talk path
+
+| Stop | Minutes | Pages | What it covers |
+|---|---:|---|---|
+| 1 | 2 | [Introduction]({{ '/' | relative_url }}) | Who the talk is for, the conductor model, how to use the linked pages |
+| 2 | 2 | [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}) | The agent loop, tools, and the context window |
+| 3 | 3 | [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) | What a harness is, and a systems approach to building one |
+| 4 | 6 | [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}), [Context files]({{ '/sections/04-context-files/' | relative_url }}), [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}), [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}) | The building blocks, one line each with its main use |
+| 5 | 4 | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) | Enforcing rules in code, and the soft-to-hard ladder |
+| 6 | 4 | [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}) | Delegation and sub-agents |
+| 7 | 4 | [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}), [Orchestration and workflows]({{ '/sections/10-orchestration/' | relative_url }}) | Coordinating sessions, and the two kinds of orchestration |
+| 8 | 2 | [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) | Context window management and memory |
+| 9 | 4 | [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}), [Code review]({{ '/sections/13-code-review/' | relative_url }}) | Testing and code review |
+| 10 | 3 | [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}) | Human gates and staying aligned |
+| 11 | 2 | [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}) | Logging and evaluation |
+| 12 | 5 | [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}) | Building your own harness, and complexity creep |
+| 13 | 1 | [Trends and model changes]({{ '/sections/18-trends/' | relative_url }}) | Model changes and trends |
+| | 42 | | Talk total |
+| | 3 | | Questions |
+| | 45 | | Session total |
+
+[Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}) and [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}) are read-only sections, off the talk path. Stop 9 mentions screenshots in one line, and stop 1 mentions chat and desktop users in one line. Demos come later, after the talk and these pages are settled.
+
+## Pitfalls and lessons
+
+- A copied harness brings its author's habits and problems with it. Build from the problems you hit yourself.
+
+## Sources
+
+The meeting description I wrote for this talk.
+
+## Licence and credits
+
+Prose on this site is licensed under CC BY 4.0, and code under Apache-2.0. The [repository README](https://github.com/sergeiwallace/ai-harness-engineering#licences) maps each licence to its files.
+
+The coordination examples use firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>).
 
 ## Contents
 

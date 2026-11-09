@@ -1,142 +1,347 @@
 # Reading order for the previous and next links and the table of contents.
+# level 0 = page or section overview, 1 = topic page, 2 = sub-topic page.
 - url: "/"
   title: "Introduction"
   level: 0
-- url: "/sections/00-landing-page/detail.html"
-  title: "Introduction in detail"
-  level: 1
 - url: "/talk/"
   title: "Talk slides"
   level: 0
 - url: "/sections/01-agentic-ai-fundamentals/"
   title: "Agentic AI fundamentals"
   level: 0
-- url: "/sections/01-agentic-ai-fundamentals/detail.html"
-  title: "Agentic AI fundamentals in detail"
+- url: "/sections/01-agentic-ai-fundamentals/the-agent-loop.html"
+  title: "The agent loop"
+  level: 1
+- url: "/sections/01-agentic-ai-fundamentals/how-a-run-ends.html"
+  title: "How an agent run ends"
+  level: 2
+- url: "/sections/01-agentic-ai-fundamentals/tools.html"
+  title: "Tools and tool calling"
+  level: 1
+- url: "/sections/01-agentic-ai-fundamentals/mcp-servers.html"
+  title: "MCP servers"
+  level: 2
+- url: "/sections/01-agentic-ai-fundamentals/permissions-and-untrusted-input.html"
+  title: "Permissions and untrusted input"
+  level: 2
+- url: "/sections/01-agentic-ai-fundamentals/context-window-and-tokens.html"
+  title: "The context window and tokens"
+  level: 1
+- url: "/sections/01-agentic-ai-fundamentals/sessions-and-state.html"
+  title: "Sessions and state"
   level: 1
 - url: "/sections/02-ai-harnesses/"
   title: "AI harnesses"
   level: 0
-- url: "/sections/02-ai-harnesses/detail.html"
-  title: "AI harnesses in detail"
+- url: "/sections/02-ai-harnesses/context-files.html"
+  title: "Harness context files"
+  level: 1
+- url: "/sections/02-ai-harnesses/context-file-layering.html"
+  title: "Context file layering"
+  level: 2
+- url: "/sections/02-ai-harnesses/context-file-budgets.html"
+  title: "Context file size budgets"
+  level: 2
+- url: "/sections/02-ai-harnesses/compiling-context-files.html"
+  title: "Compiling context files"
+  level: 2
+- url: "/sections/02-ai-harnesses/skills.html"
+  title: "Harness skills"
+  level: 1
+- url: "/sections/02-ai-harnesses/native-commands-and-tools.html"
+  title: "Native commands and tools"
+  level: 1
+- url: "/sections/02-ai-harnesses/plugins-and-mcp-servers.html"
+  title: "Plugins and MCP servers"
+  level: 1
+- url: "/sections/02-ai-harnesses/permissions-and-settings.html"
+  title: "Permissions and settings"
+  level: 1
+- url: "/sections/02-ai-harnesses/hooks.html"
+  title: "Harness hooks"
+  level: 1
+- url: "/sections/02-ai-harnesses/hook-lifecycle-events.html"
+  title: "Hook lifecycle events"
+  level: 2
+- url: "/sections/02-ai-harnesses/guard-hooks.html"
+  title: "Guard hooks"
+  level: 2
+- url: "/sections/02-ai-harnesses/hook-failure-modes.html"
+  title: "Hook failure modes"
+  level: 2
+- url: "/sections/02-ai-harnesses/agent-profiles.html"
+  title: "Agent profiles"
+  level: 1
+- url: "/sections/02-ai-harnesses/guides-sensors-and-enforcement.html"
+  title: "Guides, sensors and enforcement"
+  level: 1
+- url: "/sections/02-ai-harnesses/memory-and-context.html"
+  title: "Harness memory and context"
   level: 1
 - url: "/sections/03-claude-code-and-codex/"
   title: "Claude Code and Codex basics"
   level: 0
-- url: "/sections/03-claude-code-and-codex/detail.html"
-  title: "Claude Code and Codex in detail"
+- url: "/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html"
+  title: "Claude Code and Codex compared"
+  level: 1
+- url: "/sections/03-claude-code-and-codex/native-commands.html"
+  title: "Native commands"
+  level: 1
+- url: "/sections/03-claude-code-and-codex/goal-and-loop.html"
+  title: "Goal and loop commands"
+  level: 2
+- url: "/sections/03-claude-code-and-codex/configuration-and-permissions.html"
+  title: "Configuration and permissions"
+  level: 1
+- url: "/sections/03-claude-code-and-codex/background-work-and-headless-runs.html"
+  title: "Background work and headless runs"
   level: 1
 - url: "/sections/04-context-files/"
   title: "Context files"
   level: 0
-- url: "/sections/04-context-files/detail.html"
-  title: "Context files in detail"
+- url: "/sections/04-context-files/how-context-files-load.html"
+  title: "How context files load"
+  level: 1
+- url: "/sections/04-context-files/after-compaction.html"
+  title: "Context files after compaction"
+  level: 2
+- url: "/sections/04-context-files/writing-rules.html"
+  title: "Writing rules that get followed"
+  level: 1
+- url: "/sections/04-context-files/hub-and-spoke-and-path-rules.html"
+  title: "Hub and spoke and path rules"
+  level: 1
+- url: "/sections/04-context-files/compiled-shared-context.html"
+  title: "Compiled shared context files"
   level: 1
 - url: "/sections/05-skills-and-plugins/"
   title: "Skills, commands and plugins"
   level: 0
-- url: "/sections/05-skills-and-plugins/detail.html"
-  title: "Skills and plugins in detail"
+- url: "/sections/05-skills-and-plugins/skill-anatomy.html"
+  title: "Skill anatomy and loading"
+  level: 1
+- url: "/sections/05-skills-and-plugins/skill-descriptions.html"
+  title: "Writing skill descriptions"
+  level: 2
+- url: "/sections/05-skills-and-plugins/invocation-and-chaining.html"
+  title: "Invocation and chaining"
+  level: 1
+- url: "/sections/05-skills-and-plugins/plugins-and-mods.html"
+  title: "Plugins, marketplaces and mods"
   level: 1
 - url: "/sections/06-hooks-scripts-and-linters/"
   title: "Hooks, scripts and linters"
   level: 0
-- url: "/sections/06-hooks-scripts-and-linters/detail.html"
-  title: "Hooks and scripts in detail"
+- url: "/sections/06-hooks-scripts-and-linters/enforcement-ladder.html"
+  title: "The enforcement ladder"
+  level: 1
+- url: "/sections/06-hooks-scripts-and-linters/hooks.html"
+  title: "Hooks"
+  level: 1
+- url: "/sections/06-hooks-scripts-and-linters/writing-a-guard.html"
+  title: "Writing a guard"
+  level: 2
+- url: "/sections/06-hooks-scripts-and-linters/git-hooks-ci-and-linters.html"
+  title: "Git hooks, CI and linters"
   level: 1
 - url: "/sections/07-templates-and-stubs/"
   title: "Templates, prompt stubs and injected prompts"
   level: 0
-- url: "/sections/07-templates-and-stubs/detail.html"
-  title: "Templates and stubs in detail"
+- url: "/sections/07-templates-and-stubs/briefs.html"
+  title: "Sub-agent briefs"
+  level: 1
+- url: "/sections/07-templates-and-stubs/original-request-block.html"
+  title: "The original-request block"
+  level: 2
+- url: "/sections/07-templates-and-stubs/injected-prompts.html"
+  title: "Injected prompts"
+  level: 1
+- url: "/sections/07-templates-and-stubs/document-and-goal-templates.html"
+  title: "Document and goal templates"
   level: 1
 - url: "/sections/08-delegation/"
   title: "Agent profiles, sub-agents and delegation"
   level: 0
-- url: "/sections/08-delegation/detail.html"
-  title: "Delegation in detail"
+- url: "/sections/08-delegation/agent-profiles.html"
+  title: "Agent profiles"
+  level: 1
+- url: "/sections/08-delegation/model-choice.html"
+  title: "Model choice"
+  level: 2
+- url: "/sections/08-delegation/worktree-isolation.html"
+  title: "Worktree isolation"
+  level: 1
+- url: "/sections/08-delegation/nesting-and-concurrency.html"
+  title: "Nesting and concurrency"
+  level: 1
+- url: "/sections/08-delegation/checking-delegated-work.html"
+  title: "Checking delegated work"
   level: 1
 - url: "/sections/09-session-coordination/"
   title: "Coordinating several sessions"
   level: 0
-- url: "/sections/09-session-coordination/detail.html"
-  title: "Session coordination in detail"
+- url: "/sections/09-session-coordination/coordinator-sessions.html"
+  title: "Coordinator and chief-of-staff sessions"
   level: 1
-- url: "/sections/09-session-coordination/advanced.html"
-  title: "Advanced session coordination topics"
+- url: "/sections/09-session-coordination/shared-action-ownership.html"
+  title: "Owning shared actions"
+  level: 2
+- url: "/sections/09-session-coordination/message-channels.html"
+  title: "Message channels and fallbacks"
   level: 1
+- url: "/sections/09-session-coordination/sendmessage-and-listagents.html"
+  title: "SendMessage and ListAgents"
+  level: 2
 - url: "/sections/10-orchestration/"
   title: "Orchestration and workflows"
   level: 0
-- url: "/sections/10-orchestration/detail.html"
-  title: "Orchestration in detail"
+- url: "/sections/10-orchestration/prompt-driven-orchestration.html"
+  title: "Prompt-driven orchestration"
   level: 1
-- url: "/sections/10-orchestration/advanced.html"
-  title: "Advanced orchestration topics"
+- url: "/sections/10-orchestration/skill-pipelines.html"
+  title: "Chaining skills into a pipeline"
+  level: 2
+- url: "/sections/10-orchestration/programmatic-workflows.html"
+  title: "Programmatic workflows"
   level: 1
+- url: "/sections/10-orchestration/orchestration-frameworks.html"
+  title: "Orchestration frameworks"
+  level: 2
+- url: "/sections/10-orchestration/goals-and-loops.html"
+  title: "Goals and loops"
+  level: 1
+- url: "/sections/10-orchestration/hill-climbing.html"
+  title: "Hill-climbing and quality ratchets"
+  level: 2
 - url: "/sections/11-context-window/"
   title: "Context window and memory"
   level: 0
-- url: "/sections/11-context-window/detail.html"
-  title: "Context window in detail"
+- url: "/sections/11-context-window/compaction.html"
+  title: "Compaction and saving state"
   level: 1
-- url: "/sections/11-context-window/advanced.html"
-  title: "Advanced context window topics"
+- url: "/sections/11-context-window/context-supervisor.html"
+  title: "A context supervisor"
+  level: 2
+- url: "/sections/11-context-window/claude-code-and-codex-context.html"
+  title: "Context in Claude Code and Codex"
+  level: 2
+- url: "/sections/11-context-window/memory-files.html"
+  title: "Memory files and lessons"
   level: 1
 - url: "/sections/12-testing/"
   title: "Testing agent-written code"
   level: 0
-- url: "/sections/12-testing/detail.html"
-  title: "Testing in detail"
+- url: "/sections/12-testing/entry-point-testing.html"
+  title: "Testing at the real entry point"
   level: 1
-- url: "/sections/12-testing/advanced.html"
-  title: "Advanced testing topics"
+- url: "/sections/12-testing/oracle-integrity.html"
+  title: "Test tampering and oracle integrity"
+  level: 1
+- url: "/sections/12-testing/test-edit-detection.html"
+  title: "Detecting test edits in a diff"
+  level: 2
+- url: "/sections/12-testing/regression-tests.html"
+  title: "The bug-fix regression test"
   level: 1
 - url: "/sections/13-code-review/"
   title: "Code review"
   level: 0
-- url: "/sections/13-code-review/detail.html"
-  title: "Code review in detail"
+- url: "/sections/13-code-review/cross-family-review.html"
+  title: "Cross-family review"
   level: 1
-- url: "/sections/13-code-review/advanced.html"
-  title: "Advanced code review topics"
+- url: "/sections/13-code-review/review-depth.html"
+  title: "How much of the diff to read"
   level: 1
+- url: "/sections/13-code-review/review-loops.html"
+  title: "Review rounds and stop rules"
+  level: 1
+- url: "/sections/13-code-review/verifying-findings.html"
+  title: "Verifying review findings"
+  level: 2
 - url: "/sections/14-human-gates/"
   title: "Human gates, decisions and alignment"
   level: 0
-- url: "/sections/14-human-gates/detail.html"
-  title: "Human gates in detail"
-  level: 1
+- url: "/sections/14-human-gates/decision-authority.html"
+  title: "Decision authority and escalation"
+  level: 0
+- url: "/sections/14-human-gates/held-decisions.html"
+  title: "Held decisions and the review queue"
+  level: 0
+- url: "/sections/14-human-gates/alignment-and-drift.html"
+  title: "Alignment with the original request"
+  level: 0
+- url: "/sections/14-human-gates/permission-rules.html"
+  title: "Permission rules and auto mode"
+  level: 0
+- url: "/sections/14-human-gates/gate-hooks.html"
+  title: "Writing a gate hook"
+  level: 0
 - url: "/sections/15-browser-automation/"
   title: "Browser automation and computer use"
   level: 0
-- url: "/sections/15-browser-automation/detail.html"
-  title: "Browser automation in detail"
-  level: 1
+- url: "/sections/15-browser-automation/vendor-routes.html"
+  title: "Claude in Chrome and computer use"
+  level: 0
+- url: "/sections/15-browser-automation/cdp-and-playwright.html"
+  title: "Driving a browser over CDP"
+  level: 0
+- url: "/sections/15-browser-automation/background-profiles.html"
+  title: "Background browser profiles"
+  level: 0
+- url: "/sections/15-browser-automation/screenshots-as-evidence.html"
+  title: "Screenshots as evidence"
+  level: 0
+- url: "/sections/15-browser-automation/prompt-injection.html"
+  title: "Untrusted page content"
+  level: 0
 - url: "/sections/16-logging-and-evaluation/"
   title: "Logging, observability and evaluation"
   level: 0
-- url: "/sections/16-logging-and-evaluation/detail.html"
-  title: "Logging and evaluation in detail"
-  level: 1
-- url: "/sections/16-logging-and-evaluation/advanced.html"
-  title: "Advanced evaluation topics"
-  level: 1
+- url: "/sections/16-logging-and-evaluation/logging-and-observability.html"
+  title: "Logging and observability"
+  level: 0
+- url: "/sections/16-logging-and-evaluation/spend-and-budgets.html"
+  title: "Spend tracking and budget checks"
+  level: 0
+- url: "/sections/16-logging-and-evaluation/evaluating-changes.html"
+  title: "Evaluating a harness change"
+  level: 0
+- url: "/sections/16-logging-and-evaluation/pass-at-k.html"
+  title: "pass@k and pass^k"
+  level: 0
 - url: "/sections/17-building-a-harness/"
   title: "Building your own harness"
   level: 0
-- url: "/sections/17-building-a-harness/detail.html"
-  title: "Building a harness in detail"
+- url: "/sections/17-building-a-harness/reflexivity-loop.html"
+  title: "The improvement loop"
+  level: 1
+- url: "/sections/17-building-a-harness/self-improving-harnesses.html"
+  title: "Self-improving harness research"
+  level: 2
+- url: "/sections/17-building-a-harness/refusal-messages.html"
+  title: "Writing refusal messages"
+  level: 2
+- url: "/sections/17-building-a-harness/first-week.html"
+  title: "A first-week harness"
+  level: 1
+- url: "/sections/17-building-a-harness/complexity-creep.html"
+  title: "Complexity creep and pruning"
   level: 1
 - url: "/sections/18-trends/"
   title: "Trends and model changes"
   level: 0
-- url: "/sections/18-trends/detail.html"
-  title: "Trends in detail"
+- url: "/sections/18-trends/retesting-after-a-model-change.html"
+  title: "Re-testing after a model change"
+  level: 1
+- url: "/sections/18-trends/building-a-task-set.html"
+  title: "Building a task set"
+  level: 2
+- url: "/sections/18-trends/harness-portability.html"
+  title: "Moving a harness between tools"
   level: 1
 - url: "/sections/19-chat-and-desktop-clients/"
   title: "Chat, desktop and web clients"
   level: 0
-- url: "/sections/19-chat-and-desktop-clients/detail.html"
-  title: "Chat and desktop clients in detail"
+- url: "/sections/19-chat-and-desktop-clients/harness-habits-in-a-chat-app.html"
+  title: "Harness habits in a chat app"
   level: 1

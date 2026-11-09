@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 300" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <title id="t">Where hooks fire in one session</title>
+  <desc id="d">A timeline of a session: SessionStart, UserPromptSubmit, then a loop of PreToolUse, the tool call and PostToolUse, then PreCompact when the window fills, then Stop when the agent tries to finish. Hooks marked can block: UserPromptSubmit, PreToolUse and Stop.</desc>
+  <rect width="820" height="300" fill="#ffffff"/>
+  <text x="410" y="30" text-anchor="middle" font-size="20" font-weight="600" fill="#1f2937">Where hooks fire in one session</text>
+  <line x1="30" y1="150" x2="790" y2="150" stroke="#9ca3af" stroke-width="3"/>
+  <g font-size="13" text-anchor="middle">
+    <circle cx="70" cy="150" r="10" fill="#6b7280"/><text x="70" y="125" font-weight="600" fill="#111827">SessionStart</text><text x="70" y="182" fill="#374151">load state</text>
+    <circle cx="190" cy="150" r="10" fill="#dc2626"/><text x="190" y="125" font-weight="600" fill="#111827">UserPromptSubmit</text><text x="190" y="182" fill="#374151">add context</text>
+    <rect x="270" y="80" width="300" height="140" rx="12" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="420" y="72" fill="#1e3a8a" font-weight="600">repeats for every tool call</text>
+    <circle cx="320" cy="150" r="10" fill="#dc2626"/><text x="320" y="125" font-weight="600" fill="#111827">PreToolUse</text><text x="320" y="182" fill="#374151">allow, deny, ask</text>
+    <rect x="395" y="136" width="50" height="28" rx="5" fill="#dbeafe" stroke="#2563eb"/><text x="420" y="155" fill="#1e3a8a">tool</text>
+    <circle cx="520" cy="150" r="10" fill="#6b7280"/><text x="520" y="125" font-weight="600" fill="#111827">PostToolUse</text><text x="520" y="182" fill="#374151">format, report</text>
+    <circle cx="640" cy="150" r="10" fill="#6b7280"/><text x="640" y="125" font-weight="600" fill="#111827">PreCompact</text><text x="640" y="182" fill="#374151">save state</text>
+    <circle cx="750" cy="150" r="10" fill="#dc2626"/><text x="750" y="125" font-weight="600" fill="#111827">Stop</text><text x="750" y="182" fill="#374151">refuse to finish</text>
+  </g>
+  <circle cx="40" cy="262" r="8" fill="#dc2626"/><text x="56" y="267" font-size="13" fill="#374151">can block the action (exit code 2 or a deny decision)</text>
+  <circle cx="460" cy="262" r="8" fill="#6b7280"/><text x="476" y="267" font-size="13" fill="#374151">observes or adds context</text>
+</svg>

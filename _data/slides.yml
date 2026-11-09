@@ -1,0 +1,167 @@
+# The talk deck at /talk/slides/ and how its slides map to site pages.
+#
+# index is the deck's 0-based slide number, so slide N opens at /talk/slides/#/N.
+# The deck list follows the deck's own slide order. Keep it in step with the deck
+# whenever the deck is rebuilt.
+#
+# sections maps a section folder name (the <NN-slug> in /sections/<NN-slug>/) to the
+# slides that cover it, most relevant first. The header and footer navigation on every
+# page under /sections/<NN-slug>/ links the first slide listed. "landing" is the
+# site's landing page and "talk" is the talk page. A page can override the mapping
+# with a front matter key, for example "slide: 17".
+url: "/talk/slides/"
+pdf: "/talk/agentic-ai-workflows-harness-engineering.pdf"
+
+deck:
+  - { index: 0, id: "title", title: "Agentic AI Workflows & Harness Engineering", part: "Introduction" }
+  - { index: 1, id: "audience", title: "Audience and scope", part: "Introduction" }
+  - { index: 2, id: "conductor", title: "The conductor model", part: "Introduction" }
+  - { index: 3, id: "route", title: "Talk route", part: "Introduction" }
+  - { index: 4, id: "agent-loop", title: "The agent loop", part: "Agentic AI fundamentals" }
+  - { index: 5, id: "context-window", title: "Context window and sessions", part: "Agentic AI fundamentals" }
+  - { index: 6, id: "harness-parts", title: "Parts of a harness", part: "AI harnesses" }
+  - { index: 7, id: "systems-reflexivity", title: "A systems approach to harness engineering", part: "AI harnesses" }
+  - { index: 8, id: "harness-cost", title: "Harness cost and effect", part: "AI harnesses" }
+  - { index: 9, id: "building-blocks", title: "The building blocks", part: "Building blocks" }
+  - { index: 10, id: "clients", title: "Claude Code and Codex", part: "Building blocks" }
+  - { index: 11, id: "native-commands", title: "Native commands", part: "Building blocks" }
+  - { index: 12, id: "context-files", title: "Context files", part: "Building blocks" }
+  - { index: 13, id: "skills-plugins", title: "Skills and plugins", part: "Building blocks" }
+  - { index: 14, id: "templates", title: "Templates and briefs", part: "Building blocks" }
+  - { index: 15, id: "enforce-in-code", title: "Enforcing rules in code", part: "Enforcing rules in code" }
+  - { index: 16, id: "enforcement-ladder", title: "Enforcement options", part: "Enforcing rules in code" }
+  - { index: 17, id: "kill-guard", title: "Process-kill guard case study", part: "Enforcing rules in code" }
+  - { index: 18, id: "guard-costs", title: "Cost of guards", part: "Enforcing rules in code" }
+  - { index: 19, id: "sub-agents", title: "Sub-agents and agent profiles", part: "Delegation and sub-agents" }
+  - { index: 20, id: "delegation", title: "Delegation with worktrees", part: "Delegation and sub-agents" }
+  - { index: 21, id: "check-delegated", title: "Checking delegated work", part: "Delegation and sub-agents" }
+  - { index: 22, id: "coordination", title: "Coordinating several sessions", part: "Coordination and orchestration" }
+  - { index: 23, id: "orchestration-kinds", title: "Two kinds of orchestration", part: "Coordination and orchestration" }
+  - { index: 24, id: "goals-loops", title: "Goals and loops", part: "Coordination and orchestration" }
+  - { index: 25, id: "context-management", title: "Context window management", part: "Context window management" }
+  - { index: 26, id: "testing", title: "Testing agent-written code", part: "Testing and code review" }
+  - { index: 27, id: "code-review", title: "Path of one change", part: "Testing and code review" }
+  - { index: 28, id: "review-practices", title: "Review practices", part: "Testing and code review" }
+  - { index: 29, id: "review-quote", title: "Open-ended review", part: "Testing and code review" }
+  - { index: 30, id: "human-gates", title: "Human gates", part: "Human gates and alignment" }
+  - { index: 31, id: "alignment", title: "Alignment with the original request", part: "Human gates and alignment" }
+  - { index: 32, id: "eval-quote", title: "Evaluating harness changes", part: "Logging and evaluation" }
+  - { index: 33, id: "logging-eval", title: "Logging and evaluation", part: "Logging and evaluation" }
+  - { index: 34, id: "reflexivity-loop", title: "Building your own harness", part: "Building your own harness" }
+  - { index: 35, id: "agents-improve", title: "Agents improving the harness", part: "Building your own harness" }
+  - { index: 36, id: "complexity-creep", title: "Complexity creep", part: "Building your own harness" }
+  - { index: 37, id: "first-week", title: "A possible first week", part: "Building your own harness" }
+  - { index: 38, id: "model-changes", title: "Model changes and trends", part: "Model changes and trends" }
+  - { index: 39, id: "close", title: "Questions and further reading", part: "Model changes and trends" }
+  - { index: 40, id: "appendix", title: "Appendix", part: "Appendix" }
+  - { index: 41, id: "detail-00-landing-page", title: "Introduction detail", part: "Appendix" }
+  - { index: 42, id: "detail-01-agentic-ai-fundamentals", title: "Agentic AI fundamentals detail", part: "Appendix" }
+  - { index: 43, id: "detail-02-ai-harnesses", title: "AI harnesses detail", part: "Appendix" }
+  - { index: 44, id: "detail-03-claude-code-and-codex", title: "Claude Code and Codex basics detail", part: "Appendix" }
+  - { index: 45, id: "detail-04-context-files", title: "Context files detail", part: "Appendix" }
+  - { index: 46, id: "detail-05-skills-and-plugins", title: "Skills, commands and plugins detail", part: "Appendix" }
+  - { index: 47, id: "detail-06-hooks-scripts-and-linters", title: "Hooks, scripts and linters detail", part: "Appendix" }
+  - { index: 48, id: "detail-07-templates-and-stubs", title: "Templates and stubs detail", part: "Appendix" }
+  - { index: 49, id: "detail-08-delegation", title: "Agent profiles, sub-agents and delegation detail", part: "Appendix" }
+  - { index: 50, id: "detail-09-session-coordination", title: "Coordinating several sessions detail", part: "Appendix" }
+  - { index: 51, id: "detail-10-orchestration", title: "Orchestration and workflows detail", part: "Appendix" }
+  - { index: 52, id: "detail-11-context-window", title: "Context window and memory detail", part: "Appendix" }
+  - { index: 53, id: "detail-12-testing", title: "Testing agent-written code detail", part: "Appendix" }
+  - { index: 54, id: "detail-13-code-review", title: "Code review detail", part: "Appendix" }
+  - { index: 55, id: "detail-14-human-gates", title: "Human gates, decisions and alignment detail", part: "Appendix" }
+  - { index: 56, id: "detail-15-browser-automation", title: "Browser automation detail", part: "Appendix" }
+  - { index: 57, id: "detail-16-logging-and-evaluation", title: "Logging, observability and evaluation detail", part: "Appendix" }
+  - { index: 58, id: "detail-17-building-a-harness", title: "Building your own harness detail", part: "Appendix" }
+  - { index: 59, id: "detail-18-trends", title: "Trends and model changes detail", part: "Appendix" }
+  - { index: 60, id: "detail-19-chat-and-desktop-clients", title: "Chat, desktop and web clients detail", part: "Appendix" }
+
+sections:
+  "landing":
+    - { index: 0, title: "Agentic AI Workflows & Harness Engineering" }
+    - { index: 1, title: "Audience and scope" }
+    - { index: 2, title: "The conductor model" }
+    - { index: 41, title: "Introduction detail" }
+  "talk":
+    - { index: 3, title: "Talk route" }
+  "00-landing-page":
+    - { index: 0, title: "Agentic AI Workflows & Harness Engineering" }
+    - { index: 1, title: "Audience and scope" }
+    - { index: 41, title: "Introduction detail" }
+  "00-introduction":
+    - { index: 0, title: "Agentic AI Workflows & Harness Engineering" }
+    - { index: 1, title: "Audience and scope" }
+    - { index: 41, title: "Introduction detail" }
+  "01-agentic-ai-fundamentals":
+    - { index: 4, title: "The agent loop" }
+    - { index: 5, title: "Context window and sessions" }
+    - { index: 42, title: "Agentic AI fundamentals detail" }
+  "02-ai-harnesses":
+    - { index: 6, title: "Parts of a harness" }
+    - { index: 7, title: "A systems approach to harness engineering" }
+    - { index: 8, title: "Harness cost and effect" }
+    - { index: 43, title: "AI harnesses detail" }
+  "03-claude-code-and-codex":
+    - { index: 10, title: "Claude Code and Codex" }
+    - { index: 11, title: "Native commands" }
+    - { index: 9, title: "The building blocks" }
+    - { index: 44, title: "Claude Code and Codex basics detail" }
+  "04-context-files":
+    - { index: 12, title: "Context files" }
+    - { index: 45, title: "Context files detail" }
+  "05-skills-and-plugins":
+    - { index: 13, title: "Skills and plugins" }
+    - { index: 46, title: "Skills, commands and plugins detail" }
+  "06-hooks-scripts-and-linters":
+    - { index: 15, title: "Enforcing rules in code" }
+    - { index: 16, title: "Enforcement options" }
+    - { index: 17, title: "Process-kill guard case study" }
+    - { index: 18, title: "Cost of guards" }
+    - { index: 47, title: "Hooks, scripts and linters detail" }
+  "07-templates-and-stubs":
+    - { index: 14, title: "Templates and briefs" }
+    - { index: 48, title: "Templates and stubs detail" }
+  "08-delegation":
+    - { index: 19, title: "Sub-agents and agent profiles" }
+    - { index: 20, title: "Delegation with worktrees" }
+    - { index: 21, title: "Checking delegated work" }
+    - { index: 49, title: "Agent profiles, sub-agents and delegation detail" }
+  "09-session-coordination":
+    - { index: 22, title: "Coordinating several sessions" }
+    - { index: 50, title: "Coordinating several sessions detail" }
+  "10-orchestration":
+    - { index: 23, title: "Two kinds of orchestration" }
+    - { index: 24, title: "Goals and loops" }
+    - { index: 51, title: "Orchestration and workflows detail" }
+  "11-context-window":
+    - { index: 25, title: "Context window management" }
+    - { index: 52, title: "Context window and memory detail" }
+  "12-testing":
+    - { index: 26, title: "Testing agent-written code" }
+    - { index: 53, title: "Testing agent-written code detail" }
+  "13-code-review":
+    - { index: 27, title: "Path of one change" }
+    - { index: 28, title: "Review practices" }
+    - { index: 29, title: "Open-ended review" }
+    - { index: 54, title: "Code review detail" }
+  "14-human-gates":
+    - { index: 30, title: "Human gates" }
+    - { index: 31, title: "Alignment with the original request" }
+    - { index: 55, title: "Human gates, decisions and alignment detail" }
+  "15-browser-automation":
+    - { index: 56, title: "Browser automation detail" }
+  "16-logging-and-evaluation":
+    - { index: 32, title: "Evaluating harness changes" }
+    - { index: 33, title: "Logging and evaluation" }
+    - { index: 57, title: "Logging, observability and evaluation detail" }
+  "17-building-a-harness":
+    - { index: 34, title: "Building your own harness" }
+    - { index: 35, title: "Agents improving the harness" }
+    - { index: 36, title: "Complexity creep" }
+    - { index: 37, title: "A possible first week" }
+    - { index: 58, title: "Building your own harness detail" }
+  "18-trends":
+    - { index: 38, title: "Model changes and trends" }
+    - { index: 39, title: "Questions and further reading" }
+    - { index: 59, title: "Trends and model changes detail" }
+  "19-chat-and-desktop-clients":
+    - { index: 60, title: "Chat, desktop and web clients detail" }

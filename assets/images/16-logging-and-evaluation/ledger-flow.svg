@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" role="img" width="1140" height="370" viewBox="0 0 1140 370" font-family="Lato, Arial, 'Liberation Sans', Helvetica, sans-serif">
+<title>Where harness logs come from and what they answer</title>
+<desc>Agent sessions, commits and model calls each write records to append-only JSONL ledgers, one per subsystem. The ledgers answer questions such as where the time goes and what a change cost, and feed a budget check that runs before any paid job.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5763"/></marker></defs>
+<rect x="0" y="0" width="1140" height="370" fill="#f5f6f8"/>
+<path d="M270,70 L370,185" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M270,185 L370,185" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M270,300 L370,185" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M670,185 L790,90" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M670,185 L790,275" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<rect x="30" y="30" width="240" height="80" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="150" y="65" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Agent sessions</text>
+<text x="150" y="86" font-size="16" fill="#15181d" text-anchor="middle">commands, files, time</text>
+<rect x="30" y="145" width="240" height="80" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="150" y="180" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Commits</text>
+<text x="150" y="201" font-size="16" fill="#15181d" text-anchor="middle">model, effort, agent</text>
+<rect x="30" y="260" width="240" height="80" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="150" y="295" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Model calls</text>
+<text x="150" y="316" font-size="16" fill="#15181d" text-anchor="middle">tokens and cost</text>
+<rect x="370" y="135" width="300" height="100" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="520" y="180" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Append-only JSONL ledgers</text>
+<text x="520" y="201" font-size="16" fill="#15181d" text-anchor="middle">one per subsystem</text>
+<rect x="790" y="40" width="310" height="100" rx="10" fill="#eef3e8" stroke="#3f6b2a" stroke-width="2"/>
+<text x="945" y="75" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Questions</text>
+<text x="945" y="96" font-size="16" fill="#15181d" text-anchor="middle">where does the time go?</text>
+<text x="945" y="116" font-size="16" fill="#15181d" text-anchor="middle">what did a change cost?</text>
+<rect x="790" y="230" width="310" height="90" rx="10" fill="#f9e9e9" stroke="#8a2d2d" stroke-width="2"/>
+<text x="945" y="270" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Budget check</text>
+<text x="945" y="291" font-size="16" fill="#15181d" text-anchor="middle">before a paid job</text>
+</svg>

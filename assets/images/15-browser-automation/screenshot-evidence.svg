@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" role="img" width="1100" height="250" viewBox="0 0 1100 250" font-family="Lato, Arial, 'Liberation Sans', Helvetica, sans-serif">
+<title>Screenshots as evidence</title>
+<desc>The agent changes the page, takes a headless full-page screenshot, compares it with the intent or with a before shot, and reports with the image attached. If the result differs, it fixes the page and takes the screenshot again.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5763"/></marker></defs>
+<rect x="0" y="0" width="1100" height="250" fill="#f5f6f8"/>
+<path d="M250,100 L300,100" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M520,100 L570,100" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M790,100 L840,100" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<text x="815" y="50" font-size="14" fill="#15181d" text-anchor="middle" font-style="italic">matches</text>
+<path d="M680,145 L680,210 L140,210 L140,140" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)" stroke-dasharray="7 5"/>
+<text x="410" y="200" font-size="14" fill="#15181d" text-anchor="middle" font-style="italic">differs: fix and retake</text>
+<rect x="30" y="60" width="220" height="80" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="140" y="106" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Change the page</text>
+<rect x="300" y="60" width="220" height="80" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="410" y="95" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Screenshot</text>
+<text x="410" y="116" font-size="16" fill="#15181d" text-anchor="middle">headless, full page</text>
+<rect x="570" y="55" width="220" height="90" rx="10" fill="#eef3e8" stroke="#3f6b2a" stroke-width="2"/>
+<text x="680" y="85" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Compare</text>
+<text x="680" y="106" font-size="16" fill="#15181d" text-anchor="middle">with the intent</text>
+<text x="680" y="126" font-size="16" fill="#15181d" text-anchor="middle">or the before shot</text>
+<rect x="840" y="60" width="230" height="80" rx="10" fill="#fdf1e3" stroke="#9a5b13" stroke-width="2"/>
+<text x="955" y="95" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Report</text>
+<text x="955" y="116" font-size="16" fill="#15181d" text-anchor="middle">with the image attached</text>
+</svg>

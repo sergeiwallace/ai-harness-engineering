@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" role="img" width="1180" height="300" viewBox="0 0 1180 300" font-family="Lato, Arial, 'Liberation Sans', Helvetica, sans-serif">
+<title>An agent driving a background browser over CDP</title>
+<desc>The agent runs a script. The script connects over the Chrome DevTools Protocol to a local port opened by a Chrome instance that uses its own dedicated profile and runs headless or off screen. The page&#x27;s content and screenshots come back to the script, which writes files the agent reads. The person&#x27;s own browser and screen are untouched.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5763"/></marker></defs>
+<rect x="0" y="0" width="1180" height="300" fill="#f5f6f8"/>
+<path d="M240,88 L300,88" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M510,88 L570,88" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<text x="540" y="30" font-size="14" fill="#15181d" text-anchor="middle" font-style="italic">CDP</text>
+<path d="M830,88 L890,88" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M700,135 L700,232 L560,232" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M300,232 L135,232 L135,135" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<rect x="30" y="40" width="210" height="95" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="135" y="72" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Agent</text>
+<text x="135" y="93" font-size="16" fill="#15181d" text-anchor="middle">writes and runs</text>
+<text x="135" y="114" font-size="16" fill="#15181d" text-anchor="middle">the script</text>
+<rect x="300" y="40" width="210" height="95" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="405" y="72" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Script</text>
+<text x="405" y="93" font-size="16" fill="#15181d" text-anchor="middle">Playwright or a</text>
+<text x="405" y="114" font-size="16" fill="#15181d" text-anchor="middle">raw CDP client</text>
+<rect x="570" y="40" width="260" height="95" rx="10" fill="#eef3e8" stroke="#3f6b2a" stroke-width="2"/>
+<text x="700" y="72" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Chrome, own profile</text>
+<text x="700" y="93" font-size="16" fill="#15181d" text-anchor="middle">headless or off screen</text>
+<text x="700" y="114" font-size="16" fill="#15181d" text-anchor="middle">local debugging port</text>
+<rect x="890" y="50" width="250" height="75" rx="10" fill="#f9e9e9" stroke="#8a2d2d" stroke-width="2"/>
+<text x="1015" y="93" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">The web page</text>
+<rect x="300" y="190" width="260" height="85" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="430" y="228" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Files the agent reads</text>
+<text x="430" y="248" font-size="16" fill="#15181d" text-anchor="middle">text, screenshots, logs</text>
+<rect x="890" y="190" width="250" height="85" rx="10" fill="#fdf1e3" stroke="#9a5b13" stroke-width="2"/>
+<text x="1015" y="228" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Your own browser</text>
+<text x="1015" y="248" font-size="16" fill="#15181d" text-anchor="middle">and screen: untouched</text>
+</svg>

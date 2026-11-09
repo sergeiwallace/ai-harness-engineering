@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" role="img" width="1180" height="360" viewBox="0 0 1180 360" font-family="Lato, Arial, 'Liberation Sans', Helvetica, sans-serif">
+<title>Who decides an action</title>
+<desc>An agent wants to act. If the action is outward, destructive, spends money or is architectural, it goes to the person as a held decision. Otherwise the agent investigates, decides and records why; if a gate still applies after investigating, it goes to the person.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5763"/></marker></defs>
+<rect x="0" y="0" width="1180" height="360" fill="#f5f6f8"/>
+<path d="M230,175 L290,175" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M425,125 L425,80 L640,80" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<text x="470" y="70" font-size="14" fill="#15181d" text-anchor="middle" font-style="italic">yes</text>
+<path d="M425,225 L425,280 L640,280" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<text x="470" y="300" font-size="14" fill="#15181d" text-anchor="middle" font-style="italic">no</text>
+<path d="M940,280 L1000,280" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M790,230 L790,130" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)" stroke-dasharray="7 5"/>
+<text x="875" y="185" font-size="14" fill="#15181d" text-anchor="middle" font-style="italic">a gate still applies</text>
+<rect x="30" y="140" width="200" height="70" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="130" y="181" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">An agent wants to act</text>
+<rect x="290" y="125" width="270" height="100" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="425" y="170" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Outward, destructive,</text>
+<text x="425" y="191" font-size="16" fill="#15181d" text-anchor="middle">spending or architectural?</text>
+<rect x="640" y="30" width="300" height="100" rx="10" fill="#fdf1e3" stroke="#9a5b13" stroke-width="2"/>
+<text x="790" y="65" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Ask the person</text>
+<text x="790" y="86" font-size="16" fill="#15181d" text-anchor="middle">held decision with options</text>
+<text x="790" y="106" font-size="16" fill="#15181d" text-anchor="middle">and a recommendation</text>
+<rect x="640" y="230" width="300" height="100" rx="10" fill="#eef3e8" stroke="#3f6b2a" stroke-width="2"/>
+<text x="790" y="275" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Investigate first</text>
+<text x="790" y="296" font-size="16" fill="#15181d" text-anchor="middle">can the agent unblock itself?</text>
+<rect x="1000" y="245" width="160" height="70" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="1080" y="275" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Agent decides</text>
+<text x="1080" y="296" font-size="16" fill="#15181d" text-anchor="middle">and records why</text>
+</svg>

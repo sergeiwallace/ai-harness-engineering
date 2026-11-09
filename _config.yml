@@ -31,3 +31,19 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
+
+callouts:
+  highlight:
+    color: yellow
+  important:
+    title: Important
+    color: green
+  new:
+    title: New
+    color: green
+  note:
+    title: Note
+    color: blue
+  warning:
+    title: Warning
+    color: red

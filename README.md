@@ -10,7 +10,7 @@ Read it at <https://sergeiwallace.github.io/ai-harness-engineering/>.
 
 - [Introduction](https://sergeiwallace.github.io/ai-harness-engineering/)
   - [Introduction in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/00-landing-page/detail.html)
-- [Talk slides](https://sergeiwallace.github.io/ai-harness-engineering/talk/)
+- [Talk slides](https://sergeiwallace.github.io/ai-harness-engineering/talk/): the slide list, a link to [present the slides](https://sergeiwallace.github.io/ai-harness-engineering/talk/slides/) and the PDF
 - [Agentic AI fundamentals](https://sergeiwallace.github.io/ai-harness-engineering/sections/01-agentic-ai-fundamentals/)
   - [Agentic AI fundamentals in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/01-agentic-ai-fundamentals/detail.html)
 - [AI harnesses](https://sergeiwallace.github.io/ai-harness-engineering/sections/02-ai-harnesses/)
@@ -59,7 +59,7 @@ Read it at <https://sergeiwallace.github.io/ai-harness-engineering/>.
 ## Layout
 
 - `sections/00-landing-page/index.md` is the landing page and introduction, served at the site root, with the table of contents. Its `detail.md` holds the story of the talk, the talk path and the credits.
-- `talk/index.md` lists the talk's slides in order.
+- `talk/index.md` lists the talk's slides in order, each linked to its slide. `talk/slides/` is the built deck (reveal.js, served as static files; slide N opens at `talk/slides/#/N`, counting from 0), with `THIRD-PARTY-NOTICES.txt` for the libraries and fonts it bundles, and `talk/agentic-ai-workflows-harness-engineering.pdf` is the PDF. `_data/slides.yml` maps each section to its slides, and every page's header and footer link the first one.
 - `sections/NN-slug/` holds one topic each, numbered from 01: `index.md` is the section page, `detail.md` the detail page, and `advanced.md`, where present, the advanced page.
 - `_data/pages.yml` is the reading order. The table of contents and the previous and next links at the top and bottom of every page are built from it (`_includes/page_toc.html`, `_includes/page_nav.html`).
 - `_config.yml` configures Jekyll and the Just the Docs theme. GitHub Pages builds the site from this repository's default branch.

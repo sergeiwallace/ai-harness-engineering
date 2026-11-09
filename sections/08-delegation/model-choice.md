@@ -1,0 +1,164 @@
+---
+title: "Model choice"
+parent: "Agent profiles"
+grand_parent: "Agent profiles, sub-agents and delegation"
+nav_order: 1
+---
+
+{% include page_nav.html %}
+
+# Model choice
+
+As of 2026-11-09. Sub-topic of [Agent profiles]({{ '/sections/08-delegation/agent-profiles.html' | relative_url }}), in [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}).
+
+Delegation lets each part of a task run on a model suited to it. A common split, the one figure 1 shows:
+
+1. The lead keeps the design decisions on the strongest model.
+2. Volume work, such as searching, goes to a cheaper model whose output the lead can check.
+3. Implementation of a decided brief goes to a mid-tier model.
+4. Review goes to a model from a different family. This page covers the tiers, how to set the model and effort, a worked task across four tiers, and when to break the default.
+
+![A sequence across four participants. The lead, on the strongest tier, asks a searcher on the cheapest tier to list callers of parse_date and gets a nine-row table. The lead decides the design and briefs an engineer on the mid tier to fix the three callers without a timezone; the engineer returns a commit and a test line. The lead asks a reviewer from another model family to review the diff and gets one finding about a daylight-saving edge case.]({{ '/assets/images/08-delegation/model-routing.png' | relative_url }}){: style="width:100%"}
+
+*Figure 1. One task split across four tiers. Built with archify.*
+
+## Contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+## The tiers
+
+### A common split
+
+This is the split my harness uses. A team with one model, or a tight budget, makes different choices.
+
+| Tier | Use it for | Why | Typical role |
+|---|---|---|---|
+| Strongest | Design decisions, plans, synthesis of many reports | Mistakes here are expensive and spread into everything built on them | Lead, architect, auditor |
+| Mid | Implementing a clear brief | Good code at lower cost when the decision is already made | Engineer |
+| Cheapest | Bulk reading, searching, classifying | Volume work whose output is easy to check | Searcher, analyst |
+| Different family | Reviewing another model's work | An independent reader catches what the author's family misses | Reviewer |
+
+### Choosing by the cost of a mistake
+
+One way to choose a tier is by how far a mistake would spread. A wrong decision in a plan affects every task built on it. A wrong row in a search table costs the lead one check. Under this approach a small decision still goes to the strongest tier, and a large search does not.
+
+> Note: in my own harness, design decisions stay on the strongest tier even when they look small. A cheaper model that reaches a design question in the middle of a brief hands it back to the lead.
+
+## Setting the model
+
+### Per session
+
+| Command | Sets | Applies to |
+|---|---|---|
+| `/model` | The model | The current session |
+| `/effort` | The reasoning effort | The current session |
+
+A sub-agent started from the session uses its profile's `model` and `effort` when they are set.
+
+### Per role
+
+A profile's `model` field fixes the model for every launch of that role: an alias such as `opus`, `sonnet` or `haiku`, or `inherit` to take the lead's.
+
+```markdown
+---
+name: searcher
+description: Finds every use of a symbol and returns a table. Read-only.
+tools: Read, Grep, Glob
+model: haiku
+---
+Return a Markdown table: file, line, one-line context. No commentary.
+```
+
+### Effort is separate from tier
+
+Effort and tier answer different questions. Tier is how capable the model is; effort is how long it thinks on this task. A mid-tier engineer on a tricky concurrency bug may want high effort; the strongest model summarising three short reports needs little.
+
+| Task | Tier | Effort |
+|---|---|---|
+| Choose between two storage designs | Strongest | High |
+| Summarise three research reports already checked | Strongest | Low |
+| Fix a race in a retry loop | Mid | High |
+| Rename a function across forty files | Cheapest or mid | Low |
+
+## Worked example: four tiers on one task
+
+### The task
+
+Make every API date carry an explicit timezone.
+
+- The codebase: one service, a `parse_date` helper called from several modules.
+- The decision to make: how dates are stored and rendered.
+- The work after the decision: change the callers that pass no timezone, with tests.
+
+### The split
+
+1. The lead, on the strongest tier, asks a searcher on the cheapest tier for every caller of `parse_date`.
+2. The searcher returns a nine-row table. The lead spot-checks two rows against the code.
+3. The lead decides: store UTC, render with an offset. It writes an engineer brief for the three callers that pass no timezone.
+4. The engineer, on the mid tier, writes the tests, fixes the callers and reports a commit with its test line.
+5. A reviewer from a different family reads the diff and finds one issue: a report generated at a daylight-saving change.
+6. The engineer fixes it; the lead checks the commit and merges.
+
+### What it cost, in shape
+
+| Step | Tier | Share of the reading | Share of the judgment |
+|---|---|---|---|
+| Search | Cheapest | Most | None |
+| Decide and brief | Strongest | Little | Most |
+| Build | Mid | Some | Little |
+| Review | Different family | Some | Some |
+
+## Cross-family review
+
+### Why another family
+
+- Models from one family share training and habits, so they tend to miss the same things.
+- A reviewer from a different family reads the code without those habits.
+- In practice: Claude writes and Codex reviews, or Codex writes and Claude reviews.
+- In the worked example above, the cross-family reviewer found the daylight-saving case the engineer and lead had both missed.
+
+### What it is not
+
+| Cross-family review is | It is not |
+|---|---|
+| An extra reader of the diff | A merge gate on its own |
+| Findings the lead weighs like any review | An automatic veto |
+| Recorded with the family that reviewed | A replacement for tests |
+
+In my harness it never blocks a merge on its own. See [Code review]({{ '/sections/13-code-review/' | relative_url }}).
+
+## When to break the default
+
+<details markdown="1">
+<summary>Cases where the cheap tier is the wrong choice</summary>
+
+- The output cannot be checked cheaply. A summary of fifty pages that nobody will re-read needs the stronger model, because nobody will catch its mistakes.
+- The task hides a decision. "Rename the config keys" is mechanical until two keys collide.
+- The cheaper model keeps failing. Three failed attempts at the cheap tier cost more than one at the mid tier.
+
+</details>
+
+<details markdown="1">
+<summary>Cases where the strongest tier is wasted</summary>
+
+- Mechanical edits with a test that proves them.
+- Searches whose results the lead will check anyway.
+- Formatting, renaming and moving files.
+
+</details>
+
+## Related pages
+
+- [Agent profiles]({{ '/sections/08-delegation/agent-profiles.html' | relative_url }}), where the `model` field lives.
+- [Checking delegated work]({{ '/sections/08-delegation/checking-delegated-work.html' | relative_url }}), what makes cheap output safe to use.
+
+## Sources
+
+- `/model` and `/effort`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
+- Profile `model` field and `inherit`: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
+- The tier split and cross-family review practice are from the author's own harness, described conceptually. The worked example is an illustration written for this page.
+
+{% include page_nav.html %}

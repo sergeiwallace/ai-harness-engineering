@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" role="img" width="1180" height="320" viewBox="0 0 1180 320" font-family="Lato, Arial, 'Liberation Sans', Helvetica, sans-serif">
+<title>Evaluating one harness change</title>
+<desc>Start from a fixed task set of 20 to 50 real failures. Run a baseline k times per task, change one thing, run again with the same tasks and the same k, compare pass rate, cost and time, then keep or revert the change before trying the next one.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5763"/></marker></defs>
+<rect x="0" y="0" width="1180" height="320" fill="#f5f6f8"/>
+<path d="M260,82 L320,82" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M550,82 L610,82" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M850,82 L910,82" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M1025,125 L1025,200" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M910,242 L850,242" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M610,242 L145,242 L145,125" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)" stroke-dasharray="7 5"/>
+<text x="380" y="232" font-size="14" fill="#15181d" text-anchor="middle" font-style="italic">next change</text>
+<rect x="30" y="40" width="230" height="85" rx="10" fill="#fdf1e3" stroke="#9a5b13" stroke-width="2"/>
+<text x="145" y="78" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Fixed task set</text>
+<text x="145" y="98" font-size="16" fill="#15181d" text-anchor="middle">20 to 50 real failures</text>
+<rect x="320" y="40" width="230" height="85" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="435" y="78" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Baseline</text>
+<text x="435" y="98" font-size="16" fill="#15181d" text-anchor="middle">run each task k times</text>
+<rect x="610" y="40" width="240" height="85" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="730" y="78" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Change one thing</text>
+<text x="730" y="98" font-size="16" fill="#15181d" text-anchor="middle">rule, hook, skill, model</text>
+<rect x="910" y="40" width="230" height="85" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="1025" y="78" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Run again</text>
+<text x="1025" y="98" font-size="16" fill="#15181d" text-anchor="middle">same tasks, same k</text>
+<rect x="910" y="200" width="230" height="85" rx="10" fill="#eef3e8" stroke="#3f6b2a" stroke-width="2"/>
+<text x="1025" y="238" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Compare</text>
+<text x="1025" y="258" font-size="16" fill="#15181d" text-anchor="middle">pass rate, cost, time</text>
+<rect x="610" y="200" width="240" height="85" rx="10" fill="#ffffff" stroke="#4f5763" stroke-width="2"/>
+<text x="730" y="238" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Keep it</text>
+<text x="730" y="258" font-size="16" fill="#15181d" text-anchor="middle">or revert it</text>
+</svg>

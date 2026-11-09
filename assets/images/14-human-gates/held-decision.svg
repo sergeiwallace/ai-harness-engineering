@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" role="img" width="1180" height="300" viewBox="0 0 1180 300" font-family="Lato, Arial, 'Liberation Sans', Helvetica, sans-serif">
+<title>The parts of a held decision</title>
+<desc>A held decision moves from the agent to the person and back. The agent writes the context, the options with pros and cons, and a recommendation with its reasoning. The person reads it in one review queue and writes a ruling, which the agent records and acts on.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f5763"/></marker></defs>
+<rect x="0" y="0" width="1180" height="300" fill="#f5f6f8"/>
+<path d="M280,88 L320,88" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M570,88 L610,88" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M860,88 L900,88" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M1025,135 L1025,185" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<path d="M900,228 L800,228" fill="none" stroke="#4f5763" stroke-width="2" stroke-linejoin="round" marker-end="url(#a)"/>
+<rect x="30" y="40" width="250" height="95" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="155" y="72" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Context</text>
+<text x="155" y="93" font-size="16" fill="#15181d" text-anchor="middle">the task it serves,</text>
+<text x="155" y="114" font-size="16" fill="#15181d" text-anchor="middle">what was investigated</text>
+<rect x="320" y="40" width="250" height="95" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="445" y="72" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Options</text>
+<text x="445" y="93" font-size="16" fill="#15181d" text-anchor="middle">each with honest</text>
+<text x="445" y="114" font-size="16" fill="#15181d" text-anchor="middle">pros and cons</text>
+<rect x="610" y="40" width="250" height="95" rx="10" fill="#e8f1f4" stroke="#0e5a75" stroke-width="2"/>
+<text x="735" y="72" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Recommendation</text>
+<text x="735" y="93" font-size="16" fill="#15181d" text-anchor="middle">reasoning first,</text>
+<text x="735" y="114" font-size="16" fill="#15181d" text-anchor="middle">then the pick</text>
+<rect x="900" y="40" width="250" height="95" rx="10" fill="#fdf1e3" stroke="#9a5b13" stroke-width="2"/>
+<text x="1025" y="72" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Review queue</text>
+<text x="1025" y="93" font-size="16" fill="#15181d" text-anchor="middle">one place for</text>
+<text x="1025" y="114" font-size="16" fill="#15181d" text-anchor="middle">every open question</text>
+<rect x="900" y="185" width="250" height="85" rx="10" fill="#fdf1e3" stroke="#9a5b13" stroke-width="2"/>
+<text x="1025" y="223" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Ruling</text>
+<text x="1025" y="244" font-size="16" fill="#15181d" text-anchor="middle">in the person&#x27;s words</text>
+<rect x="470" y="185" width="330" height="85" rx="10" fill="#eef3e8" stroke="#3f6b2a" stroke-width="2"/>
+<text x="635" y="223" font-size="16" fill="#15181d" text-anchor="middle" font-weight="700">Agent records the ruling</text>
+<text x="635" y="244" font-size="16" fill="#15181d" text-anchor="middle">and continues</text>
+</svg>
