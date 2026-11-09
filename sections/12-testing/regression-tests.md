@@ -16,10 +16,10 @@ A bug fix is the one place where the red step of test-driven development still p
 
 This page walks one bug through the full method:
 
-1. reproduce;
-2. find the root cause;
-3. freeze the failing test;
-4. fix;
+1. reproduce
+2. find the root cause
+3. freeze the failing test
+4. fix
 5. verify in widening rings.
 
 It then covers where each rule is enforced, and the pitfalls.

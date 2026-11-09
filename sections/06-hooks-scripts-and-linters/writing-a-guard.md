@@ -12,8 +12,8 @@ last_updated: "2026-11-09"
 
 A guard is a [hook]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) that refuses an action. It can enforce how work should be done, such as refusing a commit without the required trailers, or stop a mistake that has happened, such as a pattern kill. Whether agents can work with a guard depends on:
 
-1. what its refusal says;
-2. what it does with commands it cannot read;
+1. what its refusal says
+2. what it does with commands it cannot read
 3. whether the risky step is unreachable when the check fails.
 
 This page covers each, then the stories of five guards in my harness that started as written rules agents broke. It is a sub-topic of [Hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}).

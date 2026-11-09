@@ -22,8 +22,8 @@ The Chrome DevTools Protocol (CDP) is the interface that Chrome's own developer 
 
 For an agent, it is the route that:
 
-- works with any model provider;
-- runs in the background;
+- works with any model provider
+- runs in the background
 - keeps the agent's browsing apart from yours.
 
 ## Contents

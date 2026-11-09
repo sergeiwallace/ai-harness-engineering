@@ -50,7 +50,7 @@ assistant  tool_use  Read  {"file_path": "src/util/dates.py", "offset": 10, "lim
 
 The tool names are the exact strings three other parts of the harness use:
 
-- permission rules, such as `Bash(npm test *)` or `Read(./.env)`;
+- permission rules, such as `Bash(npm test *)` or `Read(./.env)`
 - hook matchers, such as `Bash` or `Edit|Write`;
 - a sub-agent's `tools` list, such as `Read, Grep, Bash`.
 

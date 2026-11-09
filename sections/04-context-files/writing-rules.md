@@ -24,8 +24,8 @@ A context file is read and interpreted by the model, so how a rule is written de
 A context file guides the model's general behaviour. It is applied unevenly, and it never enforces anything.
 
 - It is followed most of the time, and less often when the model:
-  - juggles several things at once;
-  - switches from one task to another;
+  - juggles several things at once
+  - switches from one task to another
   - works with a nearly full context window.
 - Claude Code's docs call `CLAUDE.md` "context, not enforced configuration".
 - So in a harness it is the second layer. The layers, in order of how reliably they hold:

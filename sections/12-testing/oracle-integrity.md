@@ -17,11 +17,11 @@ The oracle is whatever decides whether code is correct: a test suite, a referenc
 
 This page covers:
 
-1. what tampering looks like, with a worked example;
-2. when it happens, according to the 2026 evidence;
-3. the lightest control with measured effect: a policy line plus an escalation channel;
-4. who judges a disputed test;
-5. heavier controls: read-only tests and file formats;
+1. what tampering looks like, with a worked example
+2. when it happens, according to the 2026 evidence
+3. the lightest control with measured effect: a policy line plus an escalation channel
+4. who judges a disputed test
+5. heavier controls: read-only tests and file formats
 6. pitfalls.
 
 The sub-topic page [Detecting test edits in a diff]({{ '/sections/12-testing/test-edit-detection.html' | relative_url }}) covers the deterministic check that backs all of this up.

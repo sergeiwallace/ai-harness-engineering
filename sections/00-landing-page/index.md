@@ -80,7 +80,7 @@ In a simpler setup you are the coordinator yourself and run one agent at a time;
 
 My own harness appears throughout as one example of what is possible:
 
-- it is described conceptually: what each mechanism does and how it is wired, without the code itself;
+- it is described conceptually: what each mechanism does and how it is wired, without the code itself
 - a copied harness brings its author's habits and problems with it, so take the ideas and build from the problems you hit yourself.
 
 ## The story
@@ -98,19 +98,19 @@ The basics move fast on the talk path. Most of the time goes to how the blocks c
 
 The talk takes a systems approach to harness engineering and to working with agentic AI:
 
-- the model, its instructions, its tools, its checks and the person directing it form one system;
-- when the output is wrong or a gap shows up, the fix goes into the system;
+- the model, its instructions, its tools, its checks and the person directing it form one system
+- when the output is wrong or a gap shows up, the fix goes into the system
 - the same approach is applied again to each new issue, often by the agents themselves, so the harness improves with use and the output gets better in a way the system enforces.
 
 Context files and instructions guide the model, but the model applies them unevenly. It drops rules more often:
 
-- when it handles several things at once;
-- when it switches tasks;
+- when it handles several things at once
+- when it switches tasks
 - when its context window is nearly full.
 
 Claude Code's own documentation says it treats `CLAUDE.md` "as context, not enforced configuration". So:
 
-- adding another detailed rule to a context file each time the model does something wrong is an anti-pattern;
+- adding another detailed rule to a context file each time the model does something wrong is an anti-pattern
 - how you want the output to be, and the fix for each issue, belong in a layer that enforces them.
 
 ![Diagram: the systems approach as a loop. A work session hits an issue or gap; you or the agent ask which layer can enforce the fix; the fix goes into layer 2, workflows and tools, layer 3, hooks, scripts and linters, or layer 4, validation and tests, with a context-file line as layer 1, the second line of defence; the next session runs inside the improved system]({{ '/assets/images/00-introduction/systems-approach-loop.svg' | relative_url }}){: style="width: 100%" }
@@ -139,7 +139,7 @@ Layers 2 to 4 do the enforcing. Layer 1 stays as a second line of defence, so th
 1. The issue: agents sometimes commit while tests fail, usually late in a long session.
 2. The ad hoc fix would be a new context-file line, "run the tests before committing". It holds most days and slips on the long ones.
 3. The systems fix goes into the enforcing layers:
-   - layer 3: a pre-commit hook runs the suite and refuses the commit on a failure, with a message naming the failing tests;
+   - layer 3: a pre-commit hook runs the suite and refuses the commit on a failure, with a message naming the failing tests
    - layer 4: the CI gate runs the same suite before a merge, for anything committed outside the hook.
 4. The context-file line stays as layer 1, and the hook's refusal message repeats it at the moment it applies.
 5. Every later session, by any agent, runs inside the same checks.
@@ -158,8 +158,8 @@ Some sections have several topic pages, and some have none because the overview 
 
 How to move around:
 
-- every page has previous and next links at the top and bottom, in reading order;
-- the left sidebar lists every section, with its topic pages nested under it;
+- every page has previous and next links at the top and bottom, in reading order
+- the left sidebar lists every section, with its topic pages nested under it
 - the [talk slides]({{ '/talk/' | relative_url }}) page lists the slides in order.
 
 The talk path and the linked pages are the same content at two depths. During the talk I can open any page when a question calls for it, and listeners can read the pages afterwards.

@@ -14,10 +14,10 @@ The client runs every tool, so before each call it can run the call, ask you fir
 
 This page is part of [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}). It covers:
 
-- the order in which Claude Code checks a call;
-- the six permission modes and when each fits;
-- allow, ask and deny rules, their precedence, and what they cannot see;
-- prompt injection, where text from outside tries to steer the model;
+- the order in which Claude Code checks a call
+- the six permission modes and when each fits
+- allow, ask and deny rules, their precedence, and what they cannot see
+- prompt injection, where text from outside tries to steer the model
 - how to layer defences so that no single layer has to be perfect.
 
 ## Contents
@@ -134,14 +134,14 @@ A Bash rule matches the command text the model writes. It does not match the sam
 
 Read and Edit deny rules reach further than Bash rules:
 
-- they cover the built-in file tools;
-- they cover file commands Claude Code recognises in Bash, such as `cat`, `head`, `tail`, `sed` and `tee`, and the targets of redirections such as `> file`;
-- they do not cover a command that reads files without naming them, such as `grep -r pattern .`;
+- they cover the built-in file tools
+- they cover file commands Claude Code recognises in Bash, such as `cat`, `head`, `tail`, `sed` and `tee`, and the targets of redirections such as `> file`
+- they do not cover a command that reads files without naming them, such as `grep -r pattern .`
 - they do not cover a script that opens files itself, such as a Python or Node program.
 
 Two further layers cover what rules miss:
 
-- a `PreToolUse` hook that parses the full command and decides with your own logic;
+- a `PreToolUse` hook that parses the full command and decides with your own logic
 - the sandbox, which enforces file and network limits at the operating-system level for every process the command starts.
 
 ### Worked example: a push that must always ask
@@ -150,7 +150,7 @@ Two further layers cover what rules miss:
 2. A context-file line, "always ask before pushing", works most of the time.
 3. `Bash(git push *)` in the ask list covers the form the model usually writes, on every call.
 4. Forms the pattern cannot see, such as `git -C . push`, need an enforcing layer below the rule:
-   - a `PreToolUse` hook that runs `git` commands through a parser and asks on any push;
+   - a `PreToolUse` hook that runs `git` commands through a parser and asks on any push
    - branch protection on the remote, which refuses a direct push to `main` whatever the client allowed.
 5. The context-file line stays as the second layer. It tells the model why, so it stops attempting the push.
 
@@ -181,8 +181,8 @@ That is prompt injection. Current models resist most crude attempts, and a long 
 
 Injection does the most damage when one session has all three of these at once:
 
-1. access to private data, such as secrets in the environment or a private repository;
-2. exposure to untrusted text, such as web pages or public issues;
+1. access to private data, such as secrets in the environment or a private repository
+2. exposure to untrusted text, such as web pages or public issues
 3. a way to send data out, such as a web request, a push or an email.
 
 Any two are manageable.

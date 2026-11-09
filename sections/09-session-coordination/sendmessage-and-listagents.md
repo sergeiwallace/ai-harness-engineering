@@ -103,7 +103,7 @@ Cases that do not connect:
 1. The sender's Claude calls `SendMessage`.
 2. The receiving session checks the message against its inbound controls (next section): delivered, held or refused.
 3. If delivered:
-   - during an active turn, the receiving Claude reads it between tool calls, so a running tool is not interrupted;
+   - during an active turn, the receiving Claude reads it between tool calls, so a running tool is not interrupted
    - if the session is idle, Claude Code starts a new turn with it.
 4. The message shows as a one-line preview, such as `› Message from @api-worker: Schema migration finished (ctrl+o to expand)`. Claude reads the full text either way; `Ctrl+O` shows it to you.
 5. The receiver can reply with `SendMessage`, to the address carried on the message.

@@ -17,9 +17,9 @@ stop_minutes: "6"
 
 A rule only works if it is in the window when the agent needs it. This page explains, for Claude Code and then Codex:
 
-- which files load, from where, and at what moment;
-- how imports, comments and exclusions change what loads;
-- what happens when two files disagree, and when a file is too long;
+- which files load, from where, and at what moment
+- how imports, comments and exclusions change what loads
+- what happens when two files disagree, and when a file is too long
 - how to run one repository with both clients, and how to check what loaded.
 
 What changes at compaction has its own sub-topic: [Context files after compaction]({{ '/sections/04-context-files/after-compaction.html' | relative_url }}).

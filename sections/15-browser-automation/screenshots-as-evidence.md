@@ -13,7 +13,7 @@ Part of [Browser automation and computer use]({{ '/sections/15-browser-automatio
 
 An agent's report that a UI change worked is a claim. A screenshot of the result is evidence:
 
-- the agent can look at it and compare it with what was asked;
+- the agent can look at it and compare it with what was asked
 - a reviewer can check it without running anything.
 
 This page covers when to take one, how to compare two, and what a screenshot cannot prove.

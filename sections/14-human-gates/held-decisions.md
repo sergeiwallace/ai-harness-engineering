@@ -19,7 +19,7 @@ Part of [Decision authority and escalation]({{ '/sections/14-human-gates/decisio
 
 Together they move questions out of the chat, where they scroll away, into files:
 
-- the person reads them in one sitting;
+- the person reads them in one sitting
 - the agents can find them again after their context is gone.
 
 ## Why a document and not a chat message

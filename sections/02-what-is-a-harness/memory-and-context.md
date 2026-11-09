@@ -122,9 +122,9 @@ One line each: past the read limit drops silently, tail first.
 
 Only the first 200 lines or 25 KB of the index load, and nothing warns the agent about the lines it did not see. My harness:
 
-1. keeps one short line per lesson;
-2. moves older lines to an archive file the index links to;
-3. puts the most important lessons near the top;
+1. keeps one short line per lesson
+2. moves older lines to an archive file the index links to
+3. puts the most important lessons near the top
 4. writes the read limit at the top of the index, so every editor sees it.
 
 ### A lesson file

@@ -73,8 +73,8 @@ Decide in advance which actions need a person, and write the list down. The usua
 
 Contained technical calls go to the agent:
 
-- which test to write first;
-- how to name a helper;
+- which test to write first
+- how to name a helper
 - which of two equivalent libraries to use inside one module.
 
 The agent records each such decision and its reason, so the person can audit them later without having been asked.
@@ -141,8 +141,8 @@ When an agent does need a person, it writes the question as a held decision that
 
 The question goes into one review queue:
 
-- a file or folder every agent writes to;
-- the person answers several questions at once, when they have time;
+- a file or folder every agent writes to
+- the person answers several questions at once, when they have time
 - a file survives the end of the session, where a chat message is lost.
 
 [Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}) has the template.
@@ -238,8 +238,8 @@ Codex has the same two ideas as an approval policy and a sandbox mode (not yet v
 1. A team writes "never force-push to main" in its `CLAUDE.md`.
 2. An agent in a long session, rebasing to fix a conflict, force-pushes anyway.
 3. The team fixes the system rather than adding another line to the context file:
-   - a deny rule, `"Bash(git push --force *)"`, in `.claude/settings.json`;
-   - a hook that refuses any push whose target is main, with a refusal naming the pull request route;
+   - a deny rule, `"Bash(git push --force *)"`, in `.claude/settings.json`
+   - a hook that refuses any push whose target is main, with a refusal naming the pull request route
    - branch protection on main, so even a push that slips through is rejected.
 4. The next time, the call is refused before it runs, and the agent reads the refusal and opens a pull request.
 

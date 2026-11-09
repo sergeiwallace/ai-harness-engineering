@@ -21,11 +21,11 @@ The research behind this page recommends complete accounting with variable depth
 
 This page covers:
 
-1. four terms that make the distinction precise;
-2. what the evidence on review size says, for people and for agents;
-3. the six-step review sequence, with the commands for each step;
-4. the risk triggers that call for a deeper read;
-5. the one narrow case where sampling is safe;
+1. four terms that make the distinction precise
+2. what the evidence on review size says, for people and for agents
+3. the six-step review sequence, with the commands for each step
+4. the risk triggers that call for a deeper read
+5. the one narrow case where sampling is safe
 6. pitfalls.
 
 <figure>

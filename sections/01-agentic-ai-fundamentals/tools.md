@@ -15,9 +15,9 @@ A tool is a named action the client can carry out for the model: read a file, ru
 
 The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#tools) is the short version. This page covers:
 
-- what a tool is made of, and the messages that carry a call and its result;
-- the built-in tools of Claude Code, and the settings that bound their output;
-- how to write a tool the model will pick correctly;
+- what a tool is made of, and the messages that carry a call and its result
+- the built-in tools of Claude Code, and the settings that bound their output
+- how to write a tool the model will pick correctly
 - what tools cost in context, and where new tools come from.
 
 Two sub-topic pages go further: [MCP servers]({{ '/sections/01-agentic-ai-fundamentals/mcp-servers.html' | relative_url }}) for adding tools from outside, and [Permissions and untrusted input]({{ '/sections/01-agentic-ai-fundamentals/permissions-and-untrusted-input.html' | relative_url }}) for controlling them.
@@ -170,7 +170,7 @@ A model picks a tool the way a new colleague picks a script from a folder: by re
 
 Two schema details help too:
 
-- mark only the inputs the tool cannot work without as `required`, because a model may guess a value for a required input you did not supply;
+- mark only the inputs the tool cannot work without as `required`, because a model may guess a value for a required input you did not supply
 - for a tool you define through the API, `strict: true` makes the model's calls match the schema exactly.
 
 ### Worked example: fixing a wrong pick

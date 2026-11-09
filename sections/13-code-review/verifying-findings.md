@@ -13,8 +13,8 @@ last_updated: "2026-11-09"
 
 A review finding is a claim about the code, and some claims are wrong:
 
-- the cited code path is never reached;
-- the "missing" check happens upstream;
+- the cited code path is never reached
+- the "missing" check happens upstream
 - the race cannot occur in the way the code is called.
 
 Fixing a false finding costs time and adds code for a case that cannot happen. Verifying a finding means handing it to separate agents that try to confirm or refute it against the code, with evidence, before anyone fixes it.

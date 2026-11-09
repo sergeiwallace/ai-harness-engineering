@@ -14,8 +14,8 @@ Part of [Logging and observability]({{ '/sections/16-logging-and-evaluation/logg
 
 Model calls cost money per token, and agents make a lot of them. Most of the time the spend is small and steady; the surprises come from jobs:
 
-- a batch over thousands of documents;
-- an evaluation run with many repeats;
+- a batch over thousands of documents
+- an evaluation run with many repeats
 - a loop that does not stop.
 
 | Tool | Does |

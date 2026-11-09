@@ -16,10 +16,10 @@ Agent review is cheap enough to run many times, which makes a new failure common
 
 This page covers:
 
-1. why open-ended review loops do not converge;
-2. three rules that make them converge, with the commands and briefs;
-3. how to read a recurring finding;
-4. a review loop described as states with explicit exits;
+1. why open-ended review loops do not converge
+2. three rules that make them converge, with the commands and briefs
+3. how to read a recurring finding
+4. a review loop described as states with explicit exits
 5. pitfalls.
 
 Its sub-topic, [Verifying review findings]({{ '/sections/13-code-review/verifying-findings.html' | relative_url }}), covers checking each finding before anyone fixes it.
@@ -179,7 +179,7 @@ The research behind this page proposes a review loop with named states and expli
 
 No single round cap fits every kind of work. Thresholds should vary with risk and be tuned from what actually escapes:
 
-- an escaped defect after a short loop argues for more confirmation on that kind of change;
+- an escaped defect after a short loop argues for more confirmation on that kind of change
 - loops that keep reaching the budget with no blocker argue for re-specifying earlier.
 
 <details markdown="1">

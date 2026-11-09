@@ -24,11 +24,11 @@ A harness is the software around a model that gives it safe access to tools, mem
 
 Harness engineering is the work of extending them:
 
-- context files that say how you work;
-- skills that hold your procedures;
-- hooks and checks that enforce how you want code, docs or any output to be, and stop the mistakes you have seen;
-- agent profiles that fix who does what;
-- memory that carries lessons from one session to the next.
+- Context files that guide how the model works, set to match how you want to work with it
+- Skills that hold reusable procedures and workflows
+- Hooks and checks that enforce how you want code, docs or any output to be, and stop the mistakes you have seen
+- Agent profiles that set who does what
+- Memory that carries lessons from one session to the next
 
 The components sort into five functions around the agent loop: context injection (what the model reads), action (what it can do), control (what decides which actions run and who runs them), observe and verify (what checks the result) and persist (what carries into the next session).
 
@@ -171,8 +171,8 @@ A context file is a Markdown file the harness loads into the model's context whe
 - Claude Code also reads `AGENTS.md` when a project has no `CLAUDE.md`.
 - The file holds what a new teammate would need on day one:
 
-- how to build and test;
-- the conventions that are not obvious from the code;
+- how to build and test
+- the conventions that are not obvious from the code
 - a short note of the rules that hooks and tests enforce, so the agent knows why a refusal comes.
 
 Claude Code's docs suggest keeping each `CLAUDE.md` under 200 lines, because longer files cost more context and are followed less closely.

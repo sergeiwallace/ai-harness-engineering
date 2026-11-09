@@ -46,9 +46,9 @@ A hook is a command the harness runs at a fixed point in a session.
 
 A permission rule matches a pattern. A hook runs code, so it can:
 
-- parse a shell command into its parts;
-- read the file the agent is about to write;
-- check the git state or the time of day;
+- parse a shell command into its parts
+- read the file the agent is about to write
+- check the git state or the time of day
 - call another tool or service before it decides.
 
 Use a [permission rule]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) when a pattern is enough and a hook when it is not. The two combine: a hook can always refuse, and a hook's allow never overrides a deny or ask rule.
@@ -59,9 +59,9 @@ Use a [permission rule]({{ '/sections/02-what-is-a-harness/permissions-and-setti
 
 Hooks are declared under the event they listen to, in any of these places:
 
-- `settings.json` at user, project, local or managed scope;
-- a plugin's `hooks/hooks.json`;
-- the front matter of a skill or a sub-agent, scoped to that skill or agent;
+- `settings.json` at user, project, local or managed scope
+- a plugin's `hooks/hooks.json`
+- the front matter of a skill or a sub-agent, scoped to that skill or agent
 - a plugin's hooks module, as function hooks loaded into the client; see [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}).
 
 A matcher picks which tools trigger the hook.

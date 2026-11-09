@@ -104,9 +104,9 @@ The permissions and MCP fields matter most after an incident: they show whether 
 
 A log of successes says nothing about what went wrong. For a failure, record:
 
-- the exit code;
-- the first lines of the error, with secrets and tokens removed;
-- the stage it failed in and how long it ran first;
+- the exit code
+- the first lines of the error, with secrets and tokens removed
+- the stage it failed in and how long it ran first
 - whether a retry followed, and its result.
 
 ## JSON Lines ledgers
@@ -288,11 +288,11 @@ To check the setup, start a session and look for `claude_code.session.count` in 
 
 A change passes through stages:
 
-1. writing;
-2. focused tests;
-3. review;
-4. waiting;
-5. the final full test run;
+1. writing
+2. focused tests
+3. review
+4. waiting
+5. the final full test run
 6. merge.
 
 Log the start and end of each, and "why is merging slow" has an answer instead of a guess.

@@ -18,9 +18,9 @@ Part of [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | 
 
 Drift happens at each hand-off, because each one is a summary that can drop something:
 
-1. person to plan;
-2. plan to brief;
-3. brief to sub-agent;
+1. person to plan
+2. plan to brief
+3. brief to sub-agent
 4. sub-agent back up as a report.
 
 ## Contents
@@ -171,7 +171,7 @@ The refusal names the two allowed routes: deliver the requirement, or ask the pe
 1. The settings page ships with the toggle but not the export button; the agent judged the endpoint "a follow-up".
 2. The drift check fails the export row.
 3. The agent writes a held decision:
-   - build the endpoint now, about half a day;
+   - build the endpoint now, about half a day
    - ship the page without the button and file the button as a dated task.
 4. The person picks the first.
 

@@ -59,8 +59,8 @@ A database migration.
 
 A context-file line, a skill or a template is text the model reads and usually follows. "Usually" weakens:
 
-- as the context window fills;
-- when the agent juggles several tasks;
+- as the context window fills
+- when the agent juggles several tasks
 - when it switches to something else and forgets to come back.
 
 > Claude Code's docs describe `CLAUDE.md` as "context, not enforced configuration". They add two pieces of guidance: "The more specific and concise your instructions, the more consistently Claude follows them", and, to block an action regardless of what Claude decides, use a `PreToolUse` hook.

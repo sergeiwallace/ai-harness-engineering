@@ -11,8 +11,8 @@ last_updated: "2026-11-09"
 
 A skill can be started by a person, by the model, or by another skill. This page covers:
 
-- the settings that decide who may start a skill, and how to choose them;
-- the trap that breaks chains silently;
+- the settings that decide who may start a skill, and how to choose them
+- the trap that breaks chains silently
 - how to build a pipeline out of small skills.
 
 It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).

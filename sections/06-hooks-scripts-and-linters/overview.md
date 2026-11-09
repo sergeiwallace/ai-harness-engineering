@@ -15,8 +15,8 @@ Stop 5 on the talk path, about 4 minutes.
 
 A context-file instruction guides an agent, and the agent applies it unevenly:
 
-- less as its context fills;
-- when it juggles several tasks, or after a task switch;
+- less as its context fills
+- when it juggles several tasks, or after a task switch
 - after a compaction drops the rule.
 
 The working principle of this site is a systems approach to harness engineering: the rule goes into the system and is enforced by code wherever a program can check it. A harness enforces its rules in four layers:

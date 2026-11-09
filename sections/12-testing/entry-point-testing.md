@@ -16,12 +16,12 @@ A behaviour-first test drives the code through the path a user or another progra
 
 This page covers, in order:
 
-1. what counts as an entry point;
-2. why the classic test pyramid shifts when agents write the tests;
-3. how to write the test, with a full worked example of a Claude Code hook;
-4. mocks, and when to use them;
-5. the value gate for function-level tests, including property-based tests;
-6. how to order spec, tests and code;
+1. what counts as an entry point
+2. why the classic test pyramid shifts when agents write the tests
+3. how to write the test, with a full worked example of a Claude Code hook
+4. mocks, and when to use them
+5. the value gate for function-level tests, including property-based tests
+6. how to order spec, tests and code
 7. pitfalls.
 
 The next page, [Test tampering and oracle integrity]({{ '/sections/12-testing/oracle-integrity.html' | relative_url }}), covers what happens when an agent cannot make such a test pass.
@@ -201,8 +201,8 @@ Anthropic's Claude Code best-practices page gives an example prompt that encodes
 
 A value gate is a short set of questions a test must answer before it is added. It keeps the function-level tests that protect something and drops the ones that mirror the code. Its parts:
 
-- questions every new test must answer;
-- a list of junk patterns to reject;
+- questions every new test must answer
+- a list of junk patterns to reject
 - the cases where a focused function-level test beats an entry-point test.
 
 ### Four questions before adding a test
@@ -218,8 +218,8 @@ One open-source project, OpenClaw, keeps a test-audit skill that its agents must
 
 The same skill lists patterns to reject:
 
-- expected values computed by the code under test;
-- mocks that implement the asserted behaviour;
+- expected values computed by the code under test
+- mocks that implement the asserted behaviour
 - tests whose only purpose is to keep test-only exports, globals or wrappers alive.
 
 It also says: "A test that would break under behavior-preserving refactoring is asserting implementation, not behavior."

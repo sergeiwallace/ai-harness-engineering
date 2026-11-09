@@ -19,7 +19,7 @@ A gate hook is a small program that runs before a tool call and decides whether 
 
 Use one when a permission rule's pattern cannot express the gate:
 
-- the answer depends on the whole command;
+- the answer depends on the whole command
 - it depends on the state of the repository, the time, or a lookup.
 
 This page walks through one hook from first draft to tested, and the design rules that keep a gate a gate.
@@ -128,8 +128,8 @@ The same rule applies to any guard in a script: write `check && act`, so that a 
 
 The agent reads the reason and decides what to do next. A bare "blocked" leads to retries and workarounds; a good reason says:
 
-- what was refused;
-- why;
+- what was refused
+- why
 - the allowed route.
 
 | Weak | Strong |
@@ -220,8 +220,8 @@ A hook reads the command text of one tool call. Some routes to the same action n
 
 A hook is one enforcement mechanism among several:
 
-- permission deny rules also block;
-- a hook can refuse through its JSON `permissionDecision` as well as through exit code 2;
+- permission deny rules also block
+- a hook can refuse through its JSON `permissionDecision` as well as through exit code 2
 - hooks can be switched off for a run.
 
 That is why the hook sits in front of layer 4, rather than replacing it.

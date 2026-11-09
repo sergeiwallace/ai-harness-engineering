@@ -68,8 +68,8 @@ Four lines save the agent from guessing the test command, editing generated code
 
 A context file guides general behaviour, and the model applies it unevenly. It is followed less reliably when the model:
 
-- juggles several things at once;
-- switches tasks;
+- juggles several things at once
+- switches tasks
 - works near a full context window.
 
 In a systems approach to a harness it is one of four layers, and the second line of defence:

@@ -16,10 +16,10 @@ last_updated: "2026-11-09"
 
 This page takes a skill apart:
 
-- the folder and the `SKILL.md` file;
-- each frontmatter field;
-- how the client loads the parts;
-- how arguments and live command output reach the body;
+- the folder and the `SKILL.md` file
+- each frontmatter field
+- how the client loads the parts
+- how arguments and live command output reach the body
 - the open standard that lets one skill run in more than one client.
 
 It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}). The sub-page [Writing skill descriptions]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) covers the one field that decides whether a skill is ever used.

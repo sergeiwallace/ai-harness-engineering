@@ -12,7 +12,7 @@ last_updated: "2026-11-09"
 
 An agent run ends in one of four ways: the model says it is done, a person stops it, a limit fires, or a check decides it is not done and sends it back. Two stopping problems come up again and again in long autonomous work:
 
-- a run that ends too early with a confident "done";
+- a run that ends too early with a confident "done"
 - a run that never ends, because the goal cannot be reached and nothing stops it.
 
 This page is part of [The agent loop]({{ '/sections/01-agentic-ai-fundamentals/the-agent-loop.html' | relative_url }}). It covers each exit, the Claude Code settings and commands behind it, and a checklist for long runs.
@@ -179,8 +179,8 @@ exit 0
 
 1. After each turn, a small fast model reads the condition and the conversation.
 2. It returns one of three verdicts, each with a short reason:
-   - not yet met: Claude takes the reason as guidance and starts another turn;
-   - met: the goal clears and an achieved entry is recorded;
+   - not yet met: Claude takes the reason as guidance and starts another turn
+   - met: the goal clears and an achieved entry is recorded
    - impossible: the goal clears and a failed entry is recorded with the reason.
 3. The evaluator does not run commands or read files. It judges only what Claude has shown in the conversation, so the condition must name a check Claude will run, such as "`npm test` exits 0".
 
@@ -210,8 +210,8 @@ A script outside the client runs the agent, checks the result itself (exit codes
 
 Which to use:
 
-- a Stop hook fits anything a script can measure;
-- `/goal` fits conditions that need judgement, such as "the design doc answers every open question";
+- a Stop hook fits anything a script can measure
+- `/goal` fits conditions that need judgement, such as "the design doc answers every open question"
 - in the [systems approach]({{ '/' | relative_url }}#a-systems-approach), the scripted check is the enforcing layer, and a `/goal` condition is closer to an instruction with a reader.
 </details>
 

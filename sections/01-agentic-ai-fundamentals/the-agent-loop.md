@@ -13,10 +13,10 @@ last_updated: "2026-11-09"
 
 The agent loop is the small program that turns a language model into an agent: send the context, read back a request for an action, carry the action out, add the result, repeat. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#the-agent-loop) is the short version. This page covers:
 
-- the messages and content blocks that pass between a client and a model, and the stop reasons the client acts on;
-- a minimal loop in code, and where it would go wrong;
-- parallel tool calls;
-- the points where each part of a harness attaches;
+- the messages and content blocks that pass between a client and a model, and the stop reasons the client acts on
+- a minimal loop in code, and where it would go wrong
+- parallel tool calls
+- the points where each part of a harness attaches
 - sub-agents, which are loops started from inside a loop.
 
 [How an agent run ends]({{ '/sections/01-agentic-ai-fundamentals/how-a-run-ends.html' | relative_url }}), a sub-topic of this page, covers stopping.
@@ -34,9 +34,9 @@ The agent loop is the small program that turns a language model into an agent: s
 
 Read the figure from the top. The model does one thing: it reads the context and writes the next message. The client does everything else:
 
-- assembles the context from instructions, context files, history and results;
-- checks each tool call against permissions and hooks;
-- runs the tool and trims its output;
+- assembles the context from instructions, context files, history and results
+- checks each tool call against permissions and hooks
+- runs the tool and trims its output
 - saves the transcript.
 
 The client's half of the loop is software you can configure, and harness engineering is the work of configuring it.

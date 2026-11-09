@@ -14,9 +14,9 @@ The Model Context Protocol (MCP) is an open standard for plugging an outside ser
 
 This page is part of [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}). It covers:
 
-- how hosts, clients and servers fit together, and the two transports;
-- adding a server from the command line or a project file, and the three scopes;
-- what a server costs in context, trust and reliability;
+- how hosts, clients and servers fit together, and the two transports
+- adding a server from the command line or a project file, and the three scopes
+- what a server costs in context, trust and reliability
 - when a command-line tool or a skill is the better choice.
 
 ## Contents
@@ -122,7 +122,7 @@ If a referenced variable is unset and has no default, Claude Code warns and pass
 
 A project-scoped server is a program a cloned repository can ask to run:
 
-- in an interactive session, Claude Code asks for approval before using a project-scoped server for the first time; `claude mcp reset-project-choices` clears those answers;
+- in an interactive session, Claude Code asks for approval before using a project-scoped server for the first time; `claude mcp reset-project-choices` clears those answers
 - in `claude -p` runs and Agent SDK sessions there is no one to ask, so project-scoped servers load without asking. Exclude them there with `--strict-mcp-config` or the `disabledMcpjsonServers` setting.
 
 ### Worked example: a read-only database tool
@@ -132,7 +132,7 @@ A team wants the agent to answer "how many orders failed yesterday" without anyo
 1. They add a database MCP server at project scope, started with `--readonly`.
 2. The agent can now list tables, read a schema and run a `SELECT`.
 3. Two layers keep it safe, both enforced below the model:
-   - the server's read-only mode refuses any write statement;
+   - the server's read-only mode refuses any write statement
    - the database user's grants allow only reads.
 4. If the model is ever talked into writing, the server and the database both refuse, whatever the model was told.
 
@@ -148,8 +148,8 @@ A team wants the agent to answer "how many orders failed yesterday" without anyo
 
 Ways to keep the cost down:
 
-- disconnect servers a project does not use; `/mcp` can disable a server without removing it;
-- keep tool descriptions short, with the words the model would search for near the start;
+- disconnect servers a project does not use; `/mcp` can disable a server without removing it
+- keep tool descriptions short, with the words the model would search for near the start
 - prefer tools that return a page of results with a way to ask for more.
 
 [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}#what-tools-cost) has a worked estimate.
@@ -163,9 +163,9 @@ A server runs with your permissions, or is a remote service that receives your d
 
 Treat a server like a dependency you install:
 
-1. check who maintains it and how widely it is used;
-2. pin its version in the configuration;
-3. give it the narrowest credentials that work, such as a read-only token;
+1. check who maintains it and how widely it is used
+2. pin its version in the configuration
+3. give it the narrowest credentials that work, such as a read-only token
 4. put ask rules on its write tools: `mcp__<server>__<tool>` names one tool, and `mcp__<server>__*` covers every tool from that server.
 
 ### Reliability
@@ -181,8 +181,8 @@ claude mcp list    # from the shell: each server and whether it connected
 
 A command-line tool the shell already runs is often enough:
 
-- it costs nothing in context until it is used;
-- its output can be trimmed with ordinary flags;
+- it costs nothing in context until it is used
+- its output can be trimmed with ordinary flags
 - its permissions are the `Bash` rules you already manage.
 
 | Need | Better fit |

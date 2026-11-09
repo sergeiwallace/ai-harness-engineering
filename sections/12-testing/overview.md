@@ -162,10 +162,10 @@ Run it on dense core logic (parsers, pricing, permission checks), where a surviv
 
 The default test for a feature or a bug fix drives the real entry point and asserts the outcome the acceptance criteria name. The entry point is whatever a user or another program calls:
 
-- a command line, run with real arguments in a temporary home directory;
-- an HTTP route, called with a real request;
-- a hook, fed the JSON payload its host sends;
-- a rendered page, loaded in a browser;
+- a command line, run with real arguments in a temporary home directory
+- an HTTP route, called with a real request
+- a hook, fed the JSON payload its host sends
+- a rendered page, loaded in a browser
 - a library's public function, called the way a caller imports it.
 
 ### Worked example: a command-line tool that files a task

@@ -16,10 +16,10 @@ Cross-family review means the agent that reviews a change comes from a different
 
 This page covers:
 
-1. the evidence on self-preference, and how reviewer types compare;
-2. how to run a cross-family review from either side, with the commands;
-3. how to write the review brief;
-4. what to do when the reviewer and the author disagree;
+1. the evidence on self-preference, and how reviewer types compare
+2. how to run a cross-family review from either side, with the commands
+3. how to write the review brief
+4. what to do when the reviewer and the author disagree
 5. what cross-family review does not fix, and its pitfalls.
 
 <figure>
@@ -117,7 +117,7 @@ Reviewed-by-family: codex
 
 With the family recorded, two numbers become countable:
 
-- the share of merged changes reviewed across families;
+- the share of merged changes reviewed across families
 - how many of each family's findings turned out real after [verification]({{ '/sections/13-code-review/verifying-findings.html' | relative_url }}).
 
 ## Writing the review brief

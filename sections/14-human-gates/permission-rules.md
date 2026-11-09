@@ -152,8 +152,8 @@ The rules for the third row: a deny on pushes to main and an ask on `npm install
 
 A PreToolUse hook is your own program, run before the permission prompt for each tool call. It receives the call as JSON on standard input and can deny it, force a prompt, or let it proceed. Use a hook when a rule's pattern is not enough:
 
-- the decision depends on the full command, such as any push whose target is main, in any spelling;
-- it depends on the state of the repository, such as uncommitted changes;
+- the decision depends on the full command, such as any push whose target is main, in any spelling
+- it depends on the state of the repository, such as uncommitted changes
 - it depends on a lookup, such as an allowlist of hosts.
 
 How hooks and rules combine, from the documentation:
@@ -188,7 +188,7 @@ sys.exit(0)
 
 This draft has two gaps:
 
-- it misses `git push origin HEAD:main`;
+- it misses `git push origin HEAD:main`
 - it lets the call through if it crashes.
 
 [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}) fixes both and adds tests. The reason string matters as much as the refusal: the agent reads it and changes course, so a useful reason names the allowed route.

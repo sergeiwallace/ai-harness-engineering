@@ -175,8 +175,8 @@ Use a path rule when the rule applies to one kind of file: tests, docs, migratio
 - Each procedure document is named by one line in the shared context file, with the trigger for reading it.
 - Path-scoped rules cover tests, documentation and skill authoring, so those rules appear only when an agent works on those files.
 - The parts that must hold are enforced elsewhere:
-  - documentation pages go through a check for forbidden names and punctuation;
-  - tests go through the test gate before a push;
+  - documentation pages go through a check for forbidden names and punctuation
+  - tests go through the test gate before a push
   - the rules explain what those checks refuse.
 
 ## Sources

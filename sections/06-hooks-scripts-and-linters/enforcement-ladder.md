@@ -13,9 +13,9 @@ A harness can put a rule in several places, from a sentence the model reads to a
 
 This page covers:
 
-- the four layers and the five mechanisms inside them;
-- how to place a rule, whether it says how the output should be or stops a mistake;
-- what to do when an agent breaks a rule;
+- the four layers and the five mechanisms inside them
+- how to place a rule, whether it says how the output should be or stops a mistake
+- what to do when an agent breaks a rule
 - what each mechanism costs.
 
 It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) and applies the [systems approach to harness engineering]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) from the AI harnesses overview.

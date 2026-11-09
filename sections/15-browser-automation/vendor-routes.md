@@ -151,15 +151,15 @@ Computer use lets Claude open apps, click, type and see your screen.
 1. Run `/mcp` in an interactive session and find the built-in `computer-use` server, which is disabled by default.
 2. Select it and choose Enable. The setting persists per project.
 3. On first use, grant two macOS permissions when prompted:
-   - Accessibility, so Claude can click, type and scroll;
+   - Accessibility, so Claude can click, type and scroll
    - Screen Recording, so Claude can see the screen. macOS may require restarting Claude Code after this one.
 
 ### Approving apps
 
 Enabling the server does not give Claude every app. The first time it needs an app in a session, a prompt shows:
 
-- which apps it wants;
-- any extra permissions, such as clipboard access;
+- which apps it wants
+- any extra permissions, such as clipboard access
 - how many other apps will be hidden.
 
 You choose "Allow for this session" or "Deny".
@@ -188,10 +188,10 @@ The level of control also depends on the app: browsers and trading platforms are
 
 The documentation warns that computer use "runs on your actual desktop with access to the apps you approve", unlike the sandboxed Bash tool. Claude checks each action and flags possible prompt injection from on-screen content. The built-in guardrails:
 
-- per-app approval for the session;
-- warnings on apps with shell, file-system or system-settings reach;
-- the terminal excluded from screenshots, so on-screen text in your session cannot feed back into the model;
-- `Esc` as a global stop, consumed so on-screen content cannot use it to dismiss a dialog;
+- per-app approval for the session
+- warnings on apps with shell, file-system or system-settings reach
+- the terminal excluded from screenshots, so on-screen text in your session cannot feed back into the model
+- `Esc` as a global stop, consumed so on-screen content cannot use it to dismiss a dialog
 - the one-session lock.
 
 ### What it costs

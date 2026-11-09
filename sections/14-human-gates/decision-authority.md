@@ -22,7 +22,7 @@ Part of [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | 
 
 With clear authority, agents run for hours:
 
-- without stalling, because they do not stop on calls they own;
+- without stalling, because they do not stop on calls they own
 - without overreaching, because they stop on calls they do not.
 
 ## Contents
@@ -95,8 +95,8 @@ This is the question most often missed, because from inside the task the decisio
 
 Some decisions are within the agent's remit but beyond a small model's judgement:
 
-- a design trade-off between two schemas or two module boundaries;
-- a security question, such as whether a token may be logged;
+- a design trade-off between two schemas or two module boundaries
+- a security question, such as whether a token may be logged
 - an ambiguous requirement with two reasonable readings.
 
 A harness can set a floor, such as "only the strongest models may resolve a design decision", and enforce it in the launcher: a smaller model's design question is routed to a stronger session, which decides and records it. The person is not involved.

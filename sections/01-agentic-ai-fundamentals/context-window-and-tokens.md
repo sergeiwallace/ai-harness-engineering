@@ -13,10 +13,10 @@ The context window is everything the model can see on one turn. A rule outside i
 
 The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#the-context-window) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers techniques for long runs. This page covers:
 
-- what Claude Code puts in the window, and when;
-- tokens, window sizes and a worked budget;
-- why quality drops before the window is full;
-- compaction: what survives it and how to compact well;
+- what Claude Code puts in the window, and when
+- tokens, window sizes and a worked budget
+- why quality drops before the window is full
+- compaction: what survives it and how to compact well
 - prompt caching: why resending the context is cheaper than it looks, and what breaks the cache.
 
 ## Contents
@@ -104,8 +104,8 @@ These are planning estimates; `/context` gives the real numbers.
 
 What the total means:
 
-- on a 200,000-token window this session is well over half full before lunch; on a one-million-token window it has plenty of room;
-- the four verbose runs cost more than the context files, the MCP servers and the quiet runs together;
+- on a 200,000-token window this session is well over half full before lunch; on a one-million-token window it has plenty of room
+- the four verbose runs cost more than the context files, the MCP servers and the quiet runs together
 - the numbers are illustrative.
 </details>
 

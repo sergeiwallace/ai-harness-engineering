@@ -15,8 +15,8 @@ stop_minutes: "6"
 
 A native command is a slash command that ships with the client, typed in the session, such as `/compact`. This page:
 
-- groups Claude Code's commands by what they are for;
-- says when each one is the right tool;
+- groups Claude Code's commands by what they are for
+- says when each one is the right tool
 - ends with a worked session that uses several together.
 
 The two commands that keep a session working by themselves have a page of their own: [Goal and loop commands]({{ '/sections/03-claude-code-and-codex/goal-and-loop.html' | relative_url }}).

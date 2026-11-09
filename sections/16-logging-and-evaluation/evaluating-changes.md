@@ -87,9 +87,9 @@ Run it through the same [budget check]({{ '/sections/16-logging-and-evaluation/s
 
 The best tasks are ones your agents actually got wrong. Sources:
 
-- entries in your friction log;
-- reverted commits and the reason for each revert;
-- corrections you typed more than once;
+- entries in your friction log
+- reverted commits and the reason for each revert
+- corrections you typed more than once
 - review comments that caught a real bug.
 
 Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures. A small set you run often tells you more than a large one you never run.
@@ -107,9 +107,9 @@ Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures.
 
 A task set that changes between runs cannot tell you whether the harness changed the result. Pin:
 
-- the starting commit of each task;
-- the instruction text, word for word;
-- the check command;
+- the starting commit of each task
+- the instruction text, word for word
+- the check command
 - the model and its settings, unless the model is what you are testing.
 
 ### Example: three tasks from one week's friction
@@ -240,8 +240,8 @@ A new hook refuses commits when focused tests have not run since the last edit.
 
 Keep the hook:
 
-- pass rate rose by 13 runs;
-- the regression set held;
+- pass rate rose by 13 runs
+- the regression set held
 - the cost and time increases are small.
 
 Record the result in the ledger next to the change.

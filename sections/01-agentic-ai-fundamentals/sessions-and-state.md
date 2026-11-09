@@ -13,9 +13,9 @@ A model keeps nothing between calls, so everything an agent "remembers" is somet
 
 The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#sessions-and-state) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers memory systems in more depth. This page covers:
 
-- what a session holds, and what it does not;
-- resuming, continuing, branching and forking a session in Claude Code;
-- handoff notes, and how to make sure they get written;
+- what a session holds, and what it does not
+- resuming, continuing, branching and forking a session in Claude Code
+- handoff notes, and how to make sure they get written
 - where each kind of state belongs, from a plan file to a check in CI.
 
 ## Contents
@@ -73,7 +73,7 @@ The model sees a longer list each time; it has no memory of turn 1 other than tu
 
 Two things come back on resume without being in the transcript's text:
 
-- an active `/goal` is restored, with its turn count and timer reset;
+- an active `/goal` is restored, with its turn count and timer reset
 - the system prompt recorded on the conversation's first request is reused until the next compaction.
 
 ### When to resume and when to start fresh
@@ -91,8 +91,8 @@ Two things come back on resume without being in the transcript's text:
 
 A handoff note is a short file the next session reads first. It carries work across sessions more reliably than the transcript:
 
-- it survives compaction, closing the terminal and switching machines;
-- it holds only what the next session needs, so it costs little context;
+- it survives compaction, closing the terminal and switching machines
+- it holds only what the next session needs, so it costs little context
 - a person can read and correct it too.
 
 ![Sequence diagram: in the afternoon you ask session 1 to migrate the orders schema; context files load; it commits tables A and B; you ask it to wrap up and it writes the plan file with done, next and watch out. The next morning you ask session 2 to continue; it loads the context files and the plan file, so it knows the next table and the nullable column; it runs make migrate for orders and updates the plan file]({{ '/assets/images/01-agentic-ai-fundamentals/session-handoff.svg' | relative_url }}){: style="width: 100%" }
@@ -133,8 +133,8 @@ An agent spends an afternoon on a migration and stops halfway, after writing the
 1. The next morning you start a fresh session and say "continue the migration".
 2. The session loads the context files and reads the plan file first.
 3. From the note it knows:
-   - which table is next, `orders`;
-   - the exact command, `make migrate TABLE=orders`;
+   - which table is next, `orders`
+   - the exact command, `make migrate TABLE=orders`
    - the trap, about 2% of rows with a null `customer_id`.
 4. It runs the migration, keeps the null values, and updates the plan file.
 
@@ -190,7 +190,7 @@ A session discovers that the test database must be reset before the integration 
 
 1. For the task in hand, it goes in the plan file under "watch out", so the next session on this task knows.
 2. Because it is true for every task in the project, the fix goes into the system:
-   - the `test-integration` target resets the database itself, so no session can run the suite against a dirty database;
+   - the `test-integration` target resets the database itself, so no session can run the suite against a dirty database
    - a CI job runs the same target, so a change that breaks the reset fails before it lands.
 3. A one-line note in the project's context file stays as a second layer: "the integration target resets the test database; do not run the suite by hand".
 

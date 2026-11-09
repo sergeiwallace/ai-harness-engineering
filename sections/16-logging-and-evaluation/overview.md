@@ -57,8 +57,8 @@ An agent session does a lot you never see: dozens of commands, file edits, retri
 
 Append-only JSON Lines files, one JSON object per line, are a good default:
 
-- easy to write from any script;
-- easy to query with `jq` or Python;
+- easy to write from any script
+- easy to query with `jq` or Python
 - no migration when a field is added.
 
 ```json
