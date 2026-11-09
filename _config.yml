@@ -1,0 +1,25 @@
+title: "Agentic AI Workflows & Harness Engineering"
+description: "Fundamentals & How to Build Your Own"
+url: "https://sergeiwallace.github.io"
+baseurl: "/ai-harness-engineering"
+
+remote_theme: just-the-docs/just-the-docs@v0.12.0
+plugins:
+  - jekyll-remote-theme
+
+search_enabled: true
+heading_anchors: true
+nav_sort: case_sensitive
+
+aux_links:
+  "Repository":
+    - "https://github.com/sergeiwallace/ai-harness-engineering"
+
+exclude:
+  - README.md
+  - LICENSE
+  - LICENSE-CONTENT
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+  - vendor
