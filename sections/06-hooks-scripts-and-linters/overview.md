@@ -32,7 +32,8 @@ Layers 2 to 4 do the enforcing, and each works two ways:
 |---|---|---|
 | Proactive | Encodes how you want code, docs or any output to be | Formatting, naming, required sections in a document, a commit message format, which modules may import what |
 | Reactive | Stops a mistake you have seen, at the point it would happen again | Refusing a pattern kill, a force push, a commit with a secret |
- This section covers layers 3 and 4, and the scripts that layer 2 relies on.
+
+This section covers layers 3 and 4, and the scripts that layer 2 relies on.
 
 ![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
 *Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*

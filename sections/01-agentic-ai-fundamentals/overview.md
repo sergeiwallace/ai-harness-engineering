@@ -22,8 +22,8 @@ Stop 2 on the talk path, about 2 minutes. This overview explains how a language 
 
 Every later page builds on these mechanics. Each idea has a worked example here, and the [topic pages](#topic-pages) at the end go deeper on each one.
 
-![Diagram: a coding agent as one tall map. You give the task to the client; the client loads context files and memory and sends the whole context to the model; the model's tool call passes a permission gate, which consults hooks; the tool runner edits files, runs the shell or fetches from the web and MCP servers; the tool result returns to the model]({{ '/assets/images/01-agentic-ai-fundamentals/agent-loop-map.svg' | relative_url }}){: style="width: 100%" }
-*Figure: one coding agent, top to bottom. The model only chooses; the client assembles context, checks each request and runs it; you steer from the top.*
+![Diagram: a coding agent as one tall map. You give the task to the client; the client loads context files and memory and sends the whole context to the model; the model chooses the next step and writes a tool call; the permission gate denies, asks or allows it, with hooks running on each event; the tool runner runs the request against files, the shell, or the web and MCP servers, and the result goes back to the model. A bottom row lists what the agent can act on through the tool runner: files and shell; web fetch and search; MCP servers and connectors; browser control over the Chrome DevTools Protocol or Claude in Chrome; computer use on desktop apps through the screen, mouse and keyboard; and other sessions and sub-agents.]({{ '/assets/images/diagrams/01-agentic-ai-fundamentals/agent-loop-map-surfaces.svg' | relative_url }})
+*Figure: one coding agent, top to bottom. The model only chooses; the client assembles context, checks each request and runs it; you steer from the top. The bottom row lists what the agent can act on.*
 
 | | The model | The client (Claude Code, Codex) |
 |---|---|---|
