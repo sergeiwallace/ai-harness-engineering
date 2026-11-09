@@ -26,22 +26,31 @@ A context file is the standing brief a harness hands the model at the start of e
 
 | Tool | File it reads | Where |
 |---|---|---|
-| Claude Code | `CLAUDE.md` | user folder, project root, subfolders; `.claude/rules/*.md` for path rules |
-| Codex | `AGENTS.md` | user folder, repository root, subfolders |
+| Claude Code | `CLAUDE.md` (or `AGENTS.md` when no `CLAUDE.md` exists) | `~/.claude/CLAUDE.md`, `./CLAUDE.md` or `./.claude/CLAUDE.md`, `./CLAUDE.local.md`, subfolders, `.claude/rules/*.md` |
+| Codex | `AGENTS.md` (an `AGENTS.override.md` wins over it) | `~/.codex/AGENTS.md`, then each folder from the repository root down to the working folder |
 | Gemini CLI | `GEMINI.md` | user folder, project root |
 | Cursor, Copilot and others | `AGENTS.md` or their own rule files | project root |
 
-`AGENTS.md` began as a shared convention so one file could serve several tools. Claude Code still reads `CLAUDE.md`, and a common pattern is a `CLAUDE.md` that imports `AGENTS.md` with one line, so the content lives in one place.
+`AGENTS.md` began as a shared convention so one file could serve several tools.
+
+- If a project has only `AGENTS.md`, Claude Code reads it.
+- If it has both, Claude Code reads only the `CLAUDE.md` files.
+- A common pattern is a `CLAUDE.md` whose first line is `@AGENTS.md`, so the content lives in one file and both tools read it.
 
 ### How it reaches the model
 
-The harness reads the file when the session starts and places its text in the context, ahead of your first message. It stays there for the whole session and survives compaction, because the harness reloads it. The model sees it as instructions from you, with more weight than a passing remark in chat and less than the harness's own system prompt.
+The harness reads the files when the session starts and places their text in the context, ahead of your first message.
+
+1. Claude Code loads `CLAUDE.md` and `CLAUDE.local.md` from the working folder and every folder above it, and concatenates them from the top of the tree down. Files are joined; none replaces another.
+2. Files in subfolders load later, the first time the agent reads or edits a file in that folder.
+3. Codex walks from the repository root down to the working folder, takes at most one file per folder, and stops adding files at 32 KiB by default (`project_doc_max_bytes`). Files closer to the working folder come later and override earlier guidance.
+4. After `/compact`, Claude Code re-reads the project-root `CLAUDE.md` from disk. Folder files and path rules come back the next time a matching file is touched.
 
 ![A sequence diagram of context loading over one session. At session start the harness reads the user file and the project file with its imports and loads both, with the system prompt, into the model's window, where they stay all session. During the task the model edits tests/test_api.py; the harness finds a path rule matching tests and its test rules reach the model fresh, absent until then. The model reads web/app.tsx; the harness finds web/CLAUDE.md and its frontend rules reach the model. At compaction the harness sends a summary and reloads the files: chat detail is lost and the files return.]({{ '/assets/images/02-ai-harnesses/context-loading.png' | relative_url }})
 
 *Which context files reach the model, and when. Our own diagram, made with archify.*
 
-> Claude Code's documentation describes `CLAUDE.md` as "context, not enforced configuration". The model reads it and usually follows it. Nothing checks that it did.
+> Claude Code's documentation describes `CLAUDE.md` as "context, not enforced configuration", and says that to block an action regardless of what Claude decides, you use a `PreToolUse` hook. The model reads the file and usually follows it. Nothing checks that it did.
 {: .important }
 
 ## What belongs in one
@@ -158,6 +167,17 @@ is in web/. Remember to update docs. Also use type hints.
 
 </details>
 
+## Where a rule belongs
+
+| If the rule is... | Put it in |
+|---|---|
+| Always true, short, for every session | the context file |
+| True for some files only | a path rule |
+| A procedure with steps | a [skill]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}) |
+| Something that must hold every time | a [hook]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) or a test |
+| An action the agent may never take | a [permission deny rule]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) |
+| A lesson from one session | [memory]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}) |
+
 ## Maintenance
 
 ### Stale lines
@@ -190,16 +210,31 @@ Adding another detailed rule to the context file each time an agent does somethi
 
 In my harness, a request to record a rule goes through one procedure that first asks whether code can enforce it, then decides where any remaining text belongs (global file, one project's file, a path rule or a procedure document) and ships it.
 
-## How context files relate to other components
+## Commands and settings
 
-| If the rule is... | Put it in |
+| Command or setting | Does |
 |---|---|
-| Always true, short, for every session | the context file |
-| True for some files only | a path rule |
-| A procedure with steps | a [skill]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}) |
-| Something that must hold every time | a [hook]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) or a test |
-| An action the agent may never take | a [permission deny rule]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) |
-| A lesson from one session | [memory]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}) |
+| `/init` | drafts a `CLAUDE.md` from the repository; edit it before you commit it |
+| `/memory` | lists every context and memory file the session can load, and opens one for editing |
+| `/context all` | shows the context files that actually loaded, under Memory files |
+| `@path/to/file` | imports another file in place, up to four hops deep |
+| `claudeMdExcludes` | a settings key that skips named `CLAUDE.md` files by path or glob, for large monorepos |
+| `project_doc_max_bytes` | the Codex limit on how much `AGENTS.md` text it reads |
+| `project_doc_fallback_filenames` | other file names Codex treats as instruction files |
+
+## Pitfalls and edge cases
+
+| Situation | What happens | What to do |
+|---|---|---|
+| two files contradict each other | Claude may pick one arbitrarily | keep each rule in one place; review nested files and rules together |
+| `CLAUDE.md` and `AGENTS.md` both exist | Claude Code reads only `CLAUDE.md` | import `AGENTS.md` from `CLAUDE.md` |
+| a path written in backticks, such as `` `@README` `` | it is not imported | intended: backticks keep a path literal |
+| an import pointing outside the project | Claude Code asks once for approval before loading it | approve it, or move the file into the project |
+| `CLAUDE.local.md` with several git worktrees | it exists only in the worktree where you made it | import a file from your home folder instead |
+| a file over 4 MiB | Claude Code skips it entirely | split it; the 200-line guidance keeps you far from this |
+| an instruction given only in chat | it is lost at compaction | put lasting rules in a file |
+
+<!-- IMAGE NEEDED: a short CLAUDE.md file annotated with the four kinds of line (fact, command, rule, pointer); search: CLAUDE.md example annotated, AGENTS.md example file, good CLAUDE.md template -->
 
 ## Sub-topics
 
@@ -209,7 +244,8 @@ In my harness, a request to record a rule goes through one procedure that first 
 
 ## Sources
 
-- Claude Code memory and `CLAUDE.md`: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08.
+- Claude Code memory and `CLAUDE.md`: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- Codex `AGENTS.md` discovery: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, verified 2026-11-09.
 - The `AGENTS.md` convention: <https://agents.md/>.
 - The maintenance practices are from the author's own harness, described conceptually.
 

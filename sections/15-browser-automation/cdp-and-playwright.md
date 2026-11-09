@@ -139,11 +139,23 @@ page.get_by_role("heading", name="Settings").wait_for()
 
 ### Set a time limit on everything
 
-A browser step that hangs holds the agent's turn open. Give each navigation and each wait a timeout, and have the script fail with a clear message the agent can act on.
+A browser step that hangs holds the agent's turn open. Build the limits into the script:
+
+| Limit | Playwright setting | Example |
+|---|---|---|
+| Every action and wait | `page.set_default_timeout(ms)` | `page.set_default_timeout(10_000)` |
+| Navigation | `page.set_default_navigation_timeout(ms)` | `page.set_default_navigation_timeout(30_000)` |
+| The whole script | the caller's timeout | `timeout 120 python check.py` |
+
+On a timeout the script exits non-zero with a message the agent can act on, for example `timeout waiting for heading "Settings" after 10 s`.
 
 ### Write results to files
 
-Return a short summary to the agent and write the rest to files. A full page of HTML in the agent's context is expensive and mostly noise.
+A full page of HTML in the agent's context is expensive and mostly noise. Split the output:
+
+- Standard output: one or two summary lines, such as `export button: present`.
+- Files: `page.txt` for the text, `shot.png` for the screenshot, `console.log` for browser errors.
+- Exit code: 0 for a pass, 1 for a failed check, 2 for a script error.
 
 ## A complete worked example
 

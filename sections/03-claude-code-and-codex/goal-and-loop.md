@@ -83,7 +83,11 @@ A goal is a Stop hook the client installs for the session, with a prompt handler
 
 ### Availability
 
-`/goal` works on cloud providers such as Amazon Bedrock; the evaluator runs on the session's provider.
+| Route | `/goal` | Where the evaluator runs |
+|---|---|---|
+| claude.ai sign-in | Available | Anthropic |
+| Cloud provider such as Amazon Bedrock | Available | The session's provider |
+| Codex | Its own `/goal` | Codex |
 
 ## Loop
 
@@ -106,7 +110,16 @@ A goal is a Stop hook the client installs for the session, with a prompt handler
 
 ### Costs
 
-Each iteration is a turn, and each turn adds to the context. A loop on a fast interval with a verbose prompt fills the window. Make the prompt ask for a short status line, and compact or stop the loop once its question is answered.
+Each iteration is a turn, and each turn adds to the context.
+
+- A loop on a fast interval with a verbose prompt fills the window.
+- Ask for a short status line in the prompt:
+
+```text
+> /loop 10m check the staging deploy; reply with one line: HEALTHY, FAILED <reason>, or PENDING
+```
+
+- Stop the loop once its question is answered, or compact with a focus if it must keep going.
 
 ## Goal and loop side by side
 

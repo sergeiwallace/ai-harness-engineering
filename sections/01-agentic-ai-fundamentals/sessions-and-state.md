@@ -25,7 +25,15 @@ A model keeps nothing between calls, so everything an agent "remembers" is somet
 
 ### The transcript
 
-Claude Code records each session as a transcript on disk: every message, tool call and tool result, in order. That record is what lets you scroll back, resume later, or audit what the agent actually did. It is also why the session's state is only as good as its transcript: after compaction, the live context holds a summary, while the full record stays on disk.
+Claude Code records each session as a transcript on disk: every message, tool call and tool result, in order.
+
+| The transcript lets you | How |
+|---|---|
+| scroll back through the session | the terminal history, or the transcript file |
+| resume it later | `claude --continue` or `claude --resume` |
+| audit what the agent did | read the tool calls and their results |
+
+After compaction, the live context holds a summary while the full record stays on disk. The agent works from the summary; only you, or a tool that reads the file, can see the rest.
 
 ### What a session holds and what it does not
 
@@ -108,7 +116,17 @@ Four headings cover almost every case: what is done, what is next (with the exac
 
 ### Worked example: resuming the next morning
 
-An agent spends an afternoon on a migration and stops halfway. If, before stopping, it wrote the note above, a new session the next morning reads it and continues in a minute: it knows which table is next, how to run it, and the one trap in the data. If it did not, the new session has to rediscover all of it from the code, and it may hit the nullable column the hard way.
+An agent spends an afternoon on a migration and stops halfway, after writing the note above.
+
+1. The next morning you start a fresh session and say "continue the migration".
+2. The session loads the context files and reads the plan file first.
+3. From the note it knows:
+   - which table is next, `orders`;
+   - the exact command, `make migrate TABLE=orders`;
+   - the trap, about 2% of rows with a null `customer_id`.
+4. It runs the migration, keeps the null values, and updates the plan file.
+
+Without the note, step 3 becomes reading code and git history, and the null values are found when the migration fails.
 
 ### Making it automatic
 

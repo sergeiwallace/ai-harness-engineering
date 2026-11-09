@@ -10,7 +10,7 @@ nav_order: 3
 
 As of 2026-11-09.
 
-[Tool-call hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) check what an agent is about to do. Git hooks, CI gates and linters check what it produced. They apply to agents and people alike, and they are the top step of [the enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}). This page covers each check, how to split work between them, ratchets for adopting strict rules in an existing codebase, and what gates cost. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
+[Tool-call hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) check what an agent is about to do. Git hooks, CI gates and linters check what it produced. They apply to agents and people alike. On [the enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}), linters and git hooks are layer 3 (they flag or refuse at commit and push) and tests and CI are layer 4 (they validate the change before it lands). This page covers each check, how to split work between them, ratchets for adopting strict rules in an existing codebase, and what gates cost. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -29,7 +29,11 @@ As of 2026-11-09.
 
 ### Split the work by speed
 
-Put the fastest checks earliest. A pre-commit hook that takes two minutes is run hundreds of times a day by agents, and its cost multiplies. A check that needs the full suite belongs in pre-push or CI.
+Put the fastest checks earliest.
+
+- A pre-commit hook runs on every commit, and agents commit often, so a two-minute hook costs two minutes many times a day.
+- Tests for the files a change touches fit in pre-push.
+- The full suite, builds and scans belong in CI.
 
 #### Worked example: one change through every check
 
@@ -59,7 +63,18 @@ The agent got answers in seconds for most problems, a minute for the tests near 
 
 ### What they are
 
-Git runs a script at fixed points: before a commit is made, when its message is written, before a push. A non-zero exit stops the commit or push. Teams keep hook scripts in the repository and point git at them with `core.hooksPath`, or use a framework such as `pre-commit` that installs them from a config file.
+Git runs a script at fixed points, and a non-zero exit stops the operation:
+
+| Git hook | Runs | Typical checks |
+|---|---|---|
+| `pre-commit` | Before the commit is made | Format, lint, secret scan, fast tests |
+| `commit-msg` | After the message is written | Message format, required trailers |
+| `pre-push` | Before the push | Tests for the changed files |
+
+Two ways to share them with a team:
+
+- Keep the scripts in the repository and point git at them with `git config core.hooksPath .githooks`.
+- Use a framework such as `pre-commit`, which installs the hooks from a config file:
 
 ```yaml
 # .pre-commit-config.yaml
@@ -89,7 +104,11 @@ An agent cannot skip git hooks unless it passes `--no-verify`, or sets the hooks
 
 ### Commit checks for agent work
 
-A commit-message hook can require structured trailers. In my harness one requires each commit to record which model and agent wrote it, so a later review can tell agent work from human work and one model's from another's.
+A commit-message hook can require structured trailers.
+
+- In my harness one requires each commit to record which model and agent wrote it.
+- A later review can then tell agent work from human work, and one model's work from another's.
+- The hook refuses a commit without the trailers and prints the lines to add:
 
 ```text
 fix: retry the upload when the token expires
@@ -100,7 +119,11 @@ Agent: <agent role>
 
 ## CI gates
 
-A CI gate runs on a server after a push or before a merge. It is the slowest check and the only one that runs on a clean machine, so it catches what depends on a local setup: a file that exists only on one laptop, a dependency installed by hand, a test that passes only with a warm cache.
+A CI gate runs on a server after a push or before a merge. It is the slowest check and the only one that runs on a clean machine, so it catches what depends on a local setup:
+
+- A file that exists only on one laptop.
+- A dependency installed by hand and missing from the lock file.
+- A test that passes only with a warm cache or a running local service.
 
 ### What belongs in CI
 
@@ -120,7 +143,11 @@ Some teams run CI but merge on a green local gate, for speed or because CI is no
 
 ## Linters
 
-A linter checks code for style and common mistakes without running it. For agents a linter is a fast reviewer: it runs in under a second, it is the same every time, and its messages say exactly what to fix.
+A linter checks code for style and common mistakes without running it. For agents it works as a fast reviewer:
+
+- It runs in under a second on a changed file.
+- It gives the same result every time for the same code.
+- Its messages name the rule, the file and the line, so the fix is clear.
 
 ### Linters agents learn from
 
@@ -129,15 +156,48 @@ src/upload.py:42:5: B904 Within an except clause, raise exceptions with `raise .
 src/upload.py:57:1: C901 `retry_upload` is too complex (14 > 10)
 ```
 
-An agent reads the rule code and the line, fixes it, and runs the linter again. A rule that agents break often is worth turning on, because each break is caught in seconds.
+1. The agent reads the rule code and the line.
+2. It fixes the line and runs the linter again.
+3. The commit goes through when the linter is clean.
+
+A lint rule that agents break often catches each break in seconds, at the commit where it happened.
 
 ### Custom lint rules
 
-A team rule that a program can check, such as "no direct database calls outside the repository layer", can be a custom lint rule. It then runs at commit time, in every session, for every agent.
+A team rule that a program can check can be a custom lint rule, which then runs at commit time in every session for every agent. One example, with an import check:
+
+```toml
+# pyproject.toml: no direct database imports outside the repository layer
+[tool.importlinter]
+root_package = "app"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Only the repository layer talks to the database"
+type = "forbidden"
+source_modules = ["app.api", "app.services"]
+forbidden_modules = ["sqlalchemy"]
+```
+
+The same rule as a context-file line would be followed unevenly; as a lint rule it fails the commit with the module that broke it.
+
+## Tests as the last layer
+
+Tests are layer 4: they check what the change does, after every earlier layer has had its turn.
+
+- Fast unit tests fit in pre-commit or pre-push; the full suite runs in CI.
+- A test written from the task's acceptance criteria checks the behaviour the agent was asked for.
+- A test for each guard checks that the earlier layers still refuse what they should: the [guard test runner]({{ '/sections/06-hooks-scripts-and-linters/writing-a-guard.html' | relative_url }}#testing-a-guard) runs in CI like any other test.
+
+Section 12 covers [testing agent-written code]({{ '/sections/12-testing/' | relative_url }}) in depth.
 
 ## Ratchets
 
-A ratchet is a check that lets a quality number only improve. The number of lint warnings, untyped functions or files over a size limit may go down but never up. A ratchet lets a team adopt a strict rule in a large codebase without fixing everything first.
+A ratchet is a check that lets a quality number only improve.
+
+- Typical numbers: lint warnings, untyped functions, files over a size limit, skipped tests.
+- Each number may go down but never up.
+- It lets a team adopt a strict rule in a large codebase without fixing everything first.
 
 ### Worked example: a ratchet run
 
@@ -160,6 +220,7 @@ files over 800 lines: 13 (baseline 12)  FAIL: one more than the baseline
 ```python
 import json, sys
 
+# count_lint, count_untyped and count_long are your own counting functions
 baseline = json.load(open("quality-baseline.json"))
 current = {"lint_warnings": count_lint(), "untyped": count_untyped(), "long_files": count_long()}
 failed = [k for k, v in current.items() if v > baseline[k]]
@@ -175,8 +236,8 @@ json.dump({k: min(v, baseline[k]) for k, v in current.items()}, open("quality-ba
 | Cost | What happens | Mitigation |
 |---|---|---|
 | Time | Slow hooks multiply across every agent commit | Fast checks first; slow ones in CI |
-| Flakiness | A check that fails at random teaches everyone to retry blindly | Fix or quarantine flaky tests |
-| Bypass | An unpassable gate teaches people and agents to skip it | Every refusal says what will pass |
+| Flakiness | A check that fails at random leads people and agents to retry without reading the failure | Fix or quarantine flaky tests |
+| Bypass | A gate that cannot be passed leads people and agents to skip it | Every refusal says what will pass |
 | Drift | Local hooks and CI check different things | One config shared by both |
 
 ## Pitfalls

@@ -23,11 +23,23 @@ Once you use more than one tool, or more than one machine, hand-editing each con
 
 ### Several tools, one set of rules
 
-Claude Code reads `CLAUDE.md`, Codex reads `AGENTS.md`, Gemini CLI reads `GEMINI.md`. Most rules apply to all three. Three hand-kept copies drift within weeks: a fix lands in one and not the others.
+| Tool | Reads |
+|---|---|
+| Claude Code | `CLAUDE.md` |
+| Codex | `AGENTS.md` |
+| Gemini CLI | `GEMINI.md` |
+
+Most rules apply to all three. Three hand-kept copies drift within weeks: a fix lands in one and not the others.
 
 ### Several machines, small differences
 
-A laptop, a cloud dev box and a work machine share most rules and differ in a few: which tools exist, what needs approval, how credentials work. Copies per machine drift the same way.
+A laptop, a cloud dev box and a work machine share most rules and differ in a few.
+
+- Which tools are installed.
+- Which actions need approval there.
+- How credentials and network access work.
+
+Copies per machine drift the same way as copies per tool.
 
 ## How a compile works
 
@@ -37,7 +49,22 @@ A laptop, a cloud dev box and a work machine share most rules and differ in a fe
 
 ### Source modules
 
-Each module is one Markdown file about one subject: collaboration style, git workflow, test requirements, delegation. A module can hold variants for tools that need different wording, such as the name of the sub-agent tool.
+Each module is one Markdown file about one subject.
+
+```text
+session-config/
+  manifest.yaml        module order, per tool and per machine
+  modules/
+    collaboration.md
+    git-workflow.md
+    testing.md
+    delegation.md
+  overlays/
+    laptop.md
+    cloud-dev.md
+```
+
+A module can hold variants for tools that need different wording, such as the name of the sub-agent tool.
 
 ### The build
 
@@ -52,11 +79,35 @@ A small script reads a manifest that lists the modules in order, picks the varia
 
 ### The size check
 
-The build ends with the [size budget]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}) check. A warn result passes and schedules a trim; a fail result stops the install.
+The build ends with the [size budget]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}) check.
+
+| Result | Effect |
+|---|---|
+| pass | install continues |
+| warn | install continues; a trim is scheduled |
+| fail | install stops until something is trimmed or moved |
 
 ### The install
 
-The installer places the outputs where each tool reads them. In my harness the installer writes each build into a numbered generation folder and points the live files at it, so a bad build can be rolled back to the previous generation with one command.
+The installer places the outputs where each tool reads them.
+
+1. It writes each build into a new numbered generation folder.
+2. It points the live files at that generation.
+3. A bad build is rolled back to the previous generation with one command.
+4. It refuses to run from a temporary worktree, so live files always come from merged work.
+5. After it runs, a live session confirms the result: `/memory` or `/context all` in Claude Code lists the files that actually loaded.
+
+### The drift check
+
+A test in CI rebuilds the outputs and fails if they differ from what is committed, so a hand edit to a generated file cannot land.
+
+```text
+$ build-context --check
+drift: AGENTS.md differs from a fresh build (line 214)
+edit the source module, then rebuild; generated files are not edited by hand
+```
+
+This is the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) applied to the context files themselves: the generated header asks, and the check enforces.
 
 ## A worked example
 
@@ -85,7 +136,15 @@ Agents in my harness each work in their own git worktree. An installer run from 
 
 ## When not to compile
 
-One tool on one machine needs no build. Start with a hand-written file. Compile when you find yourself making the same edit in two places.
+A compile step is machinery to maintain. The tools now offer simpler ways to share text, so try these first.
+
+| Situation | Start with |
+|---|---|
+| one tool, one machine | a hand-written file |
+| Claude Code and Codex, same rules | an `AGENTS.md`, and a `CLAUDE.md` whose only line is `@AGENTS.md` |
+| the same rules in several projects | `~/.claude/rules/` for yourself, or a `.claude/rules/` folder of symlinks to a shared folder |
+| the same edit made in two places twice | a compile step |
+| several machines with real differences | a compile step with overlays |
 
 ## Related pages
 
@@ -95,6 +154,7 @@ One tool on one machine needs no build. Start with a hand-written file. Compile 
 
 ## Sources
 
-- The compile, generation and re-rooting design is from the author's own harness, described conceptually.
+- Imports, personal rules and symlinked rules: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- The compile, generation, drift check and re-rooting design are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

@@ -11,7 +11,7 @@ nav_order: 1
 
 As of 2026-11-09. Sub-topic of [Re-testing after a model change]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}), in [Trends and model changes]({{ '/sections/18-trends/' | relative_url }}).
 
-A task set is the list of tasks you run before and after a change to see whether the change helped. It is what makes a [model re-test]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) or a [pruning decision]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}) a measurement. This page covers where tasks come from, how to write each one, and how to read the results.
+A task set is the list of tasks you run before and after a change to see whether the change helped. It is what makes a [model re-test]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) or a [pruning decision]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}) a measurement. In the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers), the task set is layer 4 for the harness itself: it validates a change to the harness before the change is kept. This page covers where tasks come from, how to write each one, and how to read the results.
 
 ![Sequence diagram of turning a friction entry into a re-test task. You pick an entry from the friction log and write a task with a prompt and a check before any run. A runner loads the task, runs it three times on the model with the same harness, gets the final tree and transcript for each run, and runs the test suite on each; the check returns pass, pass, fail. The runner reports the pass rate with the failing transcript, and you keep the task for the next model change.]({{ '/assets/images/18-trends/task-set-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -24,7 +24,8 @@ A task set is the list of tasks you run before and after a change to see whether
 | Your friction log | "Agent said done with a failing test" | It already failed once, so it tests a real weakness |
 | A rule in your context file | "Never edit files under generated/" | It tests whether the rule still does its job |
 | A task you do every week | "Write the weekly status note" | It tests the work you care about most |
-| A model's known habit | "Uses bold lead-ins in summaries" | It tests the rule you wrote for that habit |
+| A model's known habit | "Uses bold lead-ins in summaries" | It tests the rule or check you wrote for that habit |
+| A guard you shipped | "Stop hook refuses a finish with untested edits" | It tests that the guard still fires, and only when it should |
 
 Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures.
 
@@ -86,11 +87,20 @@ With a small set, expect noise. The table on [Self-improving harness research]({
 
 ## Keeping the set current
 
-Add a task each time the friction log gets a new kind of entry. Retire a task when the behaviour it tests no longer matters to you. Keep the old results with the date and the model, so the next comparison has a baseline.
+| Event | Action on the task set |
+|---|---|
+| The friction log gets a new kind of entry | Add a task for it |
+| A new guard ships | Add a task that the guard should catch |
+| The behaviour a task tests no longer matters | Retire the task |
+| Any run | Keep the results with the date and the model, as the next baseline |
 
 ## Examples from my own harness
 
-My harness has test suites for its own guards and checks, and many of the cases in them started as entries in a friction log. The re-test after a model change draws on those cases plus a set of writing tasks for the writing rules.
+- My harness has test suites for its own guards and checks.
+  - Many of their cases started as entries in a friction log.
+- The re-test after a model change draws on two sources.
+  - Those test cases.
+  - A set of writing tasks for the writing rules.
 
 To start: write three tasks from your friction log in the format above, each with a program check.
 

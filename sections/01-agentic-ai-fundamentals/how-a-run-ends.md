@@ -38,7 +38,14 @@ An agent run ends in one of four ways: the model says it is done, a person stops
 
 ### What it is
 
-When the model writes a reply with no tool call, the client treats it as the end of the task. In the Messages API this is a reply whose stop reason is `end_turn` rather than `tool_use` (see [Messages and content blocks]({{ '/sections/01-agentic-ai-fundamentals/the-agent-loop.html' | relative_url }}#messages-and-content-blocks)).
+When the model writes a reply with no tool call, the client treats it as the end of the task.
+
+| Stop reason in the reply | What the client does |
+|---|---|
+| `tool_use` | runs the tools and calls the model again |
+| `end_turn` | treats the text as the final answer, unless a completion check sends it back |
+
+[Messages and content blocks]({{ '/sections/01-agentic-ai-fundamentals/the-agent-loop.html' | relative_url }}#messages-and-content-blocks) has the full list of stop reasons.
 
 ### Why it can be wrong
 
@@ -55,13 +62,28 @@ A final answer is prose the model wrote about its own work. It can say "all test
 
 ### Worked example: reporting a blocked task
 
-An agent asked to deploy a service finds the cloud credentials expired. A good final answer says so: "Blocked: the deploy step needs a fresh login; nothing was deployed." A bad one says "Deployment steps complete" because every command it could run did run. The difference is in the instructions: tell agents that "blocked" is an acceptable answer and must be said plainly.
+An agent asked to deploy a service finds the cloud credentials expired.
+
+| | Final answer | What happened |
+|---|---|---|
+| Good | "Blocked: the deploy step needs a fresh login; nothing was deployed." | states what stopped it and what state things are in |
+| Bad | "Deployment steps complete." | every command it could run did run, so it reported success |
+
+Two layers make the good answer the usual one:
+
+1. A completion check that tests the outcome, such as the service's health endpoint returning the new version, so a false "complete" is sent back.
+2. An instruction in the context file or brief that "blocked" is an acceptable answer, with the fields a blocked report must contain: what failed, what was done, what is needed.
 
 ## Exit 2: the interrupt
 
-A person can stop a run at any moment. In Claude Code, Esc stops the current turn and leaves the conversation open, so you can correct course and continue. The model sees the interruption in its context and the partial work stays in place.
+A person can stop a run at any moment. In Claude Code:
 
-Interrupts work only when someone is watching. For long runs, the practical alternatives are limits and checks, which do not need a person at the screen.
+1. Press Esc. The current turn stops.
+2. The conversation stays open, and any partial work, such as an edit already applied, stays in place.
+3. The model sees the interruption in its context.
+4. You type a correction ("use the existing helper instead") and the run continues from there.
+
+Interrupts need someone watching. For long unattended runs, limits and completion checks do the same job without a person at the screen.
 
 ## Exit 3: limits
 
@@ -76,11 +98,32 @@ Interrupts work only when someone is watching. For long runs, the practical alte
 
 ### The context limit is different
 
-A full context window does not end a Claude Code session. The client compacts the history into a summary and the run carries on. The work continues, but with less detail than it had. [The context window and tokens]({{ '/sections/01-agentic-ai-fundamentals/context-window-and-tokens.html' | relative_url }}#compaction) covers what survives.
+A full context window does not end a Claude Code session:
+
+1. The window nears its limit.
+2. The client compacts the history into a summary.
+3. The run carries on from the summary, with less detail than it had.
+   - Context files reload from disk.
+   - Chat-only instructions survive only if the summary kept them.
+
+[The context window and tokens]({{ '/sections/01-agentic-ai-fundamentals/context-window-and-tokens.html' | relative_url }}#compaction) covers what survives.
 
 ### Worked example: a limit with a clean stop
 
-A nightly job runs an agent headless with a turn cap. When the cap fires mid-task, the run ends wherever it was, which can leave a half-edited file. A cleaner design pairs the hard cap with a soft instruction one step earlier: "after 40 turns, stop starting new work, commit what is done, and write what is left to the plan file". The instruction usually produces a clean stop, and the hard cap still ends the run if the instruction is missed.
+A nightly job runs an agent headless with a turn cap. When the cap fires mid-task, the run ends wherever it was, which can leave a half-edited file.
+
+```bash
+claude -p "Migrate the next table in PLAN.md. After 40 turns, stop starting new work, \
+commit what is done, and update PLAN.md with what is left." --max-turns 50
+```
+
+| Layer | What it does |
+|---|---|
+| The instruction at 40 turns | usually produces a clean stop: work committed, plan updated |
+| The hard cap at 50 turns | ends the run if the instruction is missed |
+| A check on the next run | reads `PLAN.md` and `git status`, and stops if the tree is dirty |
+
+Check the current flag names with `claude --help`; headless options change between versions.
 
 ## Exit 4: completion checks
 

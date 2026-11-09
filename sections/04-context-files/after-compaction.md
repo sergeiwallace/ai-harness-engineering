@@ -39,9 +39,16 @@ Compaction summarises the conversation to free the window. For context files it 
 | Subdirectory `CLAUDE.md` | Summarised away; loads again when a file tool touches that folder |
 | Path rule | Summarised away; loads again when a file tool touches a matching path |
 
-### Why it works this way
+### In short
 
-Re-reading every file that loaded during the session would put back most of what compaction removed. Re-reading only the always-loaded files keeps the reset cheap, and the on-demand files come back the same way they came in the first time.
+| Kind of file | Loaded at launch | After compaction | Comes back when |
+|---|---|---|---|
+| Project-root `CLAUDE.md` | Yes | Re-read from disk | Already back |
+| Unscoped rule | Yes | Re-read from disk | Already back |
+| Subdirectory `CLAUDE.md` | No, on first touch | Gone | A file tool touches that folder |
+| Path rule | No, on first match | Gone | A file tool touches a matching path |
+
+The on-demand files come back the same way they came in the first time.
 
 ## Failure cases
 
@@ -57,11 +64,22 @@ The agent's next action after compaction is a shell command that creates a file.
 
 ### The long detour
 
-The agent spends the second half of a session in another part of the code. Compaction runs. It returns to the first folder through a file tool, so the folder file loads again. This case is safe.
+1. The agent spends the second half of a session in another part of the code.
+2. Compaction runs; the first folder's file is summarised away.
+3. The agent returns to the first folder by reading or editing a file there.
+4. The folder file loads again, so the rules are back before the agent changes anything.
 
 ### The summary that keeps a paraphrase
 
-The summary may keep a version of a rule ("handlers should use typed errors"). A paraphrase is weaker than the rule and has lost its reason. Do not rely on it.
+The summary may keep a version of a rule.
+
+| | Text | What is lost |
+|---|---|---|
+| The rule in `api/CLAUDE.md` | "Handlers return `Result[T, ApiError]`; never raise from a handler." | |
+| The summary's paraphrase | "handlers should use typed errors" | The exact type, the prohibition, the reason |
+
+- Do not rely on the paraphrase.
+- A check that rejects a handler which raises holds whether or not the rule is in the window.
 
 ## Placing a rule so it holds
 
@@ -109,7 +127,15 @@ A focus lasts for one compaction in one session. The placements in the table abo
 
 ### Doing the same for a path rule
 
-Repeat the steps with a rule in `.claude/rules/api.md` with `paths: ["api/**"]`. Step 4 behaves the same: a shell write is not a file-tool touch.
+```markdown
+---
+paths: ["api/**"]
+---
+- When you edit a file in api/, end your reply with the word PINEAPPLE.
+```
+
+- Save it as `.claude/rules/api.md` and repeat the steps above.
+- Step 4 behaves the same: a shell write does not count as a file-tool touch, so the rule stays unloaded.
 
 ## In a long autonomous run
 

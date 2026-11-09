@@ -37,6 +37,8 @@ Delegation means a lead agent hands part of a task to another agent and keeps co
 
 ### What a sub-agent is
 
+<!-- IMAGE NEEDED: a main agent's context window beside a sub-agent's separate context window, with only a short summary passing back to the main one; search: subagent context window diagram, claude code subagents, multi-agent orchestrator worker diagram -->
+
 A sub-agent is a second agent that the main agent starts to do part of a task.
 
 - It runs in its own context window.
@@ -75,6 +77,18 @@ These are common choices, each with the case it fits. A lead weighs them per tas
 4. It returns a twelve-row table.
    - The main agent's context gains twelve rows; the thirty files stay with the sub-agent.
 
+## Shapes of delegation
+
+Delegation can take three shapes. Most delegation today is a hub, with a tree where one part is large.
+
+| Shape | How results flow | Status in Claude Code |
+|---|---|---|
+| Hub | Every sub-agent reports to one lead | Standard sub-agents |
+| Tree | Some sub-agents start helpers and report up one level | Standard sub-agents, within the depth limit |
+| Team | Agents message each other directly | Agent teams: experimental, off by default |
+
+Session-to-session coordination is covered in [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}).
+
 ## Agent profiles
 
 ### A role in a file
@@ -112,11 +126,14 @@ The fields one by one, how the runtime picks a profile, and how the tool list is
 Two agents editing one checkout overwrite each other's files, and their changes mix in one diff that nobody can review. A git worktree is a second checkout of the same repository, on its own branch, in its own directory. Give each writing agent its own.
 
 ```bash
-git worktree add ../repo-agent-a -b agent-a/fix-parser
-git worktree add ../repo-agent-b -b agent-b/add-tests
+git fetch origin
+git worktree add ../repo-agent-a -b agent-a/fix-parser origin/main
+git worktree add ../repo-agent-b -b agent-b/add-tests   origin/main
 ```
 
-Claude Code's `isolation: worktree` profile setting does this automatically for a sub-agent.
+<!-- IMAGE NEEDED: one git repository with two or three worktrees, each a separate directory on its own branch, sharing one object store; search: git worktree diagram, git worktrees multiple branches -->
+
+Claude Code's `isolation: worktree` profile setting does this for a sub-agent: a temporary worktree branched from the default branch, removed automatically if the agent changed nothing.
 
 ### Merge back one branch at a time
 
@@ -155,7 +172,14 @@ Shapes of delegation, the depth limit, three kinds of concurrency limit and what
 
 ### Concurrency
 
-Many agents at once slow every session on the machine, because CPU, memory and test databases are shared. Set two bounds: how many agents run at once, and which roles may start others.
+Many agents at once slow every session on the machine. What they share:
+
+- CPU: every test run and build slows.
+- Memory: processes are killed or swap.
+- Test databases and ports: tests collide.
+- Model rate limits: calls queue or fail.
+
+Two bounds cover most cases: how many agents run at once, and which roles may start others.
 
 #### Worked example: a bounded lead
 
@@ -185,7 +209,12 @@ One common split, the one my harness uses. Other splits work too; the trade-offs
 
 ### Reports are claims
 
-Agents report work they did not do: a complete fix report with passing tests while no file changed. A summary can drop the caveat that changes the conclusion. Check the files, the commits and the test output yourself, and read the key passage of a source before deciding on it.
+Two ways a report misleads:
+
+| Failure | Looks like | Check |
+|---|---|---|
+| Work reported but not done | "Fixed; all tests pass", with an empty diff | `git log` and `git diff --stat` on the agent's branch |
+| A dropped caveat | "The API supports batching", without "only on the paid tier" | Read the key passage of the cited source |
 
 #### Worked example: catching a false report
 
@@ -198,19 +227,9 @@ lead$ git -C ../repo-agent-a diff --stat
 lead> Returned with the evidence: no commit and no diff on your branch.
 ```
 
-The report described a plan; no work was done. The full checking routine, with a decision path and the research case, is on [checking delegated work]({{ '/sections/08-delegation/checking-delegated-work.html' | relative_url }}).
+The report described a plan; no work was done.
 
-## Agent teams
-
-Delegation can take three shapes. The first two are the common ones today.
-
-| Shape | How results flow | Status in Claude Code |
-|---|---|---|
-| Hub | Every sub-agent reports to one lead | Standard sub-agents |
-| Tree | Some sub-agents start helpers and report up one level | Standard sub-agents, within the depth limit |
-| Team | Agents message each other directly | Agent teams: experimental, off by default |
-
-Session-to-session coordination is covered in [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}).
+In the systems approach these checks are built in: a collection step in the delegation workflow runs them on every report, and a guard can refuse to merge a branch whose report quotes no test output. The full checking routine, with a decision path and the research case, is on [checking delegated work]({{ '/sections/08-delegation/checking-delegated-work.html' | relative_url }}).
 
 ## Examples from my own harness
 
@@ -224,7 +243,13 @@ To start: one read-only researcher profile and one brief template.
 
 ## Pitfalls
 
-> Warning: a summary can drop the caveat that changes the conclusion. Agents report work they did not do. Isolation can fail. Unbounded fan-out slows every session.
+| Pitfall | What happens | Fix in the system |
+|---|---|---|
+| Trusting a report | A fix is reported with no change made | The lead's collection step checks commits, diff and test output every time |
+| Trusting a summary | The caveat that changes the plan is gone | Read the cited passage before deciding on it |
+| Isolation fails | Commits land on the parent's branch or another repository's main checkout | A launch guard that requires a worktree in every repository the agent writes to |
+| Unbounded fan-out | Every session on the machine slows | Role limits in profiles and a load check before each launch |
+| Limits only in the brief | An agent does what its profile allows | Put safety limits in the profile's `tools` |
 
 ## Pages in this section
 

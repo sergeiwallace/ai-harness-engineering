@@ -18,8 +18,11 @@ Alignment here means something narrow and practical: the work an agent delivers 
 
 - [How drift happens](#how-drift-happens)
 - [Keep the original words](#keep-the-original-words)
+  - [When the person adds or changes something](#when-the-person-adds-or-changes-something)
 - [Carry the request into every brief](#carry-the-request-into-every-brief)
 - [The drift check](#the-drift-check)
+  - [Who runs it](#who-runs-it)
+  - [As a gate in the system](#as-a-gate-in-the-system)
 - [Worked examples](#worked-examples)
 - [Examples from my own harness](#examples-from-my-own-harness)
 - [Pitfalls](#pitfalls)
@@ -57,6 +60,25 @@ sha256sum request.txt > request.sha256
 sha256sum --check request.sha256
 ```
 
+### When the person adds or changes something
+
+Requests change during a task. Keep the original and append each change as its own dated entry, so the history stays readable and each entry can be checked:
+
+```text
+request.txt          the original, never edited
+amendments/
+  2026-11-09T14:10Z.txt   "Also add a CSV option to the export."
+  2026-11-09T16:42Z.txt   "Drop the dark mode toggle for now."
+request.sha256       hashes of the original and every amendment
+```
+
+| Case | What the drift check uses |
+|---|---|
+| The person adds a requirement | the original plus the amendment |
+| The person removes one | the amendment, which records that the person, not an agent, dropped it |
+| An agent proposes a change and the person agrees | the ruling in the held decision, copied verbatim as an amendment |
+| An agent narrows something on its own | nothing: the check fails |
+
 ## Carry the request into every brief
 
 Every brief to a sub-agent carries the verbatim request in a fixed block, separate from the task-specific framing. The framing tells the agent its part; the verbatim block tells it the whole, so it can notice when its part conflicts with the whole.
@@ -80,7 +102,7 @@ The label "Framing, not authoritative" tells the agent that if the framing and t
 
 ## The drift check
 
-The drift check compares the result with the original request before the work is called complete. It has two parts.
+The drift check compares the result with the original request, and any amendments, before the work is called complete. It has two parts:
 
 1. Extract the requirements the person named, one per line, from the verbatim request.
 2. For each, find the evidence in the result that it was delivered, or an explicit escalation where the person agreed to change it.
@@ -94,23 +116,72 @@ export button                 none                               FAIL
                               agent decision "defer export"      not the agent's call
 ```
 
-The check can be run by an agent other than the one that did the work, which helps, because the author tends to read its own result generously. It can also be a gate in the harness that refuses to mark the task complete while any row fails.
+### Who runs it
 
-![The original request, stored with a hash, is carried into each brief. The result is compared against the original by a drift check, and a dropped requirement is escalated.]({{ '/assets/images/14-human-gates/alignment-chain.svg' | relative_url }})
+| Runner | Strength | Weakness |
+|---|---|---|
+| The agent that did the work | cheap, knows the evidence | reads its own result generously |
+| A second agent, given only the verbatim request and the result | independent reading | costs a second run |
+| A gate script over a requirements file | runs every time, cannot be skipped | needs the requirements extracted first |
+
+### As a gate in the system
+
+An agent, or the person, extracts the requirements into a file once. A completion gate then refuses to mark the task done while any requirement lacks evidence:
+
+```yaml
+# requirements.yaml, extracted from request.txt and its amendments
+- id: toggle
+  text: "a dark mode toggle"
+  evidence: "tests/test_settings.py::test_dark_mode_toggle"
+- id: export
+  text: "an export button"
+  evidence: null          # nothing yet: the gate fails
+```
+
+```python
+import sys
+import yaml
+
+missing = [r["id"] for r in yaml.safe_load(open("requirements.yaml")) if not r.get("evidence")]
+if missing:
+    sys.exit(f"drift check failed: no evidence for {', '.join(missing)}. "
+             "Deliver them, or open a held decision for the person.")
+print("drift check passed")
+```
+
+The refusal names the two allowed routes: deliver the requirement, or ask the person.
+
+![The original request, stored with a hash, is carried into each brief. The result is compared against the original by a drift check, and a dropped requirement is escalated.]({{ '/assets/images/14-human-gates/alignment-chain.svg' | relative_url }}){: style="width:100%"}
+
+*The request travels unchanged with the work, and the result is compared with it before the task is called done.*
 
 ## Worked examples
 
 ### Example 1: the deferred button
 
-The settings page ships with the toggle but not the export button, because the agent judged the endpoint "a follow-up". The drift check fails the export row. The agent writes a held decision: build the endpoint now (half a day), or ship the page without the button and file the button as a dated task. The person picks the first.
+1. The settings page ships with the toggle but not the export button; the agent judged the endpoint "a follow-up".
+2. The drift check fails the export row.
+3. The agent writes a held decision:
+   - build the endpoint now, about half a day;
+   - ship the page without the button and file the button as a dated task.
+4. The person picks the first.
 
 ### Example 2: a narrowing caught in a brief
 
-A coordinator writes a brief: "export for admin users". The sub-agent compares it with the verbatim block ("an export button", no audience named), notices the narrowing, and asks the coordinator. The coordinator had narrowed it to avoid a permissions question; it restores "all users" and adds the permissions question to the queue.
+1. A coordinator writes a brief: "export for admin users".
+2. The sub-agent compares it with the verbatim block, which names no audience.
+3. It asks the coordinator before building.
+4. The coordinator had narrowed it to avoid a permissions question. It restores "all users" and adds the permissions question to the review queue.
 
 ### Example 3: a substitution that was better, and still escalated
 
-The person asked for a CSV export. The agent believes an Excel file would serve the users better. It still builds CSV, and adds a one-line note to the queue proposing Excel as an option. The person may agree, but the switch is theirs to make.
+| | |
+|---|---|
+| Request | a CSV export |
+| Agent's view | an Excel file would serve the users better |
+| What it builds | CSV, as asked |
+| What it adds | a one-line item in the review queue proposing Excel |
+| Who decides the switch | the person |
 
 ## Examples from my own harness
 
@@ -118,13 +189,15 @@ The person asked for a CSV export. The agent believes an Excel file would serve 
 - Every brief carries the verbatim request in a fixed block, followed by framing explicitly marked non-authoritative, and an alignment obligation.
 - A gate fails any agent decision that drops, narrows or contradicts an explicit requirement. The only ways through are to keep the requirement or to escalate it.
 
-To start: paste the original request at the top of your plan document, and before you call a task done, ask the agent to list each requirement from that text with the evidence it was delivered.
+To start: store the original request in a file with its hash, have the brief template include it verbatim, and add a completion check that lists each requirement with its evidence and refuses to mark the task done while one is missing. A context-file line asking the agent to preserve the request is the second layer.
 
 ## Pitfalls
 
 - Storing the request but carrying only a summary into briefs defeats the purpose. The verbatim text must travel.
 - A drift check written by the same agent from the same summary will agree with itself. Extract the requirements from the verbatim text.
-- Not every word is a requirement. "Maybe also" and "if easy" are suggestions; the check should mark them as such rather than fail on them.
+- Not every word is a requirement. "Maybe also" and "if easy" are suggestions; the check marks them as such rather than failing on them.
+- Editing the original request in place to match what was built hides the drift. Keep the original and record each change as an amendment.
+- A requirements file extracted once can itself drop something. Have a second agent extract it from the verbatim text and compare the two lists.
 
 ## Sources
 

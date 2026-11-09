@@ -105,7 +105,11 @@ After compaction the session reads this note and carries on as if nothing happen
 
 ## Memory between sessions
 
-Memory files carry lessons between sessions. A good lesson file says what to do, what went wrong that taught it, and how to recognise the case. Keep the index that loads every session short, and put each lesson in its own file.
+Memory files carry lessons between sessions.
+
+- A good lesson file says what to do, what went wrong that taught it, and how to recognise the case.
+- The index that loads every session stays short; each lesson has its own file.
+- A lesson guides the model. For a mistake that matters or repeats, the fix goes into the system as well: a workflow step, a hook or a test. See [where a fix belongs]({{ '/sections/11-context-window/memory-files.html' | relative_url }}#where-a-fix-belongs).
 
 ![A sequence diagram. Session 1 writes a lesson file and adds one line to the index. Days later session 2 loads the index at start, gets the pointer, reads the lesson file and gets the story behind the rule.]({{ '/assets/images/11-context-window/lesson-reaches-later-session.svg' | relative_url }}){: style="width:100%"}
 

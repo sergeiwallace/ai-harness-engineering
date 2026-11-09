@@ -57,7 +57,7 @@ Only the description is paid for on every turn. The body arrives when the skill 
 
 ### By the model
 
-The model reads every skill's description and starts a skill when the task matches. The description is therefore a trigger, not a summary: it should name the situations, in the words a person would use.
+The model reads every skill's description and starts a skill when the task matches. The description is therefore a trigger: it should name the situations, in the words a person would use.
 
 | Weak description | Strong description |
 |---|---|
@@ -77,7 +77,7 @@ Typing `/name` starts the skill directly. Text after the name is passed as argum
 
 ## Writing the body
 
-### Steps, not advice
+### Numbered steps
 
 A skill body is a numbered procedure. Each step says what to do, what to check, and what to do when the check fails.
 
@@ -150,7 +150,7 @@ My harness has skills for the procedures I run most: landing a change end to end
 <details markdown="1">
 <summary>Testing a skill</summary>
 
-Run the skill on a real task in a fresh session and read the transcript. Check that it triggered from a natural request, that each step ran in order, and that the report has every field. When a step is skipped, the fix is usually in the step's wording or a missing check, not in emphasis.
+Run the skill on a real task in a fresh session and read the transcript. Check that it triggered from a natural request, that each step ran in order, and that the report has every field. When a step is skipped, the fix is usually in the step's wording or a missing check.
 
 </details>
 

@@ -109,7 +109,14 @@ A rule in `api/CLAUDE.md` says "every handler returns a typed error". The agent 
 
 ### Why size matters
 
-Everything in an always-loaded file costs context on every turn, and a long file gets followed less reliably. Claude Code's docs suggest keeping each `CLAUDE.md` under 200 lines; Codex stops reading at 32 KiB.
+| Cost of a long file | Detail |
+|---|---|
+| Context on every turn | Every always-loaded line is in the window for every request |
+| Uneven following | A long file is followed less reliably than a short one |
+| Claude Code guidance | Keep each `CLAUDE.md` under 200 lines |
+| Codex limit | Reading stops at 32 KiB in total (`project_doc_max_bytes`) |
+
+Two techniques keep the always-loaded part short: hub and spoke, and path-scoped rules.
 
 ### Hub and spoke
 
@@ -244,13 +251,25 @@ My context has three layers: one file shared by all my projects, one file per re
 
 ### A compiled, size-gated shared file
 
-The shared file is assembled from smaller source parts by a script, checked against a size budget, and installed on every machine; a bad edit rolls back in one step. See [Compiled shared context files]({{ '/sections/04-context-files/compiled-shared-context.html' | relative_url }}).
+1. Source parts: a base, a part per client, a part per machine.
+2. A script joins them and checks the result against a size budget.
+   - Over budget: the build fails and nothing is installed.
+3. A passing build is written to a new versioned directory and linked into each client's config.
+4. A bad edit rolls back by relinking the previous version.
+
+See [Compiled shared context files]({{ '/sections/04-context-files/compiled-shared-context.html' | relative_url }}).
 
 ### Procedures as spokes
 
-Each procedure document is named by one line in the shared file, with the trigger for reading it. Path-scoped rules cover tests, documentation and skill authoring.
+- Each procedure document is named by one line in the shared file, with the trigger for reading it.
+- Path-scoped rules cover tests, documentation and skill authoring.
+- The rules that must hold are also enforced by hooks and the test gate; the lines explain them.
 
-To start: one hand-written `CLAUDE.md` per repository. Add a user-level file when you notice the same lines in every repository.
+| Starting point | When to add the next step |
+|---|---|
+| One hand-written `CLAUDE.md` per repository | You notice the same lines in every repository |
+| A user-level file | You work with two clients or on two machines |
+| A compiled shared file | The shared file needs a size budget and a rollback |
 
 ## Topic pages
 

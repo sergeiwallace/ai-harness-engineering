@@ -28,6 +28,18 @@ When a hook, a script or a gate refuses an action, the agent reads the refusal m
 4. Where to read more, if the rule is long.
    - A pointer to the context file section or the skill that covers it.
 
+## Where refusals fit in the layers
+
+A refusal message is guidance (layer 1) delivered by an enforcing layer (3 or 4), at the moment the rule applies.
+
+| | A rule in a context file | The same rule in a refusal message |
+|---|---|---|
+| When the agent reads it | At the start of the session | At the moment it tries the action |
+| Competes with | Everything else loaded since | Nothing; it is the latest message |
+| If the agent forgets it | The action goes ahead | The action is still refused |
+
+So the refusal message is the most reliable place to explain a rule. The context file can then shrink to a line that says the guard exists.
+
 ## Before and after
 
 ### A force push
@@ -100,7 +112,9 @@ rc=$?
 
 ## Examples from my own harness
 
-Refusals in my harness name the rule, the reason and the allowed route, and several of them were rewritten after a transcript showed an agent retrying the refused action in another form.
+- Refusals in my harness name the rule, the reason and the allowed route.
+- Several were rewritten after a transcript showed an agent retrying the refused action in another form.
+  - The rewrite added the reason and the allowed route, following the format on this page.
 
 To start: take the refusal message of one guard you have, and add the reason and the allowed route.
 

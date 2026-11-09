@@ -42,6 +42,17 @@ A brief is the prompt one agent writes to start another. It is the only channel 
 
 In figure 1 the launch guard checks the brief's fixed blocks because they are the only route by which the parent's rules reach the sub-agent.
 
+### How a brief is sent
+
+| Who starts the sub-agent | How | Where the brief goes |
+|---|---|---|
+| The lead agent, in Claude Code | Its Agent tool, naming a profile | The tool call's prompt is the brief |
+| The lead, without naming a profile | The runtime picks a profile from the descriptions | Same |
+| A person | An `@` mention of the sub-agent in a prompt | The rest of the prompt is the brief |
+| A skill that wraps the stub | `/<skill-name> args`, which fills the stub | The filled skill text is the brief |
+
+The last row is the one that makes briefs consistent: a skill copies the fixed blocks every time. The worked example is on the overview: [a brief stub as a skill]({{ '/sections/07-templates-and-stubs/' | relative_url }}#worked-example-a-brief-stub-as-a-skill).
+
 ### Stub, then brief
 
 A stub is the template; a brief is one filled copy.
@@ -61,27 +72,34 @@ Two briefs from the same stub differ only in what they are about, so a reviewer 
 
 #### What it holds
 
-One sentence saying what done looks like. Not the activity ("look into the date parsing"), the end state ("a table of every caller of `parse_date`, marked by whether it passes a timezone").
+One sentence naming the end state.
+
+| An activity (weak) | An end state (strong) |
+|---|---|
+| "Look into the date parsing" | "A table of every caller of `parse_date`, marked by whether it passes a timezone" |
+| "Look into the flaky test" | "Name the cause of the `test_retry` failure, with the line that causes it" |
+| "Improve error handling" | "Every call to `fetch` in `client/` handles a timeout, with a test per call site" |
+| "Review this PR" | "A list of bugs in the diff, each with file, line, severity and a one-line fix" |
 
 #### What goes wrong without it
 
-An agent with no end state either stops at the first plausible result or keeps going until it runs out of turns. The objective lets it tell which.
-
-| Weak objective | Strong objective |
-|---|---|
-| Look into the flaky test | Name the cause of the `test_retry` failure, with the line that causes it |
-| Improve error handling | Every call to `fetch` in `client/` handles a timeout, with a test per call site |
-| Review this PR | A list of bugs in the diff, each with file, line, severity and a one-line fix |
+- The agent stops at the first plausible result.
+- Or it keeps going until it runs out of turns.
+- In both cases it has no way to tell which is right; the objective gives it one.
 
 ### Inputs
 
 #### What it holds
 
-The files, links, branches and data the sub-agent starts from, and anything the parent already learned about them.
+- The files, links, branches and data the sub-agent starts from.
+- What the parent already learned about them.
+- What the parent already ruled out.
 
 #### What goes wrong without it
 
-Without inputs the sub-agent spends its first ten minutes finding what the parent already found. Worse, it may find a different starting point: the old copy of a file, the wrong branch.
+- The sub-agent spends its first minutes finding what the parent already found.
+- It may start from a different place: the old copy of a file, the wrong branch.
+- It may repeat the parent's dead ends.
 
 > Tip: name what the parent already ruled out. "The config loader is not the cause; it was checked" saves a sub-agent from repeating the parent's dead end.
 
@@ -89,11 +107,15 @@ Without inputs the sub-agent spends its first ten minutes finding what the paren
 
 #### What it holds
 
-The exact format of the result, where to put it, and a length cap.
+- The exact format of the result.
+- Where to put it: the final answer, or a file at a named path.
+- A length cap: rows, words or lines.
 
 #### What goes wrong without it
 
-The parent reads the output of every sub-agent it starts. If five sub-agents return five formats, the parent spends its own context reconciling them. A fixed format lets it read each result the same way, and a length cap keeps a sub-agent from pasting the hundred files it read back into the parent's window, which defeats the reason for delegating.
+1. The parent starts five sub-agents and gets back five formats.
+2. It spends its own context reconciling them.
+3. A sub-agent with no cap pastes the files it read into its answer, which fills the parent's window and undoes the reason for delegating.
 
 #### Formats that work
 
@@ -118,23 +140,21 @@ Read and search only. Directory: src/dates/ and its tests.
 No edits, no shell commands that change files.
 ```
 
-#### What it holds
-
-Which tools the sub-agent may use, which directories or repositories it may touch, and whether it may write at all.
-
 #### What goes wrong without it
 
-Scope limits what can go wrong. A researcher with write access can edit a file by accident; a writer with no stated repository can write into the wrong checkout. The brief states the scope, and the [agent profile]({{ '/sections/08-delegation/agent-profiles.html' | relative_url }}) enforces it: a profile with no edit tools cannot edit whatever the brief says.
+| Missing | What happens |
+|---|---|
+| A read-only statement | A researcher edits a file by accident |
+| A named repository | A writer edits the wrong checkout |
+| A directory | The agent wanders the whole repository and fills its context |
+
+The brief states the scope; the [agent profile]({{ '/sections/08-delegation/agent-profiles.html' | relative_url }}) enforces the tool part of it, because a profile with no edit tools cannot edit whatever the brief says.
 
 ### Boundaries
 
 #### What it holds
 
 The safety rules, word for word, the same in every brief.
-
-#### Why it is fixed text
-
-This is the field that carries the rules the sub-agent has no other source for. A paraphrase loses detail; a pointer ("follow the safety rules in the docs") delivers nothing. The stub holds the exact sentences, and the lead agent never edits them.
 
 ```markdown
 ## Boundaries (fixed, do not edit)
@@ -145,9 +165,15 @@ This is the field that carries the rules the sub-agent has no other source for. 
 - Never skip the commit hooks.
 ```
 
-#### Keeping the block honest
+#### Why it is fixed text
 
-Every line in the Boundaries block exists because something went wrong once. The block is the instruction layer; the enforcing happens elsewhere.
+- A paraphrase loses detail.
+- A pointer ("follow the safety rules in the docs") delivers nothing, because the sub-agent may never open the docs.
+- Fixed text can be checked: a launch guard compares the block with the stub byte for byte.
+
+#### Where it sits among the layers
+
+The Boundaries block is the instruction layer. A model applies instructions inconsistently, so each rule in it is also enforced in code:
 
 | Rule in the block | Where it is enforced | What the brief line adds |
 |---|---|---|
@@ -156,17 +182,15 @@ Every line in the Boundaries block exists because something went wrong once. The
 | Scratch in your own temp directory | A guard checks paths | Same |
 | Never skip commit hooks | The commit tool refuses the flag | Same |
 
-When a hook or guard enforces a rule, the brief line can shrink to a short reminder or leave the brief. See [keeping templates small]({{ '/sections/07-templates-and-stubs/' | relative_url }}#keeping-templates-small).
+When a rule is enforced in code, its brief line can shrink to a short reminder. Adding a new detailed line to the block after every mistake makes the brief longer without making the rule more reliable. See [keeping templates small]({{ '/sections/07-templates-and-stubs/' | relative_url }}#keeping-templates-small).
 
 ### When stuck
 
 #### What it holds
 
-What to try when the obvious path fails, and when to stop and report instead.
-
-#### What goes wrong without it
-
-A sub-agent that hits a wall has two bad options without this field: loop on the same attempt, or guess and report the guess as a result. "When stuck" gives it a third: a stated fallback and a stated stop.
+- What to try when the obvious path fails.
+- When to stop and report instead.
+- How to mark a partial result.
 
 ```markdown
 ## When stuck
@@ -174,6 +198,13 @@ If a test fails for a reason unrelated to the change, record it and continue.
 If the same command fails three times, stop and report the command and its output.
 Stop after 30 minutes and report what you have, marked partial.
 ```
+
+#### What goes wrong without it
+
+| Without the field | With it |
+|---|---|
+| The agent loops on the same failing attempt | It stops after three tries and reports the command |
+| It guesses and reports the guess as a result | It reports what it has, marked partial |
 
 ## A filled brief, end to end
 
@@ -239,10 +270,34 @@ A brief can be checked before launch, by the lead agent itself or by a guard. Th
 4. The output names a format and a cap.
 5. The scope names a directory or repository, and says read-only or not.
 
-<details markdown="1">
-<summary>Why a guard checks the fixed blocks, not the filled ones</summary>
+Checks 1 to 3 are facts a script can test. A guard in the launch path runs them every time:
 
-The filled fields are judgment: whether an objective is clear enough is a question for a reader. The fixed blocks are facts: either the boundaries are the stub's exact text or they are not. A guard that checks only facts never refuses a good brief for a style reason, so people and agents do not learn to route around it.
+```python
+# brief_check.py: refuse a brief whose fixed blocks differ from the stub
+import hashlib, re, sys
+
+def block(text, heading):
+    m = re.search(rf"^## {re.escape(heading)}.*?\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    return m.group(1).strip() if m else None
+
+brief = open(sys.argv[1], encoding="utf-8").read()
+stub = open(sys.argv[2], encoding="utf-8").read()
+for heading in ("Objective", "Inputs", "Output", "Tools and scope", "Boundaries", "When stuck"):
+    if block(brief, heading) is None:
+        sys.exit(f"refused: missing field {heading}")
+if block(brief, "Boundaries") != block(stub, "Boundaries"):
+    sys.exit("refused: Boundaries block differs from the stub")
+print("brief ok")
+```
+
+Checks 4 and 5 are judgment, so a reader makes them, or the lead before it sends the brief.
+
+<details markdown="1">
+<summary>Why a guard checks the fixed blocks and leaves the filled ones to a reader</summary>
+
+- The filled fields are judgment: whether an objective is clear enough is a question for a reader.
+- The fixed blocks are facts: either the boundaries are the stub's exact text or they are not.
+- A guard that checks only facts never refuses a good brief for a style reason, so people and agents do not learn to route around it.
 
 </details>
 

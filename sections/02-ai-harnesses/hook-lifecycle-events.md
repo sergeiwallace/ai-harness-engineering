@@ -54,23 +54,36 @@ The hook runs on every start and resume, and its output costs tokens for the res
 
 ### SessionEnd
 
-Fires once on exit. It cannot change the session, so use it for cleanup and records: write the session's cost to a log, release a lock the session held, mark its tasks for review.
+Fires once on exit. It cannot change the session, so it is for cleanup and records.
+
+- Write the session's token use and cost to a log.
+- Release a lock the session held, such as a claim on a shared test runner.
+- Mark the session's in-progress tasks for review, so nothing stays claimed by a session that is gone.
 
 ## Prompt events
 
 ### UserPromptSubmit
 
-Runs before the model sees your prompt. It can add context or refuse the prompt.
+Runs before the model sees your prompt.
 
-#### Worked example
+| It can | Example |
+|---|---|
+| add context | the location of the release checklist when "release" appears |
+| refuse the prompt | a prompt that contains something shaped like an API key |
+| record the prompt | an audit log of what was asked |
 
-A hook watches for the words "deploy" and "release" in a prompt and, when it sees one, adds a two-line reminder of the release checklist's location. The checklist stays out of the always-loaded context file and appears exactly when it is relevant.
+Its output is added to the context, so keep it to a few lines and fire it only when its condition matches.
 
 ## Tool events
 
 ### PreToolUse
 
-The most used event. It sees the tool name and its full input before anything runs, and it can allow, ask or deny. [Guard hooks]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) covers it in depth.
+The most used event. It sees the tool name and its full input before anything runs.
+
+- Return `permissionDecision: "deny"` with a reason to refuse.
+- Return `"allow"` to run without a prompt, or `"ask"` to show one.
+- Exit 2 with a message on standard error for a simple refusal.
+- [Guard hooks]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) covers writing one in depth.
 
 ### PostToolUse
 
@@ -89,7 +102,11 @@ After every Edit or Write to a Python file, a hook runs the linter on that file 
 
 ### PermissionRequest
 
-Fires when the harness is about to show a permission prompt. A hook here can approve or refuse by code, which suits rules too subtle for a [permission pattern]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}).
+Fires when the harness is about to show a permission prompt.
+
+- A hook here can approve or refuse by code.
+- It suits rules too subtle for a [permission pattern]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}), such as "allow `git push` only to branches this session created".
+- It does not run when a rule already allowed or denied the call.
 
 ## Turn events
 
@@ -106,13 +123,24 @@ A Stop hook runs the fast test suite. If any test fails, it blocks the stop with
 
 ### SubagentStop
 
-The same, for a sub-agent. My harness uses this kind of check on a sub-agent's report: if a required field is missing (the head commit, the checks run, what is unfinished), the sub-agent is sent back to add it before its launcher collects it.
+The Stop event for a sub-agent.
+
+1. A sub-agent finishes and returns its report.
+2. The hook checks the report for every required field: head commit, checks run and their results, anything unfinished.
+3. If a field is missing, it blocks with the list of missing fields, and the sub-agent adds them.
+4. The launcher collects a complete report.
+
+My harness uses a check of this kind on sub-agent reports.
 
 ## Context events
 
 ### PreCompact
 
-Fires before the harness summarises the context. Detail in the context is about to be lost, so this is the last chance to write it somewhere durable. See [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}#compaction).
+Fires before the harness summarises the context. Detail in the conversation is about to be lost.
+
+- Check that a resume note exists and is newer than the last commit.
+- Write the current task, open decisions and git state somewhere durable.
+- See [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}#compaction).
 
 ## Choosing the event
 

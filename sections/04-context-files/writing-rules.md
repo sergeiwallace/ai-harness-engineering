@@ -23,7 +23,7 @@ A context file guides the model's general behaviour. It is applied unevenly, and
 - Claude Code's docs call `CLAUDE.md` "context, not enforced configuration".
 - So in a harness it is the second layer. The layers, in order of how reliably they hold:
 
-| Layer | What it does | Example for "run one test, not the full suite" |
+| Layer | What it does | Example: running only the changed tests |
 |---|---|---|
 | 1. Instructions: context files, skills, prompts | Guide behaviour and explain the checks | "`make test` runs changed tests; the full suite runs at push." |
 | 2. Workflows and tools | Build the right step in | `make test` runs only the changed tests by default |
@@ -148,10 +148,10 @@ The workflow change, in the `Makefile`:
 
 ```make
 test:        ## changed tests only, the default
- files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
- if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
+	files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
+	if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
 test-all:    ## the full suite; runs in the pre-push gate
- pytest tests -q
+	pytest tests -q
 ```
 
 The hook, in `.claude/settings.json`:

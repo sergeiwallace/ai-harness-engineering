@@ -29,7 +29,6 @@ A skill can be started by a person, by the model, or by another skill. This page
    - It is the model that starts the skill, so this is a form of way 2.
    - That detail decides how chains behave.
 
-The third way is a special case of the second: when a skill, a sub-agent's brief or a hook's message tells the agent to run a skill, it is the model that starts it. That detail decides how chains behave.
 
 ### The settings
 
@@ -39,7 +38,17 @@ The third way is a special case of the second: when a skill, a sub-agent's brief
 | `disable-model-invocation: true` | Yes | No | Yes | No |
 | `user-invocable: false` | No | Yes | No | Yes |
 
-A person-only skill also takes its description out of the window, so it costs nothing until a person starts it. Codex has a similar setting, `allow_implicit_invocation: false`.
+- A person-only skill also takes its description out of the window, so it costs nothing until a person starts it.
+- A model-only skill stays out of the `/` menu, so its description is its only way to be started.
+- Codex has a similar setting, `allow_implicit_invocation: false`.
+
+```yaml
+---
+name: publish-release
+description: Push a release tag and publish the changelog.
+disable-model-invocation: true
+---
+```
 
 ### Choosing a setting
 
@@ -68,7 +77,11 @@ A person-only skill cannot be started by the model, and everything except a pers
 ![Sequence diagram with four lanes: Person, Model, Client and /publish-release, which is person-only. The person types /release-day; the model runs steps 1 to 3 through the client. At step 4 the model asks to run /publish-release; the client answers that it is not available because it is person-only; the model reports release day complete, though step 4 never ran. The fix: the skill is made model-invocable with a confirm step. Now the model runs it, the skill shows the tag and changelog to the person and waits; the person says yes; the skill reports published.]({{ '/assets/images/05-skills-and-plugins/chain-trap-sequence.png' | relative_url }})
 *The chain trap and its fix. The purple arrow is the model reporting the run as complete when step 4 did not run.*
 
-The agent reads "run `/publish-release`", cannot, and often reports the work as done without step 4. Nothing errors.
+What happens in the session:
+
+1. The agent reaches step 4 and reads "run `/publish-release`".
+2. It cannot start a person-only skill.
+3. No error is raised, and the agent can report the run as complete without step 4.
 
 ### How to keep the gate
 
@@ -81,17 +94,35 @@ Keep the called skill model-invocable and put the gate where it holds:
 
 ### Worked example: a test that finds the trap
 
-Search every skill body for a slash command, and fail if the target is person-only. The [frontmatter test on the overview]({{ '/sections/05-skills-and-plugins/' | relative_url }}#a-frontmatter-test) does this in a dozen lines.
+A test can find the trap before it reaches a session:
+
+1. Read the frontmatter of every `SKILL.md` and collect the person-only skills.
+2. Search every other skill body, brief template and hook message for `/<name>` of each one.
+3. Fail the test with the file that makes the call.
+
+The [frontmatter test on the overview]({{ '/sections/05-skills-and-plugins/' | relative_url }}#a-frontmatter-test) does this in a dozen lines.
 
 ## Chaining skills
 
 ### Several skills in one message
 
-Claude Code lets a person start one message with several skills, up to six. Typing `/review /pr-description get this ready to merge` loads both skills before the task, and the agent applies them in turn.
+Claude Code lets a person start one message with several skills, up to six.
+
+```text
+> /review /pr-description get this ready to merge
+```
+
+- Both skills load before the task.
+- The agent applies them in turn: the review first, then the description.
+- The person chose the order, so nothing in the skills needs to call the other.
 
 ### A skill that calls a skill
 
-A skill's step can tell the agent to run another skill. This is a convention: the docs do not describe it. It works because the agent reads the step as an instruction and starts the named skill.
+A skill's step can tell the agent to run another skill.
+
+- This is a convention; the docs do not describe it.
+- It works because the agent reads the step as an instruction and starts the named skill.
+- The called skill must be model-invocable, for the reason in [the chain trap](#the-chain-trap).
 
 ```markdown
 ---
@@ -125,7 +156,7 @@ description: Take the current branch from finished code to an open pull request.
 3. Each finished task goes through `/review`.
 4. `/merge` lands the reviewed results one at a time.
 
-My orchestration skill plans a piece of work and hands each launch to my delegation skill, which writes the brief and starts the worker in its own checkout. Because every launch goes through one skill, a fix to how briefs are written lands once and applies to every launch. Section 10 covers [orchestration]({{ '/sections/10-orchestration/' | relative_url }}).
+This is the chain in my harness. Every launch goes through the one delegation skill, so a fix to how briefs are written applies to every launch. Section 10 covers [orchestration]({{ '/sections/10-orchestration/' | relative_url }}).
 
 ### How chains fail
 
@@ -139,7 +170,12 @@ My orchestration skill plans a piece of work and hands each launch to my delegat
 <details markdown="1">
 <summary>Why each step should name its output</summary>
 
-A chain is only as reliable as the hand-off between steps. "Run /review" leaves the next step to guess where the findings are. "Run /review and save findings to review.md" gives the next step a file it can read. When a chain breaks, the saved outputs also show where.
+| Step written as | Next step |
+|---|---|
+| "Run /review" | Has to guess where the findings are |
+| "Run /review and save findings to review.md" | Reads `review.md` |
+
+When a chain breaks, the saved outputs also show which step it broke at.
 
 </details>
 

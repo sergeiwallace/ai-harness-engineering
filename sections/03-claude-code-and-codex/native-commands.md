@@ -33,6 +33,20 @@ The commands fall into the phases of a task. The diagram on the [overview]({{ '/
 | Keeping the session healthy | Can I keep going in this window? | `/compact`, `/clear`, `/resume`, `/rewind`, `/branch` |
 | Improving the setup | What keeps going wrong? | `/insights`, `/fewer-permission-prompts`, `/doctor`, `/skill-doctor` |
 
+### Where commands come from
+
+Typing `/` lists everything you can run. The list mixes three sources:
+
+| Source | Example | Where it is defined |
+|---|---|---|
+| Built-in command | `/compact`, `/context`, `/hooks` | Ships with the client |
+| Your skill | `/release` | `.claude/skills/release/SKILL.md` or `~/.claude/skills/` |
+| A plugin's skill or command | a plugin's `/deploy` | The installed plugin; see `/plugin` |
+
+- A built-in command is part of the client: you cannot edit it, and its meaning can change between releases.
+- A skill is yours: you write it, version it and test it like any other file. See [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+- Shell flags such as `claude -c` (continue) and `claude -p` (one task, no session) are typed in the terminal, before a session starts.
+
 > Several commands changed meaning in recent releases: `/review` was a separate pull-request review before v2.1.223, `/simplify` was the bug-finding command before v2.1.147, and `/agents` lost its interactive manager after v2.1.197. Check the reference for your installed version before you script against a command.
 
 ## Running long work
@@ -103,7 +117,14 @@ Each unit has its own worktree, so units do not collide on the same files, and t
 
 ### What /rewind does not undo
 
-`/rewind` tracks file edits made through the client's edit tools. Files changed only by shell commands are not tracked, and sub-agent edits are usually not restored. Keep committing to git; a checkpoint does not replace it.
+| Change | Restored by `/rewind` |
+|---|---|
+| An edit through the client's edit tools | Yes |
+| A file changed only by a shell command (`sed -i`, a generator) | No |
+| An edit made by a sub-agent | Usually not |
+| Anything a shell command did outside the files, such as a push or a deploy | No |
+
+> `/rewind` does not replace git. Commit at each checkpoint you may want to return to, including changes made through the shell.
 
 ### Compact with a focus
 
@@ -119,14 +140,20 @@ Each unit has its own worktree, so units do not collide on the same files, and t
 
 ### The commands
 
-- `/hooks` shows every configured hook and where it comes from, read-only.
-- `/permissions` sets allow, ask and deny rules; auto mode lets a classifier approve routine actions in long runs.
-- `/plan` and `/sandbox` switch to plan mode and to sandbox mode for shell commands.
-- `/fewer-permission-prompts` scans transcripts for common read-only calls and proposes an allowlist.
-- `/update-config` edits `settings.json` from a plain request.
-- `/model` and `/effort` choose the model and the reasoning effort; `/advisor` lets a cheaper main model consult a stronger one at decision points.
-- `/plugin`, `/reload-plugins`, `/reload-skills` and `/skills` manage plugins and skills without a restart; `/skill-doctor` shows what each skill costs in context and how often it is used.
-- `/mcp` manages MCP connections; `/statusline` configures the status line.
+| Command | What it does | Layer it touches |
+|---|---|---|
+| `/hooks` | Shows every configured hook and where it comes from, read-only | Enforcement |
+| `/permissions` | Sets allow, ask and deny rules | Enforcement |
+| `/plan`, `/sandbox` | Plan mode; sandbox mode for shell commands | Enforcement |
+| `/fewer-permission-prompts` | Scans transcripts for common read-only calls and proposes an allowlist | Enforcement |
+| `/update-config` | Edits `settings.json` from a plain request | Settings |
+| `/model`, `/effort` | Choose the model and the reasoning effort | Settings |
+| `/advisor` | Lets a cheaper main model consult a stronger one at decision points | Settings |
+| `/plugin`, `/reload-plugins`, `/reload-skills`, `/skills` | Manage plugins and skills without a restart | Workflow |
+| `/skill-doctor` | Shows what each skill costs in context and how often it is used | Workflow |
+| `/mcp`, `/statusline` | Manage MCP connections; configure the status line | Settings |
+
+`Shift+Tab` cycles the permission modes without a command; see [Configuration and permissions]({{ '/sections/03-claude-code-and-codex/configuration-and-permissions.html' | relative_url }}#permission-modes).
 
 ### From prompt fatigue to an allowlist
 
@@ -151,13 +178,27 @@ The rules land in the local file, so they apply to you in this project only. [Co
 
 ## Measuring use
 
-- `/insights` writes a report on your recent sessions, friction points included, for improving your setup. See [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
-- `/usage` shows session cost and usage attribution.
-- `/doctor` checks the setup and can audit instructions; `/debug` turns on debug logging for the session.
+| Command | What it does | Use it to |
+|---|---|---|
+| `/insights` | Writes a report on your recent sessions, friction points included | Find the mistakes that repeat, and fix them in the system |
+| `/usage` | Shows session cost and usage attribution | See what a task cost |
+| `/doctor` | Checks the setup and can audit instructions | Find broken settings and stale context-file lines |
+| `/debug` | Turns on debug logging for the session | Trace why a hook or setting did not apply |
+
+See [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
 
 ## Remote control
 
-`/rc` (`/remote-control`) controls a session from another device. It needs a claude.ai sign-in; API keys are not supported, and it is not available through cloud providers.
+`/rc` (`/remote-control`) controls a session from another device.
+
+| Route | `/rc` available |
+|---|---|
+| claude.ai sign-in | Yes |
+| API key | No |
+| Cloud provider such as Amazon Bedrock | No |
+
+- Cross-machine and cloud session messaging also depend on Remote Control.
+- Same-machine session messaging does not, and works on cloud providers from v2.1.248.
 
 ## A morning's session
 
@@ -193,13 +234,37 @@ The percentages and output are illustrative.
 
 ## Codex commands
 
-Codex has its own set. The ones that match Claude Code's are `/goal`, `/compact` and `/memories`; it has no `/loop`, and it adds `/import` to read a Claude Code or Cursor setup. See [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html' | relative_url }}).
+Codex has its own set. Type `/` in the Codex composer for the full list; these are the ones with a Claude Code counterpart.
+
+| Purpose | Claude Code | Codex |
+|---|---|---|
+| Work until a condition holds | `/goal` | `/goal` (set, edit, pause, resume, view, clear) |
+| Summarise to free context | `/compact` | `/compact` |
+| Memory | `/memory` | `/memories` |
+| Starter context file | `/init` | `/init` writes an `AGENTS.md` scaffold |
+| Permissions | `/permissions` | `/permissions` |
+| Hooks | `/hooks` | `/hooks` (view and manage) |
+| Plan mode | `/plan` | `/plan` |
+| Review the working tree | `/code-review` | `/review` |
+| Show the diff | ask the agent, or `git diff` | `/diff` |
+| Background terminals | `/tasks` | `/ps`; `/stop` stops them all |
+| Side question | `/btw` | `/side` or `/btw` |
+| Fork the conversation | `/fork`, `/branch` | `/fork` |
+| Resume a conversation | `/resume`, `claude -r` | `/resume` |
+| Model | `/model` | `/model` |
+| Session configuration and usage | `/status`, `/usage` | `/status`, `/usage`, `/debug-config` |
+| Work in a git worktree | `/batch` units, background sessions | `/worktree` |
+| Repeat a prompt | `/loop` | none |
+| Import another setup | none | `/import` (Claude Code or Cursor) |
+
+See [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html' | relative_url }}).
 
 ## Sources
 
 - <https://code.claude.com/docs/en/commands.md>, <https://code.claude.com/docs/en/workflows.md>, <https://code.claude.com/docs/en/goal.md>, <https://code.claude.com/docs/en/permission-modes.md>, <https://code.claude.com/docs/en/advisor.md>, <https://code.claude.com/docs/en/costs.md>, <https://code.claude.com/docs/en/code-review-local.md>, <https://code.claude.com/docs/en/cross-session-messaging.md>, <https://code.claude.com/docs/en/remote-control.md>, verified 2026-11-09.
 - `/rewind`: <https://code.claude.com/docs/en/checkpointing.md>, verified 2026-11-09.
-- Codex: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, verified 2026-11-08.
+- Codex: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09.
+- Typing `/` to list commands and skills: <https://code.claude.com/docs/en/quickstart.md>, read 2026-11-09.
 - Session excerpts are illustrations written for this page.
 
 {% include page_nav.html %}

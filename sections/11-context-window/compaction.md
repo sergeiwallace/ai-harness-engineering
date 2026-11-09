@@ -57,7 +57,14 @@ Claude Code compacts automatically near the limit. A model reads the conversatio
 
 ### By fill level
 
-As the context window fills, an agent follows instructions less reliably. My own practice is to compact at about 50 to 60 percent of the context window. Other practitioners report a sweet spot below about 300k tokens (unverified practitioner reports). `/autocompact` sets the threshold for automatic compaction in Claude Code.
+As the context window fills, an agent follows instructions less reliably.
+
+| Setting or practice | Value |
+|---|---|
+| My own compaction point | About 50 to 60 percent of the window |
+| Other practitioners' reports | A sweet spot below about 300k tokens (unverified practitioner reports) |
+| Claude Code's automatic compaction | Near the limit |
+| Changing the automatic threshold | `/autocompact` |
 
 ### By task boundary
 
@@ -75,7 +82,10 @@ The best moment is between tasks: the last task is committed, its state written,
 
 ### Measure, do not guess
 
-`/context` shows what is filling the window. A guess based on how long the session has run is not a measurement; a session that read three large files can be fuller after ten minutes than another after two hours.
+- `/context` shows what is filling the window, by category, with suggestions.
+- Time is a poor proxy for fill level.
+  - A session that read three large files can be fuller after ten minutes than another after two hours.
+- A hook can read the number on every tool call, which is what [a context supervisor]({{ '/sections/11-context-window/context-supervisor.html' | relative_url }}) does.
 
 ## Steering the summary
 
@@ -127,11 +137,17 @@ Rules still in force: no edits to old migrations; ask before touching archive.
 
 ### Checking the resume worked
 
-The first thing after resuming is to restate the task and next step from the files, and check the branch and last commit match the note. A mismatch means the note is stale; fix it before working.
+1. Restate the task and the next step from the state note.
+2. Check the branch and the last commit match the note.
+   - `git -C <worktree> log --oneline -1`
+3. If they differ, the note is stale: fix it before working.
 
 ## Examples from my own harness
 
-A save-state skill writes the current state before compaction, and a resume message format the next context reads. It records the task, decisions, git state, what is next, and any feedback from me in that session. The resume message lists the plan doc, memory files and in-progress tasks to read.
+- A save-state skill that writes the current state before compaction, and a resume message the next context reads.
+  - It records the task, decisions, git state, what is next, and any feedback from me in that session.
+  - The resume message lists the plan doc, memory files and in-progress tasks to read.
+- A hook-driven supervisor that runs the save before compacting, so saving does not depend on the agent remembering ([a context supervisor]({{ '/sections/11-context-window/context-supervisor.html' | relative_url }})).
 
 To start: one notes file the agent updates before each compaction, and a resume line that tells it to read that file first.
 

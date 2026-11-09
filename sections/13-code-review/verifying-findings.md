@@ -83,15 +83,33 @@ Verification costs tokens for every finding it checks. The table shows where a f
 
 ### Number of verifiers
 
-One verifier with a required test or trace catches most false findings. Two that use different methods (one traces, one tests) catch more and disagree usefully. When they disagree, the finding goes to the owner as unclear with both pieces of evidence.
+| Setup | What it catches | Cost |
+|:--|:--|:--|
+| One verifier, required to attach a test or trace | Most false findings | One extra pass per finding |
+| Two verifiers with different methods (one traces, one tests) | More false findings, and disagreements worth a look | Two passes per finding |
+
+When two verifiers disagree, the finding goes to the owner marked unclear, with both pieces of evidence attached.
 
 ## The author as verifier
 
-The author has every reason to refute a finding and holds the reasoning that produced the code. [Cross-family review]({{ '/sections/13-code-review/cross-family-review.html' | relative_url }}) rests on the same reasoning. Earlier research on model self-correction points the same way: self-correction without external feedback can fail or make results worse, while critique that uses tools and external feedback helps.
+Letting the author verify findings against its own code is the cheapest setup and the weakest:
+
+- The author holds the reasoning that produced the code, so it tends to argue for it.
+- Research on model self-correction found that self-correction without external feedback can fail or make results worse.
+- The same research found that critique using tools and external feedback helps.
+
+So the verifier should be a separate agent that runs a tool (a test, a trace) against the code. [Cross-family review]({{ '/sections/13-code-review/cross-family-review.html' | relative_url }}) rests on the same reasoning.
 
 ## From my harness
 
-My harness does not yet run a separate verifier per finding by default. What it does today is the cheaper half: findings are sorted by severity, and the session that owns the change checks each must-fix finding against the code before acting on it, because a reviewer from the other family is sometimes wrong about what a call path reaches. A verifier step per must-fix finding would be the next layer, following the design on this page.
+My harness does not yet run a separate verifier per finding by default. What it does today:
+
+1. Findings are sorted by severity.
+2. The session that owns the change checks each must-fix finding against the code before acting on it.
+   - A reviewer from the other family is sometimes wrong about what a call path reaches.
+3. A refuted finding is recorded with its evidence.
+
+A verifier step per must-fix finding would be the next layer, built into the review workflow so it runs without being asked, following the design on this page.
 
 ## Sources
 

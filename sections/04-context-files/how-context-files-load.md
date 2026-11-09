@@ -75,7 +75,20 @@ A context file can import another with `@path` syntax, up to four levels deep.
 
 ### Conflicts
 
-When two files disagree, the more specific one is read later, nearer to the task. Write files so they do not need to win: the subdirectory file adds rules for that folder, it does not reverse the root file. If a folder truly needs the opposite rule, say so in both places ("except in `legacy/`, which keeps tabs").
+When two files disagree, the more specific one is read later, nearer to the task.
+
+- Write files so they do not need to win: a subdirectory file adds rules for its folder.
+- If a folder needs the opposite of a root rule, say so in both places:
+
+```markdown
+<!-- repo/CLAUDE.md -->
+- Indent with 4 spaces, except in `legacy/`, which keeps tabs.
+
+<!-- repo/legacy/CLAUDE.md -->
+- This folder keeps tabs; do not reformat it.
+```
+
+- If the conflict matters, a formatter config per folder enforces it and the lines explain it.
 
 ### A monorepo
 
@@ -96,7 +109,6 @@ repo/
 | `web/Button.tsx` | root file, `web/CLAUDE.md` |
 | `services/billing/tests/test_refund.py` | root file, `services/billing/CLAUDE.md`, `tests.md` |
 | `services/search/migrations/0042.sql` | root file, `services/search/CLAUDE.md`, `migrations.md` |
-
 ## Codex
 
 ### The walk
@@ -119,7 +131,10 @@ The sizes are illustrative.
 
 ### Fallback names
 
-`project_doc_fallback_filenames` in the Codex configuration adds other file names to look for, for a repository that already has instructions under another name.
+`project_doc_fallback_filenames` in the Codex configuration adds other file names to look for.
+
+- Use it for a repository that already keeps instructions under another name.
+- In each directory Codex checks `AGENTS.override.md`, then `AGENTS.md`, then the fallback names, and takes at most one file.
 
 ## Both clients on one repository
 

@@ -114,17 +114,13 @@ Use a path rule when the rule applies to one kind of file: tests, docs, migratio
 
 ### Limits
 
-#### Shell-only work
+| Limit | What happens | What to do |
+|---|---|---|
+| Shell-only work | A file written with `cat > file` or a generator never loads the rule | Enforce the important rules with a hook or linter that checks the file |
+| Compaction | A loaded rule is summarised away and returns only on the next matching touch | See [Context files after compaction]({{ '/sections/04-context-files/after-compaction.html' | relative_url }}) |
+| Codex | Path-scoped rules are not documented | Put an `AGENTS.md` in the folder that holds those files |
 
-Path rules load only when a file tool touches a matching path. An agent that writes a file with `cat > file` or a generator never sees them. If agents in your setup do much of their work through the shell, back the important path rules with a hook.
-
-#### Compaction
-
-A path rule that loaded earlier is summarised away at compaction and returns only on the next matching touch. See [Context files after compaction]({{ '/sections/04-context-files/after-compaction.html' | relative_url }}).
-
-#### Codex
-
-Codex does not document path-scoped rules. For a repository used with both clients, the nearest equivalent is an `AGENTS.md` in the folder that holds those files.
+> A path rule is still an instruction. For a convention that must hold on every file of a kind, a linter on those paths does the enforcing and the rule explains it.
 
 ## Choosing between them
 
@@ -137,7 +133,12 @@ Codex does not document path-scoped rules. For a repository used with both clien
 
 ## Examples from my own harness
 
-Each procedure document is named by one line in the shared context file, with the trigger for reading it. Path-scoped rules cover tests, documentation and skill authoring, so those rules appear only when an agent works on those files.
+- Each procedure document is named by one line in the shared context file, with the trigger for reading it.
+- Path-scoped rules cover tests, documentation and skill authoring, so those rules appear only when an agent works on those files.
+- The parts that must hold are enforced elsewhere:
+  - documentation pages go through a check for forbidden names and punctuation;
+  - tests go through the test gate before a push;
+  - the rules explain what those checks refuse.
 
 ## Sources
 

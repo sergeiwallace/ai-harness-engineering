@@ -13,7 +13,17 @@ redirect_from:
 
 As of 2026-11-09. Part of [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
 
-A bug fix is the one place where the red step of test-driven development still pays for itself with agents. The regression test must fail on the unfixed code, for the reason the bug report describes, before it may pass on the fix. This page walks through the full method: reproduce, find the root cause, freeze the test, fix, verify in widening rings, and decide where each rule is enforced.
+A bug fix is the one place where the red step of test-driven development still pays for itself with agents. The regression test must fail on the unfixed code, for the reason the bug report describes, before it may pass on the fix.
+
+This page walks one bug through the full method:
+
+1. reproduce;
+2. find the root cause;
+3. freeze the failing test;
+4. fix;
+5. verify in widening rings.
+
+It then covers where each rule is enforced, and the pitfalls.
 
 <figure>
   <img src="{{ '/assets/images/12-testing/regression-proof.svg' | relative_url }}" width="100%" alt="Sequence diagram with five lanes: coding agent, unfixed code, regression test, fixed code and full suite. The agent reproduces the bug, writes a test at the entry point, and sees it fail on the unfixed code for the stated reason. It commits the failing test alone. It writes the fix, the same test passes on the fixed code, and the preservation tests stay green.">
@@ -30,9 +40,17 @@ A bug fix is the one place where the red step of test-driven development still p
 
 ## The red step in bug fixes
 
-For new features, strict TDD inside the agent loop showed no measurable gain in one 2026 evaluation (see [test ordering and the spec]({{ '/sections/12-testing/entry-point-testing.html#test-ordering-and-the-spec' | relative_url }})). A bug report comes with a concrete observed failure, so there is a precise thing the test must reproduce, and a precise way to check the test does its job: it fails on the old code.
+For new features, strict TDD inside the agent loop showed no measurable gain in one 2026 evaluation (see [test ordering and the spec]({{ '/sections/12-testing/entry-point-testing.html#test-ordering-and-the-spec' | relative_url }})). A bug fix is different in two ways:
 
-The open-source test-audit skill says: "Bug regression tests must fail on the pre-fix code for the intended reason." Anthropic's example prompt for a bug is the same order: "write a failing test that reproduces the issue, then fix it."
+- A bug report comes with a concrete observed failure, so there is a precise behaviour for the test to reproduce.
+- Running the test on the old code shows whether the test does its job: it must fail there.
+
+Two sources state the same order:
+
+| Source | Wording |
+|:--|:--|
+| OpenClaw's test-audit skill | "Bug regression tests must fail on the pre-fix code for the intended reason." |
+| Anthropic's Claude Code best practices | "write a failing test that reproduces the issue, then fix it" |
 
 > The agent-specific risk is a test written after the fix, which passes on both the old and new code. It has the form of a regression test and does not detect the bug.
 
@@ -44,18 +62,36 @@ Drive the reported input through the real entry point and observe the reported w
 
 #### Worked example
 
-A user reports that `task export --format csv` drops tasks whose title contains a comma.
+A user reports that after `task export --format csv`, a spreadsheet shows titles containing a comma split across two columns, with the status in the wrong column. Reproduce it with the same CSV parsing the spreadsheet does:
 
 ```console
 $ task new 'Fix login, then deploy'
 created 42
-$ task export --format csv | grep -c '^42,'
-0
+$ task export --format csv | python3 -c 'import csv, sys; print(list(csv.reader(sys.stdin))[1])'
+['42', 'Fix login', ' then deploy', 'open']
 ```
+
+The row has four fields where three are expected, which is the reported failure.
 
 ### 2. Find the root cause
 
-Trace the failure back until it points at a line of code. Here the CSV writer joins fields with `,` without quoting. The root cause is "fields are not quoted", not "commas break export". The root cause also breaks titles with quotes and newlines, so the fix should cover those too.
+Trace the failure back until it points at a line of code:
+
+1. Symptom: titles with a comma split into two columns.
+2. Where it happens: the exported line for task 42 is `42,Fix login, then deploy,open`.
+3. Cause: the CSV writer joins fields with `,` and never quotes them.
+
+```python
+line = ",".join([task.id, task.title, task.status])   # no quoting
+```
+
+The cause, unquoted fields, breaks more than commas:
+
+| Title | Result before the fix |
+|:--|:--|
+| `Fix login, then deploy` | Split into two fields |
+| `Say "hi"` | The quote characters reach the parser unescaped |
+| A title with a line break | One task becomes two rows |
 
 ### 3. Freeze the failing test
 
@@ -66,21 +102,36 @@ def test_csv_export_keeps_titles_with_commas(tmp_path):
     task_id = run_cli(["new", "Fix login, then deploy"], home=tmp_path).task_id
     out = run_cli(["export", "--format", "csv"], home=tmp_path).stdout
     rows = list(csv.reader(io.StringIO(out)))
-    assert [task_id, "Fix login, then deploy"] in [r[:2] for r in rows]
+    assert [task_id, "Fix login, then deploy", "open"] in rows
 ```
 
 ```console
 $ pytest tests/test_export.py::test_csv_export_keeps_titles_with_commas
-FAILED  AssertionError: ['42', 'Fix login, then deploy'] not in [['42', 'Fix login', ' then deploy'], ...]
+FAILED  AssertionError: ['42', 'Fix login, then deploy', 'open'] not in [['id', 'title', 'status'], ['42', 'Fix login', ' then deploy', 'open']]
 ```
 
-The failure message shows the title split in two, which is the bug as reported. A failure for any other reason (an import error, a missing fixture) does not count.
+Check the failure reason:
+
+- The message shows the title split in two, which is the bug as reported.
+- A failure for any other reason (an import error, a missing fixture) does not count; fix the test until it fails for the right reason.
 
 Commit the test on its own. From here on, the fix commit may not touch this file.
 
 ### 4. Fix
 
-Make the smallest change that addresses the root cause, here using a CSV library's quoting instead of a hand-written join.
+Make the smallest change that addresses the root cause. Here that is the standard library's CSV writer, which quotes fields as needed:
+
+```python
+writer = csv.writer(out)
+writer.writerow([task.id, task.title, task.status])
+```
+
+Then cover the rest of the root cause:
+
+1. Run the frozen test on the fix; it passes.
+2. Add tests for the quote and line-break titles in a separate commit.
+3. Run those new tests on the base commit too, and confirm they fail there.
+   - A new case that already passed on the old code is not a regression test for this bug.
 
 ### 5. Verify in widening rings
 
@@ -95,28 +146,70 @@ Make the smallest change that addresses the root cause, here using a CSV library
 Each ring is slower and runs less often. Stopping at ring 1 is the common agent shortcut.
 
 <details markdown="1">
-<summary>Aside: the five-line proof a reviewer should ask for</summary>
+<summary>Aside: the proof a reviewer should ask for</summary>
 
-A credible bug-fix report records: the reproduction fails on the clean base; the same reproduction passes with the fix; preservation tests pass; the fix did not alter the frozen test or the gate; and the result was re-run from a clean checkout. Do not accept an agent's statement that a failure is "pre-existing". Run the test on the base commit and see.
+A credible bug-fix report records five things:
+
+1. The reproduction fails on the clean base.
+2. The same reproduction passes with the fix.
+3. Preservation tests pass.
+4. The fix did not alter the frozen test or the gate.
+5. The result was re-run from a clean checkout.
+
+Do not accept an agent's statement that a failure is "pre-existing". Run the test on the base commit and see.
 
 </details>
 
 ## Where each rule is enforced
 
-A rule written in a procedure is the weakest form of enforcement. An agent can skip it without anything noticing. Rank each rule by the strongest mechanism that can carry it.
+A rule written only in a procedure is the weakest form of enforcement: an agent can skip it without anything noticing. Rank each rule by the strongest harness layer that can carry it (see [Where tests sit in the harness]({{ '/sections/12-testing/#where-tests-sit-in-the-harness' | relative_url }})):
 
-| Rule | Procedure | Hook | CI or gate |
+| Rule | Layer 2, workflow | Layer 3, hook or script | Layer 4, gate |
 |:--|:--|:--|:--|
-| Reproduce before fixing | Yes | No | No |
-| The test fails on the base | Yes | No | Yes: run the new test on the merge base |
-| The fix does not touch the frozen test | Yes | Possible | Yes: diff check on the test file |
-| Widening rings | Yes | No | Partly: the gate selects tests from the diff |
+| Reproduce before fixing | The procedure's first step | No | No |
+| The test fails on the base | The procedure | No | Yes: run the new test on the merge base |
+| The fix does not touch the frozen test | The procedure | Possible: a hook on the test path | Yes: diff check on the test file |
+| Widening rings | The procedure | No | Partly: the gate selects tests from the diff |
 
-The order of preference is CI or gate first, then hook, then written procedure. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers this ladder in general.
+The gate check for "fails on the base" fits in a few lines:
+
+```bash
+# Run the branch's new regression test against the merge-base code; it must FAIL there
+base=$(git merge-base origin/main HEAD)
+git worktree add --detach /tmp/base-check "$base"
+cp tests/test_export.py /tmp/base-check/tests/
+( cd /tmp/base-check && ! pytest -q tests/test_export.py::test_csv_export_keeps_titles_with_commas )
+status=$?
+git worktree remove --force /tmp/base-check
+exit $status
+```
+
+The `!` inverts the result, so the gate passes only when the test fails on the old code. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers the enforcement ladder in general.
+
+## Pitfalls
+
+| Pitfall | Example | Fix |
+|:--|:--|:--|
+| The test was written after the fix | It passes on old and new code | Run it on the base commit and see it fail |
+| It fails for the wrong reason | An import error on the base commit | Read the failure message against the bug report |
+| The fix edits the frozen test | The assertion is loosened to match the new output | A diff check on the test file in the fix commit |
+| Only the reported case is fixed | Commas work, quotes and line breaks still break | Fix the root cause and add its sibling cases |
+| "Pre-existing failure" accepted on the agent's word | A real regression is waved through | Run the failing test on the base commit |
 
 ## From my harness
 
-My bug-fix procedure is a skill with numbered gates, in this order: reproduce, root-cause, freeze the failing regression test, fix, verify, document. Its freeze gate requires that the regression test "must assert the real behavioral contract", at whatever level the defect actually lives (unit, integration, end-to-end or front end), and that the test is not edited during the fix.
+My bug-fix procedure is a skill with numbered gates:
+
+1. Reproduce.
+2. Establish the root cause.
+3. Freeze the regression test.
+   - It "must assert the real behavioral contract", at whatever level the defect lives: unit, integration, end-to-end or front end.
+   - It is confirmed failing on the unfixed code.
+4. Apply the causal fix.
+5. Verify in widening rings.
+6. Document the bug.
+
+The skill is layer 2 of the harness: it builds the order into the workflow the agent follows. The merge gate checks that the frozen test passes, which is layer 4.
 
 ## Sources
 

@@ -23,7 +23,13 @@ A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/com
 
 ## Why automate it
 
-An agent deep in a task does not stop to check its own context. By the time the automatic compaction near the limit fires, it has spent a long stretch at the fill level where it follows instructions less reliably, and it compacts without having saved state. A supervisor moves the save and the compaction earlier, and makes them happen the same way every time.
+| Without a supervisor | With a supervisor |
+|---|---|
+| The agent has to notice its own fill level mid-task | A hook measures it after every tool call |
+| Automatic compaction fires near the limit, often without a save | The save runs at a set threshold, then the compaction |
+| The routine varies run to run | The same steps every time |
+
+A written instruction to "save state at 55%" competes with the task for the agent's attention. A hook applies it the same way every time, which is the systems approach to this problem.
 
 ## The parts
 
@@ -62,7 +68,14 @@ The numbers follow my own practice of compacting at about 50 to 60 percent; tune
 
 ### Why `/compact` has to be typed in
 
-Slash commands such as `/compact` are typed into the session's prompt; a hook cannot call them as a function. So the supervisor types the command into the terminal, the same way a person would, through a small library that targets the right session and refuses to type into a pane a person is using. [Templates and stubs]({{ '/sections/07-templates-and-stubs/' | relative_url }}) covers injected prompts.
+- Slash commands such as `/compact` are typed into the session's prompt; a hook cannot call them as a function.
+- So the supervisor types the command into the session's terminal, the way a person would.
+- It goes through a small library that:
+  - targets the right session,
+  - refuses to type into a pane a person is using,
+  - and lets the supervisor check afterwards that the fill level dropped.
+
+[Templates and stubs]({{ '/sections/07-templates-and-stubs/' | relative_url }}) covers injected prompts.
 
 ## A minimal hook
 
@@ -86,6 +99,12 @@ fi
 
 ## Failure modes
 
+| Failure | Sign | Response |
+|---|---|---|
+| The compaction never fires | The fill level did not drop after the injection | Retry, then raise it |
+| The state saved mid-step | The note describes a half-finished action | Finish the current step before saving (the middle band) |
+| Over-eager reminders | A reminder on every tool call fills the window | Remind once per band |
+
 #### Compaction that never fires
 
 The injection can fail: the session is busy, the terminal is not where expected. The supervisor should notice that the fill level did not drop and retry or raise it, not assume success.
@@ -100,9 +119,11 @@ A reminder on every tool call above 40 percent fills the context with reminders.
 
 ## Examples from my own harness
 
-My context supervisor: hooks read how full the context is and, past a threshold, run save-state and then send `/compact` into the session through the prompt-injection library. A separate command reports the actual context percentage and the band it is in, so a session quotes a reading, not a guess, before it talks about saving or compacting.
+- My context supervisor: hooks read how full the context is and, past a threshold, run save-state and then send `/compact` into the session through the prompt-injection library.
+- A separate command reports the actual context percentage and the band it is in.
+  - A session quotes that reading, not a guess, before it talks about saving or compacting.
 
-To start: a hook that prints a reminder at one threshold, and a habit of saving state when you see it.
+To start: a hook that prints a reminder at one threshold.
 
 ## Sources
 

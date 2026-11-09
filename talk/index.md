@@ -33,7 +33,7 @@ The PDF has one page per slide, for showing the talk without a browser or for pr
 ## How the slides and the pages link
 
 1. Every slide has its own address, counting from 0.
-   - `talk/slides/#/17` opens slide 18, the process-kill guard case study: [try it]({{ slides_url }}#/17){:target="_blank" rel="noopener"}.
+   - `talk/slides/#/17` opens slide 18, [Process-kill guard case study]({{ slides_url }}#/17){:target="_blank" rel="noopener"}.
    - The lists below link every slide this way.
 2. Every page on the site links its slide.
    - The header and footer of each page show "Slide:" and the slide title, and open it in a new tab.

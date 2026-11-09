@@ -120,7 +120,26 @@ Three lines in that sketch are already harness decisions: the `max_turns` limit,
 
 ### Worked example: where the sketch would go wrong
 
-Give the sketch the task "delete the build directory and rebuild". It will run `rm -r build` without asking, because nothing between `reply` and `run_tool` checks anything. Claude Code puts a permission check and the `PreToolUse` hook exactly there, which is why it can ask before a deletion, or refuse one outright. The fix in the sketch is a single function call before `run_tool`, and that function is where most of a harness's safety lives.
+Give the sketch the task "delete the build directory and rebuild".
+
+1. The model replies with `tool_use: run("rm -r build && make")`.
+2. Nothing between `reply` and `run_tool` checks the call, so the deletion runs without asking.
+3. Claude Code puts a permission check and the `PreToolUse` hook at exactly that point, which is why it can ask before a deletion or refuse one.
+
+The fix in the sketch is one function call before `run_tool`:
+
+```python
+def check(name, args):
+    cmd = args.get("command", "")
+    if "rm -r" in cmd or "git push" in cmd:
+        return input(f"Allow `{cmd}`? [y/N] ").lower() == "y"
+    return True
+
+# in agent(), before running each block:
+#   content = run_tool(b.name, b.input) if check(b.name, b.input) else "refused by the user"
+```
+
+A real client replaces the string match with permission rules, hooks and a sandbox, but the check sits in the same place.
 
 ## Parallel and sequential tool calls
 

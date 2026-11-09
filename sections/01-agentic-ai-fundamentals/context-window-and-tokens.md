@@ -41,7 +41,18 @@ The first three are a fixed cost paid on every turn. The last three grow, and in
 
 ### What a token is
 
-Models read text as tokens: pieces of words, punctuation and whitespace. Common English words are often one token; rare words, code identifiers and non-English text split into several. For English prose a rough rule is four characters, or three quarters of a word, per token.
+Models read text as tokens: pieces of words, punctuation and whitespace.
+
+- Common English words are often one token each.
+- Rare words, long code identifiers and non-English text split into several.
+- For English prose a rough rule is four characters, or three quarters of a word, per token.
+
+An illustrative split (the exact boundaries depend on the model's tokenizer):
+
+```text
+"The parser rejects February 29."  ->  The | parser | rejects | February | 29 | .
+"parse_date_with_timezone"         ->  parse | _date | _with | _timezone
+```
 
 ### Rules of thumb
 
@@ -76,7 +87,19 @@ On a 200,000-token window this session is two thirds full before lunch; on a one
 
 ### Attention is spread across the whole window
 
-A model attends to its whole context on every turn, but not evenly. As the window fills, an instruction near the start has more competition. Studies of long-context retrieval find that models recall facts at the beginning and end of a long input better than facts in the middle, and that accuracy on multi-step tasks falls as irrelevant text grows. The effect varies by model and is shrinking with each generation, but it has not gone away.
+A model attends to its whole context on every turn, but not evenly.
+
+- As the window fills, an instruction near the start has more text competing with it.
+- Long-context studies find that models recall facts at the beginning and end of a long input better than facts in the middle.
+- Accuracy on multi-step tasks falls as irrelevant text grows.
+- The size of the effect varies by model and has shrunk with each generation; it has not gone away.
+
+| Placement of a rule | How reliably it is followed late in a long session |
+|---|---|
+| In a context file, reloaded each session and after compaction | most reliable of the text options |
+| Early in the chat, hours ago | least reliable; may also be lost at compaction |
+| In the latest message | reliable for that turn |
+| In a hook or permission rule | enforced whatever the context holds |
 
 ### Symptoms
 
@@ -110,11 +133,27 @@ When the window nears its limit, Claude Code compacts: it asks the model to summ
 
 ### What survives and what does not
 
-Anything reloaded from disk survives exactly: the project-root `CLAUDE.md`, rules, and the files the agent re-reads. Anything that lived only in the conversation survives only as well as the summary describes it. A rule you typed in chat, a caveat a tool printed, the exact list of tests already run: those can be shortened or dropped.
+| Survives exactly | Survives only as well as the summary describes it |
+|---|---|
+| the project-root `CLAUDE.md` and loaded rules | a rule you typed in chat |
+| files the agent reads again | a caveat a tool printed once |
+| permission rules and hooks | the exact list of tests already run |
+| the plan file, if the agent wrote one | why an approach was abandoned |
 
 ### Worked example: the rule that vanished
 
-You tell an agent early in a long session, "never edit the generated files under `build/`". Two hours and one compaction later, it edits one. The instruction was in a chat message, and the summary dropped it. Had the rule been in the project's context file, the client would have loaded it again after compaction. The fix that holds even better is a permission rule that denies edits to `build/`, which needs no memory at all (see [Permissions and untrusted input]({{ '/sections/01-agentic-ai-fundamentals/permissions-and-untrusted-input.html' | relative_url }})).
+1. Early in a long session you tell the agent: "never edit the generated files under `build/`".
+2. Two hours and one compaction later, it edits one; the summary did not carry the chat instruction.
+3. The systems fix, in order of strength:
+   - a deny rule, enforced on every call whatever the context holds:
+
+     ```json
+     { "permissions": { "deny": ["Edit(build/**)"] } }
+     ```
+
+   - a line in the project's `CLAUDE.md`, reloaded after compaction, as the second layer that tells the model why.
+
+[Permissions and untrusted input]({{ '/sections/01-agentic-ai-fundamentals/permissions-and-untrusted-input.html' | relative_url }}) covers deny rules and where they stop.
 
 ### Compacting well
 
@@ -127,7 +166,12 @@ You tell an agent early in a long session, "never edit the generated files under
 
 ### Why repeated context is cheaper than it looks
 
-Each turn resends the whole context, which sounds expensive. Prompt caching makes it far less so: when the start of a request matches a recent one exactly, the provider reuses its earlier work on that prefix and bills it at a fraction of the normal input price. Coding clients arrange the context so the stable parts (system instructions, tools, context files) come first and the changing parts last.
+Each turn resends the whole context. Prompt caching makes that much cheaper:
+
+1. The client sends the stable parts first: system instructions, tools, context files.
+2. The changing parts come last: history, tool results, the newest message.
+3. When the start of a request matches a recent one exactly, the provider reuses its earlier work on that prefix.
+4. The reused prefix is billed at a fraction of the normal input price, and the turn starts faster.
 
 ### What breaks the cache
 

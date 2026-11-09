@@ -82,15 +82,17 @@ Layers 2 to 4 do the enforcing. Adding one more detailed rule to the brief every
 
 ## Stubs and templates
 
-The words are close, and on this site they mean different things.
+The words are close, and on this site they mean three different things.
 
-| | Prompt stub | Document template |
-|---|---|---|
-| What it shapes | A prompt one agent sends another | A document people and agents read later |
-| Read by | One sub-agent, once, at launch | Many readers, many times |
-| Typical kinds | Sub-agent brief, review request, research question | Design, plan, research report, bug report |
-| Fixed parts | Headings and safety rules | Headings and what goes under each |
-| Failure it prevents | A rule or the output format left out | A reader not finding the answer |
+| | Prompt stub | Document template | Goal template |
+|---|---|---|---|
+| What it shapes | A prompt one agent sends another | A document people and agents read later | A stop condition for `/goal` |
+| Read by | One sub-agent, once, at launch | Many readers, many times | The goal evaluator, after every turn |
+| Typical kinds | Sub-agent brief, review request, research question | Design, plan, research report, bug report | "Tests pass", "queue empty", "every caller fixed" |
+| Fixed parts | Headings and safety rules | Headings and what goes under each | Evidence lines, constraints, a bound |
+| Failure it prevents | A rule or the output format left out | A reader not finding the answer | A goal that never ends, or ends too early |
+
+<!-- IMAGE NEEDED: a fill-in-the-blanks form with some fields pre-printed and others left blank; search: fill in the blank form template, blank form illustration, document template icon -->
 
 ### Worked example: a brief stub
 
@@ -117,13 +119,60 @@ The words are close, and on this site they mean different things.
 
 The lead agent fills in the angle-bracket fields. The Boundaries block is fixed text, the same in every brief. Each field, why it exists and how to fill it well is on the [sub-agent briefs]({{ '/sections/07-templates-and-stubs/briefs.html' | relative_url }}) page.
 
+## Where templates live
+
+A template is only useful if the agent that needs it gets it the same way every time. Both tools store reusable prompts as files with argument placeholders.
+
+| Tool | Location | How it is invoked | Placeholders |
+|---|---|---|---|
+| Claude Code skill | `.claude/skills/<name>/SKILL.md` (project) or `~/.claude/skills/<name>/SKILL.md` (personal) | `/<name> args`, or by Claude when the description matches | `$ARGUMENTS`, `$0`, `$1`, or named `arguments` in frontmatter |
+| Claude Code command (older format, still works) | `.claude/commands/<name>.md` | `/<name> args` | Same as skills |
+| Codex skill | Codex skills replace custom prompts | By name, or by Codex when it fits | See the Codex skills documentation |
+| Codex custom prompt (deprecated) | `~/.codex/prompts/<name>.md` | `/prompts:<name> KEY=value` | `$1` to `$9`, `$ARGUMENTS`, named `$NAME` |
+
+### Worked example: a brief stub as a skill
+
+```markdown
+---
+name: research-brief
+description: Start a read-only research sub-agent on one question.
+argument-hint: [question] [start-path]
+disable-model-invocation: true
+---
+## Objective
+Answer: $0
+
+## Inputs
+Start from $1. Report what you ruled out.
+
+## Output
+The answer in two sentences, then a table of sources. At most 300 words.
+
+## Tools and scope
+Read and search only.
+
+## Boundaries (fixed)
+- Never kill processes by name pattern.
+- Never cite a file that is not tracked in git.
+
+## When stuck
+Stop after 20 minutes and report what you have, marked partial.
+```
+
+1. A person or a lead runs `/research-brief "Which services call old_client.fetch?" src/`.
+2. Claude Code replaces `$0` and `$1` with the two arguments.
+3. The filled text becomes the brief, with the fixed blocks exactly as written in the file.
+4. `disable-model-invocation: true` keeps Claude from loading the skill on its own; it runs only when called by name.
+
+This is the workflow layer of the systems approach: the fixed blocks reach every brief because the tool copies them, not because an agent remembered to.
+
 ## The brief
 
-A brief is the prompt that starts a sub-agent. A good one answers six questions before the sub-agent has to ask any of them.
+A brief is the prompt that starts a sub-agent. It has six fields, plus the original-request block above them.
 
-- Two of its blocks are fixed text, copied from the stub: the original request and the boundaries.
-- Four are filled for the task: objective, inputs, output, and tools and scope.
-- One more, When stuck, is filled with a fallback and a stop condition.
+- One block is fixed text placed above the fields: the original request, copied from its record.
+- One field is fixed text copied from the stub: Boundaries.
+- Five fields are filled for the task: Objective, Inputs, Output, Tools and scope, When stuck.
 
 ### The six fields at a glance
 
@@ -188,52 +237,68 @@ The incident that led to this, the guard that checks the block, and how agents u
 
 ### What the term means here
 
-On this site, an injected prompt is text the harness types into a live session at the right moment.
+On this site, an injected prompt is text that reaches a session that is already running, at a moment the session cannot choose for itself. Claude Code has native routes for most moments; typing into the terminal is the fallback.
 
-| Moment | What the harness types |
-|---|---|
-| After compaction | A reminder of the current task and the rules that matter |
-| Session idle with a goal still open | A wake-up that tells it to continue |
-| Context window nearly full | `/compact` with a focus line naming the task |
-| Message from another session | The message text, with its sender |
+| Moment | Native route | Terminal route needed? |
+|---|---|---|
+| The session's own background work ends, goal still open | `/goal` delivers the result as a new turn and runs idle check-ins | No |
+| A job outside the session ends, such as a CI run | Channels, where available | Yes, where channels are not |
+| Another session has news | Cross-session messaging starts a turn in an idle session | Only for sessions without messaging |
+| Compaction just happened | A `SessionStart` hook with the `compact` matcher adds a reminder | No |
+| The window is nearly full | None: `/compact` sent as a message arrives as text | Yes |
 
 > Note: the security attack with the same name, where untrusted content smuggles instructions to a model, is a different thing. It is covered in [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 
 ### Why type into the terminal
 
-A built-in command sent as a message between sessions arrives as plain text and never runs. Claude Code's documentation says so for cross-session messages and for scheduled `/loop` fires. A harness that needs a session to run `/compact` at a given moment has to type it into that session's terminal, then check that it was submitted.
+- A built-in command sent as a message between sessions arrives as plain text and never runs.
+- A built-in command in a scheduled `/loop` fire is passed to Claude as text too.
+- Claude Code's documentation says both, and documents no hook that runs a slash command.
+- So a harness that needs a session to run `/compact` at a given moment types it into that session's terminal, then checks that it was submitted.
 
 ![A sequence across five participants. A background job finishes and tells the goal waker. The waker calls the injection library with the session name and text; the library clears the input, types and submits into the terminal pane. The pane still shows the text in the input box, so the library sends submit again, and the session starts a new turn to continue its goal. Later the session's context reaches 81 percent; the waker asks the library to save state and then send /compact with a focus line, and the pane reports that compaction finished.]({{ '/assets/images/07-templates-and-stubs/injection-wake.png' | relative_url }}){: style="width:100%"}
 
-*Waking an idle session, then compacting it, through one library. Built with archify.*
+*The terminal route: waking a session after a job that ran outside it, then compacting it. Built with archify.*
 
 #### Worked example: waking an idle session
 
+A session has a goal and is waiting on a CI pipeline, which runs outside the session, so Claude Code does not see it end.
+
 ```text
-[goal active] waiting on background job "full test run"
+[goal active] waiting on CI pipeline "full test run"
 ... session idle ...
-[harness] job finished, exit 0
-[harness] inject -> session pane: "the background test run finished; continue the goal"
+[harness] CI finished, exit 0
+[harness] inject -> session pane: "the CI test run finished; read its result and continue the goal"
 [harness] verify: input box empty, new turn started
-[session] Reading the test output...
+[session] Reading the CI output...
 ```
 
-The session wakes and continues without a person. Triggers, the four parts of the library, and the failure modes are on the [injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}) page.
+The four parts of the library, the native routes in detail and the failure modes are on the [injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}) page.
 
 ## Goal templates
 
-`/goal` keeps a session working until a condition holds, and an evaluator decides after each turn whether it does. The evaluator reads only the conversation, so a condition must name evidence the agent will print.
+`/goal` keeps a session working until a condition holds. After each turn, a small fast model reads the conversation and returns a verdict: not yet met, met, or impossible.
+
+```text
+/goal all tests in tests/dates pass and the lint step is clean
+/goal          # status
+/goal clear    # remove
+```
+
+- The evaluator reads only the conversation and calls no tools, so a condition must name evidence the agent will print.
+- One goal per session; the condition can be up to 4,000 characters.
+- A clause such as "or stop after 20 turns" bounds the run.
 
 ![A lifecycle from left to right: goal armed, agent works, turn ends, evaluator reads, goal met. From the evaluator, not yet loops back to agent works, and a stated blocker leads to a blocker-reported state. From agent works, a started job leads to an idle state that returns on an injected wake-up.]({{ '/assets/images/07-templates-and-stubs/goal-evaluator.png' | relative_url }}){: style="width:100%"}
 
-*A goal from start to stop. Built with archify.*
+*A goal from start to stop. The wake-up arrow is the case of a job outside the session; Claude Code wakes the session itself for its own background work. Built with archify.*
 
 | Vague goal | Checkable goal |
 |---|---|
 | "Fix the tests" | "All tests in `tests/dates/` pass, shown in this session's output, and the change is committed" |
 | "Improve the docs" | "Every page under `docs/api/` has an Examples section, listed by a grep in this session" |
 
-More on goals and the other document templates: [Document and goal templates]({{ '/sections/07-templates-and-stubs/document-and-goal-templates.html' | relative_url }}).
+More on goals, their commands and edge cases, and the document templates: [Document and goal templates]({{ '/sections/07-templates-and-stubs/document-and-goal-templates.html' | relative_url }}#goal-templates).
 
 ## Keeping templates small
 
@@ -261,7 +326,13 @@ To start: one template for the task you delegate most.
 
 ## Pitfalls
 
-> Warning: a brief that points at a rule does not deliver the rule to the sub-agent. A request restated by each hand loses parts of itself. A built-in command sent as a message arrives as text. A template that gains a block per incident grows too long to read in full.
+| Pitfall | What happens | Fix in the system |
+|---|---|---|
+| A brief points at a rule | The sub-agent never reads the rule | Enforce the rule with a hook; name it in Boundaries as the second layer |
+| Each hand restates the request | A requirement drops out with every check green | The original-request block and its launch guard |
+| A command is sent as a message | `/compact` arrives as text and nothing compacts | Native route first; the terminal route with a verify step for commands |
+| A goal names no evidence | The evaluator cannot tell it is met, and the session keeps running | A goal template with evidence lines and a bound |
+| A template gains a block per incident | The brief grows too long to read in full | Prune; move enforced rules into hooks and tests |
 
 ## Pages in this section
 

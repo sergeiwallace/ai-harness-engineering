@@ -13,13 +13,13 @@ redirect_from:
 
 As of 2026-11-09. Topic page in [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}).
 
-A chat app has no hooks, scripts or tests between the model and you. It has a place for standing instructions, a place for files, and your own review. This page takes four habits from the terminal harness and shows how each one works when you are the only enforcement.
+A chat app has no hooks, scripts or tests between the model and you. It has a place for standing instructions, a place for files, and your own review. This page takes five habits from the terminal harness and shows how each one works when you are the only enforcement.
 
 ![Sequence diagram of carrying the durable-notes habit into a chat project. In session 1 you add an instruction to end each chat with a notes block, work on the task, and get an answer plus a notes block; between sessions you paste the notes into the project's notes file; in session 2 you ask the model to continue from the notes, it reads the file and picks up at the right step, and you check the answer against the original ask.]({{ '/assets/images/19-chat-and-desktop-clients/chat-project-notes-sequence.svg' | relative_url }}){: style="width:100%"}
 
 *Figure 1. The durable-notes habit across two chat sessions, with you doing the step a hook would do in a terminal harness. Diagram made with archify.*
 
-## The four habits, side by side
+## The five habits, side by side
 
 | Habit | In a terminal harness | In a chat app |
 |---|---|---|
@@ -27,12 +27,23 @@ A chat app has no hooks, scripts or tests between the model and you. It has a pl
 | Keep the original ask | A template carries the request verbatim into every brief | You paste the request at the top of each new chat |
 | Check before relying | Tests and gates check the result | You check the result against a written checklist |
 | Decide what needs approval | Permission rules ask before an action | The model cannot act; you decide what to do with its output |
+| One task per session | Each task gets its own session or sub-agent with its own context | You start a new chat for each task |
 
 ## 1. Durable notes
 
 ### Why it matters
 
-A chat conversation ends, or grows too long, and the next one starts from nothing. Durable notes carry the state across: what was decided, what is still open, and what comes next. In a terminal harness this is [memory and the context window]({{ '/sections/11-context-window/' | relative_url }}). In a chat app it is a notes file in the project.
+A chat conversation ends, or grows too long, and the next one starts from nothing. Durable notes carry the state across:
+
+- What was decided.
+- What is still open.
+- What comes next.
+
+| | Terminal harness | Chat app |
+|---|---|---|
+| Where the notes live | Memory files; see [the context window]({{ '/sections/11-context-window/' | relative_url }}) | A notes file in the project |
+| Who writes them | The agent, often prompted by a workflow step | The model, prompted by the project instruction |
+| Who saves them | The agent | You |
 
 ### Worked example
 
@@ -64,7 +75,14 @@ Nothing checks that the notes were written or saved. If a reply has no notes blo
 
 ### Why it matters
 
-Over a long conversation, the request drifts. Each answer reshapes the next question, and the final result can drift away from what you first asked for. A terminal harness keeps the request word for word and checks the result against it. In a chat app, you do the same by hand.
+Over a long conversation, the request drifts. Each answer reshapes the next question, and the final result can move away from what you first asked for.
+
+1. A terminal harness carries the request word for word.
+   - A template copies it into every brief for a sub-agent.
+   - A final check compares the result with it before "done".
+2. In a chat app, you do both steps by hand.
+   - Paste the request at the top of each new chat.
+   - Compare the final answer with it yourself.
 
 ### Worked example
 
@@ -82,7 +100,13 @@ Paste the first block at the top of each new chat about the task. The second lin
 
 ### Why it matters
 
-A chat model's answer sounds equally confident when it is right and when it is wrong. In a terminal harness, [tests]({{ '/sections/12-testing/' | relative_url }}) and [review]({{ '/sections/13-code-review/' | relative_url }}) check the result. In a chat app, the check is a written checklist that you run.
+A chat model's answer sounds equally confident when it is right and when it is wrong.
+
+| | Terminal harness | Chat app |
+|---|---|---|
+| What checks the result | [Tests]({{ '/sections/12-testing/' | relative_url }}), validators and [review]({{ '/sections/13-code-review/' | relative_url }}) | A written checklist |
+| Who runs the check | A program or a reviewer agent | You |
+| When it runs | Before the result lands, every time | When you remember to |
 
 ### Worked example
 
@@ -113,9 +137,45 @@ In a terminal harness, [human gates]({{ '/sections/14-human-gates/' | relative_u
 | Numbers that go into a decision | Check each one against the source |
 | Anything published | Read it and check the facts |
 
+## 5. One task per chat
+
+### Why it matters
+
+Instructions are applied less consistently when a model juggles several things at once or switches between tasks, and when its context fills up. A coding harness avoids this by design: each task gets its own session or sub-agent. In a chat app, the design choice is yours.
+
+| Situation | What to do |
+|---|---|
+| A new, unrelated task | Start a new chat in the same project, so the project instructions still load |
+| The same task, but the chat has grown long | Ask for a notes block, start a new chat, and continue from the notes |
+| A side question in the middle of a task | Ask it in a separate chat, and bring back only the answer |
+
+### Worked example
+
+```text
+Chat 1 (drafting the survey summary), after many turns:
+> Before we stop: write the Notes block.
+
+Chat 2 (new chat, same project):
+> Continue the survey summary from the notes file. Original request:
+> "A one-page summary of the Q3 survey for the leadership meeting: three findings,
+> one chart, and the decision we need from them."
+```
+
+The second chat starts with the project instructions, the notes and the original request, and none of the earlier back-and-forth.
+
 ## Examples from my own harness
 
-My harness runs in the terminal clients, where each of these habits is a rule or a mechanism: durable notes in memory files, the original request kept verbatim in every brief, checks before any claim of done, and approval rules for outward actions. The chat versions on this page are those same habits with you doing the enforcement.
+My harness runs in the terminal clients, where each habit is built into the system:
+
+| Habit | How the terminal harness enforces it |
+|---|---|
+| Durable notes | Memory files, written as a workflow step |
+| The original request | Carried verbatim in every brief by a template |
+| Check before relying | Checks that run before any claim of done |
+| Approval | Approval rules for outward actions |
+| One task per session | A separate session or sub-agent for each task, each with its own brief |
+
+The chat versions on this page are the same habits with you doing the enforcement.
 
 To start: add the notes-block instruction to one chat project and keep a notes file for one task.
 

@@ -58,7 +58,7 @@ My harness has a rule that any claim about context must quote the current readin
 
 ### Choosing the moment
 
-Compact at a checkpoint you pick, not when the harness forces it mid-step.
+Compact at a checkpoint you pick, before the harness forces it mid-step.
 
 - Good moments: after a commit, after a sub-agent's work is collected, between tasks.
 - Bad moments: halfway through a multi-file edit, while a decision is open.
@@ -99,7 +99,7 @@ Claude Code keeps a memory folder per project.
 One line each: past the read limit drops silently, tail first.
 
 - [Check a merge in a scratch tree first](merge-in-scratch-first.md): a hand-resolved conflict once split a test from its asserts
-- [A green push can hide an unrun check](green-push-unrun-check.md): read the verified line, not the exit code
+- [A green push can hide an unrun check](green-push-unrun-check.md): read the verified line beside the exit code
 - [Never type into a peer's terminal](never-type-into-peer.md): message it instead
 ```
 

@@ -10,13 +10,13 @@ nav_order: 2
 
 As of 2026-11-09. Topic page in [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}). Slides: [talk stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
-An injected prompt, on this site, is text the harness types into a session that is already running, at a moment the session cannot choose for itself. It wakes an idle session that still has a goal, reminds a session of its task after compaction, and sends the compact command before the window runs out. This page covers when a harness injects, why it has to type into the terminal, the four parts of an injection library, how to verify a submission, and how injection fails.
+An injected prompt, on this site, is text that reaches a session that is already running, at a moment the session cannot choose for itself: a wake-up when work finishes, a reminder after compaction, the compact command before the window fills. Claude Code now has native routes for most of these, and a harness should use them first. Typing into the session's terminal is the fallback for the cases no native route covers, chiefly running a built-in command such as `/compact` at a chosen moment.
 
 > Note: the security attack called prompt injection, where untrusted content smuggles instructions to a model, is a different thing. It is covered in [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 
 ![A sequence across five participants. A background job finishes and tells the goal waker. The waker calls the injection library with the session name and text; the library clears the input, types and submits into the terminal pane. The pane still shows the text in the input box, so the library sends submit again, and the session starts a new turn to continue its goal. Later the session's context reaches 81 percent; the waker asks the library to save state and then send /compact with a focus line, and the pane reports that compaction finished.]({{ '/assets/images/07-templates-and-stubs/injection-wake.png' | relative_url }}){: style="width:100%"}
 
-*Waking an idle session, then compacting it, through one library. Built with archify.*
+*Figure 1. The terminal route: waking an idle session after a job that ran outside it, then compacting it. Built with archify.*
 
 ## Contents
 {: .no_toc .text-delta }
@@ -24,65 +24,146 @@ An injected prompt, on this site, is text the harness types into a session that 
 1. TOC
 {:toc}
 
-## When a harness injects
+## What a harness needs to send in
 
-### The four triggers
+### Five needs and their routes
 
-| Trigger | What the session needs | Payload |
+| Need | Native route in Claude Code | When the terminal route is still needed |
 |---|---|---|
-| Idle with a goal | To continue after a background job ends | "The job finished; continue the goal" |
-| After compaction | The current task and rules the summary may have dropped | A short reminder naming the task and the rules |
-| Context nearly full | To compact before it runs out of room | `/compact` with a focus line |
-| Message from another session | To read and act on it | The message text, with its sender |
+| Wake a session when its own background work ends | `/goal`: the result of a background shell or sub-agent arrives as a new turn, and idle check-ins start turns on their own | The work ran outside the session (a CI job, another machine), or no goal is set, or the idle check-ins ran out |
+| Pass news from another session | Cross-session messaging: a message to an idle session starts a new turn | The receiving session has no messaging (older version, bare mode) or refuses inbound messages |
+| Push an external event, such as a CI result | Channels: an MCP server pushes events into the open session | Channels are unavailable: research preview, and not offered on Amazon Bedrock, Google Cloud's Agent Platform or Microsoft Foundry |
+| Add context after compaction | A `SessionStart` hook with the `compact` matcher; its stdout becomes context | Rarely |
+| Run a built-in command, such as `/compact`, at a chosen moment | None: messages and `/loop` fires deliver commands as text, and no hook is documented as running a slash command | Always |
 
-### Why the session cannot do it itself
+### Choosing a route
 
-Each trigger is something the harness can see and the session cannot.
+1. Use the native route when one fits.
+   - It is supported, versioned and documented, and it carries its own safeguards (inbound controls, rate limits, check-in caps).
+2. Use a hook when the need is tied to a session event, such as compaction or session start.
+   - Hooks are configuration, so the behaviour is the same in every session in their scope.
+3. Use the terminal route only for what is left.
+   - In practice that is built-in commands at a chosen time, and sessions or providers where the native routes are unavailable.
 
-- An idle session gets no turn until someone types, so it never notices that its background job ended.
-- A session near a full window does not see the usage figure; that signal is outside its window.
-- A message from another session arrives outside the session's own conversation.
-- After compaction, the session cannot know which rule its own summary dropped.
+This follows the systems approach: the harness builds the behaviour into tools and hooks, and the hand-built terminal route carries only the cases nothing else can.
 
-## Why type into the terminal
+## The native routes
 
-### Commands sent as messages do not run
+### Goal check-ins
 
-The obvious route is to send the text as a message.
+While a `/goal` is active, Claude Code handles the common "wake when the job ends" case itself.
 
-- For a prompt, that works: the session reads it as a request.
-- For a built-in command, it does not.
-  - A command sent through cross-session messaging arrives as plain text.
-  - A built-in command in a scheduled `/loop` fire is passed to Claude as text.
-  - Claude Code's documentation says both.
+- If a sub-agent or background shell command is still running when a turn ends, the goal's evaluation is skipped for that turn.
+- When the background work finishes, Claude Code delivers the result to Claude as a new turn, with no prompt needed.
+- After 30 minutes of waiting on background work, a check-in is due: Claude lists the running tasks, reads their output, and fixes or stops stuck ones.
+  - Later check-ins wait twice as long each time, up to four times the first interval: 1 hour, then every 2 hours.
+  - In an interactive session, Claude Code starts at most three idle check-ins per goal between your prompts.
+- `CLAUDE_CODE_GOAL_CHECKIN_MINUTES` changes the first interval; `0` turns check-ins and automatic retries off.
+
+#### Edge cases
+
+| Case | What happens |
+|---|---|
+| The job runs outside the session, for example in CI | Claude Code does not see it end; a harness waker or a channel has to tell the session |
+| Three idle check-ins have run | Idle check-ins pause until you send another prompt |
+| Non-interactive session (`claude -p`) | Check-ins arrive only at the end of a turn |
+
+### Cross-session messages
+
+- One session sends with the `SendMessage` tool; Claude finds the target with `ListAgents`, or you name it with `@session-name`.
+- During an active turn, the receiving Claude reads the message between tool calls. When the session is idle, Claude Code starts a new turn with it.
+- A command inside the message, such as `/compact`, arrives as plain text and never runs.
+- `notify_when_idle` asks another session on the same machine for one notice when it next goes idle or exits; the subscription expires after 12 hours.
+- The receiving session's `crossSessionInbound` setting decides what happens to arrivals:
+
+| Value | Effect |
+|---|---|
+| `accept` | Delivered |
+| `hold` | Shown as a notice, delivered only when an `accept` later applies |
+| `refuse` | Dropped |
+
+> Warning: with no `crossSessionInbound` value set, a session that bypasses permission prompts holds each incoming message for approval unless the sender also bypasses, and an unanswered approval dialog drops the message after five minutes by default (`dialogExpiry`). A harness that relies on messages to wake unattended sessions has to set `accept` explicitly.
+
+### Hooks around compaction
+
+Two hook events cover what a harness used to inject around compaction:
+
+| Hook | Matcher | What its output does |
+|---|---|---|
+| `PreCompact` | `manual`, `auto` | Stdout becomes instructions for the compaction summary; exit code 2 blocks compaction |
+| `SessionStart` | `compact` (also `startup`, `resume`, `clear`, `fork`) | Stdout, or `hookSpecificOutput.additionalContext`, is added as context |
+
+#### Worked example: a reminder after every compaction
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          { "type": "command", "command": "cat .claude/after-compact.md" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+1. The session compacts, by hand or automatically.
+2. Claude Code starts the post-compaction session and fires `SessionStart` with the `compact` source.
+3. The hook prints the reminder file: the current task, where its state is saved, and the rules that matter.
+4. Claude Code adds that text as context, so the session continues with the reminder in its window.
+
+### Channels
+
+- A channel is an MCP server that pushes events into the running session: CI results, chat messages, monitoring alerts.
+- It is enabled per session with `claude --channels plugin:<name>@<marketplace>`.
+- Every approved channel keeps a sender allowlist; other senders are dropped.
+- Channels are a research preview: they need claude.ai or Console authentication, and they are not available on Amazon Bedrock, Google Cloud's Agent Platform or Microsoft Foundry.
+
+## The terminal route
+
+### Why it is still needed
+
+| Route | Prompt text | Built-in command such as `/compact` |
+|---|---|---|
+| Cross-session message | Delivered; starts a turn when idle | Arrives as text, does not run |
+| Scheduled `/loop` fire | Delivered | Passed to Claude as text, does not run |
+| Hook output | Added as context | No documented way to run one |
+| Typed into the terminal | Delivered | Runs, as if a person typed it |
 
 ```text
 [message to session] /compact
-[session] (receives the text "/compact" as a message; no compaction runs)
+[session] (receives the text "/compact"; no compaction runs)
 ```
 
 The transcript is illustrative: the session gets the characters, and the built-in command never executes.
 
-### The terminal route
+### The commands involved
 
-Text typed into the session's terminal input and submitted runs exactly as if a person typed it. Of the three routes in the table below, it is the only one that runs a built-in command at a time the harness chooses.
+In a terminal multiplexer such as tmux, typing into a session's pane takes three commands:
 
-| Route | Prompt text | Built-in command |
-|---|---|---|
-| Cross-session message | Delivered | Arrives as text, does not run |
-| Scheduled `/loop` fire | Delivered | Arrives as text, does not run |
-| Typed into the terminal | Delivered | Runs |
+```bash
+# type the text literally (-l), so tmux does not read words like "Enter" as key names
+tmux send-keys -t "$pane" -l "/compact focus: docs rework, step 3 of 5"
+# send the submit key as its own keystroke
+tmux send-keys -t "$pane" Enter
+# read the pane back to check the input line is empty and the session reacted
+tmux capture-pane -p -t "$pane" | tail -n 5
+```
+
+<!-- IMAGE NEEDED: a terminal multiplexer window with several AI coding sessions in separate panes; search: tmux panes screenshot, tmux split window terminal -->
 
 ## The library
 
-A harness ends up injecting from several places. One shared library keeps them consistent.
+A harness that types into terminals from several places needs one shared library, so every caller types and checks the same way.
 
-| Caller | When it injects | Payload |
+| Caller in my harness | When it uses the terminal route | Payload |
 |---|---|---|
-| Goal waker | A background job ended and the session is idle | "The job finished; continue the goal" |
+| Goal waker | A job that ran outside the session finished and the session is idle | "The job finished; continue the goal" |
 | Context supervisor | Usage passes a threshold | Save state, then `/compact` with a focus line |
-| Compaction path | Compaction finished | A reminder of the task and rules |
-| Message relay | Another session sent a message | The message, with its sender |
+| Compaction path | A compaction that should have fired did not | `/compact` |
 
 Written separately, each caller would type and check differently, and a fix to one would miss the others.
 
@@ -90,36 +171,36 @@ Written separately, each caller would type and check differently, and a fix to o
 
 #### Session target
 
-Which session to type into: in a terminal multiplexer, the pane that session runs in. The target is resolved from the session's name at call time, never cached, because panes come and go.
+- Which session to type into: in a terminal multiplexer, the pane that session runs in.
+- Resolved from the session's name at call time, never cached, because panes come and go.
 
 #### Payload
 
-The text to send: a prompt or a built-in command. The payload is plain text; the library does not interpret it.
+- The text to send: a prompt, or a built-in command such as `/compact`.
+- Plain text; the library does not interpret it.
 
 #### Injector
 
-Types the payload into the target and submits it. It handles the details that differ by terminal: clearing a half-typed input first, and sending the submit key separately from the text so a long payload does not get split.
+1. Clears any half-typed input in the pane.
+2. Types the payload literally.
+3. Sends the submit key as a separate keystroke.
+   - Sending it with the text can submit before the text has arrived.
 
 #### Verify
 
-Confirms the text was submitted and did not just sit in the input box. Without this step, an injection that typed but never submitted looks the same as one that worked.
+1. Reads the pane's input line after the submit.
+2. Empty, and a new turn started: reports submitted.
+3. Text still there: sends submit once more.
+4. Still there: reports failure with the pane contents.
 
-One call through the library, in order (the figure at the top of this page shows it with a retry):
-
-1. The caller passes a session name and a payload.
-2. The library resolves the name to a pane, clears any half-typed input, and types the payload.
-3. It sends the submit key as a separate keystroke.
-4. It reads the input line. Empty, and a new turn started: it reports submitted.
-5. Text still in the input: it sends submit once more, then reports failure with the pane contents if that does not work.
+Without this step, an injection that typed but never submitted looks the same as one that worked.
 
 ### One fix, every caller
 
-Because every caller uses the same four parts, a change lands once.
-
 1. A terminal update changes how the submit key has to be sent.
 2. The fix goes into the injector.
-3. The goal waker, the supervisor, the compaction path and the message relay all get it together.
-4. One test of the injector covers all four callers.
+3. Every caller gets it together.
+4. One test of the injector covers all callers.
 
 ## Verification in practice
 
@@ -137,10 +218,13 @@ Because every caller uses the same four parts, a change lands once.
 [supervisor] session reports: state saved
 [supervisor] inject "/compact focus: docs rework, step 3 of 5" -> submitted
 [supervisor] verify: session reports compaction finished
-[supervisor] inject reminder: "resume from saved state; current task is step 3"
+[hook]       SessionStart(compact): reminder file added as context
 ```
 
-The supervisor saves state first, so nothing in flight is lost, then compacts with a focus line naming the current task, then reminds.
+1. The supervisor asks the session to save its state, so nothing in flight is lost.
+2. It types `/compact` with a focus line naming the current task, the one step only the terminal route can do.
+3. It verifies that compaction ran.
+4. The `SessionStart` hook adds the reminder, so the supervisor does not have to type one.
 
 ## How injection fails
 
@@ -151,13 +235,16 @@ The supervisor saves state first, so nothing in flight is lost, then compacts wi
 | Typed over a person | A person's half-written prompt is mixed with the payload | Do not inject into a session a person is typing in |
 | Injection loop | A waker re-wakes a session that is working | Inject only when idle, and rate-limit |
 | Dry run arms a real one | A test of the injector types for real | Test against a scratch pane, never a live session |
+| Native route already did it | The session gets the same wake-up twice | Skip the terminal route when a goal check-in or message covers the case |
 
 > Warning: never type into another person's or another session's live pane by hand to "help". Use the library, with its target check and its verify step, or send a message.
 
 <details markdown="1">
 <summary>Injection and the person's keyboard focus</summary>
 
-Typing into a terminal pane in a multiplexer does not move the person's cursor or window. Typing into a desktop window, by contrast, takes the keyboard from whoever is using it. A harness that injects should only use routes that leave the person's focus alone.
+- Typing into a terminal multiplexer pane does not move the person's cursor or window.
+- Typing into a desktop window takes the keyboard from whoever is using it.
+- A harness that injects should only use routes that leave the person's focus alone.
 
 </details>
 
@@ -165,12 +252,17 @@ Typing into a terminal pane in a multiplexer does not move the person's cursor o
 
 - [Context window]({{ '/sections/11-context-window/' | relative_url }}): when and why sessions compact.
 - [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}): messaging between sessions.
-- [Document and goal templates]({{ '/sections/07-templates-and-stubs/document-and-goal-templates.html' | relative_url }}#goal-templates): the goals an idle-session waker resumes.
+- [Document and goal templates]({{ '/sections/07-templates-and-stubs/document-and-goal-templates.html' | relative_url }}#goal-templates): writing the goal a session works toward.
+- [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}): hook events and configuration.
 
 ## Sources
 
-- Commands in cross-session messages arrive as text: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
+- `/goal`, background work, check-ins and `CLAUDE_CODE_GOAL_CHECKIN_MINUTES`: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- Cross-session messaging, delivery, `crossSessionInbound`, `notify_when_idle`, commands arriving as text: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
+- `SessionStart` and `PreCompact` matchers and output: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09. The hooks reference documents no way for a hook to run a slash command; that is an absence in the docs as read, not a stated limit.
+- Channels: <https://code.claude.com/docs/en/channels.md>, verified 2026-11-09.
 - Built-in commands in scheduled `/loop` fires arrive as text: <https://code.claude.com/docs/en/scheduled-tasks.md>, verified 2026-11-09.
+- `tmux send-keys -l` and `capture-pane -p`: the tmux manual page.
 - The injection library, its four parts and its callers are from the author's own harness, described conceptually. The transcripts are illustrations written for this page.
 
 {% include page_nav.html %}

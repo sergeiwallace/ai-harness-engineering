@@ -120,15 +120,18 @@ Make every API date carry an explicit timezone.
 - In practice: Claude writes and Codex reviews, or Codex writes and Claude reviews.
 - In the worked example above, the cross-family reviewer found the daylight-saving case the engineer and lead had both missed.
 
-### What it is not
+### How the lead treats it
 
-| Cross-family review is | It is not |
+How the lead treats a cross-family review in my harness:
+
+| Aspect | Practice |
 |---|---|
-| An extra reader of the diff | A merge gate on its own |
-| Findings the lead weighs like any review | An automatic veto |
-| Recorded with the family that reviewed | A replacement for tests |
+| Role of the reviewer | An extra reader of the diff, alongside tests and the lead's own check |
+| Its findings | Weighed by the lead like any other review, each fixed or answered |
+| Effect on merge | It never blocks a merge on its own |
+| Record | The commit or PR records which family reviewed |
 
-In my harness it never blocks a merge on its own. See [Code review]({{ '/sections/13-code-review/' | relative_url }}).
+See [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
 ## When to break the default
 

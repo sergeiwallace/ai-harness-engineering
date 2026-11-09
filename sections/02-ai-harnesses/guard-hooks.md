@@ -56,11 +56,24 @@ The first message tells the agent it hit a wall and nothing more, so it tries th
 
 ### Parsing the command
 
-A guard that searches the raw command string for `rm -rf` misses `rm -r -f` and blocks `echo "never rm -rf"`. Split the command into its parts, find the program in each segment, and judge its flags.
+A guard that searches the raw command string misses spellings and blocks innocent text.
+
+| Command | String search for `rm -rf` | Parsed check |
+|---|---|---|
+| `rm -r -f build/` | missed | caught: `rm` with recursive and force flags |
+| `echo "never rm -rf"` | wrongly refused | allowed: the program is `echo` |
+| `cd x && rm -rf y` | caught | caught: each segment checked |
+
+Split the command on `;`, `&&`, `||` and `|`, find the program in each segment, and judge its flags.
 
 ### Allowlist the safe form
 
-Where a dangerous command has a safe variant, allow the variant by name. A guard on recursive deletes can let `rm -r` through when the target is inside the session's own scratch directory and refuse it everywhere else.
+Where a dangerous command has a safe variant, allow the variant by name.
+
+- `rm -r` inside the session's own scratch directory: allowed.
+- `rm -r` anywhere else: refused, with the scratch path in the message.
+- `kill <pid>` for one process: allowed.
+- `pkill` and `killall`: refused, with `ps -eo pid,etime,args` as the way to find the PID.
 
 ### Refusing what it cannot judge
 
@@ -75,17 +88,35 @@ The cost is an extra turn; the gain is that no clever command can slip past.
 
 ### Scope the guard
 
-Some guards apply only to some sessions. My harness's isolation guard is active only for sub-agents given their own worktree, so a person's own session can still work across the repository.
+Some guards apply only to some sessions.
+
+| Guard | Active for |
+|---|---|
+| worktree isolation | sub-agents given their own worktree |
+| destructive-command guard | every session |
+| secret guard | every session |
+| publish guard | sessions working on public files |
+
+My harness's isolation guard is active only for sub-agents, so a person's own session can still work across the repository.
 
 ## A worked example
 
 ### The incident
 
-On a shared machine, an agent ran a pattern kill to stop its own test run. The pattern matched other sessions' test runs too, and they died mid-run. The context file already said "never kill by pattern".
+On a shared machine, an agent ran a pattern kill to stop its own test run.
+
+- The pattern matched other sessions' test runs too, and they died mid-run.
+- The context file already said "never kill by pattern".
+- Nothing in the system enforced the rule at the moment of the command.
 
 ### The guard
 
-A `PreToolUse` hook on Bash, as shown on the [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}#a-complete-guard) page, refuses `pkill` and `killall` and tells the agent to find the process id and kill that one process.
+A `PreToolUse` hook on Bash, shown in full on the [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}#a-complete-guard) page.
+
+1. It splits the command into segments.
+2. It refuses any segment whose program is `pkill` or `killall`.
+3. Its refusal tells the agent to find the process ID and kill that one process.
+4. It exits 0 for everything else.
 
 ### The result
 

@@ -102,21 +102,22 @@ Agents in separate [worktrees]({{ '/sections/08-delegation/worktree-isolation.ht
 
 #### A count limit
 
-At most N agents of a role at once. Simple, and it ignores what each agent is doing.
+- At most N agents of a role at once, for example four engineers.
+- Easy to state and to check.
+- Blind to what each agent is doing: four idle agents count the same as four running test suites.
 
 #### A role limit
 
-Which roles may start others, as in the table above. It bounds the tree's width at each level.
+- Which roles may start other agents, as in the role table above.
+- Bounds the width of the tree at each level.
+- Enforced by the profile: a role without the launch tool cannot launch.
 
 #### A load check
 
-Before each launch, read the machine's current load and refuse when it is busy. It adapts to what is running, including other people's sessions.
-
-| Limit | Strength | Weakness |
-|---|---|---|
-| Count | Easy to state and check | Four idle agents and four test-heavy agents count the same |
-| Role | Stops runaway trees | Does not see the machine |
-| Load check | Reacts to real contention | Needs a reliable reading of load |
+1. Before each launch, read the machine's current contention with one shared check.
+2. Free capacity: launch.
+3. Busy: refuse, and the launching session does the item itself.
+   - The check sees other people's sessions too, which a count limit cannot.
 
 ### What a refused launch means
 

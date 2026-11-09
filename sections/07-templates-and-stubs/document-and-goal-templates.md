@@ -10,11 +10,14 @@ nav_order: 3
 
 As of 2026-11-09. Topic page in [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}).
 
-A document template is the full shape of one kind of document, with a description of what goes under each heading. A goal template is the shape of a stop condition for `/goal`. Prompt stubs are read once, at launch, by one agent; these are read later, by many readers, or after every turn by an evaluator. This page covers both, with a template per common document kind and a set of checkable goals.
+A document template is the full shape of one kind of document, with a description of what goes under each heading. A goal template is the shape of a stop condition for `/goal`. Prompt stubs are read once, at launch, by one agent; these are read later, by many readers, or after every turn by an evaluator. This page covers both:
+
+- Document templates for a research report, a design document and a bug report, with a worked example each and a check that enforces the headings in code.
+- Goal templates: how `/goal` evaluates a condition, its commands and limits, and how to write a condition the evaluator can check.
 
 ![A lifecycle from left to right: goal armed, agent works, turn ends, evaluator reads, goal met. From the evaluator, not yet loops back to agent works, and a stated blocker leads to a blocker-reported state. From agent works, a started job leads to an idle state that returns on an injected wake-up.]({{ '/assets/images/07-templates-and-stubs/goal-evaluator.png' | relative_url }}){: style="width:100%"}
 
-*A goal from start to stop: the evaluator reads the conversation after every turn. Built with archify.*
+*Figure 1. A goal from start to stop: the evaluator reads the conversation after every turn. The "injected wake-up" arrow is the case of a job outside the session; for the session's own background work, Claude Code delivers the result as a new turn itself (see [injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}#goal-check-ins)). Built with archify.*
 
 ## Contents
 {: .no_toc .text-delta }
@@ -73,7 +76,17 @@ status: draft | complete
 
 #### Worked example
 
-A research agent asked "does the library support streaming responses?" fills it in. The Answer section reads "Yes, behind a flag: streaming is experimental and disabled by default." The Findings section quotes the documentation line. A lead agent reading only the Answer has the caveat, because the template put it first.
+A research agent is asked "does the library support streaming responses?" and fills in the template:
+
+| Heading | Filled with |
+|---|---|
+| Answer | "Yes, behind a flag: streaming is experimental and disabled by default." |
+| Method | "Read the library's streaming guide and its changelog for the current version." |
+| Findings | The documentation line quoted, with its link |
+| Open questions | "Is the flag planned to become default? The changelog does not say." |
+| Sources | Two links, each with the date checked |
+
+A lead agent reading only the Answer has the caveat, because the template put it first.
 
 ### Design document
 
@@ -126,16 +139,80 @@ The order matches the [bug-fix flow]({{ '/sections/12-testing/' | relative_url }
 | Design document | Summary | Person, implementing agents | Every decision has a reason |
 | Bug report | Symptom | Implementing agent, reviewer | A reproduction and a regression test |
 
+### Checking a document against its template
+
+A template written down is an instruction; a check in code enforces it. A short script can refuse a document whose headings do not match its kind:
+
+```python
+# check_headings.py: fail when a research report is missing a required heading
+import re, sys
+
+REQUIRED = {"research": ["Answer", "Method", "Findings", "Open questions", "Sources"]}
+
+def missing(path, kind):
+    text = open(path, encoding="utf-8").read()
+    found = set(re.findall(r"^## (.+)$", text, re.M))
+    return [h for h in REQUIRED[kind] if h not in found]
+
+gaps = missing(sys.argv[1], sys.argv[2])
+if gaps:
+    sys.exit(f"{sys.argv[1]}: missing headings: {', '.join(gaps)}")
+```
+
+1. An agent writes a research report from the template.
+2. A commit hook, or a CI step, runs the check on every changed report.
+3. A report missing a heading is refused with the heading names, so the agent fixes it before the change lands.
+
+The same check can test the order of headings, or that the Sources section has at least one line.
+
 ## Goal templates
 
-### What a goal condition is
+### What a goal is
 
-`/goal` keeps a session working until a condition holds. After each turn, an evaluator reads the conversation and decides whether the condition is met. Two things follow from that:
+`/goal` sets a completion condition, and Claude keeps working toward it without a prompt for each step.
 
-- A vague condition never ends, or ends too early.
-- The evaluator reads only the conversation, so the condition must name evidence the agent will print there.
+1. You run `/goal` followed by the condition. Setting it starts a turn at once, with the condition as the directive.
+2. After each turn, Claude Code sends the condition and the conversation so far to the configured small fast model.
+3. That evaluator returns one of three verdicts, each with a short reason:
+   - Not yet met: Claude keeps working and takes the reason as guidance.
+   - Met: the goal clears and an achieved entry is recorded.
+   - Impossible: the goal clears and a failed entry is recorded with the reason.
+4. If Claude keeps answering the evaluator without making progress (no tool use for several turns in a row), Claude Code stops the loop and returns control with the goal still set.
 
-### Vague and checkable
+### The commands
+
+```text
+/goal all tests in tests/dates pass and the lint step is clean   # set (replaces any active goal)
+/goal                                                             # status: condition, time, turns, tokens, last reason
+/goal clear                                                       # remove; stop, off, reset, none and cancel also work
+```
+
+```bash
+# non-interactive: runs the loop to completion in one invocation
+claude -p "/goal CHANGELOG.md has an entry for every PR merged this week" --output-format stream-json --verbose
+```
+
+| Fact | Value |
+|---|---|
+| Goals per session | One |
+| Condition length | Up to 4,000 characters |
+| Survives a resume | Yes; the turn count, timer and token baseline reset |
+| Who evaluates | The small fast model for your provider; `ANTHROPIC_DEFAULT_HAIKU_MODEL` changes it |
+| What the evaluator can see | Only the conversation; it calls no tools |
+
+### Writing a checkable condition
+
+The evaluator does not run commands or read files, so the condition must name evidence that Claude's own output will show. Claude Code's documentation lists three parts of a condition that holds up:
+
+| Part | Example |
+|---|---|
+| One measurable end state | "every caller of `parse_date` passes a timezone" |
+| A stated check | "`pytest tests/dates/` exits 0" |
+| Constraints that matter | "no other test file is modified" |
+
+A turn or time clause, such as "or stop after 20 turns", bounds how long a goal runs; Claude reports progress against it each turn.
+
+#### Vague and checkable
 
 | Vague | Checkable |
 |---|---|
@@ -150,10 +227,17 @@ Goal: <end state in one sentence>
 Evidence the evaluator will see in this session:
 - <command> prints <expected output>
 - <command> prints <expected output>
+Constraints: <what must not change on the way>
+Bound: or stop after <N> turns and report progress
 Also done when: <a blocker is reported with its evidence and what would unblock it>
 ```
 
-The last line gives the goal a second exit. Without it, a session that hits a blocker cannot meet the condition and keeps running.
+| Line | Why it is there |
+|---|---|
+| Evidence | The evaluator reads only the conversation |
+| Constraints | Without them, the goal can be met by breaking something else |
+| Bound | Caps the run if progress stalls |
+| Also done when | Names the blocker case, so the evaluator can return "impossible" with a reason the person can act on |
 
 #### Worked example
 
@@ -162,6 +246,8 @@ Goal: every caller of parse_date passes an explicit timezone.
 Evidence the evaluator will see in this session:
 - `grep -rn "parse_date(" src/ | grep -v "tz="` prints nothing
 - `pytest tests/dates/` ends with "passed" and no failures
+Constraints: no change to the public signature of parse_date.
+Bound: or stop after 25 turns and report progress.
 Also done when: a caller cannot take a timezone without an API change;
 report the caller and the change it needs.
 ```
@@ -169,9 +255,28 @@ report the caller and the change it needs.
 <details markdown="1">
 <summary>Why the evidence must be printed, not just true</summary>
 
-The evaluator does not run commands and does not read the repository. If the agent fixed every caller but never ran the grep in the session, the evaluator has nothing to go on and the goal stays open. The template asks for the command and its output so the proof lands where the evaluator looks.
+- The evaluator does not run commands and does not read the repository.
+- If the agent fixed every caller but never ran the grep in the session, the evaluator has nothing to go on and the goal stays open.
+- The template asks for the command and its output so the proof lands where the evaluator looks.
 
 </details>
+
+### When a goal is the wrong tool
+
+| Need | Better fit |
+|---|---|
+| Re-run a prompt on a time interval | `/loop` |
+| A deterministic check after every turn, in every session | A Stop hook in settings that runs a script |
+| Work independent of any open session, such as nightly tests | A scheduled task |
+
+#### Edge cases
+
+| Case | What happens |
+|---|---|
+| A sub-agent or background shell is still running when the turn ends | Evaluation is skipped until a turn ends with no background work running |
+| A turn fails on an error you must fix (authentication, exhausted credit, unrecoverable context overflow, unavailable model) | The goal clears; set it again after the fix |
+| A rate limit or usage limit | The goal pauses and resumes later |
+| Hooks are disabled (`disableAllHooks`) or limited to managed hooks | `/goal` is unavailable, because the evaluator is a prompt-based Stop hook |
 
 ## Keeping document templates honest
 
@@ -187,12 +292,12 @@ Templates drift too: a heading nobody fills becomes noise, and a heading everyon
 ## Related pages
 
 - [Sub-agent briefs]({{ '/sections/07-templates-and-stubs/briefs.html' | relative_url }}): the prompt stub, read once at launch.
-- [Injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}): how an idle session with a goal is woken.
+- [Injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}): goal check-ins and the other routes that wake an idle session.
 - [Logging and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}): checking results over many runs.
 
 ## Sources
 
-- `/goal` and its evaluator: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- `/goal` commands, evaluator, verdicts, condition advice, limits and edge cases: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
 - The document templates and goal template are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

@@ -15,7 +15,7 @@ redirect_from:
 
 As of 2026-11-09.
 
-A hook is a handler that the client runs at a fixed point in a session: before a tool call, after it, when a prompt is sent, before compaction, when the agent tries to stop. It runs whether or not the model remembers any rule, and some hooks can refuse the action. This page covers the events, the handler types, the data a hook receives and returns, exit codes, registration and debugging. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}). The sub-page [Writing a guard]({{ '/sections/06-hooks-scripts-and-linters/writing-a-guard.html' | relative_url }}) covers hooks that refuse actions.
+A hook is a handler that the client runs at a fixed point in a session: before a tool call, after it, when a prompt is sent, before compaction, when the agent tries to stop. It runs whether or not the model remembers any rule, and some hooks can refuse the action. Hooks are layer 3 of the [enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}): they act at the moment the agent tries something. This page covers the events, the handler types, the data a hook receives and returns, exit codes, registration and debugging. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}). The sub-page [Writing a guard]({{ '/sections/06-hooks-scripts-and-linters/writing-a-guard.html' | relative_url }}) covers hooks that refuse actions.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -108,7 +108,11 @@ A hook can also print a JSON object on standard output for finer control. On `Pr
 }
 ```
 
-`ask` is the middle ground: the person sees a prompt and decides, which suits actions that are sometimes right.
+| Decision | Effect | Suits |
+|---|---|---|
+| `allow` | The call runs without a permission prompt | Commands the hook has checked and knows are safe |
+| `deny` | The call is blocked and the reason goes to the agent | Commands that are never right |
+| `ask` | The person sees a prompt and decides | Commands that are right in some cases |
 
 <details markdown="1">
 <summary>Adding context without blocking</summary>
@@ -119,7 +123,16 @@ A `SessionStart` or `UserPromptSubmit` hook can return text that is added to the
 
 ## Registering a hook
 
-Hooks are registered in a settings file: the user's, the project's, or a plugin's.
+Hooks are registered in a settings file:
+
+| File | Applies to |
+|---|---|
+| `~/.claude/settings.json` | Every project you open |
+| `.claude/settings.json` | Everyone who works in the repository |
+| `.claude/settings.local.json` | You, in this repository, not committed |
+| A plugin's `hooks/hooks.json` | Everyone who enables the plugin |
+
+Use `$CLAUDE_PROJECT_DIR` in the command path, so the hook is found whatever directory the agent is in:
 
 ```json
 {
@@ -127,11 +140,11 @@ Hooks are registered in a settings file: the user's, the project's, or a plugin'
     "PreToolUse": [
       {
         "matcher": "Bash",
-        "hooks": [{ "type": "command", "command": ".claude/guards/no-pattern-kill.sh", "timeout": 5 }]
+        "hooks": [{ "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/guards/no-pattern-kill.sh", "timeout": 5 }]
       },
       {
         "matcher": "Edit|Write",
-        "hooks": [{ "type": "command", "command": ".claude/guards/protected-paths.sh", "timeout": 5 }]
+        "hooks": [{ "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/guards/protected-paths.sh", "timeout": 5 }]
       }
     ],
     "PostToolUse": [
@@ -146,11 +159,25 @@ Hooks are registered in a settings file: the user's, the project's, or a plugin'
 
 ### Matchers
 
-The matcher picks which tool calls the hook sees. It is a tool name or a pattern such as `Edit|Write`. Tools from an MCP server have names of the form `mcp__<server>__<tool>`, so a matcher can target one server's tools.
+The matcher picks which tool calls the hook sees.
+
+| Matcher | Sees |
+|---|---|
+| `Bash` | Every shell command |
+| `Edit\|Write` | Every file edit and file write |
+| `mcp__github__.*` | Every tool from the MCP server named `github` |
+| `*` or empty | Every tool call |
+
+A narrow matcher keeps a slow hook off the calls it does not need to check.
 
 ### Timeouts
 
-Each hook takes a `timeout` in seconds. Set one on every hook: a hook that hangs on every tool call stops all work.
+Each hook takes a `timeout` in seconds.
+
+- Set one on every hook. A hook that hangs on every tool call stops all work.
+- A guard that parses a command needs a few seconds; 5 is a common value.
+- A hook that runs tests, such as a `Stop` hook, needs longer, sized to the suite it runs.
+- Make a timeout visible: print which hook timed out, so the person can find it.
 
 ### One manifest
 
@@ -173,6 +200,11 @@ A `Stop` hook can refuse to let the agent finish while the tests fail.
 ```bash
 #!/usr/bin/env bash
 # Stop hook: refuse to finish while the test suite fails
+input=$(cat)
+# Already continuing because of this hook: let the agent stop, so it cannot loop forever
+if [[ "$(jq -r '.stop_hook_active' <<<"$input")" == "true" ]]; then
+  exit 0
+fi
 if ! out=$(npm test --silent 2>&1); then
   echo "Tests are failing. Fix them before finishing. Last lines:" >&2
   echo "$out" | tail -n 15 >&2
@@ -193,7 +225,7 @@ fi
 ● Fixed the expiry comparison. All 48 tests pass.
 ```
 
-> A `Stop` hook that can never pass keeps the agent working forever. Give it a way out: a limit on retries, or a condition the agent can always reach.
+> A `Stop` hook that can never pass keeps the agent working forever. The script above lets the agent stop on the second attempt, using the `stop_hook_active` field in its input; a retry count or a condition the agent can always reach also works.
 
 ## Debugging hooks
 
@@ -203,7 +235,7 @@ fi
 | Dangerous command still runs | Hook exits 1 | Exit 2, or return a deny decision |
 | Every tool call is slow | A slow script on a broad matcher | Time the script; narrow the matcher |
 | Agent loops on a refusal | The message gives no fix | Name the allowed form in the message |
-| Hook works by hand, fails in session | Different working directory or environment | Use paths relative to the project; print `cwd` while testing |
+| Hook works by hand, fails in session | Different working directory or environment | Use `$CLAUDE_PROJECT_DIR` in the path; print `cwd` while testing |
 
 ### Testing a hook by hand
 
@@ -216,7 +248,24 @@ Feed it the JSON the client would send and check the exit code and message. A te
 
 ## Hooks in Codex
 
-Codex has its own hooks, 14 events at the time of writing, configured in its own settings. The ideas carry over: a check before a tool runs, a message back to the agent, a timeout. The event names and output fields differ, so a hook script shared by both clients needs a small adapter for each.
+Codex has its own hooks, 14 events at the time of writing, configured in its own settings.
+
+| | Claude Code | Codex |
+|---|---|---|
+| Events | 33 | 14 |
+| Check before a tool runs | Yes | Yes |
+| Message back to the agent | Yes | Yes |
+| Event names and output fields | Its own | Its own |
+
+A hook script shared by both clients keeps its check in one function and adds a small adapter per client that reads that client's input and writes its output.
+
+## Pitfalls
+
+- A guard that exits 1, which reports an error and lets the command run.
+- A broad matcher on a slow script, which slows every tool call.
+- No `timeout`, so a hung hook stops all work.
+- A refusal with no fix in its message, which gets a retry or a workaround.
+- A hook copied from a repository or plugin without reading it. A hook runs as you, with your permissions.
 
 ## Sources
 

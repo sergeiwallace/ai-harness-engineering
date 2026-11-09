@@ -24,6 +24,8 @@ A gate hook is a small program that runs before a tool call and decides whether 
 - [Test both arms](#test-both-arms)
 - [Wiring it up](#wiring-it-up)
 - [Design rules](#design-rules)
+- [What a hook cannot catch](#what-a-hook-cannot-catch)
+- [Pitfalls](#pitfalls)
 
 ![Sequence diagram with three alternatives. A push to main reaches Claude Code, which passes the call as JSON to the gate hook; the hook denies it with a reason and the agent is told to open a pull request. When the hook receives a malformed call it denies because it cannot check. A push to a branch gets no decision from the hook, and Claude Code runs the push in the shell.]({{ '/assets/images/14-human-gates/fail-closed-hook-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -36,9 +38,10 @@ A PreToolUse hook receives the pending call as JSON on standard input, with fiel
 | Answer | How | Effect |
 |---|---|---|
 | Decide | print JSON with `hookSpecificOutput.permissionDecision` of `deny`, `ask` or `allow`, and a reason | the call is refused, prompted or allowed |
+| Block | exit with code 2, with the reason on standard error | the call stops before permission rules are evaluated, even when an allow rule matches |
 | Say nothing | exit 0 with no output | the normal rules and mode decide |
 
-Deny and ask rules in settings still apply whatever the hook says ([Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }})).
+Deny and ask rules in settings still apply whatever the hook says ([Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }})). The hook is layer 3 of the enforcement layers: it acts at the moment of the call. Branch protection and the test gate (layer 4) catch what it misses.
 
 ## A first gate
 
@@ -80,7 +83,15 @@ if __name__ == "__main__":
 
 > When the guard fails, the dangerous action must still be unreachable.
 
-If the hook above crashes, for example on malformed input, it exits with an error and prints no decision. A hook error that is not a decision does not block the call, so the push goes through. The gate has failed open.
+If the hook above crashes, for example on malformed input, Python exits with code 1 and prints no decision:
+
+| Exit | Meaning to Claude Code | Push |
+|---|---|---|
+| 0 with a deny decision | refuse | blocked |
+| 2 | block | blocked |
+| 1, from an uncaught exception | a hook error, not a decision | goes through |
+
+The gate has failed open.
 
 Wrap the work so that any failure becomes a refusal:
 
@@ -129,7 +140,21 @@ def test_allows_push_to_branch():
 def test_allows_branch_named_like_main():
     call = {"tool_name": "Bash", "tool_input": {"command": "git push origin maintenance"}}
     assert decide(call) is None
+
+
+def test_refuses_when_input_is_malformed():
+    import subprocess
+    out = subprocess.run(["python3", "gate_no_push_main.py"], input="not json",
+                         capture_output=True, text=True)
+    assert '"permissionDecision": "deny"' in out.stdout
 ```
+
+| Test | Arm | What a failure would mean |
+|---|---|---|
+| refuses push to main | refusal | the gate does not stop the dangerous call |
+| allows push to a branch | allow | the gate blocks correct work and will be worked around |
+| allows `maintenance` | allow | the pattern is too loose |
+| refuses malformed input | fail closed | a crash lets the call through |
 
 You can also run the hook by hand:
 
@@ -167,16 +192,34 @@ Commit the hook and the settings together, so every session in the repository ge
 5. Test both arms: one test that it refuses, at least one that it allows.
 6. Log refusals to a ledger, so you can see how often the gate fires and whether it blocks correct work ([Logging and observability]({{ '/sections/16-logging-and-evaluation/logging-and-observability.html' | relative_url }})).
 
+## What a hook cannot catch
+
+A hook reads the command text of one tool call. Some routes to the same action never show it that text:
+
+| Route | Example | The layer that catches it |
+|---|---|---|
+| A script that pushes | `./release.sh`, which runs `git push origin main` inside it | branch protection on the server |
+| An alias or a variable | `git p`, or `git push origin "$TARGET"` | branch protection on the server |
+| Another tool | a merge done through the hosting service's API | the service's own rules and required reviews |
+
+This is why the hook sits in front of layer 4, not instead of it.
+
 ## Examples from my own harness
 
 - Many of my guards started as written rules that agents broke; each became a hook that refuses the action and names the route to take instead.
 - Guards are written so that a failed check makes the action unreachable, and each has tests for both the refusal and the allowed case.
 
-To start: take the one rule in your context file that agents break most often, and write it as a hook with the two tests above.
+To start: take the one rule in your context file that agents break most often, and write it as a hook with the tests above.
+
+## Pitfalls
+
+- A hook that prints a decision and also exits non-zero sends mixed signals. Print the JSON decision and exit 0, or exit 2 with the reason on standard error, not both.
+- A slow hook slows every matching call. A hook that calls the network on each Bash command adds that latency to every command.
+- A regex written against one spelling of a command misses the others. Collect real commands from your logs and add each new spelling as a test.
 
 ## Sources
 
-- PreToolUse hooks and their precedence with permission rules: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- PreToolUse hooks, their precedence with permission rules, and exit code 2 blocking before rules are evaluated: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
 - Hook input and output fields: <https://code.claude.com/docs/en/hooks.md>, not yet verified against the primary source for this page.
 - The guard design rules: from the author's own harness, described conceptually.
 

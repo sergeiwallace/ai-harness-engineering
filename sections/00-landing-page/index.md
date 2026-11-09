@@ -25,7 +25,15 @@ This site teaches how to work with AI coding agents such as Claude Code and Code
 
 ## Who this is for
 
-Anyone who uses AI models for work. The examples come from software engineering, where agents run in a terminal and change code, but most of the ideas also apply, in adapted form, to people who use the chat and desktop apps (see [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }})). You do not need a harness to start; the site shows what one is, how the parts fit, and a first week of steps to build your own.
+Anyone who uses AI models for work. The examples come from software engineering, where agents run in a terminal and change code, and most of the ideas also apply, in adapted form, to the chat and desktop apps.
+
+| If you use | Start with | Then read |
+|---|---|---|
+| Claude Code or Codex in a terminal | [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}) | the building blocks, sections 3 to 7 |
+| A chat, desktop or web app | [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}) | context files and skills, which have chat-app equivalents |
+| Several agents already | [Delegation]({{ '/sections/08-delegation/' | relative_url }}) and [orchestration]({{ '/sections/10-orchestration/' | relative_url }}) | testing, review and human gates |
+
+You do not need a harness to start. The site shows what one is, how the parts fit, and a first week of steps to [build your own]({{ '/sections/17-building-a-harness/' | relative_url }}).
 
 ### Key points
 
@@ -98,11 +106,29 @@ Layers 2 to 4 do the enforcing. Layer 1 stays as a second line of defence, so th
 
 ## How the site is organised
 
-Each section starts with an overview you can learn from on its own, with a worked example for each idea. Where a concept, tool or technique deserves depth, the section adds one or more topic pages that go further: diagrams, snippets, fuller examples, pitfalls and sources. Some sections have several topic pages, and some have none because the overview covers the subject. Every page has previous and next links at the top and bottom, and a link back to the contents below. The [talk slides]({{ '/talk/' | relative_url }}) page lists the slides in order.
+Each section has an overview and, where a subject needs more depth, topic pages under it.
 
-The talk path and the linked pages are the same content at two depths. During the talk I can open any page when a question or the room calls for it, and listeners can read the pages afterwards.
+| Page kind | What it holds | Example |
+|---|---|---|
+| Overview | every idea in the section, each with a worked example; readable on its own | [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}) |
+| Topic page | one concept, tool or technique in depth: diagrams, snippets, fuller examples, pitfalls, sources | [The agent loop]({{ '/sections/01-agentic-ai-fundamentals/the-agent-loop.html' | relative_url }}) |
+| Sub-topic page | a part of a topic that needs its own page | [How an agent run ends]({{ '/sections/01-agentic-ai-fundamentals/how-a-run-ends.html' | relative_url }}) |
 
-Examples from my own harness are described conceptually: what a subsystem does, how it fits, and what you could build. A source marked "verified" with a date was fetched that day and supports the claim. A claim marked "unverified" or "not yet verified against the primary source" has not yet been checked against its primary source.
+Some sections have several topic pages, and some have none because the overview covers the subject. Links inside the text lead from a term to the page that covers it in more depth.
+
+How to move around:
+
+- every page has previous and next links at the top and bottom, in reading order;
+- the left sidebar lists every section, with its topic pages nested under it;
+- the [talk slides]({{ '/talk/' | relative_url }}) page lists the slides in order.
+
+The talk path and the linked pages are the same content at two depths. During the talk I can open any page when a question calls for it, and listeners can read the pages afterwards.
+
+Conventions used on every page:
+
+- Examples from my own harness are described conceptually: what a mechanism does, how it fits, and what you could build.
+- A source marked "verified" with a date was fetched that day and supports the claim.
+- A claim marked "not yet verified against the primary source" has not yet been checked there.
 
 ## Talk path
 
@@ -137,7 +163,12 @@ The meeting description I wrote for this talk.
 
 ## Licence and credits
 
-Prose on this site is licensed under CC BY 4.0, and code under Apache-2.0. The [repository README](https://github.com/sergeiwallace/ai-harness-engineering#licences) maps each licence to its files.
+| Content | Licence |
+|---|---|
+| Prose and diagrams | CC BY 4.0 |
+| Code and configuration snippets | Apache-2.0 |
+
+The [repository README](https://github.com/sergeiwallace/ai-harness-engineering#licences) maps each licence to its files.
 
 The coordination examples use firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>).
 

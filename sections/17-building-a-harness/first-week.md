@@ -28,7 +28,17 @@ You can start a useful harness in a week with four small files. Each one covers 
 
 ### What goes in
 
-Put in the things you have told the agent more than once, and things it cannot learn from the code. Leave out what the agent can read for itself, such as the directory layout or the language of the project.
+The context file is layer 1, the guidance layer. Days 2 to 4 add the layers that enforce. Use this test for each candidate line:
+
+| Candidate line | Keep it in `CLAUDE.md`? | Why |
+|---|---|---|
+| The command that runs the tests | Yes | The agent needs it to work at all |
+| "Push branches, never main" | As a one-line pointer | Day 4's approval rule asks before every push, so you see a push to main before it happens |
+| "Format code before committing" | As a one-line pointer | Day 3's hook enforces it |
+| A point of taste, such as how to name functions | Yes | No check can encode it |
+| The directory layout | No | The agent can read it for itself |
+
+Any line you find yourself rewriting more emphatically after a mistake belongs on a later day, as a hook, a workflow or a test.
 
 ### A complete example
 
@@ -40,7 +50,7 @@ Put in the things you have told the agent more than once, and things it cannot l
 - Format: `make fmt`. A hook runs it after each edit, so you do not need to.
 
 ## Rules
-- Never commit to `main`. Work on a branch and open a pull request.
+- Work on a branch and open a pull request. Every `git push` asks for approval.
 - Do not edit files under `generated/`; edit the schema in `schema/` and run `make gen`.
 - Ask before adding a new dependency.
 
@@ -59,7 +69,12 @@ Every line is read at the start of every session and competes with the task for 
 
 ### Pick the prompt you type most
 
-Look back over the last week of sessions and find the instruction you typed most often. For many people it is a review request.
+A skill sits in layer 1 or layer 2, depending on what it does. A skill whose text tells the agent how to work is guidance (layer 1). A skill that runs a script, fills a template or calls fixed commands builds the steps into the workflow (layer 2). A first skill is usually the first kind, and moves toward the second as you script its steps.
+
+1. Look back over the last week of sessions.
+2. Find the instruction you typed most often.
+   - For many people it is a review request, a commit message format or a status note.
+3. Write its steps as a numbered list, in the order you want them run.
 
 ### A complete example
 
@@ -91,11 +106,34 @@ description: Review the uncommitted changes in this repository for bugs, missing
 
 The same `SKILL.md` format works in Codex, because Agent Skills is a shared format.
 
+#### Moving it toward layer 2
+
+This skill is mostly guidance: step 2 relies on the agent to notice a missing test. To enforce that step, give the skill a script and make step 2 run it.
+
+```bash
+#!/usr/bin/env bash
+# list-untested.sh: print changed source files that have no matching test file.
+for f in $(git diff --name-only -- 'src/*.py'); do
+  t="tests/test_$(basename "$f")"
+  [[ -f "$t" ]] || echo "no test file for $f (expected $t)"
+done
+```
+
+Step 2 then begins "Run `tools/list-untested.sh` and report every line it prints", and the check no longer depends on the agent noticing.
+
 ## Day 3: one hook
 
 ### Pick the rule the agent broke
 
-Take a rule from day 1 that the agent broke anyway. Formatting is a common first choice, because it is easy to check and costly to remind about.
+A hook is layer 3: it acts at the moment the agent edits a file or runs a command, whether or not the agent remembers the rule.
+
+| Candidate | Hook event | Why it suits a first hook |
+|---|---|---|
+| Formatting and lint | PostToolUse on Edit and Write | Easy to check, costly to remind about |
+| Edits to generated files | PreToolUse on Edit and Write | A clear yes or no on the file path |
+| Finishing with untested edits | Stop | Catches the "done" claim itself |
+
+The example below takes formatting.
 
 ### A complete example
 
@@ -147,7 +185,7 @@ fi
 <details markdown="1">
 <summary>Why a PostToolUse hook and not a PreToolUse one</summary>
 
-A PreToolUse hook runs before the tool and can stop it, which is right for a dangerous command such as a force push. A PostToolUse hook runs after the edit has happened, so it cannot undo it, but it can fix the result and tell the agent what is still wrong. Formatting changes the file and does not need to stop anything, so it fits after the edit. The [enforcement ladder]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}#4-change-the-harness) shows a PreToolUse example.
+A PreToolUse hook runs before the tool and can stop it, which is right for a dangerous command such as a force push. A PostToolUse hook runs after the edit has happened, so it cannot undo it, but it can fix the result and tell the agent what is still wrong. Formatting changes the file and does not need to stop anything, so it fits after the edit. The [enforcement ladder]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}#change-the-system) shows a PreToolUse example.
 
 </details>
 
@@ -155,7 +193,14 @@ A PreToolUse hook runs before the tool and can stop it, which is right for a dan
 
 ### Pick what needs your say-so
 
-Choose the actions you would want to see before they happen: a push, a deploy, a message to someone, a deletion. Start with one.
+A permission rule is also layer 3, and the strictest rung: the action cannot run without you. Candidates:
+
+- `git push`, so you see every change that leaves your machine.
+- Deploy commands.
+- Commands that send a message or an email.
+- Deletions outside the working tree.
+
+Start with one.
 
 ### A complete example
 
@@ -165,12 +210,17 @@ In the same `.claude/settings.json`:
 {
   "permissions": {
     "ask": ["Bash(git push:*)"],
-    "deny": ["Bash(git push --force:*)", "Read(./.env)"]
+    "deny": ["Bash(git push --force:*)", "Bash(git push -f:*)", "Read(./.env)"]
   }
 }
 ```
 
-`ask` makes Claude Code stop and ask you before any `git push`. `deny` refuses the command outright, and keeps the agent from reading your `.env` file. Codex has its own approval and sandbox settings that play the same role.
+| Key | Effect |
+|---|---|
+| `ask` | Claude Code stops and asks you before any `git push` |
+| `deny` | The command is refused outright, and the agent cannot read your `.env` file |
+
+A `Bash(...:*)` rule matches commands that start with that text, so each spelling needs its own entry: `git push --force` and `git push -f` are listed separately above. A force push written another way, such as `git push origin +main`, needs a hook that parses the command. Codex has its own approval and sandbox settings that play the same role.
 
 > Warning: if you approve prompts without reading them, the rule protects nothing. Keep the `ask` list short enough that each prompt gets your attention.
 
@@ -185,7 +235,12 @@ Then take the top item through the [improvement loop]({{ '/sections/17-building-
 
 ## Examples from my own harness
 
-My harness started the same way: one context file with rules I kept repeating, and a few skills for prompts I typed every day. Most of what came later grew out of the friction log, one item at a time, and some of the early written rules are now a single line that names the hook enforcing them.
+- It started the same way.
+  - One context file with rules I kept repeating.
+  - A few skills for prompts I typed every day.
+- Most of what came later grew out of the friction log, one item at a time.
+  - Many early written rules became hooks, workflows or tests.
+  - Their context-file lines are now short pointers to the guard that enforces them.
 
 To start: copy the four examples above, change the commands to your project's, and run one real task with them.
 

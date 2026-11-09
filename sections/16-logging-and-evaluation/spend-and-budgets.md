@@ -50,7 +50,12 @@ The prices here are placeholders. Read the current ones from your provider's pri
 
 ### From telemetry
 
-Claude Code's OpenTelemetry export includes a `claude_code.cost.usage` metric per session. See [Logging and observability]({{ '/sections/16-logging-and-evaluation/logging-and-observability.html#claude-code-telemetry' | relative_url }}).
+Claude Code's OpenTelemetry export includes cost directly:
+
+- `claude_code.cost.usage`: cost of the session in US dollars.
+- `claude_code.token.usage`: tokens used.
+
+See [Logging and observability]({{ '/sections/16-logging-and-evaluation/logging-and-observability.html#claude-code-telemetry' | relative_url }}) for the setup.
 
 ## The budget check
 
@@ -87,21 +92,22 @@ The refusal message names the alternatives, so the agent that hits it knows what
 
 ## Worked example
 
-#### The job
+| Step | Value |
+|---|---|
+| Job | classify 40,000 support tickets into ten categories |
+| Sample | 50 tickets: 900 input and 40 output tokens per call on the large model |
+| Tokens | about 36 million input and 1.6 million output |
+| Large model | about $180 + $40 = $220; $264 with a 20 percent margin (illustrative prices) |
+| Small model | about $53 with margin |
+| Remaining budget for jobs this month | $100 |
 
-Classify 40,000 support tickets into ten categories.
+The check refuses the large-model run, and the agent proposes:
 
-#### The measurement
+1. Run the small model on all 40,000 tickets (about $53).
+2. Run the large model on a 1,000-ticket sample (about $7) to measure the accuracy difference.
+3. Ask the person whether the difference justifies a budget increase.
 
-A 50-ticket sample averages 900 input tokens and 40 output tokens per call on the large model.
-
-#### The arithmetic
-
-40,000 calls times (900 input plus 40 output tokens) is about 36 million input and 1.6 million output tokens. At the illustrative large-model prices above, that is about $180 plus $40, or $220, and $264 with a 20 percent margin. On the small model it is about $53 with margin.
-
-#### The outcome
-
-The remaining monthly budget for jobs is $100. The check refuses the large-model run and the agent proposes: run the small model on all tickets, and the large model on a 1,000-ticket sample to measure the accuracy difference. The person approves.
+The person approves steps 1 and 2.
 
 ## Examples from my own harness
 

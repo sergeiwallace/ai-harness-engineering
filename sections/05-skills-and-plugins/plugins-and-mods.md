@@ -10,7 +10,7 @@ nav_order: 3
 
 As of 2026-11-09.
 
-A plugin is how a set of harness parts travels: skills, sub-agent profiles, hooks and MCP servers that only work well together, installed as one unit. This page covers the plugin layout and manifest, marketplaces, what a plugin costs in context, mods, and a pattern for sharing code across the skills in a plugin. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+A plugin packages skills, sub-agent profiles, hooks and MCP servers that are meant to be used together, so they install as one unit at one version. This page covers the plugin layout and manifest, marketplaces, what a plugin costs in context, mods, and a pattern for sharing code across the skills in a plugin. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -20,7 +20,14 @@ A plugin is how a set of harness parts travels: skills, sub-agent profiles, hook
 
 ## What a plugin is
 
-The docs define a plugin as "a directory of skills, agents, hooks, MCP servers, or other components that Claude Code installs and loads as one unit", and say to use one "when you want several skills, subagents, hooks, or MCP servers packaged as one unit".
+The docs define a plugin as "a directory of skills, agents, hooks, MCP servers, or other components that Claude Code installs and loads as one unit", and say to use one "when you want several skills, subagents, hooks, or MCP servers packaged as one unit". A plugin can hold:
+
+- Skills, in `skills/`.
+- Sub-agent profiles, in `agents/`.
+- Hook registrations, in `hooks/hooks.json`.
+- MCP servers, in `.mcp.json`.
+
+Because the hook ships with the skill, a plugin is also how a team ships the enforcement for a procedure along with the procedure: install the review skill and the lint hook arrives with it.
 
 ### When to make one
 
@@ -32,6 +39,8 @@ The docs define a plugin as "a directory of skills, agents, hooks, MCP servers, 
 | Parts for a whole team | Yes, in a marketplace | New people install once |
 
 ## The layout
+
+A plugin is a folder with a manifest in `.claude-plugin/` and its parts beside it:
 
 ```text
 review-kit/
@@ -57,7 +66,9 @@ review-kit/
 }
 ```
 
-Raise the version on every change you ship, so people can tell which copy they have.
+- `name` is the field the manifest must have; the other fields describe the plugin.
+- Raise the version on every change you ship, so people can tell which copy they have.
+- Only `plugin.json` goes inside `.claude-plugin/`. The `skills/`, `agents/` and `hooks/` folders sit at the plugin's root; parts placed inside `.claude-plugin/` are not found.
 
 ### How the parts load
 
@@ -66,11 +77,17 @@ Raise the version on every change you ship, so people can tell which copy they h
 
 ## Marketplaces
 
-A marketplace is a catalogue of plugins that people add once and install from. A git repository with a marketplace file listing the plugins is enough, so a team can host its own.
+A marketplace is a catalogue of plugins that people add once and install from.
+
+- A git repository with a marketplace file listing the plugins is enough.
+- A team can host its own, next to its code.
+- A plugin's version in the marketplace is what everyone installs, so a release is one change in one place.
 
 ### Worked example: a team marketplace
 
 #### The catalogue
+
+The marketplace file is `.claude-plugin/marketplace.json` at the root of the marketplace repository:
 
 ```json
 {
@@ -96,7 +113,7 @@ A marketplace is a catalogue of plugins that people add once and install from. A
   Reloaded 1 plugin.
 ```
 
-Three commands, and the new person has the same review skill, reviewer profile and lint hook as the rest of the team.
+After these commands the new person has the same review skill, reviewer profile and lint hook, at the same version, as the rest of the team.
 
 ### Managing plugins
 
@@ -106,11 +123,21 @@ Three commands, and the new person has the same review skill, reviewer profile a
 | `/reload-plugins` | Applies plugin changes without a restart |
 | `/skill-doctor` | Shows what each skill costs in context and how often it is used |
 
-The same plugin format installs on claude.ai and in Cowork, where a different set of components loads. A cloud session does not load local plugins.
+Where a plugin loads:
+
+| Surface | Loads |
+|---|---|
+| Claude Code on your machine | Every enabled plugin and all its parts |
+| A cloud session | Not your local plugins |
+| claude.ai and Cowork | The same plugin format, with a different set of components |
 
 ## The context cost
 
-Every enabled plugin costs context on every turn, because the name and description of each model-invocable skill and agent in it stay loaded. Hooks and MCP servers add their own costs: a hook that injects text adds it on every event it fires on, and each MCP tool adds its name and schema.
+Every enabled plugin costs context on every turn:
+
+- Each model-invocable skill and agent keeps its name and description loaded.
+- Each MCP tool adds its name and schema.
+- A hook that injects text adds it on every event it fires on.
 
 ### Worked example: an audit
 
@@ -127,7 +154,11 @@ Disabling the two unused plugins removes eight skill descriptions, two agent des
 
 ## Mods
 
-A mod is a plugin with a hooks module: hooks written as JavaScript or TypeScript functions, which can change how Claude Code looks and behaves, for example by drawing panes in the terminal beside the chat. Mods need Claude Code 2.1.287 or later.
+A mod is a plugin with a hooks module.
+
+- The hooks are JavaScript or TypeScript functions loaded into the client.
+- They can change how Claude Code looks and behaves, for example by drawing panes in the terminal beside the chat.
+- Mods need Claude Code 2.1.287 or later.
 
 ### Hooks module and shell hooks
 
@@ -140,17 +171,28 @@ A mod is a plugin with a hooks module: hooks written as JavaScript or TypeScript
 
 #### Example: a context pane
 
-A mod draws a small pane that shows how full the context window is and updates after each turn. The person sees the number without asking, and decides when to compact. Section 11 covers [the context window]({{ '/sections/11-context-window/' | relative_url }}).
+1. After each turn, the mod reads how full the context window is.
+2. It redraws a small pane beside the chat with the percentage.
+3. The person sees the number without asking and decides when to run `/compact`.
+
+<!-- IMAGE NEEDED: a Claude Code terminal with a mod-drawn pane or status area beside the chat; search: claude code mods, claude code terminal pane, claude code status line -->
+
+Section 11 covers [the context window]({{ '/sections/11-context-window/' | relative_url }}).
 
 ## Shared code across skills
 
 ### The problem
 
-Skills often include small command-line tools. Written one per skill, each parses options its own way, loads settings its own way and has its own test helpers. A bug fixed in one stays in the others.
+Skills often include small command-line tools. Written one per skill, they diverge:
+
+- Each parses options its own way.
+- Each loads settings its own way.
+- Each has its own test helpers.
+- A bug fixed in one stays in the others.
 
 ### Plugin modules
 
-One pattern that works is a plugin whose skills, MCP servers and hooks all import one shared library, so the code is written once. I call this a plugin module. That is my own name; Claude Code has no such term. The nearest vendor term is the hooks module above.
+One pattern I use is a plugin whose skills, MCP servers and hooks all import one shared library, so the code is written once. I call this a plugin module. That is my own name; Claude Code has no such term. The nearest vendor term is the hooks module above.
 
 ![Sequence diagram with five lanes: Developer, Shared library, Skill A tool, Skill B tool and MCP server. Two skill tools call settings.load and both get a wrong path on a second profile. The developer fixes the profile lookup in the library once and adds a test, which passes. After the next install, Skill A, Skill B and the MCP server each call settings.load and get the correct path, with no change to any of them.]({{ '/assets/images/05-skills-and-plugins/shared-library-fix-sequence.png' | relative_url }})
 *A settings bug fixed once in the shared library. Every tool, hook and server that imports it gets the fix on the next install.*
@@ -169,7 +211,10 @@ def main(days):
         print(issue.id, issue.age_days, issue.title)
 ```
 
-The tool has seven lines of its own. Option parsing, settings, error output and exit codes come from the library, so every tool behaves the same, and a fix in the library reaches all of them on the next install.
+- The tool has seven lines of its own.
+- Option parsing, settings, error output and exit codes come from the library, so every tool behaves the same.
+- A fix in the library reaches every tool on the next install.
+- The library's test helpers give every tool the same way to run against a temporary settings file.
 
 <details markdown="1">
 <summary>A core plugin for two clients</summary>
@@ -183,6 +228,7 @@ In my harness one core plugin serves the same read-only tools to Claude Code and
 - A plugin that bundles everything costs context in every session that enables it.
 - A plugin version that never changes leaves people unsure which copy they run.
 - Copying a helper into each skill multiplies every bug in it.
+- A plugin's hooks and injected commands run with your permissions. Read a plugin from outside your team before installing it, as you would a script.
 
 ## Sources
 

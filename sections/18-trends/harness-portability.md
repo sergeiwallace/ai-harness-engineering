@@ -18,19 +18,19 @@ Until recently, a harness built for one coding agent stayed with that agent. Now
 
 ## What travels and what does not
 
-| Part of the harness | How well it travels | Why |
-|---|---|---|
-| Context file content | Well | It is plain text; only the file name differs |
-| Skills | Well | Agent Skills is a shared format built on `SKILL.md` |
-| Templates and stubs | Well | Plain files the agent reads |
-| Scripts and linters | Well | They run outside the agent |
-| Tests and merge gates | Well | They live in the repository and the CI |
-| Hooks | Needs rework | Event names, input format and configuration differ by tool |
-| Approval and sandbox settings | Needs rework | Each tool has its own model of permissions |
-| Sub-agent profiles | Needs rework | Profile files and their fields differ by tool |
-| Habits and procedures | Well | They live in you and in your documents |
+| Part of the harness | Layer | How well it travels | Why |
+|---|---|---|---|
+| Context file content | 1 | Well | It is plain text; only the file name differs |
+| Skills | 1 and 2 | Well | Agent Skills is a shared format built on `SKILL.md` |
+| Templates and stubs | 2 | Well | Plain files the agent reads |
+| Scripts and linters | 3 | Well | They run outside the agent |
+| Tests and merge gates | 4 | Well | They live in the repository and the CI |
+| Hooks | 3 | Needs rework | Event names, input format and configuration differ by tool |
+| Approval and sandbox settings | 3 | Needs rework | Each tool has its own model of permissions |
+| Sub-agent profiles | 2 | Needs rework | Profile files and their fields differ by tool |
+| Habits and procedures | All | Well | They live in you and in your documents |
 
-Parts that live in plain files or run outside the agent move as they are. Parts that plug into the client's own event loop need rewriting.
+Parts that live in plain files or run outside the agent move as they are. Parts that plug into the client's own event loop need rewriting. For the [systems approach]({{ '/sections/17-building-a-harness/' | relative_url }}#1-a-systems-approach-to-building-a-harness) this has a practical consequence: put each check in a script or a test where you can, and keep the hook as a thin trigger, so the enforcement survives a change of tool.
 
 ## Context files
 
@@ -58,13 +58,35 @@ See [Context files]({{ '/sections/04-context-files/' | relative_url }}) for what
 
 ## Skills
 
-A skill is a folder with a `SKILL.md` file: front matter with a name and a description, then the instructions. Because the format is shared, the same folder works in tools that support Agent Skills. A skill that calls a tool-specific feature, such as a Claude Code slash command inside its steps, needs those steps checked after the move.
+A skill is a folder with a `SKILL.md` file:
+
+```markdown
+---
+name: review-changes
+description: Review the uncommitted changes for bugs, missing tests and unclear names.
+---
+
+1. Run `git diff` and read every changed file in full.
+2. ...
+```
+
+Because the format is shared, the same folder works in tools that support Agent Skills. After a move, check:
+
+- Steps that call a tool-specific feature, such as a Claude Code slash command.
+- Scripts the skill runs, and whether the target tool's sandbox allows them.
+- Hooks the skill relies on, which need rewriting for the target.
 
 ## Hooks
 
 ### Why hooks need rework
 
-A hook is code that the client runs at a named point in its own loop, such as before a tool call or when the agent stops. Each client names those points differently, passes different input to the hook, and reads the result differently. Codex has hooks too, but a Claude Code hook script and its settings entry do not run there unchanged.
+A hook is code that the client runs at a named point in its own loop, such as before a tool call or when the agent stops. Three things differ between clients:
+
+1. The names of those points, and which ones exist.
+2. The input the hook receives, such as the JSON fields describing the tool call.
+3. How the client reads the result: exit codes, output streams and their meaning.
+
+Codex has hooks too, but a Claude Code hook script and its settings entry do not run there unchanged.
 
 ### What to keep
 
@@ -100,7 +122,13 @@ fi
 
 ## Examples from my own harness
 
-My harness runs on both Claude Code and Codex. The shared parts are the context-file content, the skills, the templates and the scripts; the per-tool parts are thin layers for hooks, approvals and agent profiles. Keeping checks in plain scripts has meant that most guards move to a new client by adding a wrapper.
+| Part of my harness | Shared or per tool |
+|---|---|
+| Context-file content | Shared, rendered into each tool's file name |
+| Skills, templates and scripts | Shared |
+| Hooks, approvals and agent profiles | Per tool, as thin layers |
+
+Because the checks live in plain scripts, most guards move to a new client by adding a wrapper.
 
 To start: take one hook you rely on, move its logic into a plain script, and make the hook call the script.
 

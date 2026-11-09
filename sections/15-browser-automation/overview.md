@@ -14,7 +14,7 @@ As of 2026-11-09.
 
 Not a stop on the primary talk path; stop 9 mentions screenshots as evidence in one line.
 
-Agents can use a browser, and some can use the whole computer. That lets them test the web app they just built, read a page that has no API, and attach a screenshot as proof. It is also the slowest and most fragile thing an agent does, and the page it reads may contain instructions written for it by someone else. So try the other routes first, run the browser in the background in its own profile, take screenshots as evidence, and treat every page as untrusted data.
+Agents can use a browser, and some can use the whole computer. That lets them test the web app they just built, read a page that has no API, and attach a screenshot as proof. It is also the slowest and most fragile thing an agent does, and the page it reads may contain instructions written for it by someone else. Try the other routes first, run the browser in the background in its own profile, take screenshots as evidence, and treat every page as untrusted data.
 
 ![Sequence diagram. The agent asks a Playwright script to check the settings page. The script launches a headless Chrome with its own profile and, in a loop that waits for the heading, navigates; Chrome requests the page, which returns HTML including hidden text. The script finds the Export button, captures a screenshot, receives PNG bytes, and returns "present" and a file path to the agent.]({{ '/assets/images/15-browser-automation/background-check-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -24,11 +24,21 @@ Agents can use a browser, and some can use the whole computer. That lets them te
 
 | Idea | In one line | Go deeper |
 |---|---|---|
-| Route ladder | API, file and CLI before any browser | [The ladder](#try-the-other-routes-first) |
+| Route ladder | API, file and CLI before any browser | [Try the other routes first](#try-the-other-routes-first) |
 | Vendor routes | Claude in Chrome and computer use drive your own browser or screen | [Claude in Chrome and computer use]({{ '/sections/15-browser-automation/vendor-routes.html' | relative_url }}) |
-| CDP | Drive a separate Chrome yourself, with any model provider | [Driving a browser over CDP]({{ '/sections/15-browser-automation/cdp-and-playwright.html' | relative_url }}) |
-| Screenshots | Evidence the agent and the reviewer can both check | [Screenshots as evidence]({{ '/sections/15-browser-automation/screenshots-as-evidence.html' | relative_url }}) |
-| Prompt injection | Page text is data, never instructions | [Untrusted page content]({{ '/sections/15-browser-automation/prompt-injection.html' | relative_url }}) |
+| CDP | drive a separate Chrome yourself, with any model provider | [Driving a browser over CDP]({{ '/sections/15-browser-automation/cdp-and-playwright.html' | relative_url }}) |
+| Background profiles | the agent's own browser, off your screen | [Background browser profiles]({{ '/sections/15-browser-automation/background-profiles.html' | relative_url }}) |
+| Screenshots | evidence the agent and the reviewer can both check | [Screenshots as evidence]({{ '/sections/15-browser-automation/screenshots-as-evidence.html' | relative_url }}) |
+| Prompt injection | page text is data, never instructions | [Untrusted page content]({{ '/sections/15-browser-automation/prompt-injection.html' | relative_url }}) |
+
+### Pages in this section
+
+1. This overview: the whole topic in one page.
+2. [Claude in Chrome and computer use]({{ '/sections/15-browser-automation/vendor-routes.html' | relative_url }}): the two built-in routes, their requirements and safety properties.
+3. [Driving a browser over CDP]({{ '/sections/15-browser-automation/cdp-and-playwright.html' | relative_url }}): starting Chrome for automation, Playwright and raw CDP, and scripts that do not break.
+   - [Background browser profiles]({{ '/sections/15-browser-automation/background-profiles.html' | relative_url }}): focus, profile lifecycle and several agents at once.
+4. [Screenshots as evidence]({{ '/sections/15-browser-automation/screenshots-as-evidence.html' | relative_url }}): taking, comparing and testing screenshots.
+5. [Untrusted page content]({{ '/sections/15-browser-automation/prompt-injection.html' | relative_url }}): how injection works and the layered defences.
 
 ## Try the other routes first
 
@@ -36,7 +46,7 @@ Browser automation is slow, and it breaks when a page changes its layout, adds a
 
 1. An API or SDK. Most services that have a web page also have an API.
 2. A file or an export. A CSV download, a sitemap, an RSS feed.
-3. A command-line tool. Many services ship one (`gh` for GitHub is the usual example).
+3. A command-line tool. Many services ship one; `gh` for GitHub is the usual example.
 4. A browser you drive yourself over the Chrome DevTools Protocol, in its own profile, in the background.
 5. Computer use or a browser extension that works on your screen, as a last resort.
 
@@ -46,22 +56,28 @@ Browser automation is slow, and it breaks when a page changes its layout, adds a
 
 ### Example: reading a pull request
 
-An agent needs the review comments on a pull request. A browser route would open the page, wait, scroll and scrape. The CLI route is one command, and it returns structured data that does not change when GitHub redesigns the page:
+An agent needs the review comments on a pull request.
+
+| Route | Steps | What breaks it |
+|---|---|---|
+| Browser | open the page, wait, scroll, expand threads, scrape | any redesign of the page |
+| CLI | one command, structured output | a change to the CLI's JSON fields, which is rare and versioned |
 
 ```bash
-gh pr view 412 --comments --json comments
+gh pr view 412 --json comments,reviews
 ```
 
 > Each rung down the ladder is slower and breaks more often than the one above it.
 
-## The four ways an agent gets a browser
+## The ways an agent gets a browser
 
 | Route | Whose browser | Provider | Good for |
 |---|---|---|---|
 | Claude in Chrome | your own Chrome, logged in, visible | direct Anthropic plan only | testing your app in your real session |
-| Computer use | your whole screen | research preview, macOS | native apps with no web or API route |
-| CDP or Playwright, yours | a separate Chrome with its own profile | any | background automation, scraping, screenshots |
-| A hosted browser service | a remote browser | any | scale, isolation from your machine |
+| Computer use | the apps you approve on your screen | research preview, macOS, direct plan | native apps with no web or API route |
+| CDP or Playwright, your own script | a separate Chrome with its own profile | any | background automation, scraping, screenshots |
+| A browser MCP server | a browser the server starts | any | browser tools inside the session without writing a script |
+| A hosted browser service | a remote browser | any | scale, and isolation from your machine |
 
 ### Claude in Chrome
 
@@ -73,15 +89,19 @@ Claude in Chrome connects Claude Code to a Chrome extension.
 - Plan: a direct Anthropic plan (Pro, Max, Ultra, Team or Enterprise); not available through providers such as Amazon Bedrock.
 - Safety: a repository's settings cannot switch it on; only you can.
 
+<!-- IMAGE NEEDED: a screenshot of Claude in Chrome working in a browser tab, with the extension visible; search: "Claude in Chrome extension", "Claude Code chrome integration screenshot" -->
+
 See [Claude in Chrome and computer use]({{ '/sections/15-browser-automation/vendor-routes.html' | relative_url }}).
 
 ### Computer use
 
 Computer use in the Claude Code CLI lets the agent see the screen and use the mouse and keyboard.
 
-- Status: a research preview on macOS for Pro, Max and Ultra plans.
-- Reach: native desktop apps, system dialogs, tools with no web or API surface.
-- Cost: every step is a screenshot, a decision and an action, so it is the slowest route, and it occupies your screen while it runs.
+- Status: a research preview on macOS for Pro, Max and Ultra plans; not on Team or Enterprise plans, not through cloud providers, not with `-p`.
+- Start: enable the built-in `computer-use` server in `/mcp`, then grant the macOS Accessibility and Screen Recording permissions.
+- Approval: each app is approved per session; terminals, Finder and System Settings carry a warning.
+- Reach: native desktop apps, simulators, tools with no web or API surface.
+- Cost: every step is a screenshot, a decision and an action, so it is the slowest route, and it hides your other apps while it runs. `Esc` stops it from anywhere.
 
 ### A browser you drive yourself
 
@@ -110,9 +130,36 @@ with sync_playwright() as p:
 
 The agent runs this, reads `settings.png`, and describes what it sees. Nothing appears on your screen.
 
+### A browser MCP server or a hosted service
+
+| Route | How it works | Trade-off |
+|---|---|---|
+| Browser MCP server | an MCP server exposes browser actions (open, click, read, screenshot) as tools in the session | no script to write; the page content flows straight into the agent's context, and each server has its own profile and focus behaviour to check |
+| Hosted browser service | a provider runs the browser on its machines and you connect over the network | nothing runs on your machine; page content and any credentials you give it pass through a third party |
+
+Whichever you use, check the same three properties: whose profile it runs in, whether it can take your screen, and where the page content goes.
+
+## Run in the background
+
+An agent that takes over the screen interrupts the person using it: a keystroke meant for your editor lands in the agent's form. Build the background into the tool the agent calls, so it holds without a reminder:
+
+| Setting | Value | Effect |
+|---|---|---|
+| Mode | `--headless=new`, or `--window-position=-32000,-32000` if a site needs a window | nothing appears on screen |
+| Profile | `--user-data-dir="$(mktemp -d)"` | no access to your logins |
+| Port | one per agent, for example 9333 and 9334 | two agents never share tabs |
+| Cleanup | stop by the process id the launcher recorded | your own browser is never stopped |
+
+Keep the screen-based routes for tasks no other route can do, and run them when you are away from the machine. [Background browser profiles]({{ '/sections/15-browser-automation/background-profiles.html' | relative_url }}) has the details.
+
 ## Screenshots as evidence
 
-A screenshot lets an agent compare what it built with what was intended, and lets a reviewer check the claim without running anything. "The button is now aligned" is a claim; a before-and-after pair of screenshots is evidence.
+A screenshot lets an agent compare what it built with what was intended, and lets a reviewer check the claim without running anything.
+
+| | Example |
+|---|---|
+| Claim | "The button is now aligned." |
+| Evidence | a before-and-after pair of screenshots at the same width, with the same data |
 
 ![Sequence diagram. The agent edits the CSS of a local app and asks a headless script to capture the settings page; the script loads it and returns settings.png. Looking at the image, the agent finds a white-on-white button, fixes it and captures again; the button is visible. The agent sends the reviewer a pull request with before and after images.]({{ '/assets/images/15-browser-automation/screenshot-loop-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -171,31 +218,19 @@ A person sees only the first line. An agent that reads the page text sees both.
 
 </details>
 
-## Run in the background
-
-An agent that takes over the screen interrupts the person using it: a keystroke meant for your editor lands in the agent's form. Build the background into the tool the agent calls, so it holds without a reminder:
-
-| Setting | Value | Effect |
-|---|---|---|
-| Mode | `--headless=new`, or `--window-position=-32000,-32000` if a site needs a window | nothing appears on screen |
-| Profile | `--user-data-dir="$(mktemp -d)"` | no access to your logins |
-| Port | one per agent, for example 9333 and 9334 | two agents never share tabs |
-| Cleanup | stop by the process id the launcher recorded | your own browser is never stopped |
-
-Keep the screen-based routes for tasks no other route can do, and run them when you are away from the machine. [Background browser profiles]({{ '/sections/15-browser-automation/background-profiles.html' | relative_url }}) has the details.
-
 ## Examples from my own harness
 
 - A CDP automation skill drives a dedicated browser profile in the background, so it never takes over my screen. Its first step is a list of non-browser routes to try before any browser is launched.
 - A screenshot skill attaches images as evidence to a report or a pull request.
 - Browser MCP servers are not used at all; every browser task goes through the one CDP route, so there is one place to fix when automation breaks.
 
-To start: the next time an agent changes a web page, ask it to take a screenshot of what it changed and attach it.
+To start: put the screenshot into the script your UI tasks already run, so every front-end change produces before and after images without anyone asking for them.
 
 ## Pitfalls and lessons
 
 - An agent that takes over the screen interrupts the person using it. Run browser automation in the background, in its own profile.
 - A scraper built on page layout breaks the next time the layout changes. Prefer the API, and when you must scrape, select elements by role and label rather than by position.
+- Some sites render differently headless, or block headless browsers. Try an off-screen window before concluding a page is broken.
 - A screenshot shows what was on the screen. Pair it with a test that exercises the feature.
 
 ## Sources
@@ -203,6 +238,7 @@ To start: the next time an agent changes a web page, ask it to take a screenshot
 - Claude in Chrome: <https://code.claude.com/docs/en/chrome.md>, verified 2026-11-09.
 - Computer use: <https://code.claude.com/docs/en/computer-use.md>, verified 2026-11-08.
 - The lethal trifecta: Simon Willison, <https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/> (2025-06-16), verified 2026-11-09.
+- Browser MCP servers and hosted browser services: described generally; no specific product was checked for this page.
 - The CDP skill, the screenshot skill and the browser policy: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

@@ -24,6 +24,19 @@ A guard is a [hook]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | rel
 ![Sequence diagram with four lanes: Model, Client, PreToolUse hook and Shell. The model asks for pkill -f pytest; the hook exits 2 with the message that pattern kills are refused; the client returns the block to the model. The model runs pgrep -a pytest, which the hook allows, and gets process 4121. The model runs kill 4121; the hook allows one PID; only that process stops.]({{ '/assets/images/06-hooks-scripts-and-linters/guard-refusal-sequence.png' | relative_url }})
 *The refusal message in the red arrow names the allowed form, and the agent's next two calls use it.*
 
+## Writing one, step by step
+
+1. Name the action to refuse, as a command or file pattern a program can match: `pkill -f`, `git push --force`, an edit under `migrations/`.
+2. Pick the event and matcher: `PreToolUse` with `Bash` for shell commands, `Edit|Write` for file changes.
+3. Read the event JSON from standard input with `jq` and take the field you need, such as `.tool_input.command`.
+4. Decide in three outcomes:
+   - Safe and readable: exit 0.
+   - Dangerous: exit 2 with a message that names the fix.
+   - Unreadable (a loop, a variable, `eval`): exit 2 and name the plain form the guard can read.
+5. Register it with a `timeout`, and use `$CLAUDE_PROJECT_DIR` in the path.
+6. Add test cases: the command that caused the incident (refused), the allowed form (allowed), and one near miss of each.
+7. Keep a one-line context rule for the reason, so the agent plans around the guard.
+
 ## Say how to fix it
 
 A refusal goes back to the agent as text, and the agent's next call depends on what that text says.
@@ -64,8 +77,8 @@ A guard that parses shell commands meets commands it cannot fully read: loops, v
 
 | Policy | Safe commands | Dangerous commands | Agent experience |
 |---|---|---|---|
-| Allow what it cannot read | All pass | Some pass hidden in a loop or variable | Smooth until the incident |
-| Refuse what it cannot read | Some refused | None pass | Extra retries, each with a fix |
+| Allow what it cannot read | All pass | Some pass hidden in a loop or variable | No extra retries; some dangerous commands run |
+| Refuse what it cannot read | Some refused | None pass | Extra retries, each with a fix in the message |
 
 Refusing is the safe default. The cost is false refusals, so the message must say what the guard could not read and name the plain form it can.
 
@@ -98,69 +111,102 @@ python check_conflicts.py merged.jsonl && git add merged.jsonl
 
 Conflict markers reached a repository with every exit code green this way: the check refused correctly, and the next line staged the file anyway.
 
-> Read every script that calls a check and ask: if the check fails here, can the next line still run? Write `check && step`, or `set -e` at the top of the script.
+> Read every script that calls a check and ask: if the check fails here, can the next line still run? Write `check && step`, or put `set -euo pipefail` at the top of the script.
+
+`set -e` has gaps of its own:
+
+| Case | Does `set -e` stop the script |
+|---|---|
+| `check` fails on its own line | Yes |
+| `check \| tee log` fails, without `pipefail` | No: the pipeline's status is `tee`'s |
+| `if check; then ...` | No: a failure in a condition is expected |
+| `check \|\| echo failed` | No: the `\|\|` handles the failure |
+
+The `check && step` form does not depend on any of these.
 
 ### Pipes hide failures
 
-`git push origin main | tail -3` reports the exit status of `tail`, which is 0 even when the push failed. Behind a pipe, a failed push and a failed issue filing were both reported to me as successes. That is the reason for the pipe-status guard above.
+A pipeline reports the exit status of its last command:
+
+```text
+$ git push origin main | tail -3
+error: failed to push some refs
+$ echo $?
+0
+```
+
+- `tail` succeeded, so the pipeline reports 0 even though the push failed.
+- Behind a pipe, a failed push and a failed issue filing were both reported to me as successes.
+- `set -o pipefail` makes the pipeline report the first failure; the pipe-status guard above refuses the pipe where it matters.
 
 ## Use the tool that already exists
 
-Before writing a new check, search the repository for a tool that already enforces the rule, using the names the code uses. A new script that repeats an existing check loses the cases the old one learned to handle, and two checks for one rule drift apart.
+Before writing a new check, look for one that already enforces the rule:
+
+1. Search the repository with the names the code uses, such as the command, the file pattern or the error text.
+2. Search the hook registrations and CI jobs for the same rule.
+3. If a check exists, extend it with the new case and a test for it.
+
+A new script that repeats an existing check loses the cases the old one learned to handle, and two checks for one rule drift apart.
 
 ## Guards from broken rules
 
-Each of these started as a written rule in a context file or a brief. An agent broke it anyway, and the rule became code.
+Each of these started as a written rule in a context file or a brief. An agent broke it anyway, and the fix went into the system as a guard. Each entry lists the rule, the incident, what the guard refuses and the message the agent sees.
 
 ### The process-kill guard
 
-#### What happened
+- Written rule: never kill processes by name pattern on a shared machine. It was in the agent's brief.
+- Incident: an agent ran `pkill -f` and stopped three test runs that belonged to other sessions.
+- Guard: refuses `pkill`, `killall` and similar pattern kills before they run.
+- Refusal the agent sees:
 
-The rule against killing processes by name pattern was in the agent's brief. An agent ran `pkill -f` on a shared machine and stopped three test runs that belonged to other sessions.
-
-#### What the guard does
-
-It refuses `pkill`, `killall` and similar pattern kills before they run, and tells the agent to find one process id and kill it, or kill its own process group.
+```text
+Pattern kills are refused on shared machines. Find the PID with pgrep -a <name>
+and run kill <pid>, or kill your own process group with kill -- -<pgid>.
+```
 
 ### The shell-tracing guard
 
-#### What happened
+- Written rule: never print secrets.
+- Incident: an agent turned on shell tracing to debug a script. Tracing prints every command with its expanded values, and the session output showed API keys.
+- Guard: refuses trace flags such as `set -x` and `bash -x` in commands.
+- Refusal the agent sees:
 
-An agent turned on shell tracing to debug a script. Tracing prints every command with its expanded values, and the session output showed API keys.
-
-#### What the guard does
-
-It refuses trace flags in commands and says to check a variable by name, such as testing whether it is set, without printing its value.
+```text
+Shell tracing prints expanded values, including secrets. Check a variable by
+name instead: [[ -n "${API_KEY:-}" ]] && echo set
+```
 
 ### The wildcard-delete guard
 
-#### What happened
+- Written rule: keep scratch files in a private directory.
+- Incident: a sub-agent cleaned up with a wildcard under a shared temporary directory, and the pattern matched files that belonged to the agent that launched it.
+- Guard: refuses wildcard deletes under shared scratch locations.
+- Refusal the agent sees:
 
-A sub-agent cleaned up its scratch files with a wildcard under a shared temporary directory. The pattern matched files that belonged to the agent that launched it.
-
-#### What the guard does
-
-It refuses wildcard deletes under shared scratch locations and says to make a private directory with `mktemp -d` and remove only that directory.
+```text
+Wildcard deletes under a shared temporary directory are refused. Create a
+private directory with d=$(mktemp -d), work inside it, and remove only "$d".
+```
 
 ### The pipe-status guard
 
-#### What happened
-
-A failed push and a failed issue filing were both reported as successes, because each command's output went through a pipe.
-
-#### What the guard does
-
-It refuses the pipe on commands whose success matters and lists the three fixes shown earlier on this page.
+- Written rule: check the exit code of every command whose success matters.
+- Incident: a failed push and a failed issue filing were both reported as successes, because each command's output went through a pipe.
+- Guard: refuses a pipe after commands such as `git push` and `git commit`.
+- Refusal the agent sees: the three fixes listed [earlier on this page](#example-a-guard-with-three-fixes-in-its-message).
 
 ### The evidence-citation guard
 
-#### What happened
+- Written rule: cite only evidence that is tracked in git.
+- Incident: committed documents cited evidence in ignored files; a later cleanup deleted the files, and the documents pointed at nothing.
+- Guard: refuses an edit to a committed document when a cited evidence path is not tracked in git.
+- Refusal the agent sees:
 
-Committed documents cited evidence in ignored files. A later cleanup deleted the files, and the documents pointed at nothing.
-
-#### What the guard does
-
-It refuses an edit to a committed document when a cited evidence path is not tracked in git, and says to commit the evidence or cite something that is.
+```text
+This edit cites an untracked path as evidence. Commit the evidence file, or cite
+a tracked file that shows the same result.
+```
 
 ### The pattern
 
@@ -176,8 +222,8 @@ In each row the rule was written down and was in the agent's context when it was
 
 ## Testing a guard
 
-```bash
-# guard test cases: one command per line, the expected result first
+```text
+# tests/guards/kill-guard.cases: one command per line, the expected result first
 refuse  pkill -f pytest
 refuse  killall node
 allow   kill 4121
@@ -185,7 +231,34 @@ allow   kill -- -4100
 allow   pgrep -a pytest
 ```
 
-A small runner feeds each command to the guard as event JSON and checks the exit code. A guard without tests drifts: the harness changes, a new command form appears, and nobody notices the guard stopped refusing it.
+A small runner feeds each command to the guard as event JSON and checks the exit code:
+
+```python
+import json, pathlib, subprocess
+
+GUARD = ".claude/guards/no-pattern-kill.sh"
+CASES = pathlib.Path("tests/guards/kill-guard.cases")
+
+def test_kill_guard_cases():
+    for line in CASES.read_text().splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        expected, command = line.split(maxsplit=1)
+        event = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
+        rc = subprocess.run([GUARD], input=event, text=True, capture_output=True).returncode
+        assert rc == (2 if expected == "refuse" else 0), f"{expected}: {command} (exit {rc})"
+```
+
+- Run it in the commit hook or CI, so a change that weakens the guard fails before it lands.
+- Add a case each time the guard misses a command form or refuses a safe one.
+
+## Pitfalls
+
+- A refusal that says only "blocked", which gets a retry or a workaround.
+- Allowing commands the guard cannot parse, which lets a dangerous command through inside a loop or a variable.
+- A check and the risky step on separate lines of a script.
+- A guard with no test cases, which stops refusing when a new command form appears and nobody notices.
+- Writing a second guard for a rule another check already enforces.
 
 ## Sources
 

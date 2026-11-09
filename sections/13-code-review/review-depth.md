@@ -52,7 +52,20 @@ The often-repeated "200 to 400 lines in 60 to 90 minutes finds 70% to 90% of def
 
 ### Reviewer agents and diff size
 
-A reviewer agent does not tire, but its accuracy still drops on large diffs: attention spreads thinner over a long context, tool output piles up, and reasoning budgets run out. Wider diffs create more relationships to track and more chances to miss a hunk. The human size numbers are a warning for agents, with no measured threshold. The research's operating rule: above about 400 lines of hand-written change, split the change or review coherent slices in fresh contexts rather than quietly reading less.
+A reviewer agent does not tire, but its accuracy still drops on large diffs:
+
+- Attention spreads thinner over a long context.
+- Tool output (file reads, test logs) piles up and competes with the diff.
+- The reasoning budget for the review runs out before the last files.
+- Wider diffs create more relationships to track and more chances to miss a hunk.
+
+The human size numbers are a warning for agents, with no measured threshold. The research's operating rule:
+
+| Hand-written change | What to do |
+|:--|:--|
+| Under about 400 lines | Review it whole in one context |
+| Over about 400 lines | Split the change, or review coherent slices in separate fresh contexts |
+| Any size with a risk trigger | Add a deep pass on the triggered hunks |
 
 ## The review sequence
 
@@ -69,23 +82,61 @@ Classify each path. Reject paths the task did not declare.
 
 ### 2. Check intent and blast radius
 
-Compare the changed files to the task, the public interfaces and the callers. Also list what should have changed but did not, which the diff cannot show.
+Compare the inventory to what the task asked for:
+
+- Files the task names that the diff does not touch.
+- Public interfaces the diff changes, and their callers outside the diff.
+
+```bash
+git grep -n "export_items(" -- ':!tests' | grep -v -f <(git diff --name-only origin/main...HEAD)
+```
+
+The command lists callers of a changed function in files the branch did not touch. Also list what should have changed but did not, which the diff cannot show: a config default, a doc page, a second code path.
 
 ### 3. Read every behaviour change
 
-Read every hand-written hunk that changes behaviour, every deletion, every test change and every configuration change. Record which generated or mechanical files were excluded and which tool verifies them.
+Read, in this order:
+
+1. Every test change, so the reviewer knows what the oracle now claims.
+2. Every hand-written hunk that changes behaviour.
+3. Every deletion.
+4. Every configuration change.
+
+Record what was excluded and what verifies it, for example "2 generated files: regenerated with `make schema`, zero diff".
 
 ### 4. Deepen by risk
 
-Trace callers, invariants, error paths, concurrency, permissions, migrations and rollback where a risk trigger fires (next section).
+Where a risk trigger fires (next section), trace beyond the hunk:
+
+| Trigger | What to trace |
+|:--|:--|
+| Permissions or authentication | Every caller of the changed check, and what runs if it is skipped |
+| Migration | Forward and rollback on a copy of real data |
+| Concurrency, retries, timeouts | What happens when two runs overlap or one is killed mid-way |
+| Swallowed errors | What the caller sees when the error happens |
 
 ### 5. Run independent evidence
 
-Pinned tests, build, type and lint checks, security scans, red-then-green proof for a bug fix, and regeneration of generated files, all in a clean environment.
+Run the checks yourself, in a clean environment, and compare the results with the author's report:
+
+- Pinned tests, build, type and lint checks.
+- Security and dependency scans.
+- For a bug fix, red then green: the regression test fails on the base commit and passes on the branch.
+- Regeneration of generated files, with a zero-diff check.
+
+```bash
+git switch --detach origin/main && pytest tests/test_export.py::test_csv_quotes   # expect FAIL
+git switch --detach HEAD@{1}     && pytest tests/test_export.py::test_csv_quotes   # expect PASS
+```
 
 ### 6. Reconcile
 
-Re-read the inventory, the test diff and the open findings. Check that no later fix invalidated an earlier approval.
+Before approving, check the whole review once more:
+
+1. Re-read the inventory and confirm every file has a classification and a verdict.
+2. Re-read the test diff.
+3. Close or carry each open finding.
+4. Check that no later fix commit invalidated an earlier approval.
 
 ## Risk triggers
 
@@ -123,11 +174,25 @@ In this case the sample is for diagnosis, and a deterministic verifier provides 
 
 ### Worked example: a 60-file rename
 
-An agent renames a function across 60 files. The reviewer checks that the changed-file list matches a `grep` for the old name on the base commit, that the old name no longer appears anywhere, that the build and tests pass, and reads five files: the definition, the first and last call sites, one test, and the one file where the call was inside a string. All 60 are covered by the grep and the build; the five are for diagnosis.
+An agent renames `load_cfg` to `load_config` across 60 files. The checks:
+
+| Check | Command or action | Covers |
+|:--|:--|:--|
+| The changed files are exactly the callers | `git grep -l load_cfg origin/main` matches the changed-file list | All 60 |
+| No old name remains | `git grep -n load_cfg` returns nothing | All 60 |
+| Build and tests pass | The merge gate | All 60 |
+| Read for diagnosis | The definition, the first and last call sites, one test, and the one file where the name appeared inside a string | 5 files |
+
+The grep and the build cover all 60 files; the five read files are for diagnosis.
 
 ## From my harness
 
-The rule I review delegated work by is the working rule in the [code review overview]({{ '/sections/13-code-review/#review-of-agent-written-code' | relative_url }}): trust scales with independent verifiability and constrained freedom. An agent's mechanical sweep across many repositories was accepted after an independent check of every output; an agent's claim that a failure was "pre-existing" was not accepted until the test ran on the base commit.
+The rule I review delegated work by is the working rule in the [code review overview]({{ '/sections/13-code-review/#shared-blind-spots' | relative_url }}): trust scales with independent verifiability and constrained freedom. Two cases from my own work:
+
+- An agent's mechanical sweep across many repositories was accepted.
+  - Every output was checked by an independent deterministic verifier.
+- An agent's claim that a failing test was "pre-existing" was not accepted at first.
+  - The test was run on the base commit before anyone believed it.
 
 ## Sources
 

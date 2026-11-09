@@ -23,6 +23,7 @@ Decision authority is the rule set that says which decisions an agent makes alon
 - [The authority test](#the-authority-test)
 - [Investigate before you escalate](#investigate-before-you-escalate)
 - [Who an agent escalates to](#who-an-agent-escalates-to)
+  - [What an escalation message contains](#what-an-escalation-message-contains)
 - [Recording agent decisions](#recording-agent-decisions)
 - [Worked examples](#worked-examples)
 - [Examples from my own harness](#examples-from-my-own-harness)
@@ -32,6 +33,13 @@ Decision authority is the rule set that says which decisions an agent makes alon
 ## The authority test
 
 The authority test is a short set of questions an agent answers about a decision before it acts. It replaces a long list of rules with a few properties that every rule on the list was standing in for.
+
+| # | Question | If yes | If no |
+|---|---|---|---|
+| 1 | Did the person claim this decision? | the person decides | next question |
+| 2 | Is it outward, destructive, spending or architectural? | the person decides, unless a program has proved it reversible | next question |
+| 3 | Would it drop, narrow or change something the person asked for? | the person decides | next question |
+| 4 | Is it a design call beyond this model's tier? | a stronger model decides | the agent decides and records why |
 
 ![Sequence diagram. A small-model agent asks the authority test three questions in turn: claimed by the person, outward or architectural, drops a requirement. Each answer is no, but the last notes it is a design call. The agent sends two options and context to the coordinator on the strongest model, which returns a decision and reason. The agent writes the decision log into the pull request for the person, who may overrule later.]({{ '/assets/images/14-human-gates/authority-test-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -43,21 +51,47 @@ The authority test is a short set of questions an agent answers about a decision
 
 ### Question 1: did the person claim it?
 
-Anything the person marked as pending their decision is theirs, however small. A person who wrote "I want to choose the colour scheme myself" gets asked about the colour scheme even though it is cosmetic.
+Anything the person marked as theirs is theirs, however small.
+
+- Signs of a claim: "I want to choose", "check with me before", an item marked pending.
+- Example: a person who wrote "I want to choose the colour scheme myself" is asked about the colour scheme, though it is cosmetic.
 
 ### Question 2: is it outward, destructive, spending or architectural?
 
-These four kinds share one property: they are hard or impossible to undo, or other people see them. An outward action (a sent message, a public comment) cannot be unsent. A destructive one may lose data. Spending cannot be refunded by a revert. An architectural choice constrains every later change, so undoing it later costs far more than asking now.
+These four kinds are hard or impossible to undo, or other people see them:
 
-Reversibility is the underlying test. Deleting a branch that is fully merged and still on the remote is technically a deletion, but nothing is lost. A harness can exempt such proved-safe cleanup from the gate, with the proof checked by a program rather than asserted by the agent.
+| Kind | Example | Why it cannot be undone |
+|---|---|---|
+| Outward | a sent message, a public comment, a published page | others have seen it |
+| Destructive | deleting data, a table, a cloud resource | the data may be gone |
+| Spending | a paid batch, rented compute | a revert does not refund it |
+| Architectural | a new dependency, a public interface, a schema | every later change builds on it |
+
+Reversibility is the underlying test. Deleting a branch that is fully merged and still on the remote is a deletion, but nothing is lost. A harness can exempt such proved-safe cleanup from the gate:
+
+1. A program checks the proof, for example that every commit on the branch is on the remote main.
+2. Only when the check passes does the deletion run (`check && delete`).
+3. The agent's own statement that the branch is merged is never the proof.
 
 ### Question 3: would it change what the person asked for?
 
-An agent may decide how to deliver a requirement. It may not decide to deliver less than was asked. Dropping a feature, narrowing its scope ("only for admins"), or changing its meaning without saying so are the person's calls. This is the question most often missed, because the decision usually looks technical from inside the task. [Alignment with the original request]({{ '/sections/14-human-gates/alignment-and-drift.html' | relative_url }}) covers the check that enforces it.
+An agent may decide how to deliver a requirement. Delivering less is the person's call:
+
+- Dropping a feature ("defer the export button to a follow-up").
+- Narrowing its scope ("only for admins").
+- Changing its meaning ("CSV" becomes "Excel" because the agent judged it better).
+
+This is the question most often missed, because from inside the task the decision looks technical. [Alignment with the original request]({{ '/sections/14-human-gates/alignment-and-drift.html' | relative_url }}) covers the drift check that enforces it.
 
 ### Question 4: is this the right model to decide?
 
-Some decisions are within the agent's remit but beyond a small model's judgement: a design trade-off, a security question, an ambiguous requirement. A harness can set a floor, such as "only the strongest models may resolve a design decision", and route a weaker model's design question to a stronger one rather than to the person.
+Some decisions are within the agent's remit but beyond a small model's judgement:
+
+- a design trade-off between two schemas or two module boundaries;
+- a security question, such as whether a token may be logged;
+- an ambiguous requirement with two reasonable readings.
+
+A harness can set a floor, such as "only the strongest models may resolve a design decision", and enforce it in the launcher: a smaller model's design question is routed to a stronger session, which decides and records it. The person is not involved.
 
 ## Investigate before you escalate
 
@@ -72,7 +106,11 @@ Most blockers dissolve at step 2 or 3. When one does not, the investigation beco
 
 ### Example: a permission error that was not one
 
-An agent calling a cloud API gets "access denied" and drafts a question asking the person to grant a permission. Investigating first, it notices the call used the machine's default credentials instead of the named profile. It re-runs with the profile, the call succeeds, and no question is needed. An error message that reads like a missing grant is often a wrong identity.
+1. An agent calling a cloud API gets "access denied".
+2. It drafts a question asking the person to grant a permission.
+3. Investigating first, it prints which identity the call used and finds the machine's default credentials, not the named profile.
+4. It re-runs with `--profile` set; the call succeeds.
+5. No question is needed. An error that reads like a missing grant is often a wrong identity, so the harness's wrapper now always passes the profile.
 
 ## Who an agent escalates to
 
@@ -85,11 +123,37 @@ Escalation has more than one destination:
 | A decision the authority test reserves for the person | The person, through a held decision |
 | A question about another agent's work | That agent's owner, by message |
 
-Sending everything to the person is the common failure. A sub-agent that hits a design question should ask its coordinator first; the coordinator either decides or escalates once, with the context already gathered.
+Sending everything to the person is the common failure. A sub-agent that hits a design question asks its coordinator first; the coordinator either decides or escalates once, with the context already gathered.
+
+### What an escalation message contains
+
+```text
+To: coordinator
+Task: export endpoint for large files
+Decision needed: stream the file, or split it into 500 MB parts?
+Investigated: the current endpoint loads the whole file; 2 GB files fail with out-of-memory.
+Options:
+  A. Stream with a chunked response. One function changes; clients need no change.
+  B. Split into parts. Clients must reassemble; simpler server code.
+Recommendation: A, because no client change is needed.
+Blocking: yes, the endpoint work waits on this.
+```
+
+- The receiver can decide from the message alone, without opening the agent's transcript.
+- "Blocking" tells the receiver whether the sender is idle while it waits.
+- If the receiver escalates further, it forwards the message unchanged and adds its own view below it.
 
 ## Recording agent decisions
 
-When the agent decides, it writes down the decision and the reason. The record can be a line in the plan document, a section in the pull request, or an entry in a decision log. A record turns "the agent did something I did not expect" into "the agent chose B over A for this reason", which the person can overrule in one line.
+When the agent decides, it writes down the decision and the reason. A record turns "the agent did something I did not expect" into "the agent chose B over A for this reason", which the person can overrule in one line.
+
+| Where | Good for |
+|---|---|
+| A section of the pull request | decisions tied to one change; the reviewer sees them with the diff |
+| The plan or design document | decisions that shape later work |
+| A decision log file | decisions across many changes, searchable later |
+
+Record decisions a reviewer could reasonably question: a format, a dependency avoided, a trade-off. Skip the trivial ones, such as a variable name.
 
 ```markdown
 ### Decision: store exports as CSV, not Parquet (agent, 2026-11-09)
@@ -106,29 +170,40 @@ Reversible: yes, the writer is one function.
 
 ### Example 1: a new dependency
 
-#### The situation
+| Step | What happens |
+|---|---|
+| Situation | an agent adding date parsing wants a third-party library |
+| Test | question 2: a new dependency is architectural |
+| Outcome | it writes a held decision |
+| Options | the library (maintained, adds a package); the standard library (more code, no new package) |
+| Recommendation | the standard library, because only two date formats appear in the data |
 
-An agent adding date parsing wants a third-party library.
+### Example 2: a flaky test blocks a merge
 
-#### The test
-
-Question 2 says a new dependency is architectural, so the agent asks.
-
-#### The question it wrote
-
-Options: the library (well maintained, adds a package) or the standard library (more code, no new package). It recommends the standard library, because only two formats appear in the data.
-
-### Example 2: a test that should be skipped
-
-A flaky test blocks a merge. Skipping it changes nothing the person asked for, but it lowers the safety net, and the harness rule is "fix every test failure before shipping". The agent investigates, finds a race in the test's setup, fixes it and records the cause. No question is needed.
+| Step | What happens |
+|---|---|
+| Situation | a flaky test blocks a merge |
+| Test | skipping changes nothing the person asked for, but the harness rule is "fix every test failure before shipping" |
+| Outcome | the agent investigates, finds a race in the test's setup, fixes it and records the cause |
+| Question to the person | none |
 
 ### Example 3: a cheaper model with a design question
 
-A small model writing a migration finds that the schema could be normalised two ways. Question 4 says this is a design call, so the small model sends the options to its coordinator, which runs on a stronger model. The coordinator decides and records the decision; the person never sees it.
+| Step | What happens |
+|---|---|
+| Situation | a small model writing a migration finds two ways to normalise the schema |
+| Test | question 4: a design call |
+| Outcome | it sends both options to its coordinator, on a stronger model |
+| Result | the coordinator decides and records it; the person never sees it |
 
 ### Example 4: a request that cannot be met as written
 
-The person asked for a report "updated every minute", but the source system rate-limits to one call every five minutes. Delivering every five minutes would narrow the request, so question 3 sends it to the person, with the measured limit and two options (five-minute refresh, or a cached feed with a staleness note).
+| Step | What happens |
+|---|---|
+| Situation | the person asked for a report "updated every minute"; the source rate-limits to one call every five minutes |
+| Test | question 3: a five-minute refresh would narrow the request |
+| Outcome | a held decision with the measured limit |
+| Options | a five-minute refresh; or a page that reloads every minute from a cache, showing the data's age |
 
 ## Examples from my own harness
 
@@ -136,13 +211,16 @@ The person asked for a report "updated every minute", but the source system rate
 - A model-tier floor: only the strongest models may resolve a design decision; smaller models ask the strongest session on the same machine.
 - Every escalated decision becomes a held decision in a review queue ([Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }})).
 
-To start: add the four questions above to your context file, and ask the agent to record every decision it makes alone in the pull request description.
+To start: build the four questions into the workflow the agent runs before it asks you anything, for example a skill or a pull request template with a section per question, and have a check refuse a pull request whose decision log is empty. A context-file line pointing at the questions is the second layer.
 
 ## Pitfalls
 
 - An authority test without investigation produces well-formatted questions the agent could have answered itself.
 - "Reversible" needs proof. An agent's claim that a branch is merged is not proof; a program checking the remote is.
 - A decision record written after the fact tends to justify the choice. Ask for the options to be written before the choice.
+- A question asked in the middle of a chat is lost when the session ends. Route every question for the person through the review queue.
+- An agent that asks again after the person answered has not recorded the ruling. Read the decision file before asking.
+- A coordinator that forwards every sub-agent question to the person adds a hop and no judgement. It decides what it has the authority to decide.
 
 ## Sources
 

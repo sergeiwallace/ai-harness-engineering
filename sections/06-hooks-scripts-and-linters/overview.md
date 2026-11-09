@@ -14,7 +14,7 @@ As of 2026-11-09.
 
 Stop 5 on the talk path, about 4 minutes.
 
-A context-file instruction guides an agent, and the agent applies it unevenly: less as its context fills, when it juggles several tasks, after a task switch, or after a compaction drops the rule. The working principle of this site is a [systems approach to harness engineering]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering): a fix goes into the system and is enforced by code wherever a program can check it. A harness enforces its rules in four layers:
+A context-file instruction guides an agent, and the agent applies it unevenly: less as its context fills, when it juggles several tasks, after a task switch, or after a compaction drops the rule. The working principle of this site is a systems approach to harness engineering: a fix goes into the system and is enforced by code wherever a program can check it. A harness enforces its rules in four layers:
 
 1. Instructions in context files, skills and prompts guide the model. They are the second line of defence and never enough on their own.
 2. Workflows and tools build the steps into what the agent runs.
@@ -25,7 +25,7 @@ Layers 2 to 4 do the enforcing. This section covers layers 3 and 4, and the scri
 
 ![A five-step staircase from least to most enforced: context rule, path rule, skill, hook or guard, test or CI gate. Each step up is more consistent and more costly. A rule goes to the highest step that can check it.]({{ '/assets/images/06-hooks-scripts-and-linters/enforcement-ladder.svg' | relative_url }})
 
-This overview covers each part with a worked example. Three topic pages go deeper:
+This overview follows the layers in order: why code enforcement, the ladder that places each rule, scripts, hooks and guards, then git hooks, CI and linters, and what all of it costs. Each part has a worked example. Three topic pages go deeper:
 
 - [The enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}): the four layers and five mechanisms in depth, how to place a rule, and what to do when an agent breaks one.
 - [Hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}): events, handler types, input and output, exit codes, registration and debugging. Its sub-page [Writing a guard]({{ '/sections/06-hooks-scripts-and-linters/writing-a-guard.html' | relative_url }}) covers refusal messages, parsing limits and the guards in my own harness.
@@ -87,9 +87,38 @@ Put each rule at the highest step that can check it, and keep a one-line context
 
 The [ladder page]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}) has a placement guide and more examples.
 
+## Scripts
+
+A script turns a procedure into code. It belongs to layer 2, workflows and tools, and it is often what a skill step, a hook or a CI job runs.
+
+- It runs the same steps in the same order every time.
+- It returns an exit code, so a hook, a skill step or CI can act on the result.
+- A skill step that says "run `release_check.py`" gets the same answer every run.
+- When an agent keeps getting a multi-step procedure wrong, the fix is a script that does the procedure, called from the skill or the hook that needs it.
+
+### Example: a procedure into a script
+
+| Before: a context paragraph | After: a script plus one line |
+|---|---|
+| "Before a release, check the version in three files matches, the changelog has an entry for it, and the tag does not exist yet." | `release_check.py` checks all three and exits 1 with the mismatch. The release skill runs it at step 1, and a hook on `git tag` runs it again |
+
+```text
+$ python release_check.py 2.4.0
+version: pyproject.toml 2.4.0, package.json 2.4.0, app/__init__.py 2.3.9  FAIL
+changelog: entry for 2.4.0 found  OK
+tag: v2.4.0 does not exist yet  OK
+```
+
+- The script names the file that is out of step, so the agent's next edit is the right one.
+- A script that a hook or CI acts on must exit non-zero on failure; a script that prints `FAIL` and exits 0 passes every check.
+
 ## Hooks
 
-A hook is a handler the client runs at a lifecycle event. Claude Code's hooks reference lists 33 events; Codex has 14.
+A hook is a handler the client runs at a lifecycle event.
+
+- Claude Code's hooks reference lists 33 events; Codex has 14.
+- A handler can be a shell command, an HTTP call, an MCP tool call, a prompt to a model or an agent. Shell commands are the most common.
+- Hooks are registered in a settings file: the user's, the project's or a plugin's.
 
 ![A session timeline: SessionStart, UserPromptSubmit, a repeating loop of PreToolUse, the tool call and PostToolUse, then PreCompact and Stop. UserPromptSubmit, PreToolUse and Stop can block.]({{ '/assets/images/06-hooks-scripts-and-linters/hook-lifecycle.svg' | relative_url }})
 
@@ -115,7 +144,16 @@ In Claude Code a `PreToolUse` hook and the agent work together like this:
    - Exit code 2: the call is blocked, and the hook's standard error goes back to the agent.
 4. The agent reads the message and makes its next call.
 
-A hook after a tool call cannot undo the call, because the tool already ran. The [process-kill case study](#case-study-the-process-kill-guard) below shows the loop as a diagram.
+The [process-kill case study](#case-study-the-process-kill-guard) below shows the loop as a diagram.
+
+#### Edge cases
+
+| Case | What happens |
+|---|---|
+| The hook exits 1 | An error is shown and the call proceeds; only exit 2 blocks |
+| A `PostToolUse` hook exits 2 | The tool already ran; the message reaches the agent, but nothing is undone |
+| The hook hangs | Every matching call waits until its `timeout` |
+| The hook needs finer control | It prints JSON with a decision of `allow`, `deny` or `ask` |
 
 ### Example: a hook that blocks force pushes
 
@@ -154,7 +192,11 @@ fi
       * [new branch]      feature/login-v2 -> feature/login-v2
 ```
 
-`/hooks` shows every configured hook and where it comes from. The [hooks page]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) covers handler types, the JSON a hook receives and returns, matchers and debugging.
+`/hooks` shows every configured hook and where it comes from, read-only.
+
+<!-- IMAGE NEEDED: the Claude Code /hooks view listing configured hooks by event, with their source settings file; search: claude code /hooks command, claude code hooks configuration screenshot -->
+
+The [hooks page]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) covers handler types, the JSON a hook receives and returns, matchers and debugging.
 
 ## Writing a guard
 
@@ -166,7 +208,7 @@ A guard is a hook that refuses an action. Three habits decide whether agents can
 | Refuse what you cannot prove safe | Allow anything the parser does not understand | Refuse it, and name the plain form the guard can read |
 | Gate the step on the check | Check on one line, act on the next | `check && act` |
 
-### Example: the check that protected nothing
+### Example: a check on a separate line
 
 ```bash
 # Wrong: the add runs whatever the check said
@@ -211,17 +253,18 @@ untyped functions: 88 (baseline 88) OK
 files over 800 lines: 13 (baseline 12)  FAIL: one more than the baseline
 ```
 
+### Linters
+
+A linter checks code without running it and names the rule, the file and the line:
+
+```text
+src/upload.py:42:5: B904 Within an except clause, raise exceptions with `raise ... from err`
+```
+
+- It runs in under a second on a changed file, so it fits in a pre-commit hook.
+- A team rule a program can check, such as which modules may import the database driver, can be a custom lint rule.
+
 An agent cannot skip git hooks unless it passes `--no-verify`, and a tool-call hook can refuse that flag. The [git hooks, CI and linters page]({{ '/sections/06-hooks-scripts-and-linters/git-hooks-ci-and-linters.html' | relative_url }}) covers each check in depth.
-
-## Scripts
-
-A script turns a procedure that would be prose into code: the same steps, the same order, an exit code. A skill whose step says "run `release_check.py`" gets the same answer every run. When an agent keeps getting a multi-step procedure wrong, the fix is often a script that does the procedure, and a context line or skill step that says to run it.
-
-### Example: a procedure into a script
-
-| Before: a context paragraph | After: a script plus one line |
-|---|---|
-| "Before a release, check the version in three files matches, the changelog has an entry for it, and the tag does not exist yet." | `release_check.py` checks all three and exits 1 with the mismatch. The context line: "Run `release_check.py` before tagging." |
 
 ## What guards cost
 
@@ -242,7 +285,7 @@ A script turns a procedure that would be prose into code: the same steps, the sa
 - Commit and push checks that run the formatter, the linter and the tests the diff touches, and require each commit to record which model and agent wrote it.
 - Hooks registered from one manifest, with a test that every hook file is registered and every registration names a file.
 
-To start: turn the rule an agent has broken twice into a hook.
+To start: pick one rule in your context file that a program could check, such as "never force push", and enforce it with a hook. Keep the line in the context file as the reason.
 
 ## Pitfalls and lessons
 

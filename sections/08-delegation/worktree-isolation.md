@@ -106,7 +106,12 @@ The fix is a worktree in each repository it writes to, and a launch guard that r
 
 #### Conflict
 
-If main moved while the agent worked, the merge can conflict. The fix happens on the branch: rebase onto the new main, rerun the tests, and try the merge again. Conflicts surface one branch at a time, where they can be resolved deliberately.
+If main moved while the agent worked, the merge can conflict. The fix happens on the branch:
+
+1. Rebase the branch onto the new main.
+2. Resolve the conflict in the agent's worktree, by the agent that knows the change.
+3. Rerun the tests.
+4. Try the merge again.
 
 ### Audit
 

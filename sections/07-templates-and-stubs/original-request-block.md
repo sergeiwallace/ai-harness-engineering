@@ -107,7 +107,17 @@ sha256 41ab...07c2
 
 ### The guard
 
-Before a sub-agent starts, a launch guard reads its brief, finds the block, and checks the quoted text against the record's hash. A brief with no block, or with an edited block, is refused before anything runs.
+Before a sub-agent starts:
+
+1. The launch guard reads the brief and finds the original-request block.
+2. It hashes the quoted text and compares it with the record's hash.
+3. It refuses the launch, with the reason, when:
+   - The brief has no block.
+   - The block's text differs from the record.
+   - The record named in the block does not exist.
+4. Otherwise the launch goes ahead.
+
+This is the enforcing layer: the agent does not have to remember to copy the block correctly, because a wrong copy never launches.
 
 #### Worked example: a refused launch
 
@@ -153,6 +163,39 @@ The final report compares the result with the block, one named requirement at a 
 |---|---|---|
 | Table of contents on the landing page | Met | Page URL and heading |
 | Table of contents in the root README.md | Met | Commit and line |
+
+## Edge cases
+
+| Case | How the block handles it |
+|---|---|
+| The person adds a correction later in the session | The correction is appended to the record as a new, dated entry with its own hash; earlier words stay as they were |
+| The request spans several messages | Each message goes into the record in order, each quoted exactly |
+| The request is long | The whole text still goes in; a summary may sit next to it, labelled as a summary and never in place of the words |
+| The launcher adds its own framing (scope, paths, deadline) | The framing goes in a separate section, labelled as not authoritative, below the block; where the two conflict, the words win and the conflict is reported |
+| The person changes their mind | Only the person changes the record; an agent that thinks the ask should change says so and waits |
+| A sub-agent needs only part of the request | It still gets the whole block, so it can see what its part is for |
+
+### Worked example: words plus framing
+
+```markdown
+## Original request (verbatim, do not edit)
+> add a table of contents on the landing page and the root README.md
+record: asks/site-restructure.md  sha256: 9f2c...e41a
+
+## Framing from the launcher (not authoritative)
+You own the README part only. Another agent owns the landing page.
+Deadline 18:00. If this framing conflicts with the request above, follow the
+request and report the conflict.
+```
+
+## Pitfalls
+
+| Pitfall | Effect | Fix in the system |
+|---|---|---|
+| The block is "tidied" on the way down | A requirement changes with every check green | The launch guard compares the hash |
+| Framing is mixed into the quoted words | A launcher's scope reads as the person's ask | A separate, labelled framing section |
+| The record is overwritten by a correction | The original ask is lost | Append-only record, one hash per entry |
+| An agent drops a requirement it judged unnecessary | The person finds out at the end | A rule that drop decisions go back to the person, checked in the final report |
 
 ## Related pages
 

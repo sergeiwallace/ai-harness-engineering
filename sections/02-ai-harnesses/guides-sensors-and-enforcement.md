@@ -183,7 +183,7 @@ HarnessTax (UC Berkeley and Arena, 2026) compared model and harness pairs.
 - Claude Code cost about twice as much as a minimal four-tool harness on SWE-bench Lite.
 - These figures are not yet verified against the primary source.
 
-> Benchmark tasks are short and self-contained. Much of what a personal harness does (memory, coordination, approvals) never shows on them, so read the figures as a warning about cost, not a verdict on any one harness.
+> Benchmark tasks are short and self-contained. Much of what a personal harness does (memory, coordination, approvals) never shows on them, so read the figures as a warning about cost; they say little about any one harness.
 {: .note }
 
 ### A worked example

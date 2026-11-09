@@ -59,25 +59,26 @@ For p = 0.7:
 
 ## Which one to use
 
-### pass@k for exploration with a verifier
+| Measure | Use when | Example |
+|---|---|---|
+| pass@k | a check tells you which attempt worked, so you can keep the best | a test suite picks the passing patch out of three |
+| pass^k | the agent runs unattended, or its first answer is trusted | a nightly job; a customer-facing agent |
+| Both | comparing two harness versions | report both, side by side |
 
-When a check can tell you which attempt worked (a test suite, a compiler, a screenshot comparison), you can run several attempts and keep the one that passes. pass@k is the chance that at least one is usable. This is how capability evals are often reported.
-
-### pass^k for reliability
-
-When the agent runs unattended, or a person will trust its first answer, every attempt has to be right. pass^k is the chance of k correct runs in a row. This is the measure for a scheduled job, a customer-facing agent, or a harness rule you want to hold every time.
-
-### Both, side by side
-
-Report both when you compare harness changes. A change that raises pass@3 and lowers pass^3 made the agent more capable and less consistent; whether that is good depends on how you run it.
+A change that raises pass@3 and lowers pass^3 made the agent more capable and less consistent. Whether that helps depends on which row above describes how you run it.
 
 ## Estimating from runs
 
-Real attempts are not perfectly independent, so estimate from what you observe rather than only from the formula.
+Real attempts are not perfectly independent, so estimate from what you observe. Two ways:
+
+- From an overall success rate: quick, and good enough for a first reading.
+- Per task, from that task's own runs: closer to the truth for small samples.
 
 ### From n runs with c successes
 
-The simplest estimate of p is c / n. Plug it into the formulas above for a quick reading.
+1. Estimate p as c / n.
+2. Plug it into the formulas above.
+   - 10 runs, 7 successes: p = 0.7, pass@3 = 0.97, pass^3 = 0.34.
 
 ### Directly, per task
 
@@ -110,7 +111,13 @@ With 10 runs and 7 successes, the formula with p = 0.7 gives pass^3 = 0.343, whi
 
 ### Example 1: a nightly job
 
-An agent updates a dependency report every night. On 20 test runs it succeeds 18 times, p = 0.9. pass^7, the chance of a clean week, is 0.9^7, about 0.48. A failure-free week is a coin flip. The team adds a check that retries a failed run once and alerts on a second failure.
+| Step | Value |
+|---|---|
+| Task | update a dependency report every night |
+| Test runs | 20, of which 18 succeed: p = 0.9 |
+| pass^7, a clean week | 0.9^7 = about 0.48 |
+| Reading | a failure-free week is close to a coin flip |
+| Fix in the system | the scheduler retries a failed run once and alerts on a second failure |
 
 ### Example 2: two harness versions
 

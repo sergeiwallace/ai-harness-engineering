@@ -69,31 +69,56 @@ except Exception as exc:
 
 ### The mechanism
 
-The guard is written, tested and merged. The installer that copies hooks into place was never run on the machine, or ran from a branch that did not have it. Every check of the repository says the guard exists.
+1. The guard is written, tested and merged.
+2. The installer that copies hooks into place was never run on the machine, or ran from a branch without it.
+3. Every check of the repository says the guard exists. No session runs it.
 
 ### The check
 
-Measure the target, not the source. `/hooks` in a live session lists what the harness actually loaded. My harness learned this more than once: a guard pinned by a test can still be live in zero places, so the release check names the one artifact whose state proves the change reached its target, and reads it.
+Measure the live target.
+
+```text
+> /hooks
+```
+
+- Run it in a live session after every install, on every machine.
+- My harness learned this more than once: a guard pinned by a test can still be live in zero places.
+- Its release check now names the one artifact whose state proves the change reached its target, and reads it.
 
 ## Matcher misses
 
 ### The mechanism
 
-A guard on `Bash` refuses deleting a file with `rm`. The agent has an MCP server with a file-delete tool, and a `Write` tool that can empty a file. The rule is enforced on one route of three.
+A guard on `Bash` refuses deleting files with `rm`. The same action has other routes.
+
+| Route | Guarded |
+|---|---|
+| `Bash` with `rm` | yes |
+| an MCP server's file-delete tool | no |
+| `Write` with empty content | no |
 
 ### The check
 
-For each guarded action, list every tool that can perform it, and widen the matcher or add a guard per route.
+1. For each guarded action, list every tool that can perform it, MCP tools included.
+2. Widen the matcher (`Bash|Write|mcp__files__.*`) or add a guard per route.
+3. Add a test per route, so a new tool that can do the action is noticed.
 
 ## False positives and route-arounds
 
 ### The mechanism
 
-A guard refuses too much. The agent, being helpful, finds another way: writes the command to a script file and runs the script, or uses a different tool. The guard now teaches evasion.
+A guard refuses too much, and the agent, being helpful, finds another way.
+
+- It writes the command into a script file and runs the script.
+- It uses a different tool that does the same thing.
+- The guard now teaches evasion, and the workaround becomes a habit.
 
 ### The check
 
-Log every refusal with the command that caused it. Read the log weekly. A refusal of a command that was safe is a bug in the guard; fix it the same day, or the agent's workaround becomes a habit.
+1. Log every refusal with the command that caused it.
+2. Read the log weekly.
+3. A refusal of a safe command is a bug in the guard; fix it the same day.
+4. Add the safe command to the guard's tests as a must-allow case.
 
 ## Bypass by spelling
 
@@ -107,17 +132,36 @@ Each row is a test case. My harness's secret guard keeps a list of every spellin
 
 ## Loops
 
-A Stop hook that blocks whenever tests fail traps an agent that cannot fix the tests. Check the flag the harness passes that says the agent was already sent back once, and on the second stop, let it through with a note to the person.
+A Stop hook that blocks whenever tests fail traps an agent that cannot fix the tests.
+
+1. The hook blocks the stop with the failing test names.
+2. The agent tries, fails, and tries to stop again.
+3. Without a limit, this repeats until the session runs out of room.
+
+> The Stop event carries a flag saying a stop hook already sent the agent back once. Check it, and on the second stop let the agent through with a note to the person.
+{: .warning }
 
 ## Cost and noise
 
 ### Time
 
-A hook on `PreToolUse` with an empty matcher runs before every tool call in every session. At a hundred milliseconds it is felt; at a second it is a tax on everything. Start a fast interpreter, read only what you need, and exit early when the event is not yours.
+A hook on `PreToolUse` with an empty matcher runs before every tool call in every session.
+
+| Hook run time | Effect |
+|---|---|
+| under 50 ms | not noticed |
+| around 100 ms | felt on busy sessions |
+| a second or more | a tax on every action |
+
+Start a fast interpreter, read only what you need, and exit early when the event is not yours.
 
 ### Tokens
 
-A hook that adds context on every prompt or tool call spends tokens every time. A reminder that fires on every call becomes text the model learns to skim. Fire on the condition, not on the event.
+A hook that adds context spends tokens every time it fires.
+
+- A reminder that fires on every tool call becomes text the model learns to skim.
+- Fire on the condition: add the background-task reminder only while a background task is running.
+- Measure what hooks add with `/context` before and after enabling them.
 
 ## Sources
 

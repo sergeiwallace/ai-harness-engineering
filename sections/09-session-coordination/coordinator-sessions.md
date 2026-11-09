@@ -14,7 +14,7 @@ redirect_from:
 
 As of 2026-11-09.
 
-A coordinator session is a long-running session whose job is to route work, not to do it. This page covers the roles in a coordination layer, the coordinator's working cycle, what it keeps in its context and what it keeps in files, how it checks reports, and the ways it goes wrong. The [section overview]({{ '/sections/09-session-coordination/' | relative_url }}) is the short version. A sub-topic page covers [owning shared actions]({{ '/sections/09-session-coordination/shared-action-ownership.html' | relative_url }}).
+A coordinator session is a long-running session whose job is routing work to other sessions and checking what comes back. This page covers the roles in a coordination layer, the coordinator's working cycle, what it keeps in its context and what it keeps in files, how it checks reports, the ways it goes wrong, and what to do when the coordinator itself stops. The [section overview]({{ '/sections/09-session-coordination/' | relative_url }}) is the short version. A sub-topic page covers [owning shared actions]({{ '/sections/09-session-coordination/shared-action-ownership.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -48,19 +48,30 @@ A session doing both compacts sooner, and while it reads files it stops answerin
 
 ### The job description
 
-A coordinator's context file states its role in a few lines. A sketch:
+Two layers set up the role. The context file describes the job; the session's permissions enforce the part that must hold.
 
 ```markdown
 ## Role: chief of staff for this machine
 
 - Route each request to the session that already has its context, or start one.
-- Do not edit project files yourself. If you catch yourself opening source
-  files, hand the work to a worker.
 - You own merges, pushes to main and installs on this machine. Workers send
   "ready to merge" with a branch name; merge one at a time.
 - Report to the top coordinator: done (with evidence), blocked (with what
   unblocks it), or needs a decision (with options).
 ```
+
+```bash
+claude --name chief \
+  --settings '{"permissions":{"deny":["Edit","Write"]}}'
+```
+
+| Rule | Where it lives | Why there |
+|---|---|---|
+| Do not edit project files | A permission deny rule | A model under pressure skips a written rule; a denied tool cannot be called |
+| Route, track, check, report | The context file | Judgment about how to route cannot be enforced by a tool list |
+| Merge one at a time | The chief's merge script, or a lock | A script that takes a lock serialises merges whatever the model decides |
+
+The chief still needs `Bash` for `git` and its merge script, so the deny list names only the edit tools.
 
 ## The working cycle
 
@@ -103,17 +114,20 @@ The coordinator keeps one row per task in flight, in the tracker:
 
 - A task with no acknowledgement after a few minutes gets a delivery check.
 - A task past its expected time gets a status question.
+- For a long task on the same machine, the coordinator can ask for an idle notice instead of polling: Claude Code's `SendMessage` takes a `notify_when_idle` input, and one notice arrives when that session next goes idle or exits (the subscription lapses after 12 hours).
 
 ### 5. Check the report
 
 A worker's report of "done" goes on to you only after the coordinator checks it, the same check as in [delegation]({{ '/sections/08-delegation/' | relative_url }}) done one level up.
 
-| Report says | Coordinator checks |
-|---|---|
-| "Committed 4e1a9c2" | The commit exists on the branch |
-| "Test passes" | The test's output in the reply shows it passing |
-| "Deployed" | The page or endpoint answers |
-| "Merged" | `main` contains the change |
+| Report says | Coordinator checks | Command |
+|---|---|---|
+| "Committed 4e1a9c2" | The commit exists on the worker's branch | `git -C <worktree> branch --contains 4e1a9c2` |
+| "Test passes" | The test passes when the coordinator runs it | `pytest tests/test_export.py::test_export_uses_index -q` |
+| "Deployed" | The page or endpoint answers | `curl -fsS https://<service>/health` |
+| "Merged" | `main` contains the change | `git merge-base --is-ancestor 4e1a9c2 origin/main && echo merged` |
+
+Running the check beats reading the worker's pasted output: pasted output can come from an earlier run.
 
 ### 6. Report to you
 
@@ -148,12 +162,15 @@ A chief has six tasks in flight when its context fills.
 
 ## Several machines
 
-With two or more machines, each machine has its own chief. The top coordinator sends work to a machine's chief, never directly to a worker on another machine. Two reasons:
+With two or more machines, each machine has its own chief. The top coordinator sends work to a machine's chief, never directly to a worker on another machine.
 
 - The chief knows its machine's state: which sessions are busy, whether a heavy test run is in progress, whether a merge is underway.
 - Shared actions on a machine have one owner. A worker taking orders from two places would break that.
 
-Messages between machines use whatever channel reaches: the built-in channel with Remote Control, or one of the fallbacks in [message channels]({{ '/sections/09-session-coordination/message-channels.html' | relative_url }}).
+| Link between machines | Needs |
+|---|---|
+| Claude Code's built-in messaging | Both sessions connected to Remote Control, with a claude.ai sign-in |
+| A mail service, board or git inbox | Each machine able to reach it; see [message channels]({{ '/sections/09-session-coordination/message-channels.html' | relative_url }}) |
 
 ### Example: picking a machine
 
@@ -175,8 +192,8 @@ You ask for a long data-processing job and a quick docs fix.
   - Its context fills with file contents and it compacts sooner.
   - While it works, it stops answering other sessions.
 - What helps:
-  - A "do not edit files" line in its role description.
-  - A hook that flags source-file edits from the coordinator session, so the rule is enforced and not only stated.
+  - Deny the coordinator the edit tools (see [the job description](#the-job-description)), so the shortcut is unavailable.
+  - The role line in its context file, as a second layer that explains why.
 
 ### Relaying without checking
 
@@ -186,11 +203,13 @@ You ask for a long data-processing job and a quick docs fix.
 
 ### Waiting on a message that never arrived
 
-- What happens: the task goes to a session that no longer exists, and the coordinator waits.
+- What happens: the task goes to a session that no longer exists, or the receiver holds it, and the coordinator waits.
+  - On the built-in channel, a message held for approval is dropped after the receiver's `dialogExpiry`, five minutes by default.
 - What helps:
-  - Run `ListAgents` before sending.
+  - Check the list before sending.
   - Ask for an acknowledgement, and count delivery only when it arrives.
   - Give each task an expected time, and check on it when the time passes.
+  - Start unattended workers with `crossSessionInbound` set to `accept`, so messages are not held.
 
 ### Asking you too much
 
@@ -205,17 +224,33 @@ You ask for a long data-processing job and a quick docs fix.
 
 [Human gates]({{ '/sections/14-human-gates/' | relative_url }}) covers where that line sits.
 
+## When the coordinator stops
+
+Workers keep running when the coordinator exits or crashes; nothing is lost if the coordinator's state is in files.
+
+1. Start a new coordinator with the same name and settings.
+2. Rebuild its picture.
+   - Read the tracker's in-flight rows and the last state note.
+   - Run `/list-agents` and match each in-flight task to a live session.
+3. Ask each worker with an in-flight task for its status.
+4. Re-send only the tasks whose session is gone, with their original ids.
+
+> A coordinator that keeps its task list only in its conversation cannot do step 2. Write every request to the tracker in step 1 of the cycle.
+{: .warning }
+
 ## Examples from my own harness
 
-- A coordination layer built on firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>). One firstmate session takes my requests and supervises a chief-of-staff session on each machine.
+- A coordination layer built on firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>).
+  - One firstmate session takes my requests and supervises a chief-of-staff session on each machine.
 - Each chief enrols the sessions it finds on its machine, routes work to them, and runs pushes and merges one at a time.
 - A fleet briefing, generated from live state, that lists each session, what it drives, whether it is busy or idle, and what needs me.
 
-To start: one coordinator session whose context file says "route, track, check, report; do not edit files", and one worker.
+To start: one coordinator session started with edits denied and a context file that says "route, track, check, report", plus one named worker.
 
 ## Sources
 
+- Cross-session messaging (`ListAgents`, `SendMessage`, `notify_when_idle`, `crossSessionInbound`, `dialogExpiry`): <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
+- Permission deny rules and `--settings`: <https://code.claude.com/docs/en/permissions.md>.
 - firstmate: <https://github.com/kunchenguid/firstmate>, verified 2026-11-08. My fork: <https://github.com/sergeiwallace/firstmate>.
-- `ListAgents` and `SendMessage`: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-08.
 
 {% include page_nav.html %}

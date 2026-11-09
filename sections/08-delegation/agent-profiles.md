@@ -46,15 +46,31 @@ Only `name` and `description` are required. Claude Code ignores a field it does 
 
 ## The fields
 
+Fields fall into four groups:
+
+- Identity: `name`, `description`.
+- Capability: `tools`, `disallowedTools`, `permissionMode`, `isolation`.
+- Model: `model`, `effort`.
+- Other: `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `color` and more.
+
+Only `name` and `description` are required. An unrecognised field is ignored without an error, so a misspelled field does nothing.
+
 ### Identity
 
 #### `name`
 
-How the role is called, by a person or by another agent: "start a `reviewer`". Short, a noun, unique.
+- How the role is called, by a person or by another agent: "start a `reviewer`".
+- Short, a noun, unique across the locations in the table above.
+
+```yaml
+name: reviewer
+```
 
 #### `description`
 
-When to use this role. The runtime reads every profile's description and matches it against the task, so this field decides which role is started when nobody names one.
+- When to use this role.
+- The runtime reads every profile's description and matches it against the task.
+  - So this field decides which role starts when nobody names one.
 
 | Weak description | Strong description |
 |---|---|
@@ -74,19 +90,41 @@ These fields set what the agent can do.
 
 #### `tools`
 
-The tools the role may call. Anything not listed does not exist for that agent. This is the field that turns "please do not edit" into "cannot edit".
+- The tools the role may call.
+- A tool not listed is unavailable to that agent, so "please do not edit" becomes "cannot edit".
+- The runtime enforces it, which makes it the right place for a limit that matters for safety.
+
+```yaml
+tools: Read, Grep, Glob
+```
 
 #### `disallowedTools`
 
-Tools to remove from the inherited or listed set, in the same format as `tools`. Useful when a role needs almost every tool but must never use a few, for example `disallowedTools: Write, Edit` for a role that inherits everything except file writes.
+- Tools removed from the inherited or listed set, in the same format as `tools`.
+- Useful when a role needs almost every tool but must never use a few.
+
+```yaml
+# inherits every tool except file writes
+disallowedTools: Write, Edit
+```
 
 #### `permissionMode`
 
-How the role handles actions that would normally ask for approval. The documented values are `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions` and `plan`. A read-only role needs no approvals; a writing role in a worktree may be set to `acceptEdits`.
+How the role handles actions that would normally ask for approval.
+
+| Value | Typical use |
+|---|---|
+| `default` | Ask as the session would |
+| `acceptEdits` | A writing role in its own worktree |
+| `plan` | A role that plans and does not act |
+| `dontAsk`, `auto`, `bypassPermissions` | Further documented modes; see the sub-agents docs before using them |
 
 #### `isolation`
 
-`worktree` runs the agent in a temporary git worktree, branched by default from the repository's default branch, so its edits never touch the lead's checkout. A worktree in which the agent made no changes is removed automatically. See [worktree isolation]({{ '/sections/08-delegation/worktree-isolation.html' | relative_url }}).
+- `worktree` runs the agent in a temporary git worktree.
+- The worktree is branched by default from the repository's default branch, so its edits never touch the lead's checkout.
+- A worktree in which the agent made no changes is removed automatically.
+- See [worktree isolation]({{ '/sections/08-delegation/worktree-isolation.html' | relative_url }}).
 
 ### Model
 
@@ -99,11 +137,16 @@ Two fields set how the agent thinks: which model, and how much reasoning effort 
 
 #### `model`
 
-Which model the role runs on: an alias (`opus`, `sonnet`, `haiku`, `fable`), a full model ID, or `inherit` to use the lead's model. When the field is omitted, Claude Code chooses by its own model order.
+- An alias: `opus`, `sonnet`, `haiku` or `fable`.
+- A full model ID.
+- `inherit`, to use the lead's model.
+- Omitted: Claude Code picks by its own model order.
 
 #### `effort`
 
-The reasoning effort for the role, separate from the model. See [model choice]({{ '/sections/08-delegation/model-choice.html' | relative_url }}#effort-is-separate-from-tier).
+- The reasoning effort for the role, set separately from the model.
+- A mid-tier model on a hard bug can run at high effort; a strong model summarising short reports can run at low effort.
+- See [model choice]({{ '/sections/08-delegation/model-choice.html' | relative_url }}#effort-is-separate-from-tier).
 
 ### Other fields
 
@@ -117,7 +160,7 @@ The reasoning effort for the role, separate from the model. See [model choice]({
 | `background` | Whether the agent runs in the background |
 | `color` | Its colour in the interface |
 
-The full list, with exact semantics, is in the sub-agents documentation linked under Sources. The trade-offs are on [model choice]({{ '/sections/08-delegation/model-choice.html' | relative_url }}).
+The full list, with exact semantics, is in the sub-agents documentation linked under Sources.
 
 ### Body
 

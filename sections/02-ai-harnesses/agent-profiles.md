@@ -143,7 +143,7 @@ The main session's context holds the plan, three summaries and the decisions. Th
 ## Profiles in my harness
 
 - Profiles live in one source folder and install everywhere, so a role means the same thing on every machine.
-- The ground truth for each profile's model is its own front matter, never a summary of it.
+- The ground truth for each profile's model is its own front matter; a summary of it can go stale.
 - Every sub-agent launch gets its own child issue in the task tracker, filed at launch and closed when its work is collected.
 - A crashed agent leaves an open issue behind, so its unfinished work is visible.
 

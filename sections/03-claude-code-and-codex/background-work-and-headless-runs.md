@@ -32,7 +32,15 @@ A shell command can run with `run_in_background: true`. The agent gets a handle 
 
 ### What it does
 
-The Monitor tool watches a background command's output or a file path and feeds each new line back to the agent as it arrives. The agent does not poll. Monitors stop when the session ends.
+The Monitor tool watches a source and feeds each new line back to the agent as it arrives.
+
+| Property | Detail |
+|---|---|
+| What it watches | A background command's output, or a file path |
+| What the agent receives | Each new line, as a message, when it is printed |
+| Polling | None; the agent keeps working until a line arrives |
+| Lifetime | Stops when the session ends |
+| Cost | Every delivered line enters the context |
 
 ### Waiting on a test run
 
@@ -75,7 +83,19 @@ A monitor ends with the session. For something that must be watched after you cl
 
 ### claude -p
 
-`claude -p "<prompt>"` runs one task without the interactive terminal and prints the result. Skills a person invokes work in this mode; terminal-only built-in commands such as `/login` do not. A broken settings file shows no dialog in this mode; Claude Code skips it and continues, so run `claude doctor` afterwards if a setting seems ignored.
+`claude -p "<prompt>"` runs one task without the interactive terminal and prints the result.
+
+| In `-p` mode | Behaviour |
+|---|---|
+| Skills a person invokes | Work |
+| Terminal-only built-in commands such as `/login` | Do not work |
+| Context files and hooks | Load and run, unless `--bare` is set |
+| A broken settings file | No dialog; Claude Code skips the file or entry and continues |
+
+```bash
+claude -p "List the TODO comments added on this branch" > todos.txt
+claude doctor   # afterwards, if a setting seemed to be ignored
+```
 
 ### --bare
 

@@ -43,7 +43,19 @@ The last kind is easy to miss because it does not look like a failure. It costs 
 
 ### 2. Record
 
-Write it down before fixing it. A friction log can be a text file, an issue tracker, or a label on existing issues. What matters is that each entry is short and dated, and that you count repeats instead of adding duplicates.
+Write it down before fixing it. Each entry is short and dated, and a repeat raises the count on the existing entry.
+
+| Where to keep the log | Suits | Watch for |
+|---|---|---|
+| A text file in the repository | One person, one project | Merge conflicts if several sessions write to it |
+| An issue tracker | Several projects, or agents filing their own entries | Duplicates; search before filing |
+| A label on existing issues | A team that already tracks bugs there | Friction that is not a bug, such as a retyped prompt, gets left out |
+
+What each entry needs:
+
+- The date, and how often it has happened so far.
+- What happened, and what you expected instead.
+- A pointer to the transcript or the output, so step 3 can read it.
 
 <details markdown="1">
 <summary>Why record before fixing</summary>
@@ -69,7 +81,7 @@ Ask which part of the system was missing or unclear. A useful order is to ask, i
 
 Read the transcript as well as the result. The transcript usually shows the exact step where the agent took the wrong branch, and whether a rule was in its context at that moment.
 
-### 4. Change the harness
+### 4. Change the system
 
 Make the smallest change that would have stopped this case, at a layer that enforces it:
 
@@ -99,7 +111,7 @@ Start at the softest step that works. Move down when agents keep breaking the ru
 
 ### 5. Measure, then keep or revert
 
-Treat the change as a trial. Check it against the next sessions, or against a small task set made from past failures (see [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }})). Keep it if the friction stops and nothing else got worse. Revert it if it blocked correct work or did not change the outcome.
+Treat the change as a trial. Check it against the next sessions, or against a small task set made from past failures (see [Building a task set]({{ '/sections/18-trends/building-a-task-set.html' | relative_url }}) and [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }})). Keep it if the friction stops and nothing else got worse. Revert it if it blocked correct work or did not change the outcome.
 
 | Result after a week | Decision |
 |---|---|
@@ -110,7 +122,7 @@ Treat the change as a trial. Check it against the next sessions, or against a sm
 
 ## A full worked example
 
-This is the "forgot to run the tests before saying done" entry from the [overview's friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#keep-a-friction-log), taken through all five steps.
+This is the "forgot to run the tests before saying done" entry from the [overview's friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#keep-a-friction-log), taken through all five steps. The example is illustrative: the failure is a common one, and the dates, counts and file names are made up for this page.
 
 | Step | Outcome |
 |---|---|
@@ -179,13 +191,19 @@ The settings entry that registers it:
 
 The hook also receives a `stop_hook_active` field on its input when the agent is already continuing because of a Stop hook; a production version reads it so that a test suite that cannot pass does not trap the session in a loop.
 
-Then I shortened the line in `CLAUDE.md` to "Tests must pass after your last edit; a Stop hook enforces this." The context file now names the guard that enforces the rule.
+Then shorten the line in `CLAUDE.md` to "Tests must pass after your last edit; a Stop hook enforces this." The context file now names the guard that enforces the rule.
 
 ### Measure
 
-The next week had no "done with a failing test" endings. The hook fired five times, and each time the agent ran the tests and fixed a real failure. It never blocked a correct finish, so I kept it.
+Read the next week against the decision table in step 5:
 
-> Note: the hook's message tells the agent what to do next. [Writing refusal messages]({{ '/sections/17-building-a-harness/refusal-messages.html' | relative_url }}) covers how to write one. A refusal that only says "blocked" gets retried in the same wrong way.
+| Question | Answer in this example | Decision |
+|---|---|---|
+| Did the friction stop? | No "done with a failing test" endings | Keep |
+| Did the hook fire on real failures? | Five times, each followed by a test run and a fix | Keep |
+| Did it block a correct finish? | Never | No narrowing needed |
+
+> Note: the hook's message tells the agent what to do next. [Writing refusal messages]({{ '/sections/17-building-a-harness/refusal-messages.html' | relative_url }}) covers how to write one. A refusal that only says "blocked" tends to be retried in the same way.
 
 ## Who runs the loop
 
@@ -231,7 +249,7 @@ Adding "IMPORTANT: always run the tests" in capital letters keeps the rule on th
 <details markdown="1">
 <summary>Skipping the measure step</summary>
 
-A change that is never measured stays forever, whether it helped or not. That is the main source of complexity creep.
+A change that is never measured stays forever, whether it helped or not. Unmeasured changes are a common source of complexity creep.
 
 </details>
 

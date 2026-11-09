@@ -35,7 +35,7 @@ When scopes disagree, the harness resolves them in a fixed order.
 
 1. Managed policy wins over everything and cannot be overridden.
 2. For ordinary settings, the more specific scope wins: local over project over user.
-3. Permission lists are merged across all scopes, not replaced.
+3. Permission lists are merged across all scopes.
 4. Within the merged lists, deny beats ask, and ask beats allow.
 
 | Example | Result |

@@ -43,7 +43,14 @@ Every rule, hook, skill and model choice in a harness is a bet that it makes the
 
 ### Start from real failures
 
-The best tasks are ones your agents actually got wrong. Each friction log entry, reverted commit or correction you typed twice is a candidate. Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures; a small set you run often beats a large one you never run.
+The best tasks are ones your agents actually got wrong. Sources:
+
+- entries in your friction log;
+- reverted commits and the reason for each revert;
+- corrections you typed more than once;
+- review comments that caught a real bug.
+
+Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures. A small set you run often tells you more than a large one you never run.
 
 ### What a task contains
 
@@ -56,7 +63,12 @@ The best tasks are ones your agents actually got wrong. Each friction log entry,
 
 ### Freeze it
 
-Pin the starting commit and the instruction text. A task set that changes between runs cannot tell you whether the harness changed the result.
+A task set that changes between runs cannot tell you whether the harness changed the result. Pin:
+
+- the starting commit of each task;
+- the instruction text, word for word;
+- the check command;
+- the model and its settings, unless the model is what you are testing.
 
 ### Example: three tasks from one week's friction
 
@@ -77,35 +89,36 @@ Pin the starting commit and the instruction text. A task set that changes betwee
 
 ## Grading
 
-### Code checks first
-
-Where a task's success can be tested by code (a test passes, a file exists, a command exits zero), use that. It is cheap, fast and consistent.
-
-### Rubrics for the rest
-
-Some outcomes need judgement: is the summary accurate, is the review comment useful. Write a rubric with a few concrete criteria and have a model grade against it, and check a sample of its grades by hand to make sure the grader agrees with you.
+| Grader | Use when | Example | Watch for |
+|---|---|---|---|
+| Code check | success can be tested by code | a hidden test file passes; a command exits 0 | a check that tests the wrong thing |
+| Rubric, graded by a model | the outcome needs judgement | "the summary names all three causes" | disagreement with a human; check a sample by hand |
+| Human review | a small number of high-stakes tasks | a design write-up | slow, so keep it for the few |
 
 ### Grade the outcome
 
-An agent that reaches a correct result by a route you did not expect should pass. Grading the exact steps penalises improvements.
+An agent that reaches a correct result by a route you did not expect should pass. Grading the exact steps penalises improvements, so check the end state:
+
+| Grade on | Example check |
+|---|---|
+| Tests | `pytest tests/test_export_large.py` passes and no other test fails |
+| Files | the export file exists and has the expected header row |
+| Behaviour | the endpoint returns 200 for a 3 GB file within the time limit |
+| The steps taken | avoid, unless a step is itself a requirement, such as "never push to main" |
 
 ## Running fairly
 
-#### Change one thing
-
-Hold the model, the task set and the number of runs fixed, and change only the harness element under test. Two changes at once tell you about neither.
-
-#### Run each task several times
-
-Agents are not deterministic. One run per task measures luck. Run each task k times, for example three to five, and report the rate. [pass@k and pass^k]({{ '/sections/16-logging-and-evaluation/pass-at-k.html' | relative_url }}) explains which rate to report.
-
-#### Isolate runs
-
-Each run starts from a clean copy of the starting state, in its own worktree or container, so one run's leftovers do not help or hurt the next.
-
-#### Record everything
-
-Log pass or fail, cost, time and the full transcript of each run in the ledger. The transcript is how you find out why a task failed.
+1. Change one thing.
+   - Hold the model, the task set and the number of runs fixed.
+   - Two changes at once tell you about neither.
+2. Run each task several times.
+   - Agents are not deterministic, so one run per task measures luck.
+   - Run each task k times, for example three to five, and report the rate; [pass@k and pass^k]({{ '/sections/16-logging-and-evaluation/pass-at-k.html' | relative_url }}) explains which rate.
+3. Isolate runs.
+   - Each run starts from a clean copy of the starting state, in its own worktree or container.
+4. Record everything.
+   - Pass or fail, cost, time and the full transcript, in the ledger.
+   - The transcript is how you find out why a task failed.
 
 ## Reading the result
 
@@ -128,23 +141,32 @@ With 30 tasks run three times each, you have 90 graded runs per side. A change f
 
 ## Capability and regression sets
 
-Anthropic's guide separates two purposes. Capability evals find what the agent can do: tasks it fails today, to see whether a change unlocks them. Regression evals stop it from losing ground: tasks it passes today, which must keep passing.
+Anthropic's guide separates two purposes:
 
-Keep them as two sets and report them separately. A change that solves two new capability tasks and breaks three regression tasks is not an improvement, and a single combined score would hide that.
+| Set | Holds | Answers |
+|---|---|---|
+| Capability | tasks the agent fails today | does the change unlock them? |
+| Regression | tasks it passes today | does it keep passing them? |
+
+Report them separately. A change that solves two capability tasks and breaks three regression tasks would look neutral in a combined score.
 
 ## Tools
 
-### `claude plugin eval`
+| Tool | What it does | When to use it |
+|---|---|---|
+| `claude plugin eval` | compares a plugin's results against a run without it | before turning a plugin on by default |
+| Eval-driven development (OpenAI) | evaluations written with the change and run on every change | any harness change you will keep |
+| Your own runner | for each task and repeat: clean worktree, start the agent, run the check, append to the ledger | your own task set |
 
-Claude Code's `claude plugin eval` compares a plugin's results against a run without it. It is the same loop, packaged for one kind of harness change.
+A minimal runner loop:
 
-### OpenAI's eval-driven development
-
-OpenAI recommends eval-driven development and running evals on every change: write the evaluation before or with the change, and treat a regression as a failing test.
-
-### Your own runner
-
-A runner can be a short script: for each task and each repeat, create a clean worktree, start the agent with the instruction, run the check, append a line to the ledger.
+```bash
+for task in tasks/*.yaml; do
+  for run in 1 2 3; do
+    ./run_task.sh "$task" "$run" >> logs/eval.jsonl
+  done
+done
+```
 
 ## A worked evaluation
 

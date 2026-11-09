@@ -30,7 +30,13 @@ Most of this site is about coding agents in a terminal: Claude Code and Codex. M
 
 ### 1.1 Same engine, different window
 
-The Claude Code desktop app and the web version run "the same underlying engine" as the terminal client. Configuration, project memory and MCP servers are shared across the local surfaces, so a `CLAUDE.md`, a skill or an MCP server you set up for the terminal is there in the desktop app too.
+The Claude Code desktop app and the web version run "the same underlying engine" as the terminal client. Shared across the local surfaces:
+
+- Configuration, including settings files.
+- Project memory, such as `CLAUDE.md`.
+- MCP servers.
+
+So a `CLAUDE.md`, a skill or an MCP server you set up for the terminal is there in the desktop app too, and the enforcing layers of the harness carry over with it.
 
 ### 1.2 What to check on the web
 
@@ -49,7 +55,7 @@ A web session runs in the cloud. A cloud session does not load the plugins in yo
 
 ### 2.1 Context
 
-In the claude.ai chat app, project instructions and uploaded files play the role of context files (unverified; check the claude.ai help pages). Write project instructions the way you would write a short [context file]({{ '/sections/04-context-files/' | relative_url }}): the rules you keep repeating, not general advice.
+In the claude.ai chat app, project instructions and uploaded files play the role of context files (unverified; check the claude.ai help pages). Keep project instructions as short as a good [context file]({{ '/sections/04-context-files/' | relative_url }}): the few rules that apply to every chat in the project, such as the audience, the format and how to end a reply. A long list is followed less consistently here too, and a chat app has no hook to catch what the model misses, so resist adding a new line after every bad answer.
 
 #### Worked example: project instructions
 
@@ -63,11 +69,38 @@ You are helping me write internal status notes.
 
 ### 2.2 Skills and plugins
 
-The same plugin format installs on claude.ai and in Cowork, where a different set of components loads. A skill written for Claude Code can be useful in a chat app as a procedure the model reads. The difference is that nothing checks whether the model followed it. See [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+The same plugin format installs on claude.ai and in Cowork, where a different set of components loads.
+
+| Part of a skill or plugin | In Claude Code | In a chat app |
+|---|---|---|
+| The procedure in `SKILL.md` | The agent follows it, and a hook can check the result | The model reads it as guidance |
+| Scripts the skill runs | Run on your machine | Do not run on your machine |
+| Hooks the plugin adds | Run on matching events | Do not apply |
+
+See [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 
 ### 2.3 Every rule is an instruction
 
-In a chat app there is no hook, no test and no gate between the model and you. Every rule sits on the softest rung of the [enforcement ladder]({{ '/sections/17-building-a-harness/' | relative_url }}#3-prefer-a-fix-that-a-program-enforces). Expect it to be followed less consistently than a rule a hook enforces, and plan to check the result yourself.
+In a chat app there is no hook, no test and no gate between the model and you, so every rule sits in layer 1 of the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers).
+
+- Expect each rule to be followed less consistently than a rule a hook enforces.
+  - Most of all in a long conversation, or one that switches between tasks.
+- You take over the enforcing layers.
+  - A written checklist you run on each answer stands in for hooks and tests.
+  - Your own approval stands in for gates.
+
+### 2.4 A systems approach without enforcement
+
+The four layers still guide how you set up a chat project. You cannot add hooks, but you can shape the workflow so the model has less to juggle, and you can make your own checks routine.
+
+| Layer | In a coding agent | In a chat app |
+|---|---|---|
+| 1. Instructions | Context files, skill text | Project instructions, kept short |
+| 2. Workflows and tools | Skills that run fixed steps, templates | A saved prompt template per kind of task; one chat per task, so the model does not switch between tasks; a new chat when a conversation grows long |
+| 3. Hooks, scripts and linters | Checks at the moment of action | None; ask for output in a fixed structure that is quick for you to scan |
+| 4. Validation and tests | Tests, gates, review | Your checklist on each answer, or a fresh chat that reviews the answer against the checklist |
+
+<!-- IMAGE NEEDED: the four layers side by side for a coding agent and a chat app, showing layers 3 and 4 handed over to the person in the chat app. -->
 
 ## 3. What does not apply
 
@@ -88,12 +121,16 @@ The habits behind a harness work in any client:
 2. Keep the original request, word for word, and check the result against it.
 3. Check results yourself before you rely on them.
 4. Decide in advance what needs your approval.
+5. Keep one task per session, and start a new one when a conversation grows long.
 
 The [chat habits page]({{ '/sections/19-chat-and-desktop-clients/harness-habits-in-a-chat-app.html' | relative_url }}) shows each one in practice, with a worked example of the notes habit.
 
 ## Examples from my own harness
 
-My harness runs in the terminal clients, so I have no chat-app setup of my own to show. The habits in section 4 come from the terminal harness: durable notes, the original ask kept verbatim, and checks before claims are all rules there, and they work the same way when I use a chat app.
+- My harness runs in the terminal clients, so I have no chat-app setup of my own to show.
+- The habits in section 4 come from the terminal harness.
+  - Durable notes, the original ask kept verbatim, and checks before claims are each enforced there by a workflow, a template or a check.
+  - In a chat app I carry them out myself.
 
 To start: copy the project instructions example above into a chat project and use it for a week.
 

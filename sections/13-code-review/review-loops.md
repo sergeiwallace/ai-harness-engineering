@@ -34,23 +34,63 @@ Agent review is cheap enough to run many times. A common failure is a loop in wh
 
 Claude Code's best-practices page says: "A reviewer that's asked to find problems will always find *something*. If you fix every finding, you end up with extra abstraction layers and tests for cases that can't happen."
 
+The kinds of finding a fresh reviewer can always produce:
+
+| Kind | Example | Usually |
+|:--|:--|:--|
+| Hypothetical edge case | "What if the list has a billion items?" | Optional, unless a criterion names it |
+| Defensive check | "Validate that `user` is not null" behind middleware that already does | A false finding (see [verifying findings]({{ '/sections/13-code-review/verifying-findings.html' | relative_url }})) |
+| Style or naming | "Rename `items` to `export_items`" | Optional |
+| Real defect | "The JSON export drops archived items" | Must-fix |
+
 ### A changing target
 
-A review loop has two jobs: improve the change, and decide when more review is no longer worth it. A turn cap does the second as a budget, but does not make the loop converge. When each round's reviewer sets the standard, the acceptance target changes every round, so a clean round never becomes a stable end point.
+A review loop has two jobs:
+
+1. Improve the change.
+2. Decide when more review is no longer worth it.
+
+A turn cap handles the second as a budget and does nothing for the first. When each round's reviewer sets the standard, the acceptance target changes every round:
+
+- Round 1's reviewer cares about error handling.
+- Round 2's reviewer cares about naming and finds the round 1 fixes verbose.
+- Round 3's reviewer asks for the error handling round 2 removed.
+
+A clean round then never becomes a stable end point.
 
 ### Over-engineering from adversarial review
 
-In my own work, especially with Codex and GPT models, an open-ended "find problems" review produced code that was more defensive and less clear with each round. Anthropic's prompting guidance points the same way: newer models over-react to aggressive wording and tend to over-engineer, including defensive code. Its workflows page still recommends independent agents that review each other's work. Together they support independent review with a bounded mandate.
+Evidence from three directions:
+
+- My own work, especially with Codex and GPT models: an open-ended "find problems" review produced more defensive, less clear code with each round.
+- Anthropic's prompting guidance: newer models over-react to aggressive wording and tend to over-engineer, including defensive code.
+- Anthropic's workflows page still recommends independent agents that review each other's work.
+
+Together they support independent review with a bounded mandate: named criteria, a severity for each finding, and permission to report nothing.
 
 ## Three rules for convergence
 
 ### 1. Fix the criteria before the first round
 
-Write the acceptance criteria before review starts, and review against them. A finding is must-fix only if it breaks a criterion or is unsafe. Everything else is optional, and optional findings do not start a new round.
+Write the acceptance criteria before review starts, and sort every finding against them:
+
+| Finding | Severity | Starts a new round? |
+|:--|:--|:--|
+| Breaks a criterion | Must-fix | Yes |
+| Unsafe (security, data loss) | Must-fix | Yes |
+| A real risk the criteria do not cover | Worth considering | No; the owner decides |
+| Style, preference, hypothetical | Optional | No |
 
 ### 2. Review only the new diff
 
-After the first round, each re-review sees only what changed since the last one. That stops a fresh reviewer from re-litigating settled code. Claude Code's team reports that capping rounds and limiting re-review to the new diff, together with [verifying each finding]({{ '/sections/13-code-review/verifying-findings.html' | relative_url }}), raised the share of internal pull requests that passed after one round from 65% to 78%.
+After the first round, each re-review sees only what changed since the last approved state:
+
+```bash
+git diff <last-reviewed-sha>..HEAD > round-2.patch
+```
+
+- A fresh reviewer then cannot reopen code that round 1 already settled.
+- Claude Code's team reports that capping rounds and limiting re-review to the new diff, together with [verifying each finding]({{ '/sections/13-code-review/verifying-findings.html' | relative_url }}), raised the share of internal pull requests that passed after one round from 65% to 78%.
 
 ### 3. Stop when findings stop being new
 
@@ -66,7 +106,16 @@ The loop ends when a round produces no new must-fix finding. Two checks keep tha
 
 ### What the pattern looks like
 
-I had 17 separate agents analyse a corpus of long review loops from my harness, and every one of them reported the same shape: each new round discovered a sibling of an earlier finding. A different state, another consumer, the opposite polarity, or another surface of the same obligation. Fresh reviewers were doing late the impact analysis the first fix should have done.
+I had 17 separate agents analyse a corpus of long review loops from my harness. Every one of them reported the same shape: each new round discovered a sibling of an earlier finding. The kinds of sibling:
+
+| Sibling | Example |
+|:--|:--|
+| A different state | The fix handled "running"; the next round found "paused" |
+| Another consumer | The fix covered the CLI; the next round found the API |
+| The opposite polarity | The fix handled "flag set"; the next round found "flag unset" |
+| Another surface of the same obligation | The fix updated the code; the next round found the doc page |
+
+Fresh reviewers were doing, late, the impact analysis the first fix should have included.
 
 ### Worked example
 
@@ -112,7 +161,15 @@ Most agent frameworks offer a loop limit: a maximum number of steps or iteration
 
 ## From my harness
 
-My audit skill reviews in rounds and sorts findings into must-fix, worth considering, and take it or leave it. Only must-fix findings start another round. Review briefs pair the request to look for improvements with "no change warranted is a valid result", and a first round with no findings is checked for whether the reviewer read the target. A round with nothing new ends the loop.
+How my audit rounds run:
+
+1. Each round sorts findings into must-fix, worth considering, and take it or leave it.
+2. Only must-fix findings start another round.
+3. Every review brief pairs "look for improvements" with "no change warranted is a valid result".
+4. A first round with no findings is checked for whether the reviewer read the target.
+5. A round with nothing new ends the loop.
+
+Steps 1, 2 and 5 are built into the audit workflow (layer 2 of the harness); step 3 is a brief line (layer 1).
 
 ## Sources
 

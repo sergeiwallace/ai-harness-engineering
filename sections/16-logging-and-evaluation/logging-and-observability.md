@@ -41,7 +41,15 @@ Observability is being able to answer questions about a system from what it reco
 
 ### Record structured events
 
-Record each thing that happened as a structured event with fixed fields rather than a sentence. "Ran the tests, they passed" cannot be counted. `{"event":"test","exit":0,"seconds":41}` can.
+Record each thing that happened as an event with fixed fields:
+
+| Free text | Structured event |
+|---|---|
+| "Ran the tests, they passed" | `{"event":"test","exit":0,"seconds":41}` |
+| "Committed the fix" | `{"event":"commit","model":"opus","agent":"engineer"}` |
+| "The gate was slow today" | `{"event":"gate","stage":"full-tests","seconds":1260}` |
+
+The right-hand column can be counted, summed and grouped; the left cannot.
 
 ### The minimum event
 
@@ -58,13 +66,25 @@ Record each thing that happened as a structured event with fixed fields rather t
 
 ### Record failures with the same care
 
-A log of successes says nothing about what went wrong. The exit code and the first lines of the error are the most useful fields in the file.
+A log of successes says nothing about what went wrong. For a failure, record:
+
+- the exit code;
+- the first lines of the error, with secrets and tokens removed;
+- the stage it failed in and how long it ran first;
+- whether a retry followed, and its result.
 
 ## JSON Lines ledgers
 
 ### Why JSONL
 
-A JSON Lines file holds one JSON object per line. Writing is an append, so concurrent writers rarely conflict and a crash loses at most one line. Reading needs no database. A new field needs no migration: old lines simply lack it.
+A JSON Lines file holds one JSON object per line.
+
+| Property | Why it helps a harness |
+|---|---|
+| Writing is an append | concurrent writers rarely conflict; a crash loses at most one line |
+| No database | any script can write it; `jq` or Python can read it |
+| No schema migration | a new field appears on new lines; old lines lack it |
+| Plain text | it diffs, greps and compresses well |
 
 ### Writing
 
@@ -93,7 +113,18 @@ jq -s 'group_by(.stage) | map({stage: .[0].stage, seconds: (map(.seconds) | add)
 
 ### One ledger per subsystem
 
-Keep a ledger for each part of the harness (the test gate, the delegation launcher, the merge step) rather than one file for everything. Each stays small, has a clear owner, and can change its fields without affecting the others.
+Keep a ledger for each part of the harness rather than one file for everything:
+
+```text
+logs/
+  gate.jsonl          test gate stages and durations
+  launcher.jsonl      agent launches: role, model, effort, outcome
+  merge.jsonl         merges: PR, wait time, result
+  model-calls.jsonl   tokens and estimated cost per call
+```
+
+- Each file stays small and has a clear owner.
+- Each subsystem can change its own fields without affecting the others.
 
 ## Commit provenance
 
@@ -170,11 +201,23 @@ Review has a median of four minutes. The final full test run has a median of twe
 
 ### Budget each gate
 
-Every gate costs time on every run. Give each a time budget, log when it exceeds it, and review the gates that block correct work most often. A gate that is slow and rarely catches anything is a candidate for removal.
+Every gate costs time on every run. For each one, track:
+
+| Measure | From the ledger | Action when it is bad |
+|---|---|---|
+| Duration | median and slowest run | shard it, cache it, or run it less often |
+| Over budget | runs above its time limit | investigate the slow runs |
+| False refusals | refusals of correct work | narrow the rule or fix the check |
+| Catches | real problems it stopped | a slow gate that rarely catches anything is a candidate for removal |
 
 ## Session reports
 
-`/insights` in Claude Code writes a report on your recent sessions, friction points included, for improving your setup. It is a quick way to find the corrections you keep repeating, which are the best candidates for a new rule or hook.
+`/insights` in Claude Code writes a report on your recent sessions, friction points included. Use it in a loop:
+
+1. Run `/insights` at the end of a week.
+2. Pick the friction point that repeats most.
+3. Fix it in the system: a workflow step, a tool, a hook or a test.
+4. Check the next report to see whether it went away.
 
 ## Examples from my own harness
 

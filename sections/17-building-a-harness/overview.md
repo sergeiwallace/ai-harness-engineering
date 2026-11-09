@@ -28,7 +28,13 @@ You build a harness with a systems approach: each time an agent's output falls s
 
 ## 1. A systems approach to building a harness
 
-The model, its context, its tools, its checks and you form one system. When the output is wrong, some part of that system let it through, and the improvement is a change to that part.
+The model and everything around it form one system. When the output is wrong, some part of that system let it through, and the improvement is a change to that part.
+
+- The model, which you choose but do not change.
+- Its context: context files, skills, prompts and the conversation so far.
+- Its tools and workflows: the commands, scripts and procedures it runs.
+- Its checks: hooks, linters, tests, gates and permission rules.
+- You: the reviewer, and the person who approves outward and destructive actions.
 
 ### 1.1 The four layers
 
@@ -36,12 +42,18 @@ A harness has four layers. The first guides the model; the other three enforce.
 
 | Layer | What it contains | How it acts | Reliability over a long session |
 |---|---|---|---|
-| 1. Instructions | Context files, skills, prompts | Guides the model while it reads them | Applied inconsistently when the model juggles several things, switches tasks or has a nearly full context window |
-| 2. Workflows and tools | Skills that run fixed steps, scripts, commands, templates | Builds the right steps into how the work is done | Holds whenever the workflow is used |
+| 1. Instructions | Context files, prompts, and the guidance text in skills | Guides the model while it reads them | Applied inconsistently when the model juggles several things, switches tasks or has a nearly full context window |
+| 2. Workflows and tools | Commands and skills that run fixed steps, scripts, templates | Builds the right steps into how the work is done | Holds whenever the workflow is used |
 | 3. Hooks, scripts and linters | Checks at the moment of action | Refuses or flags the action as it happens | Runs on every matching event |
 | 4. Validation and tests | Test suites, merge gates, review | Catches what slipped through before it lands | Runs before every change lands |
 
 Layers 2 to 4 do the enforcing. Layer 1 is the second line of defence: a context-file line can tell the agent about a guard, or cover knowledge that no check can encode, such as taste.
+
+Research on coding agents points the same way. In one study, corrections kept in memory still left 57.5% of the checked preferences violated, while compiling them into runtime checks cut out-of-distribution violations to 2.0%. In another, the share of instructions followed fell steeply as the count rose from one to twenty. The figures and caveats are in [Evidence for enforcing over instructing]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}#evidence-for-enforcing-over-instructing).
+
+A skill can sit in either layer. A skill whose text describes how to review code guides the model (layer 1). A skill that runs a script, fills a template or calls a fixed sequence of commands builds the steps in (layer 2).
+
+<!-- IMAGE NEEDED: the four layers as a vertical stack around one agent action, such as an edit or a push, showing where each layer acts: instructions before the action, workflows shaping it, hooks at the moment it runs, tests before the result lands. -->
 
 > Warning: adding a new, detailed rule to a context file every time an agent does something wrong is an anti-pattern. The rules pile up, the agent applies them less consistently as they grow, and the same failure returns in a long or busy session. Put the fix into a workflow, a tool, a hook or a test, and keep at most one context-file line that names it. The [complexity creep page]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}#the-four-usual-paths) covers this in detail.
 
@@ -49,14 +61,17 @@ Layers 2 to 4 do the enforcing. Layer 1 is the second line of defence: a context
 
 1. Notice the gap.
    - A failure, a stall, or a correction you have given twice.
-2. Find the layer that should have caught it.
+2. Record it.
+   - One dated line in a friction log, with a count of how often it happened.
+3. Find the layer that should have caught it.
    - Usually layer 2, 3 or 4. A missing line in a context file is rarely the whole answer.
-3. Change that layer.
+4. Change that layer.
    - Build the step into the workflow, add a check, or add a test.
-4. Measure.
+5. Measure.
    - Watch the next sessions for the same gap, and for correct work the change now blocks.
+   - Keep the change if the gap closed and nothing else broke; revert it otherwise.
 
-The [improvement loop page]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) takes one gap through all four steps, with the hook it produced.
+The [improvement loop page]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) takes one gap through all five steps, with the hook it produced.
 
 ## 2. Start from friction
 
@@ -69,9 +84,9 @@ Friction is the input to every change. A copied harness brings its author's fric
 | Repeated correction | Edited a generated file twice | 3: a hook that refuses the edit |
 | Your own repetition | Retyped the same review prompt | 2: a skill |
 
-### Keep a friction log
+### 2.1 Keep a friction log
 
-Start with a list. Each time something goes wrong, write one line with the date, what happened, how often you have seen it, and what it cost. Do not fix anything yet. After a week, sort by count and cost.
+Start with a list. Each time something goes wrong, write one line with the date, what happened, how often you have seen it, and what it cost. Do not fix anything yet. After a week, sort by count and cost. An illustrative log:
 
 ```text
 date        what happened                                     seen   cost
@@ -81,7 +96,7 @@ date        what happened                                     seen   cost
 2026-11-05  agent edited a generated file instead of its source 1     medium
 ```
 
-### Find the part of the system that let it through
+### 2.2 Find the part of the system that let it through
 
 | Symptom | Part that let it through | Where the fix goes |
 |---|---|---|
@@ -116,7 +131,7 @@ A rule in prose competes with everything else in the context window, so the agen
 
 ### 3.1 The enforcement ladder
 
-The ladder lists the mechanisms from softest to strictest. Put a fix on the lowest rung that will hold it, and move it down when agents keep getting past it.
+The ladder lists the mechanisms from softest to strictest. Put a fix on the softest rung that will hold it, and move it down when agents keep getting past it. A permission rule sits at the bottom even though it belongs to layer 3: the action cannot run at all, so nothing gets past it.
 
 | Rung | Layer | Cost to write | How reliably it holds | Good for |
 |---|---|---|---|---|
@@ -145,7 +160,7 @@ Each guard has a cost:
 In a mature harness, an agent files the bug, writes the fix, adds the check and opens the pull request, and you review the result. An illustrative exchange, shortened:
 
 ```text
-> This is the second time a session said "done" with a failing test. Fix the harness, not the code.
+> This is the second time a session said "done" with a failing test. Fix the harness so it cannot happen again.
 
   Reading the last two transcripts...
   Both sessions ran the tests, then edited a file and did not re-run them.
@@ -189,6 +204,7 @@ Studies of self-improving harnesses describe one outer loop:
 3. Propose a small edit.
 4. Evaluate it against a protected task set, and keep it only if nothing regresses.
    - The evaluator stays outside what the loop may change.
+5. Promote it through someone other than the proposer, usually a person, and keep a record so it can be rolled back.
 
 One study found that automatic harness changes did no better than simply running the model more, so compare any automatic loop against that baseline. Details and sources: [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}).
 
@@ -214,7 +230,7 @@ Every fix adds a mechanism. Over months, a harness can become a patchwork of ove
 
 1. Write one `CLAUDE.md` (layer 1).
    - The five or six things you keep telling the agent that no check can encode.
-2. Turn the prompt you type most into one skill (layer 2).
+2. Turn the prompt you type most into one skill (layer 1, moving to layer 2 as you script its steps).
 3. Turn the rule an agent broke into one hook (layer 3).
 4. Write one approval rule for what needs your say-so, such as `git push` (layer 3).
 

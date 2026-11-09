@@ -53,8 +53,8 @@ The Model Context Protocol (MCP) is an open standard for connecting a model to o
 ### Claude Code
 
 ```text
-claude mcp add --transport http docs-search https://mcp.example.com/docs
-claude mcp add notes -- python3 tools/notes_server.py
+$ claude mcp add --transport http docs-search https://mcp.example.com/docs
+$ claude mcp add notes -- python3 tools/notes_server.py
 ```
 
 At project scope the servers are written to `.mcp.json`, committed so the team shares them:
@@ -90,7 +90,7 @@ A guard written for `Bash` does not see MCP calls. If an MCP tool can delete, se
 
 ## What MCP costs
 
-Every tool's name, description and schema sits in the context like a native tool's. A server with thirty tools can cost more than your whole context file. Connect the servers a project needs, not every server you have. Claude Code can defer loading tool definitions until they are searched for, which lowers the standing cost when many servers are connected.
+Every tool's name, description and schema sits in the context like a native tool's. A server with thirty tools can cost more than your whole context file. Connect only the servers a project needs. Claude Code can defer loading tool definitions until they are searched for, which lowers the standing cost when many servers are connected.
 
 > An MCP server runs with your credentials and can return any text into the context. Install servers from sources you trust, and treat their output as untrusted input.
 {: .warning }

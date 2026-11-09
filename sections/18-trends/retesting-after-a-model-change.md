@@ -80,7 +80,12 @@ A pass rate shows that something changed. The transcripts show what changed, and
 
 ### 4. Change one thing at a time
 
-For each idle rule, remove it and re-run the tasks it covers. Keep the removal if nothing regresses. For each new failure, add the smallest fix, starting low on the [enforcement ladder]({{ '/sections/17-building-a-harness/' | relative_url }}#3-prefer-a-fix-that-a-program-enforces).
+1. For each idle rule, remove it and re-run the tasks it covers.
+   - Keep the removal if nothing regresses.
+2. For each new failure, put the fix into the system.
+   - A workflow step, a hook or a test where a program can detect the failure; see [the four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers).
+   - A short context-file line only where it cannot, or as a pointer to the new guard.
+3. Re-run the task set after each change, so each result belongs to one change.
 
 ### 5. Record what changed and why
 
@@ -88,7 +93,8 @@ For each idle rule, remove it and re-run the tasks it covers. Keep the removal i
 2026-10-14  model: new-model
   removed: "Avoid em dashes" from the always-loaded rules; kept it in the writing checklist only
   reason:  0 hits in 30 runs on the new model, 11 hits in 30 on the old
-  added:   "No bold lead-in labels on paragraphs"
+  added:   a pattern check for bold lead-in labels (a line starting with **Word.**), run before publishing
+           plus one line in the writing checklist that names the check
   reason:  appeared in 9 of 30 new-model summaries, 1 of 30 old
 ```
 
@@ -104,7 +110,7 @@ The writing-tells change from the [overview]({{ '/sections/18-trends/' | relativ
 | Task set | Ten writing tasks: summaries, status notes, a pull request description |
 | Run | Each task on both models, several times |
 | Differences | Em dashes nearly gone; bold lead-ins, three-part lists and hedges more frequent |
-| Change | Kept the em dash rule short; added rules for the three new patterns |
+| Change | Kept the em dash rule short; added a pattern check for bold lead-ins and hedge words, and checklist lines for three-part lists, which need a reader |
 | Record | One entry per rule, with the model and the date |
 
 <details markdown="1">
@@ -134,7 +140,10 @@ Forgotten rules are the likeliest to be out of date. Re-test from the inventory 
 
 ## Examples from my own harness
 
-When the model changed, I read a batch of fresh output against my writing rules and found both idle rules and uncovered patterns, as in the worked comparison. The writing rules now carry a note of which model each pattern applies to, so the next change starts with a list of rules to re-check.
+- When the model changed, I read a batch of fresh output against my writing rules.
+  - I found both idle rules and uncovered patterns, as in the worked comparison.
+- The writing rules now carry a note of which model each pattern applies to.
+  - The next model change starts with a list of rules to re-check.
 
 To start: write five tasks from past failures into a file today, so the next model change has something to run against.
 

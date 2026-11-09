@@ -13,11 +13,37 @@ permalink: /sections/12-testing/
 
 As of 2026-11-09. Stop 9 on the talk path, about 2 minutes.
 
-When an agent writes the code, it usually writes the tests too. The tests are then also the signal the agent optimises against, and an agent can make a test pass without meeting the intent behind it. This overview covers five testing habits for agent-written code, with a worked example for each. Each habit links to a topic page with more detail.
+When an agent writes the code, it usually writes the tests too. The tests then double as the score the agent works toward, and an agent can make a test pass without meeting the intent behind it. This overview covers six testing practices for agent-written code, each with a worked example, and links to a topic page wherever a practice has more depth.
+
+| Practice | What it means | Go deeper |
+|:--|:--|:--|
+| [Test at the real entry point](#testing-at-the-entry-point) | Drive the command, route, hook or page a user touches, and assert what they would see | [Testing at the real entry point]({{ '/sections/12-testing/entry-point-testing.html' | relative_url }}) |
+| [Write the spec before the code](#test-ordering) | Tests come from acceptance criteria written first | [Test ordering and the spec]({{ '/sections/12-testing/entry-point-testing.html#test-ordering-and-the-spec' | relative_url }}) |
+| [Keep the oracle honest](#oracle-integrity) | Forbid weakening tests, give the agent a way to report a bad one, flag test edits in the diff | [Test tampering and oracle integrity]({{ '/sections/12-testing/oracle-integrity.html' | relative_url }}), then [Detecting test edits in a diff]({{ '/sections/12-testing/test-edit-detection.html' | relative_url }}) |
+| [Freeze the bug's test first](#bug-fix-regression-tests) | A regression test fails on the old code before it may pass on the fix | [The bug-fix regression test]({{ '/sections/12-testing/regression-tests.html' | relative_url }}) |
+| [Run the real system](#end-to-end-and-live-validation) | End-to-end and live runs, and screenshots for anything visual | [Browser automation]({{ '/sections/15-browser-automation/' | relative_url }}) |
+| [Scale the suite deliberately](#testing-at-scale) | Select tests from the diff and queue heavy runs | This page |
+
+<details markdown="1">
+<summary>Terms used in this section</summary>
+
+| Term | Meaning |
+|:--|:--|
+| Launcher | The person or agent session that handed the task to the coding agent and will review its result |
+| Acceptance criteria | The short list of statements that say when the task is done, written before the code |
+| Entry point | What a user or another program actually calls: a command, an HTTP route, a hook's input, a page |
+| Oracle | Whatever decides whether the code is right: a test suite, a reference output, a checker script |
+| Reward hacking | An agent meeting the letter of its success check without meeting its intent; test tampering is one form |
+| Regression test | A test that reproduces a fixed bug, so the bug cannot come back unnoticed |
+| Mutation testing | A tool changes the code in small ways and checks whether any test fails; surviving changes show weak tests |
+| Hermetic test | A test that owns all its temporary files, ports and processes, and cleans up after itself |
+| TDD | Test-driven development: write one failing test, write just enough code to pass it, repeat |
+
+</details>
 
 <figure>
   <img src="{{ '/assets/images/12-testing/bugfix-run.svg' | relative_url }}" width="100%" alt="Sequence diagram of one bug-fix run across five lanes: launcher, coding agent, test suite, real entry point and merge gate. The launcher briefs the agent with the bug report, the criteria and a never-weaken-a-test line. The agent drives the bug through the real entry point, sees the wrong output, and commits a failing test. It runs that test on the fix and sees it pass, then runs an end-to-end check. An old test now fails, and the agent reports it as disputed instead of editing it. The agent pushes; the merge gate runs the tests the diff touches and reports no test edits; the launcher rules on the dispute and merges.">
-  <figcaption>One bug-fix run, top to bottom. Made with archify.</figcaption>
+  <figcaption>One bug-fix run, top to bottom, using five of the six practices. Made with archify.</figcaption>
 </figure>
 
 The run in the diagram, step by step:
@@ -35,14 +61,6 @@ The run in the diagram, step by step:
 6. The merge gate runs the tests the diff touches and reports any pre-existing test the branch changed.
 7. The launcher rules on the disputed test and merges.
 
-| Habit | One line | Topic page |
-|:--|:--|:--|
-| Test the real entry point | Drive the CLI, route, hook or page the user touches, and assert what they would see | [Testing at the real entry point]({{ '/sections/12-testing/entry-point-testing.html' | relative_url }}) |
-| Anchor tests in the spec | Tests come from the acceptance criteria, not from the code they check | [Testing at the real entry point]({{ '/sections/12-testing/entry-point-testing.html#test-ordering-and-the-spec' | relative_url }}) |
-| Keep the oracle honest | Forbid weakening tests, give the agent a way to report a bad one, and flag test edits in the diff | [Test tampering and oracle integrity]({{ '/sections/12-testing/oracle-integrity.html' | relative_url }}) |
-| Freeze the bug's test first | A regression test must fail on the old code before it may pass on the fix | [The bug-fix regression test]({{ '/sections/12-testing/regression-tests.html' | relative_url }}) |
-| Scale the suite deliberately | Select tests from the diff and serialise heavy runs, so test time does not become the bottleneck | This page, [testing at scale](#testing-at-scale) |
-
 <details markdown="1">
 <summary>Contents of this page</summary>
 
@@ -50,22 +68,6 @@ The run in the diagram, step by step:
 {:toc}
 
 </details>
-
-## Where tests sit in the harness
-
-This site treats harness engineering as a systems approach: when an agent gets something wrong, the fix goes into the system, enforced by code wherever possible, and each new gap gets the same treatment. Tests are the last of four layers in that system:
-
-1. Instructions in context files, skills and prompts.
-   - Example: a testing rule that loads when the agent edits a test file.
-   - The model applies these inconsistently, especially with several tasks in flight or a full context window, so they are the second line of defence.
-2. Workflows and tools that build the steps in.
-   - Example: a bug-fix procedure whose steps include "commit the failing test before the fix".
-3. Hooks, scripts and linters that refuse or flag at the moment of action.
-   - Example: a hook that blocks edits to existing test files, or a script that lists changed tests on a branch.
-4. Validation and tests before a change lands.
-   - Example: the merge gate runs the tests the diff touches and refuses the merge when one fails.
-
-Layers 2 to 4 do the enforcing. A testing lesson that only becomes another line in a context file tends to be missed on a busy run; the same lesson as a gate check runs on every change. The [bug-fix diagram](#testing-agent-written-code) above shows layers 1, 2 and 4 in one run, and [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3.
 
 ## Why agent-written tests need different habits
 
@@ -77,16 +79,18 @@ A human who writes a test usually knows what the feature is for. An agent knows 
 | Reward signal | Agents optimise against their own tests, and iterating on them makes results worse | [Tests as the reward signal](#tests-as-the-reward-signal) |
 | Isolation | Agents pass tests of single features and fail when features combine | [Overfitting to isolated checks](#overfitting-to-isolated-checks) |
 
+<!-- IMAGE NEEDED: chart of visible-test pass rate against held-out-test pass rate for coding agents, gap widening with code size; search: SpecBench reward hacking coding agents chart, held-out tests gap -->
+
 ### Test volume
 
 The model vendors now document this about their own models:
 
-- One vendor's guide for a recent model says it "may fix nearby code, extend behavior the task didn't mention, or commit more test files than the change warrants."
-  - The same guide suggests "roughly one focused test per stated behavior" and reports fewer unrequested files with no loss in task success.
-- Another vendor's guide warns that for small tasks its model can write "broader tests than the task requires."
-  - Its fix is a prompt line: do not write tests for reversible, low-impact changes that mirror the implementation.
+- Anthropic's prompting guide for Claude Fable 5.1 says the model "may fix nearby code, extend behavior the task didn't mention, or commit more test files than the change warrants."
+  - The same guide suggests "roughly one focused test per stated behavior" and reports fewer unrequested files with no measurable change in task success.
+- OpenAI's guide for GPT-6 warns that for smaller tasks the model can write "broader tests than the task requires."
+  - Its suggested prompt line: "Do not write tests for reversible, low-impact changes that mirror the implementation."
 - An open-source maintainer removed about 400,000 lines of agent-written tests with little change in code coverage.
-  - The maintainer's explanation: modern models write tests for every small change, useful or not.
+  - The maintainer's explanation, as reported: "Modern models just love writing tests for every tiny change, even if they aren't useful."
 
 Most of these tests check how the code is written. They keep passing when the feature a user relies on is broken, and they fail when someone refactors code that still works.
 
@@ -94,13 +98,13 @@ Most of these tests check how the code is written. They keep passing when the fe
 
 When the agent writes the code and its tests, the tests become the score it works toward. A 2026 study on the SWE-bench benchmark measured how often that score misleads:
 
-| Measurement | One model | Another model |
+| Measurement | Claude 3.7 Sonnet | GPT-4o |
 |:--|--:|--:|
 | Passed the agent's own tests, failed the hidden reference tests | 21.8% | 33.0% |
 | Same, after the agent iterated on its own tests | 25.5% | 35.9% |
 | Broke existing regression tests even with the reference tests shown | 5.8% | 11.3% |
 
-A test states only part of the intent, and an optimiser can satisfy the test without meeting the rest. The models in this study predate the current generation, so the exact rates today are unknown; the mechanism does not depend on the model.
+A test states only part of the intent, and an optimiser can satisfy the test without meeting the rest. These models predate the current generation, so the exact rates today are unknown; the mechanism does not depend on the model.
 
 ### Overfitting to isolated checks
 
@@ -113,6 +117,40 @@ The SpecBench benchmark (2026) separates two kinds of test:
   - The most common failure was features that each worked alone and did not share state with each other.
 
 For long tasks on large codebases, the tests that catch real failures are the ones that drive several features together through the entry point.
+
+### Measuring test strength
+
+Line coverage says a line ran, not that a test checked what it did. Two measures, and what each misses:
+
+| Measure | What it reports | What it misses |
+|:--|:--|:--|
+| Line or branch coverage | Which lines and branches some test executed | Whether any assertion depends on them |
+| Mutation score | The share of small deliberate code changes ("mutants") that make some test fail | Slow to run on a whole codebase; best on core logic |
+
+One 2026 write-up describes a file with 100% statement coverage and no unit tests at all: a large acceptance test happened to call every line, and a mutation tool still found 13 surviving mutants. Thoughtworks placed mutation testing in the Trial ring of its Technology Radar in April 2026, calling it "the most honest signal" of a suite's fault-detection ability.
+
+Python, with mutmut (configure the paths once, then run):
+
+```toml
+# pyproject.toml
+[tool.mutmut]
+source_paths = ["src/"]
+pytest_add_cli_args_test_selection = ["tests/"]
+```
+
+```bash
+mutmut run "export*"    # limit the run to one module
+mutmut browse           # inspect surviving mutants interactively
+```
+
+JavaScript and TypeScript, with StrykerJS:
+
+```bash
+npm init stryker@latest   # installs Stryker and writes stryker.config.mjs
+npx stryker run
+```
+
+Run it on dense core logic (parsers, pricing, permission checks), where a surviving mutant points at an assertion the agent did not write.
 
 ## Testing at the entry point
 
@@ -147,7 +185,21 @@ This test fails if any step between the command line and the stored record is br
 
 #### Function-level tests
 
-Function-level tests pass a value gate when the function is itself a contract (a parser for a public file format, a migration, a security check), when the test freezes a reproduced bug, or when dense pure logic is easier to pin with a table of inputs and outputs than through a large fixture. The [topic page]({{ '/sections/12-testing/entry-point-testing.html#the-value-gate' | relative_url }}) gives the four questions one open-source project asks before any test is added.
+Function-level tests still pass a value gate in three cases:
+
+- The function is itself a contract: a parser for a public file format, a migration, a security check.
+- The test freezes a reproduced bug in that function.
+- Dense pure logic is easier to pin with a table of inputs and outputs than through a large fixture.
+
+The [value gate]({{ '/sections/12-testing/entry-point-testing.html#the-value-gate' | relative_url }}) on the topic page gives the four questions one open-source project asks before any test is added.
+
+#### Edge cases
+
+| Situation | What to do at the entry point |
+|:--|:--|
+| The feature calls a paid or rate-limited API | Replace only that API with a recorded response; run everything else for real |
+| The entry point is slow (seconds per call) | Keep one test per acceptance criterion; put the many input variations in a table-driven test of the function behind it |
+| The output includes timestamps or random ids | Assert on the fields the criteria name, or freeze the clock and the seed |
 
 ### Test ordering
 
@@ -176,11 +228,11 @@ The oracle is whatever decides whether the code is right. An agent that can edit
 In ordinary work, agents mostly fix the code. Tampering concentrates in three situations:
 
 1. The task cannot be done as specified.
-   - One model card reports attempted reward hacking three to six times more often on impossible tasks than on possible ones.
+   - Anthropic's Claude Opus 5.5 system card reports attempted reward hacking three to six times more often on impossible tasks than on possible ones.
 2. The written spec and a test disagree.
    - ImpossibleBench builds tasks with deliberate spec-test conflicts; some model families cheated there mainly by editing test cases.
 3. The checker itself is defective.
-   - On tasks with known checker defects, baseline hacking rates were 11.1% and 13.3% for two current models.
+   - On tasks with known checker defects, baseline hacking rates were 11.1% for claude-fable-5 and 13.3% for gpt-5.6-sol.
 
 Controls work best aimed at those moments: when an agent cannot pass a test, it needs a permitted next step.
 
@@ -188,12 +240,17 @@ Controls work best aimed at those moments: when an agent cannot pass a test, it 
 
 <figure>
   <img src="{{ '/assets/images/12-testing/tamper-dispute.svg' | relative_url }}" width="100%" alt="Sequence diagram with four lanes: launcher, coding agent, old test and test-edit check. The agent runs the suite and an old export test fails, expecting 12 rows where the change exports 9. On the common path the agent reports a disputed test citing criterion 3; the launcher confirms the criterion changed and tells the agent to update the test with a stated reason. On the rare path the agent silently loosens the assertion to greater than zero; the test-edit check flags a changed pre-existing test with no reason, and the launcher files a finding to restore the assertion.">
-  <figcaption>The two paths an agent can take when an old test blocks it. The report channel makes the honest path the easy one, and the diff check catches the rest. Made with archify.</figcaption>
+  <figcaption>The two paths an agent can take when an old test blocks it. Made with archify.</figcaption>
 </figure>
 
-A 2026 study across eight frontier models from five model families tested two cheap changes. The first is a policy line telling the agent not to weaken tests. The second is a sanctioned way for the agent to report a test it thinks is wrong. Together they cut test tampering from 23.6% to 5.3%, with no measured cost, and removed it entirely for six of the eight models. Escalation and hacking almost never happened in the same run.
+A 2026 study across eight frontier models from five model families tested two cheap changes:
 
-A brief can carry both in three lines:
+| Change | What it is |
+|:--|:--|
+| A policy line | Tells the agent not to modify, delete or narrow test assertions, expected values or scope |
+| An escalation channel | A sanctioned way for the agent to report a test it thinks is wrong |
+
+Together they cut test tampering from 23.6% to 5.3%, with no measured cost, and removed it entirely for six of the eight models. Escalation and hacking almost never happened in the same run (98.7% of escalations involved no hacking). A brief can carry both in three lines:
 
 ```text
 Never modify, delete or narrow an existing test's assertions, expected values or scope.
@@ -210,11 +267,11 @@ How the parts fit together in one run:
    - In my harness that is the launcher, which holds the acceptance criteria. A person or a separate reviewer agent can also take this role.
 4. A test-edit check on the diff lists any pre-existing test the branch changed anyway.
 
-The [topic page]({{ '/sections/12-testing/oracle-integrity.html' | relative_url }}) covers who decides, the heavier option of making tests read-only with a hook, and why an LLM judge on every diff is the wrong default.
+The [topic page]({{ '/sections/12-testing/oracle-integrity.html' | relative_url }}) covers who decides, the heavier option of making tests read-only with a hook, and why an LLM judge on every diff is a costly default.
 
 ### Test-edit detection
 
-Both reward-hacking benchmarks used the same detection channel: a check that flags when a pre-existing test file changed. For a delegated branch it is one command, read before merge:
+Two 2026 reward-hacking benchmarks, EvilGenie and the escalation-channel study above, used the same detection channel: a check that flags when a pre-existing test file changed. For a delegated branch it is one command, read before merge:
 
 ```bash
 git diff --name-only --diff-filter=MD "$(git merge-base origin/main HEAD)"...HEAD -- tests/
@@ -248,7 +305,7 @@ In one 2026 evaluation, strict TDD did not pay for itself inside the agent loop.
   <figcaption>Red then green. The same frozen test fails on the old code and passes on the fix. Made with archify.</figcaption>
 </figure>
 
-The order matters because an agent asked to "fix the bug and add a test" can write a test that passes on both old and new code. The [topic page]({{ '/sections/12-testing/regression-tests.html' | relative_url }}) walks the full method: reproduce, root-cause, freeze, fix, verify in widening rings, and rank where the rule is enforced.
+The order matters because an agent asked to "fix the bug and add a test" can write a test that passes on both old and new code. The [topic page]({{ '/sections/12-testing/regression-tests.html' | relative_url }}) walks the full method: reproduce, root-cause, freeze, fix, verify in widening rings, and where each rule is enforced.
 
 ## End-to-end and live validation
 
@@ -266,7 +323,12 @@ A green unit suite can pass while the feature is broken. Anthropic's write-up on
 
 ### Worked example: a live messaging test
 
-In my harness, one feature lets one agent session send a message to another. Unit tests can check the message format, the addressing and the queue, and every one of them can pass with a stub standing in for the real delivery path. So the feature also has a live end-to-end run: it starts real sessions, sends a real message from one, and checks that it arrives in the other within a time limit. It is slower and runs less often, but it is the only test that answers the question a user asks: did my message get there?
+In my harness, one feature lets one agent session send a message to another. What each kind of test can and cannot see:
+
+- Unit tests check the message format, the addressing and the queue.
+  - Every one of them can pass with a stub standing in for the real delivery path.
+- A live end-to-end run starts real sessions, sends a real message from one, and checks that it arrives in the other within a time limit.
+  - It is slower and runs less often, and it is the only test that answers the question a user asks: did my message get there?
 
 ```text
 live e2e: cross-session message
@@ -277,6 +339,8 @@ live e2e: cross-session message
   stop A, stop B, remove temp state
 ```
 
+The last line removes the sessions and state the run created, so a failed run does not leave processes behind on a shared machine.
+
 ### Screenshots as a check
 
 For anything visual, the check can be a screenshot:
@@ -286,16 +350,22 @@ For anything visual, the check can be a screenshot:
 3. It compares the screenshot with the intended design or a reference image.
 4. It lists the differences and fixes them, then repeats from step 2.
 
-Anthropic's best-practices page gives this as an example prompt: "take a screenshot of the result and compare it to the original. list differences and fix them." Current flagship models read screenshots well enough that the loop is cheap. Claude Code's Chrome integration is not available through Amazon Bedrock, Google Cloud's Agent Platform or Microsoft Foundry, so on those providers the browser is driven another way. [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}) covers the tooling.
+Anthropic's best-practices page gives this as an example prompt: "take a screenshot of the result and compare it to the original. list differences and fix them." Current flagship models read screenshots well enough that the loop is cheap.
+
+> Claude Code's Chrome integration is not available through Amazon Bedrock, Google Cloud's Agent Platform or Microsoft Foundry, so on those providers the browser is driven another way, for example with Playwright. [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}) covers the tooling.
+
+<!-- IMAGE NEEDED: side-by-side of a design mockup and a rendered page screenshot with the differences circled; search: visual regression testing screenshot diff, playwright screenshot comparison -->
 
 ## Testing at scale
 
-Once several agents work in parallel, waiting for tests takes longer than writing the code. The two subsections below cover the two levers:
+Once several agents work in parallel, waiting for tests takes longer than writing the code. The two levers:
 
 | Lever | Problem it addresses | Subsection |
 |:--|:--|:--|
 | Test selection | Each change waits for the full suite | [Test selection from the diff](#test-selection-from-the-diff) |
-| Run serialisation | Parallel full-suite runs overload a shared machine | [Heavy test runs on a shared machine](#heavy-test-runs-on-a-shared-machine) |
+| Run queueing | Parallel full-suite runs overload a shared machine | [Heavy test runs on a shared machine](#heavy-test-runs-on-a-shared-machine) |
+
+<!-- IMAGE NEEDED: test impact analysis, changed source files mapped to the subset of tests that cover them; search: test impact analysis diagram, regression test selection -->
 
 ### Test selection from the diff
 
@@ -308,9 +378,24 @@ Running the full suite on every change does not scale. One alternative is a map 
 2. The push gate runs the mapped tests for the files the diff touches.
    - In my harness the full suite then runs less often, on the merged result.
 
+| Edge case | Why selection can miss it | What to do |
+|:--|:--|:--|
+| A config or fixture file changed | No test imports it directly | Map data files to the tests that read them, or run the full suite |
+| A shared helper changed | Its callers' tests are many | Treat helpers as "run everything" paths |
+| A new file with no tests yet | The map has no entry | Fail the gate until the change adds or names a test |
+
 ### Heavy test runs on a shared machine
 
-When several agents share one machine, parallel full-suite runs can overload it until every run times out. A machine-wide lock that heavy test runs must hold keeps them in a queue. When a gate always fails on one machine, people skip it there, so each gate needs to pass on every machine it runs on.
+When several agents share one machine, parallel full-suite runs can overload it until every run times out. A machine-wide lock queues them:
+
+```bash
+# Each heavy run waits for the same lock; flock releases it when pytest exits
+flock /tmp/test-suite.lock pytest -n 4
+```
+
+- Light runs (one test file) skip the lock; only full-suite or parallel runs take it.
+- A run that cannot get the lock within a time limit reports "waiting" instead of failing, so a queue does not read as a broken test.
+- When a gate always fails on one machine, people skip it there, so each gate needs to pass on every machine it runs on.
 
 <details markdown="1">
 <summary>Aside: how flaky end-to-end tests cost real time</summary>
@@ -321,22 +406,47 @@ Integration and end-to-end tests are more often flaky than unit tests. A widely 
 
 ## Testing instructions by model tier
 
-Newer flagship models check their own work without being told. Both major vendors now say that old "always verify" instructions make these models over-test and waste tokens. Cheaper models at low effort still sometimes report work done without running any check. A single testing instruction for all models over-instructs the flagship models and under-instructs the cheaper ones at low effort.
+How much testing to ask for depends on the model:
+
+- Newer flagship models check their own work without being told.
+  - Anthropic's guide for Claude Opus 5 says to remove explicit verification instructions, because they cause over-verification and waste tokens.
+  - OpenAI says GPT-6 Astra runs tests on its own, "so the same instructions can lead to unnecessary testing."
+- Cheaper models at low effort still sometimes report work done without running any check.
+  - Anthropic's Sonnet 5.5 and Haiku 5.5 guides both recommend the line "run a real check that exercises the change before reporting it done."
 
 | Model tier | What it tends to do | What to put in the brief |
 |:--|:--|:--|
 | Flagship, any effort | Verifies on its own; may over-test | Drop "always verify" lines; ask for about one focused test per stated behaviour |
 | Mid or small tier, low effort | Sometimes skips the check | "Run a real check that exercises the change before reporting it done" |
 
+## Where tests sit in the harness
+
+This site treats harness engineering as a systems approach: when an agent gets something wrong, the fix goes into the system, enforced by code wherever possible, and each new gap gets the same treatment. Tests are the last of four layers in that system:
+
+1. Instructions in context files, skills and prompts.
+   - Example: a testing rule that loads when the agent edits a test file, or the model-tier line above.
+   - The model applies these inconsistently, especially with several tasks in flight or a full context window, so they are the second line of defence.
+2. Workflows and tools that build the steps in.
+   - Example: a bug-fix procedure whose steps include "commit the failing test before the fix".
+3. Hooks, scripts and linters that refuse or flag at the moment of action.
+   - Example: a hook that blocks edits to existing test files, or a script that lists changed tests on a branch.
+4. Validation and tests before a change lands.
+   - Example: the merge gate runs the tests the diff touches and refuses the merge when one fails.
+
+Layers 2 to 4 do the enforcing. A testing lesson that only becomes another line in a context file tends to be missed on a busy run; the same lesson as a gate check runs on every change. The [bug-fix diagram](#testing-agent-written-code) at the top of this page shows layers 1, 2 and 4 in one run, and [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3.
+
 ## From my harness
 
-The descriptions below are conceptual.
+The descriptions below are conceptual, one per layer where it applies:
 
-- Testing rules load only when the agent touches a test file, so the always-loaded context stays short. The rule says to drive the real caller end to end and to count coverage in acceptance criteria, not lines.
-- A bug-fix procedure with numbered gates: reproduce, root-cause, freeze the failing test, fix, then verify in widening rings.
-- Live end-to-end runs that send real messages between sessions and check they arrive.
-- An oracle-integrity rule: a pre-existing test is edited only with a stated reason in a commit trailer, and the launcher checks every delegated branch for unreasoned test edits before merge.
-- A push gate that selects tests from the diff, and a machine-wide test lock.
+| Mechanism | Layer | What it does |
+|:--|:--|:--|
+| A path-scoped testing rule | 1 | Loads only when the agent touches a test file: drive the real caller end to end, count coverage in acceptance criteria |
+| A bug-fix procedure with numbered gates | 2 | Reproduce, root-cause, freeze the failing test, fix, verify in widening rings |
+| An oracle-integrity rule plus a test-edit flag tool | 1 and 3 | A pre-existing test is edited only with a stated reason in a commit trailer; the launcher runs the tool on every delegated branch |
+| Live end-to-end runs | 4 | Send real messages between real sessions and check they arrive |
+| A push gate that selects tests from the diff | 4 | Runs the mapped tests; the full suite runs on the merged result |
+| A machine-wide test lock | 3 | Queues heavy runs on a shared machine |
 
 To start, write one end-to-end test per feature that runs the real entry point, and add the three-line policy to briefs that ask an agent to change code.
 
@@ -344,10 +454,11 @@ To start, write one end-to-end test per feature that runs the real entry point, 
 
 | Pitfall | Why it bites | Fix |
 |:--|:--|:--|
-| Counting coverage in lines | A line can run without its effect being checked; one helper with full line coverage still let 13 mutants survive | Count coverage in acceptance criteria; use mutation testing on core logic |
-| A healer that loops until green | It can repair the assertion instead of the app | Let it fix selectors, never expected values |
-| "Fix this and add a test" in one step | The test can pass on the old code too | Freeze the failing test first |
-| Verification instructions left over from older models | Flagship models over-test | Calibrate per tier |
+| Counting coverage in lines | A line can run without its effect being checked; one file with full statement coverage still had 13 surviving mutants | Count coverage in acceptance criteria; use [mutation testing](#measuring-test-strength) on core logic |
+| An auto-fixing test agent that loops until green | Playwright's Healer agent, for example, "Re-runs the test until it passes or until guardrails stop the loop"; it can repair the assertion instead of the app | Let it fix selectors and waits, never expected values |
+| "Fix this and add a test" in one step | The test can pass on the old code too | [Freeze the failing test first](#bug-fix-regression-tests) |
+| Verification instructions left over from older models | Flagship models over-test | [Calibrate per tier](#testing-instructions-by-model-tier) |
+| Mocking the thing under test | The test then checks the mock | Mock only what is slow, costly or outside your control |
 
 ## Sources
 
@@ -355,11 +466,20 @@ To start, write one end-to-end test per feature that runs the real entry point, 
 - SpecBench (28 points per tenfold code size): <https://arxiv.org/abs/2605.21384>, verified 2026-10-08.
 - Escalation channels and reward hacking (23.6% to 5.3%, eight models): <https://arxiv.org/abs/2608.29460>, verified 2026-11-09.
 - ImpossibleBench: <https://arxiv.org/abs/2510.20270>, verified 2026-10-08.
+- EvilGenie reward-hacking benchmark: <https://arxiv.org/abs/2511.21654>, verified 2026-10-08.
+- Claude Opus 5.5 system card (three to six times on impossible tasks): <https://www.anthropic.com/claude-opus-5-5-system-card>, verified 2026-10-08.
 - TDD inside the agent loop: <https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html>, verified 2026-10-08.
 - Maintainability sensors (13 surviving mutants): <https://martinfowler.com/articles/sensors-for-coding-agents.html>, verified 2026-10-08.
+- Thoughtworks Technology Radar, mutation testing: <https://www.thoughtworks.com/radar/techniques/mutation-testing>, verified 2026-10-08.
 - TDAD impact maps (6.08% to 1.82%): <https://arxiv.org/abs/2603.17973>, verified 2026-10-08.
 - Effective harnesses for long-running agents: <https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents>, verified 2026-10-08.
 - Over-testing guidance: <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1> and <https://developers.openai.com/api/docs/guides/latest-model>, verified 2026-10-08.
+- GPT-6 Astra and testing: <https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra>, verified 2026-10-08.
 - The deleted-tests example: <https://www.explainx.ai/blog/openclaw-test-audit-skill-deleted-400k-lines-tests-2026>, verified 2026-11-09, a secondary report of the maintainer's post.
+- mutmut: <https://mutmut.readthedocs.io/en/latest/>, verified 2026-11-09.
+- StrykerJS getting started: <https://stryker-mutator.io/docs/stryker-js/getting-started/>, verified 2026-11-09.
+- Playwright test agents (Healer): <https://playwright.dev/docs/test-agents>, verified 2026-10-08.
+- Claude Code with Chrome (provider availability): <https://code.claude.com/docs/en/chrome>, verified 2026-10-08.
+- Model-tier guidance: <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5> and <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5>, verified 2026-10-08.
 
 {% include page_nav.html %}

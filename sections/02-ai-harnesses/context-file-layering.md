@@ -25,37 +25,79 @@ A session rarely reads one context file. It reads several, from broad to narrow,
 
 ### Organisation policy
 
-A managed file set by an administrator, read for every user on the machine. It holds rules the organisation requires, such as data-handling limits. Users cannot override it.
+A managed file set by an administrator, deployed with MDM, Group Policy or a similar tool.
+
+| Platform | Claude Code path |
+|---|---|
+| macOS | `/Library/Application Support/ClaudeCode/CLAUDE.md` |
+| Linux and WSL | `/etc/claude-code/CLAUDE.md` |
+| Windows | `C:\Program Files\ClaudeCode\CLAUDE.md` |
+
+- It is read for every user on the machine, in every project, and loads before user and project files.
+- A developer cannot exclude it with `claudeMdExcludes`.
+- Its content can also live in a `claudeMd` key inside managed settings.
+- Claude Code's docs split the job: managed settings do the technical enforcement (`permissions.deny`, `sandbox.enabled`), and the managed `CLAUDE.md` carries behavioural guidance. That is the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) at organisation scale.
 
 ### User file
 
-`~/.claude/CLAUDE.md` for Claude Code, `~/.codex/AGENTS.md` for Codex. It applies to every project you open: your writing style, your safety rules, how you like to be asked questions. It is never committed to a project, so it is the place for preferences your teammates do not share.
+`~/.claude/CLAUDE.md` for Claude Code, `~/.codex/AGENTS.md` (or `AGENTS.override.md`) for Codex.
+
+- Applies to every project you open.
+- Claude Code also reads personal rules from `~/.claude/rules/`, which apply to every project on the machine.
+- Holds your writing style, your safety rules, how you like to be asked questions.
+- Never committed to a project, so it is the place for preferences your teammates do not share.
 
 ### Project file
 
-`CLAUDE.md` or `AGENTS.md` at the repository root, committed and shared. It holds the build and test commands and the project's conventions. A `CLAUDE.local.md` next to it can hold your own project-specific notes and stays out of git.
+`./CLAUDE.md` or `./.claude/CLAUDE.md` for Claude Code, `AGENTS.md` for Codex, at the repository root, committed and shared.
+
+- Holds the build and test commands and the project's conventions.
+- Reviewed like code, because it changes how every teammate's agent behaves.
+- A `CLAUDE.local.md` beside it holds your own notes for the project. Add it to `.gitignore` yourself; nothing ignores it for you.
+- Files in folders above the working folder load too, so starting in `packages/api/` still loads the repository's root file.
 
 ### Path rules
 
-Files in `.claude/rules/` with a `paths` pattern in their front matter. They load only when the agent reads or edits a matching file.
+Markdown files in `.claude/rules/`, found recursively, one topic per file.
+
+- A rule with a `paths` pattern in its front matter loads only when the agent reads or edits a matching file, and costs nothing while the agent works elsewhere.
+- A rule without `paths` loads at launch, with the same priority as `.claude/CLAUDE.md`.
+- The folder can hold symlinks to a shared set of rules; links that point outside the project need a one-time approval.
+- Covered in depth under [Anatomy](#anatomy) below.
 
 ### Subfolder files
 
-A `CLAUDE.md` inside a folder loads when the agent starts working in that folder. A monorepo uses these to give each package its own rules.
+A `CLAUDE.md` inside a subfolder loads the first time the agent reads, writes or edits a file in that folder.
+
+```text
+repo/
+  CLAUDE.md            project-wide commands and conventions
+  web/CLAUDE.md        frontend rules, loaded in web/
+  services/api/CLAUDE.md   API rules, loaded in services/api/
+```
+
+A monorepo uses these to give each package its own rules without loading all of them everywhere.
 
 ## Loading and precedence
 
 ### When each layer loads
 
-| Layer | Loads | Survives compaction |
+| Layer | Loads | After `/compact` |
 |---|---|---|
-| Organisation, user, project | at session start | yes, reloaded |
-| Path rule | when a matching file is touched | reloaded on the next match |
-| Subfolder file | when the agent works in the folder | reloaded on the next visit |
+| Organisation, user, project root | at session start | the project-root file is re-read from disk |
+| Rule without `paths` | at session start | loaded with the project files |
+| Path rule | when a matching file is touched | loads again on the next match |
+| Subfolder file | when a file in the folder is touched | loads again on the next touch |
+
+To see what actually loaded, run `/context all` and read the Memory files list, or `/memory` for every location the session knows about.
 
 ### Which wins
 
-The files are combined, not replaced. When two say different things, the narrower and later one usually wins in practice, because it is closer to the task in the context and more specific. Organisation policy is the exception: it is meant to hold whatever a narrower file says. Avoid relying on precedence at all. If two files disagree, fix one of them.
+The files are combined; each one adds to the context.
+
+- Claude Code concatenates them from the top of the folder tree down to the working folder. Its docs say that when two instructions contradict each other, Claude may pick one arbitrarily.
+- Codex orders them the same way and states that files closer to the working folder override earlier guidance.
+- Neither tool resolves a contradiction reliably. If two files disagree, fix one of them.
 
 > A rule that appears in two layers costs tokens twice and drifts apart over time. Put each rule in exactly one layer.
 {: .warning }
@@ -75,9 +117,23 @@ A Claude Code context file can pull in another file with an `@` line:
 
 The imported text loads as if it were written in place. This is how one `AGENTS.md` serves both Codex and Claude Code: the `CLAUDE.md` is a single import line.
 
+| Rule | Detail |
+|---|---|
+| Relative paths | resolve from the file that contains the import, not the working folder |
+| Depth | imports can import, up to four hops |
+| Backticks | `` `@README` `` in backticks is literal text and is not imported |
+| Spaces in a path | escape each space with a backslash |
+| Outside the project | Claude Code asks once for approval before loading it |
+
 ### Imports and cost
 
-An imported file loads every time its parent does. Importing a long procedure into the user file puts that procedure in every session. A pointer ("Before a release, read `docs/release.md`") costs one line and loads the procedure only when needed.
+An imported file loads every time its parent does.
+
+| Approach | Cost | When the detail arrives |
+|---|---|---|
+| `@docs/release.md` in the user file | the whole procedure, every session | always |
+| "Before a release, read `docs/release.md`." | one line | when a release starts |
+| a release skill | one description line | when the skill runs |
 
 ## Path rules
 
@@ -99,7 +155,16 @@ paths:
 
 ### When to use one
 
-A rule that applies only to some files is the best candidate. The rule is absent while the agent edits documentation and present the moment it opens a test, which is when it matters. My harness keeps its test standards, its writing rules for public documents and its skill-authoring rules as path rules, so each loads only for the files it governs.
+A rule that applies only to some files is the best candidate.
+
+| Rule | Path pattern |
+|---|---|
+| test standards | `tests/**`, `**/test_*.py` |
+| public writing rules | `docs/public/**` |
+| skill-authoring standards | `**/SKILL.md` |
+| migration rules | `migrations/**` |
+
+My harness keeps its test standards, its public writing rules and its skill-authoring rules as path rules, so each loads only for the files it governs.
 
 ### A worked example
 
@@ -111,7 +176,12 @@ An agent spends an hour on documentation, then switches to tests. A test-style r
 
 ## Layering in a multi-machine harness
 
-My harness runs on several machines with different tools and access. The global context file has a shared base, and each machine adds an overlay section that narrows or overrides the base for that machine: which tools are installed, which actions need approval there, which credentials route where. The overlay is selected by an environment variable set at install time, never by the machine's hostname, so a renamed machine does not pick up the wrong rules.
+My harness runs on several machines with different tools and access.
+
+1. The global context file has a shared base.
+2. Each machine adds an overlay section that narrows or overrides the base for that machine: which tools are installed, which actions need approval there, which credentials route where.
+3. The build places the overlay after the base, so it reads as the narrower layer.
+4. The overlay is selected by an environment variable set at install time, never by the machine's hostname, so a renamed machine does not pick up the wrong rules.
 
 <details markdown="1">
 <summary>Why an overlay and not a separate file</summary>
@@ -119,6 +189,15 @@ My harness runs on several machines with different tools and access. The global 
 A separate file per machine repeats the base, and the copies drift. An overlay is a short section that says only what differs, and the build places it after the base so it reads as the narrower layer. See [Compiling context files]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}).
 
 </details>
+
+## Pitfalls
+
+| Pitfall | Result | Fix |
+|---|---|---|
+| the same rule in the user file and the project file | paid for twice; the copies drift | keep it in one layer |
+| a long procedure imported into the user file | loads in every session of every project | a pointer line or a skill |
+| a monorepo root file with rules for one package | every package pays for them | a subfolder file or a path rule |
+| a path rule whose pattern never matches | the rule never loads, silently | open a matching file and check `/context all` |
 
 ## Related pages
 
@@ -128,8 +207,8 @@ A separate file per machine repeats the base, and the copies drift. An overlay i
 
 ## Sources
 
-- Claude Code memory, imports and rules: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-08.
-- Codex `AGENTS.md` discovery: <https://developers.openai.com/codex/guides/agents-md>.
+- Claude Code memory, imports and rules: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
+- Codex `AGENTS.md` discovery: <https://learn.chatgpt.com/docs/agent-configuration/agents-md>, verified 2026-11-09.
 - The machine overlay is from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

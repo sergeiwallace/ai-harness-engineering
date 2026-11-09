@@ -38,7 +38,11 @@ The last row connects to [Untrusted page content]({{ '/sections/15-browser-autom
 
 ## Never steal focus
 
-An agent that opens a window, raises it, or moves the pointer takes your screen while you are using it. A keystroke you meant for your editor lands in the agent's form. A run that steals focus every few seconds makes the machine unusable until it ends.
+An agent that takes your screen while you use it causes three kinds of damage:
+
+- A keystroke meant for your editor lands in the agent's form.
+- A window raised every few seconds makes the machine unusable until the run ends.
+- A screen-driving run sees whatever else you have open.
 
 ### The rules that prevent it
 
@@ -64,7 +68,12 @@ Nothing carries over, so one run cannot affect the next. This is the default for
 
 ### Persistent for a login
 
-Some tasks need a site you log into once by hand: an internal dashboard, a vendor console. Keep a named automation profile for it, separate from your own, stored outside any repository. Log in once in a visible window, then run headless against the same profile. Treat the profile directory like a credential: it holds the session cookies.
+Some tasks need a site you log into once by hand, such as an internal dashboard. Set up a dedicated automation profile:
+
+1. Create it outside any repository, for example `~/.local/share/agent-browser/dashboard`.
+2. Open it once in a visible window and log in by hand.
+3. Run every later task headless against the same `--user-data-dir`.
+4. Treat the directory like a credential: it holds the session cookies.
 
 ### Which to use
 

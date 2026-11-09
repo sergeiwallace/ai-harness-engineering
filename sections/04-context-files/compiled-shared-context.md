@@ -75,7 +75,11 @@ Every session that starts after the link moves reads the new file. Rolling back 
 
 ### Install on every machine
 
-The same install step runs on each machine, with that machine's part. One change to the base reaches every machine at the next install.
+1. Each machine runs the same install step.
+2. The step builds the file from the base, the client's part and that machine's part.
+3. A change to the base reaches every machine at its next install.
+   - A change to one machine's part reaches only that machine.
+4. Each machine keeps its own versioned directories, so a rollback on one machine leaves the others alone.
 
 ## Building a small one
 

@@ -57,13 +57,23 @@ A cropped shot of the part that changed is easier to read than a full page where
 
 ### Name files for the reader
 
-`settings-375-before.png` and `settings-375-after.png` say what they are. `screenshot1.png` does not.
+| Name | Says |
+|---|---|
+| `settings-375-before.png` | page, viewport width, before the change |
+| `settings-375-after.png` | the same page and width, after |
+| `screenshot1.png` | nothing |
 
 ## Comparing screenshots
 
 ### By eye: the agent looks
 
-Multimodal models can read images. Ask the agent to open both shots and describe the difference in one sentence, then compare that sentence with the request. This catches the gross failures: a missing button, an overlapping label, a blank page.
+Multimodal models can read images. The step has three parts:
+
+1. The agent opens both shots.
+2. It writes one sentence describing the difference.
+3. It compares that sentence with the request.
+
+This catches the gross failures: a missing button, an overlapping label, a blank page, white text on white.
 
 ### By pixels: a visual diff
 
@@ -128,18 +138,23 @@ agent> Pixel diff: only the form region changed (x 16-359, y 120-610).
 
 ### Example 2: catching its own mistake
 
-An agent adds a "Save" button and reports success. Asked to take a screenshot first, it looks at the image and finds the button rendered white on white. It fixes the colour and retakes the shot before reporting. The screenshot did the work a reviewer would otherwise have had to do.
+1. An agent adds a "Save" button and is about to report success.
+2. The workflow requires a screenshot first, so it captures the page.
+3. Looking at the image, it finds the button rendered white on white.
+4. It fixes the colour, captures again, and only then reports, with both images.
 
 ### Example 3: a claim that a screenshot cannot settle
 
-An agent claims a form now validates email addresses. A screenshot of the error message proves the message renders; whether validation runs on every path needs a test. The agent adds a test that submits three invalid addresses and checks each is rejected, and attaches the screenshot as a picture of the message.
+| Claim | What the screenshot proves | What else is needed |
+|---|---|---|
+| "The form now validates email addresses" | the error message renders for one input | a test that submits three invalid addresses and checks each is rejected |
 
 ## Examples from my own harness
 
 - A screenshot skill captures a page or a window and attaches the image to a report, so evidence travels with the claim.
 - Presentation work is checked the same way: each slide is rendered and captured, and the capture is read back before a deck is called done.
 
-To start: add one line to your context file, "after any UI change, take a screenshot of the result, look at it, and attach it".
+To start: build the screenshot into the workflow, for example a script your UI tasks run after every change that captures the page and fails if the image is missing from the pull request. A context-file line asking for screenshots is the second layer.
 
 ## Sources
 

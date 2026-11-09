@@ -11,7 +11,7 @@ nav_order: 1
 
 As of 2026-11-09.
 
-A sub-topic of [coordinator and chief-of-staff sessions]({{ '/sections/09-session-coordination/coordinator-sessions.html' | relative_url }}). It covers which actions several sessions must not run at once, how one owner per machine turns races into a queue, and how to keep that owner from becoming the bottleneck.
+A sub-topic of [coordinator and chief-of-staff sessions]({{ '/sections/09-session-coordination/coordinator-sessions.html' | relative_url }}). It covers which actions several sessions must not run at once, how one owner per machine turns races into a queue, how to enforce the ownership so a worker that forgets is refused, locks for actions that need no owner, and how to keep the owner from becoming the bottleneck.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -59,7 +59,39 @@ Two branches can each pass alone and fail together.
 3. Each branch's tests pass on its own.
 4. After both merge, `main` fails: B's new caller uses a name that no longer exists.
 
+<!-- IMAGE NEEDED: two git branches that each pass tests and break main when both merge; search: git branch merge diagram, semantic merge conflict, merge queue diagram -->
+
 Running the tests on `main` after each merge catches this at the merge that caused it. Merge queues on hosted Git services use the same idea, covered in [code review]({{ '/sections/13-code-review/' | relative_url }}).
+
+## Enforcing ownership
+
+A line in each worker's context file saying "do not merge" is the first layer, and the one a busy model skips. The layers that enforce it sit in the tools:
+
+| Layer | What it does here | Enforces? |
+|---|---|---|
+| 1. Instructions | Each worker's context file says the chief merges | Guides |
+| 2. Workflow | The worker's "finish" skill ends by sending "ready to merge", with no merge step in it | Yes, for runs that use the skill |
+| 3. Hook | A `PreToolUse` hook refuses `git push` to `main` and `git merge` into `main` in any session that is not the owner | Yes, at the moment of action |
+| 4. Server side | Branch protection on `main`, or a merge queue, so even a push from outside a session cannot land unchecked | Yes, for every client |
+
+### Example: a hook that refuses non-owner merges
+
+A hook script receives the tool call as JSON on standard input. Exit code 2 blocks the call and passes the message on standard error back to Claude.
+
+```bash
+#!/usr/bin/env bash
+# PreToolUse hook for Bash: only the owner session may push or merge to main.
+set -euo pipefail
+cmd="$(jq -r '.tool_input.command // empty')"
+if [[ "${SESSION_ROLE:-worker}" != "owner" ]] &&
+   [[ "$cmd" =~ git[[:space:]]+(push[^|;&]*[[:space:]]main|merge) ]]; then
+  echo "Only the owner session merges or pushes to main. Send the chief 'ready to merge' with your branch." >&2
+  exit 2
+fi
+exit 0
+```
+
+The owner session is started with `SESSION_ROLE=owner` in its environment. The pattern is deliberately rough: it errs toward refusing, and the message tells the worker what to do instead.
 
 ## Locks for things that are not merges
 
@@ -100,11 +132,13 @@ A queue moves work out of a race and into a line. If the line gets long, the own
 
 ## When the owner is not there
 
-An owner session can exit, crash, or be compacting. Workers need a rule for that case that is not "do it yourself":
+An owner session can exit, crash, or be compacting. Workers need a rule for that case other than doing the action themselves:
 
-- Wait and retry for a bounded time.
-- Tell the top coordinator, which can start a new owner.
-- Never take the action in parallel "just this once". That is how the race comes back.
+1. Wait and retry for a bounded time, for example three tries over fifteen minutes.
+2. Tell the top coordinator, which can start a new owner.
+3. Keep the change on its branch until an owner takes it.
+
+The hook above makes "just this once" unavailable to a worker, so the race cannot come back by accident.
 
 ## Examples from my own harness
 
@@ -112,10 +146,11 @@ An owner session can exit, crash, or be compacting. Workers need a rule for that
 - A machine-wide test lock, so parallel test runs from several sessions do not overload the machine.
 - A machine contention check that sessions read before starting a sub-agent or a parallel test run.
 
-To start: decide which one session may merge to `main`, and tell the others in their context file.
+To start: decide which one session may merge to `main`, enforce it with branch protection or a hook like the one above, and add the context-file line as the second layer.
 
 ## Sources
 
+- Hooks, `PreToolUse` and exit code 2: <https://code.claude.com/docs/en/hooks.md>.
 - `flock(1)`: <https://man7.org/linux/man-pages/man1/flock.1.html>.
 
 {% include page_nav.html %}

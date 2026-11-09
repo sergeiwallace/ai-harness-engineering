@@ -12,11 +12,20 @@ permalink: /sections/03-claude-code-and-codex/
 
 As of 2026-11-09. Slide: [stop 4 on the talk page]({{ '/talk/' | relative_url }}#stop-4-6-minutes), "Claude Code and Codex".
 
-Claude Code (from Anthropic) and Codex (from OpenAI) are coding agents that live in a repository. You start one in a terminal inside a project folder and give it a task in plain language. It reads the code, runs commands, edits files and reports back. Every later section of this site builds on what these two clients give you before you customise anything: a context file, skills, hooks, sub-agents, a goal command and compaction. This overview covers each of those building blocks with an example, and links down to a topic page wherever a block deserves a full article.
+Claude Code (from Anthropic) and Codex (from OpenAI) are coding agents that work inside a repository. You start one in a terminal in a project folder and give it a task in plain language; it reads the code, runs commands, edits files and reports back. Every later section of this site builds on what these two clients provide before you customise anything.
+
+This overview covers, in order:
+
+1. Installing a client and running a first session.
+2. The building blocks both clients share: context files, skills, hooks, sub-agents, memory and compaction.
+3. Settings and permissions, the commands worth knowing, and how an agent waits on long work.
+4. Where the clients run, which features need which sign-in, and how to grow a setup.
+
+Each part links down to a topic page; the [pages in this section](#pages-in-this-section) are listed at the end.
 
 ![Sequence of one task in Claude Code: you set a goal, the client loads context files into the model, each tool call passes a PreToolUse hook before it runs, an edit triggers a formatter hook, and when the agent tries to stop the goal evaluator sends it back until a passing run and a commit are shown]({{ '/assets/images/03-claude-code-and-codex/one-task-sequence.svg' | relative_url }})
 
-*One task, start to finish. Context files reach the model at launch, and a subdirectory's file loads when the agent first touches that folder. Hooks sit on every tool call: PreToolUse can refuse before anything runs, PostToolUse runs after an edit. The goal is a Stop hook that only reads the conversation, so it sends the agent back until the evidence is printed. Diagram made with archify; the session is an illustration.*
+*One task, start to finish. Context files reach the model at launch, and a subdirectory's file loads when the agent first touches that folder. Hooks sit on every tool call: PreToolUse can refuse before anything runs, PostToolUse runs after an edit. The goal is a Stop hook that reads only the conversation, so it sends the agent back until the evidence is printed. Diagram made with archify; the session is an illustration.*
 
 | Phase of the task | Building block at work | Covered in |
 |---|---|---|
@@ -31,11 +40,66 @@ Claude Code (from Anthropic) and Codex (from OpenAI) are coding agents that live
 1. TOC
 {:toc}
 
+## Your first session
+
+### Install
+
+| Client | Command | Notes |
+|---|---|---|
+| Claude Code, macOS, Linux, WSL | `curl -fsSL https://claude.ai/install.sh \| bash` | Native installer; updates itself in the background |
+| Claude Code, Windows PowerShell | `irm https://claude.ai/install.ps1 \| iex` | Git for Windows is recommended so the agent can use Bash |
+| Claude Code, Homebrew | `brew install --cask claude-code` | Stable channel; does not auto-update (`brew upgrade claude-code`) |
+| Claude Code, WinGet | `winget install Anthropic.ClaudeCode` | Does not auto-update |
+| Codex, npm | `npm install -g @openai/codex` | |
+| Codex, Homebrew | `brew install --cask codex` | |
+
+Check the install with `claude --version`; it prints a version followed by `(Claude Code)`.
+
+### Start and sign in
+
+```bash
+cd ~/code/my-project
+claude            # or: codex
+```
+
+| | Claude Code | Codex |
+|---|---|---|
+| First start | Prompts you to log in through the browser | Choose "Sign in with ChatGPT" |
+| Account types | Claude subscription, Claude Console (API credits), or a cloud provider such as Amazon Bedrock | ChatGPT plan, or an API key with extra setup |
+| Later sign-in changes | `/login` inside the session | `codex login`, `/logout` |
+
+### First prompts
+
+Ask about the code before you change it:
+
+```text
+> what does this project do?
+> where is the main entry point?
+> add input validation to the user registration form
+> what files have I changed?
+> commit my changes with a descriptive message
+```
+
+- Before an edit or a command it has no permission for, the agent asks; answer yes or no.
+- In Claude Code, `Shift+Tab` cycles the permission mode (default, accept edits, plan, and others); see [Configuration and permissions]({{ '/sections/03-claude-code-and-codex/configuration-and-permissions.html' | relative_url }}#permission-modes).
+- Type `/` to see the commands and skills available.
+
+<!-- IMAGE NEEDED: a first Claude Code or Codex session in a terminal, showing the prompt, a question about the project and the agent's answer; search: "Claude Code terminal screenshot", "Codex CLI TUI", "Claude Code quickstart" -->
+
+### Useful shell flags
+
+| Command | What it does |
+|---|---|
+| `claude "fix the build error"` | Starts a session with a first prompt |
+| `claude -c` | Continues the most recent conversation in this directory |
+| `claude -r` | Picks a previous conversation to resume |
+| `claude -p "explain this function"` | Runs one task without the interactive session and exits |
+
 ## What the two clients share
 
-### What both give you
+### The building blocks by name
 
-The two clients now have the same building blocks under different names. If you learn one, most of what you learn carries over to the other.
+The two clients have the same building blocks under different names. Most of what you learn on one carries over to the other.
 
 | Building block | Claude Code | Codex | Read more |
 |---|---|---|---|
@@ -44,13 +108,22 @@ The two clients now have the same building blocks under different names. If you 
 | Hooks | 33 events | 14 events | [Hooks]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
 | Sub-agents | Markdown in `.claude/agents/` | TOML in `.codex/agents/` | [Delegation]({{ '/sections/08-delegation/' | relative_url }}) |
 | Keep working until a condition holds | `/goal` | `/goal` | [Goal and loop commands]({{ '/sections/03-claude-code-and-codex/goal-and-loop.html' | relative_url }}) |
-| Repeat a prompt on an interval | `/loop` | none | [Goal and loop commands]({{ '/sections/03-claude-code-and-codex/goal-and-loop.html' | relative_url }}) |
+| Repeat a prompt on an interval | `/loop` | none | [Goal and loop commands]({{ '/sections/03-claude-code-and-codex/goal-and-loop.html' | relative_url }}#loop) |
 | Summarise to free context | `/compact` | `/compact` | [Context window]({{ '/sections/11-context-window/' | relative_url }}) |
+| Write a starter context file | `/init` writes `CLAUDE.md` | `/init` writes `AGENTS.md` | [Context files]({{ '/sections/04-context-files/' | relative_url }}) |
 | Import another setup | none | `/import` | [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html' | relative_url }}) |
 
 ### Where they differ
 
-They differ most in defaults and limits, and in how they are configured. Claude Code is configured through JSON settings files and Markdown files under `.claude/`. Codex is configured through a TOML file in its home directory and TOML agent profiles. The full feature grid, the size limits and how to run one repository with both clients are on [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html' | relative_url }}).
+| | Claude Code | Codex |
+|---|---|---|
+| Settings format | JSON files at user, project, local and managed levels | TOML configuration in `~/.codex` |
+| Context-file limit | Suggestion: under 200 lines per `CLAUDE.md` | Hard cap: 32 KiB in total |
+| Path-scoped rules | `.claude/rules/` with `paths:` | not documented |
+| Hook events | 33 | 14 |
+| Sub-agent profiles | Markdown | TOML, inheriting the sandbox |
+
+The full grid and how to run one repository with both clients are on [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html' | relative_url }}).
 
 #### One context file for both
 
@@ -62,11 +135,23 @@ They differ most in defaults and limits, and in how they are configured. Claude 
 - Run /code-review before opening a pull request.
 ```
 
-Codex reads `AGENTS.md` directly. Claude Code reads `CLAUDE.md`, which pulls in `AGENTS.md` through an `@` import and adds its own lines. The shared rules live in one file.
+- Codex reads `AGENTS.md` directly.
+- Claude Code reads `CLAUDE.md`, which pulls in `AGENTS.md` through an `@` import and adds its own lines.
+- The shared rules live in one file.
 
 ## The building blocks in brief
 
-Each block has a section of its own later on this site. This is what each one is, what it looks like on disk, and the smallest useful example.
+Each block has a section of its own later on this site. Below is what each one is, what it looks like on disk, and the smallest useful example. The blocks differ in how reliably they hold:
+
+| Block | Harness layer | Holds |
+|---|---|---|
+| Context file | Instructions | Most of the time; less often in a busy or nearly full window |
+| Skill | Workflow: builds the steps in | Each time it runs |
+| Hook | Enforcement at the moment of action | Every time its event fires |
+| Sub-agent | Workflow: separates the work | Each time it is called |
+| Tests and checks | Validation before a change lands | Every run |
+
+A repeated mistake is fixed in the most reliable layer that can prevent it; the context file explains the fix.
 
 ### Context file
 
@@ -77,11 +162,15 @@ A Markdown file of instructions loaded at the start of every session: build and 
 - Never edit files under `generated/`; run `make gen`.
 ```
 
-Full treatment: [Context files]({{ '/sections/04-context-files/' | relative_url }}).
+- `/init` writes a starter file from the repository; `/memory` opens the files for editing.
+- Full treatment: [Context files]({{ '/sections/04-context-files/' | relative_url }}).
 
 ### Skills
 
-A skill is a folder with a `SKILL.md`: a name, a description the model reads, and the procedure. The model sees only the descriptions until a task matches one, then loads that skill's body, so a large library costs little context.
+A skill is a folder with a `SKILL.md`: a name, a description the model reads, and the procedure.
+
+- The model sees only the descriptions until a task matches one, then loads that skill's body, so a large library costs little context.
+- Typing `/release` runs the skill below on purpose; asking "cut a release" lets the model pick it.
 
 ```markdown
 ---
@@ -93,11 +182,11 @@ description: Cut a release. Use when asked to release, tag or publish a version.
 3. Tag and push the tag.
 ```
 
-Typing `/release` runs it on purpose; asking "cut a release" lets the model pick it. Full treatment: [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+Full treatment: [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 
 ### Hooks
 
-A hook is a command the client runs on an event, such as before or after a tool call, when you submit a prompt, or when the agent tries to stop. Unlike a context-file line, a hook runs every time.
+A hook is a command the client runs on an event, such as before or after a tool call, when you submit a prompt, or when the agent tries to stop. A hook runs every time its event fires, whatever the model is attending to.
 
 | Event | Typical use | Example |
 |---|---|---|
@@ -110,7 +199,11 @@ Full treatment: [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-
 
 ### Sub-agents
 
-A sub-agent profile is a named role with its own instructions, tools and model. The main session hands it a task; it works in its own context and returns a result, so the main window holds the answer and not the search.
+A sub-agent profile is a named role with its own instructions, tools and model.
+
+1. The main session hands the sub-agent a task.
+2. The sub-agent works in its own context window.
+3. It returns a result, so the main window holds the answer and leaves out the search.
 
 ```markdown
 ---
@@ -126,7 +219,7 @@ Claude Code keeps these as Markdown in `.claude/agents/`; Codex keeps them as TO
 
 ### Memory and compaction
 
-Two mechanisms carry knowledge across the limits of one window.
+Two mechanisms carry knowledge past the limits of one window.
 
 | Mechanism | What it does | Commands |
 |---|---|---|
@@ -139,7 +232,8 @@ Two mechanisms carry knowledge across the limits of one window.
 > /compact keep the failing test name, the root cause and the plan's next step
 ```
 
-After compaction the project-root `CLAUDE.md` is read again from disk; folder-level files return only when the agent touches that folder ([Context files after compaction]({{ '/sections/04-context-files/after-compaction.html' | relative_url }})). Full treatment: [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}).
+- After compaction the project-root `CLAUDE.md` is read again from disk; folder-level files return only when the agent touches that folder ([Context files after compaction]({{ '/sections/04-context-files/after-compaction.html' | relative_url }})).
+- Full treatment: [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}).
 
 <details markdown="1">
 <summary>Which block to reach for</summary>
@@ -148,40 +242,33 @@ After compaction the project-root `CLAUDE.md` is read again from disk; folder-le
 |---|---|
 | The agent does not know a fact or a command | Context file line |
 | The agent does a multi-step task differently each time | Skill |
-| The agent breaks a rule it was told | Hook |
+| The agent breaks a rule it was told | Hook, plus a context-file line explaining it |
 | The agent's window fills with search results | Sub-agent |
 | A long session forgets earlier decisions | Compaction with a focus, or a memory note |
 
 </details>
 
-## Where they run
-
-### Surfaces
-
-Both clients run in a terminal, in editors, and as desktop or web apps. Claude Code "runs the same underlying engine everywhere", and the terminal, the editor extensions and the desktop app read the same settings files, so a setup you build in the terminal also applies in the editor.
-
-| Surface | Good for | What carries over |
-|---|---|---|
-| Terminal | Long tasks, several sessions side by side, scripting | Everything |
-| Editor extension | Work beside the code you are reading | Same engine and settings as the terminal |
-| Desktop and web | Starting or reviewing work away from a terminal | A cloud session runs on a fresh clone and does not read your user or local settings |
-| Headless (`claude -p`) | CI jobs and scripts | Skills and hooks run; terminal-only commands do not |
-
-> A cloud session is a different machine. It reads the repository's committed files and your organization's server-managed settings, and nothing from your own home directory. A hook that only exists in `~/.claude/settings.json` does not run there.
-
-### One setup, two surfaces
-
-You add a formatter hook to `.claude/settings.json` while working in the terminal. The next time you open the same project in the editor extension, the hook runs there too, because both read the same file. The topic page [Configuration and permissions]({{ '/sections/03-claude-code-and-codex/configuration-and-permissions.html' | relative_url }}) covers which file reaches which surface.
-
 ## Configuration in brief
 
-### The layers
+### Settings files and precedence
 
-Claude Code reads settings from several files, and when two set the same key the higher one wins. The order, highest first, is managed settings (your organization's policy), the command line (`--settings`, one session), project local (`.claude/settings.local.json`, you in one project), shared project (`.claude/settings.json`, committed for the team) and user (`~/.claude/settings.json`, you everywhere). List keys such as `permissions.allow` merge across files: each file adds its entries to the list.
+Claude Code reads settings from several files. When two set the same key, the higher one wins.
+
+| Precedence | File | Who it affects |
+|---|---|---|
+| 1, highest | Managed settings | Everyone your organization deploys it to |
+| 2 | `--settings` on the command line | One session; writes no file |
+| 3 | `.claude/settings.local.json` | You, in one project; kept out of git |
+| 4 | `.claude/settings.json` | The team, once committed |
+| 5, lowest | `~/.claude/settings.json` | You, in every project |
+
+- List keys such as `permissions.allow` merge across files: each file adds its entries.
+- Committed `allow` rules wait until each person trusts the folder; `deny` and `ask` rules apply at once.
+- `/status` lists which files loaded.
 
 ### What a settings file holds
 
-A settings file holds permissions, hooks, environment variables and the default model. This one lets the agent run the tests without asking, asks before any push, and formats every edited file:
+A settings file holds permissions, hooks, environment variables and the default model. This one lets the agent run the tests without asking, asks before any push, blocks reading the secrets file, and formats every edited file:
 
 ```json
 {
@@ -209,14 +296,16 @@ The permission rules, the modes and the order in which allow, ask and deny combi
 
 ## Commands worth knowing by name
 
-A slash command is something you type in the session, such as `/compact`. Claude Code ships with dozens. Four come up throughout this site, and the rest are grouped by purpose on [Native commands]({{ '/sections/03-claude-code-and-codex/native-commands.html' | relative_url }}).
+A slash command is something you type in the session, such as `/compact`. Both clients ship with dozens; these come up throughout this site, and the rest are grouped by purpose on [Native commands]({{ '/sections/03-claude-code-and-codex/native-commands.html' | relative_url }}).
 
-| Command | What it does | When you reach for it |
-|---|---|---|
-| `/goal <condition>` | Keeps the session working until a separate small model judges the condition met | "Keep going until the tests pass and the branch is pushed" |
-| `/loop` | Repeats a prompt on an interval; recurring tasks expire after 7 days | "Check the deploy every five minutes" |
-| `/compact <focus>` | Summarises the session to free context, steered by the focus text | The window is filling and you want to keep two facts |
-| `/rc` | Controls the session from another device; needs a claude.ai sign-in | You walk away from the desk |
+| Command | What it does | When you reach for it | Codex |
+|---|---|---|---|
+| `/goal <condition>` | Keeps the session working until a separate small model judges the condition met | "Keep going until the tests pass and the branch is pushed" | `/goal` |
+| `/loop` | Repeats a prompt on an interval; recurring tasks expire after 7 days | "Check the deploy every five minutes" | none |
+| `/compact <focus>` | Summarises the session to free context, steered by the focus text | The window is filling and you want to keep two facts | `/compact` |
+| `/context` | Shows what fills the context window | Before a long task | `/status` shows token usage |
+| `/model`, `/effort` | Choose the model and the reasoning effort | A hard task, or a cheap one | `/model` |
+| `/rc` | Controls the session from another device; needs a claude.ai sign-in | You walk away from the desk | none |
 
 ### How /goal works
 
@@ -275,18 +364,44 @@ Without these, an agent that starts a forty-minute test suite checks on it every
 
 > Every line a monitor feeds back costs context. Filter it to the lines that should change what the agent does next, such as failures and the exit code.
 
-[Background work and headless runs]({{ '/sections/03-claude-code-and-codex/background-work-and-headless-runs.html' | relative_url }}) covers background shells, Monitor patterns and their trade-offs.
+Codex lists its background terminals with `/ps` and stops them with `/stop`. [Background work and headless runs]({{ '/sections/03-claude-code-and-codex/background-work-and-headless-runs.html' | relative_url }}) covers background shells, Monitor patterns and their trade-offs.
 
 ### Headless runs
 
-`claude -p "<prompt>"` runs one task without the interactive terminal and prints the result, which is how the client runs in CI. `--bare` skips hooks, skills, plugins and `CLAUDE.md`, so a job behaves the same on every machine.
+`claude -p "<prompt>"` runs one task without the interactive session and prints the result, which is how the client runs in CI.
+
+- `--bare` skips hooks, skills, plugins and `CLAUDE.md`, so a job behaves the same on every machine.
+- Leave `--bare` off for jobs that edit or push, so your hooks still apply.
 
 ```yaml
 - name: Summarise the failing tests
   run: claude -p --bare "Read test-results.xml and list each failing test with a one-line cause" > summary.txt
 ```
 
-## Sign-in and availability
+## Where they run and what needs a sign-in
+
+### Surfaces
+
+Both clients run in a terminal, in editors, and as desktop or web apps. Claude Code "runs the same underlying engine everywhere", and the terminal, the editor extensions and the desktop app read the same settings files.
+
+| Surface | Good for | What carries over |
+|---|---|---|
+| Terminal | Long tasks, several sessions side by side, scripting | Everything |
+| Editor extension | Work beside the code you are reading | Same engine and settings as the terminal |
+| Desktop and web | Starting or reviewing work away from a terminal | A cloud session runs on a fresh clone and does not read your user or local settings |
+| Headless (`claude -p`) | CI jobs and scripts | Skills and hooks run; terminal-only commands do not |
+
+> A cloud session is a different machine. It reads the repository's committed files and your organization's server-managed settings, and nothing from your own home directory. A hook that only exists in `~/.claude/settings.json` does not run there.
+
+### One setup, two surfaces
+
+1. You add a formatter hook to `.claude/settings.json` while working in the terminal.
+2. You open the same project in the editor extension.
+3. The hook runs there too, because both surfaces read the same file.
+   - A cloud session would also run it once the file is committed.
+   - A hook kept only in `~/.claude/settings.json` would not reach a cloud session.
+
+### Sign-in routes
 
 Some features need a claude.ai sign-in and do not work with API keys or through cloud providers such as Amazon Bedrock. If you use Claude Code through work, check which route your account uses before you rely on a feature.
 
@@ -300,9 +415,9 @@ Some features need a claude.ai sign-in and do not work with API keys or through 
 
 The full table is on [Claude Code and Codex compared]({{ '/sections/03-claude-code-and-codex/claude-code-and-codex-compared.html' | relative_url }}#availability-on-cloud-providers).
 
-## How to start
+## Growing a setup
 
-1. Install one client and run it in one real project with the defaults.
+1. Run one client in one real project with the defaults.
 2. Give it real tasks for a few days and note each time it goes wrong.
 3. Write a short [context file]({{ '/sections/04-context-files/' | relative_url }}) with the commands and conventions the agent cannot guess.
 4. When a procedure repeats, make it a [skill]({{ '/sections/05-skills-and-plugins/' | relative_url }}), so the steps are built in.
@@ -311,16 +426,33 @@ The full table is on [Claude Code and Codex compared]({{ '/sections/03-claude-co
    - A [hook]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) that refuses the wrong action.
    - A test that catches it before a change lands.
    - Then one context-file line that explains the check.
-
-Add one piece at a time. Turning on many features at once makes a failure hard to trace.
+6. Add one piece at a time, so a new failure has one suspect.
 
 > A context-file line on its own is applied unevenly, especially when the model is busy, switches tasks or is near a full window. Adding a new detailed rule for each mistake is an anti-pattern; [Context files]({{ '/sections/04-context-files/' | relative_url }}#where-it-sits-in-a-harness) shows the layers.
+
+## Common pitfalls
+
+| Pitfall | What happens | What to do |
+|---|---|---|
+| Many features turned on at once | A failure has several possible causes | Add one piece at a time |
+| Scripting against a command name | Names and meanings change between releases (`/review`, `/simplify` both changed) | Check the commands reference for your installed version |
+| A feature that needs a claude.ai sign-in | It is missing on a cloud provider, sometimes without an error | Say in each procedure which sign-in route it assumes |
+| A hook only in your user settings | It does not run in a cloud session | Commit hooks the team relies on to `.claude/settings.json` |
+| `--bare` on a job that edits | Your safety hooks do not run | Use `--bare` only for read-only jobs |
+| An unfiltered monitor | The window fills with log lines | Filter to failures and exit codes |
 
 ## Examples from my own harness
 
 ### One install for every machine
 
-I work on several machines. One install step puts the same context files, skills, hooks and agent profiles on each of them, so a new session on any machine starts with the same setup. The shared context file is assembled from parts (a base, a part per client, a part per machine), rendered into a versioned directory and linked into place, so a bad edit rolls back in one step. [Compiled shared context files]({{ '/sections/04-context-files/compiled-shared-context.html' | relative_url }}) describes the pattern.
+I work on several machines. One install step puts the same context files, skills, hooks and agent profiles on each of them.
+
+1. The shared context file is assembled from parts: a base, a part per client, a part per machine.
+2. It is checked against a size budget and rendered into a versioned directory.
+3. The install links it into each client's config location.
+4. A bad edit rolls back by relinking the previous version.
+
+[Compiled shared context files]({{ '/sections/04-context-files/compiled-shared-context.html' | relative_url }}) describes the pattern.
 
 ![Sequence: an author adds a lesson to a source part, the compiler fails the build when the joined file is over its size budget, a second try moves the detail to a spoke and passes, the new version is linked into every client, and a bad edit is undone by relinking the previous version]({{ '/assets/images/04-context-files/compiled-file-sequence.svg' | relative_url }})
 
@@ -328,9 +460,16 @@ I work on several machines. One install step puts the same context files, skills
 
 ### Codex as a second family
 
-My harness drives most work from Claude Code and calls Codex through a small wrapper with one configuration per role (reviewer, researcher, implementer). I use it mainly for review: a change written with one model family is reviewed with the other. That is a choice for my setup; a fresh-context review with the same family is another. See [Code review]({{ '/sections/13-code-review/' | relative_url }}).
+My harness drives most work from Claude Code and calls Codex through a small wrapper.
 
-## Topic pages
+- One configuration per role: reviewer, researcher, implementer.
+- The main use is review: a change written with one model family is reviewed with the other.
+  - The reviewer gets the diff and the spec only.
+  - That is a choice for my setup; a fresh-context review with the same family is another.
+
+See [Code review]({{ '/sections/13-code-review/' | relative_url }}).
+
+## Pages in this section
 
 | Page | What it covers |
 |---|---|
@@ -342,11 +481,12 @@ My harness drives most work from Claude Code and calls Codex through a small wra
 
 ## Sources
 
+- Install, first session, shell flags and permission-mode switching: <https://code.claude.com/docs/en/quickstart.md>, read 2026-11-09.
 - Commands and features: <https://code.claude.com/docs/en/commands.md>, <https://code.claude.com/docs/en/goal.md>, <https://code.claude.com/docs/en/scheduled-tasks.md>, <https://code.claude.com/docs/en/remote-control.md>, verified 2026-11-08 and 2026-11-09.
 - Settings files and precedence: <https://code.claude.com/docs/en/settings.md>, read 2026-11-09.
 - Surfaces: <https://code.claude.com/docs/en/platforms.md>, verified 2026-11-08.
 - Monitor and headless runs: <https://code.claude.com/docs/en/tools-reference>, <https://code.claude.com/docs/en/headless.md>, verified 2026-11-02 and 2026-11-09.
-- Codex: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, <https://learn.chatgpt.com/docs/hooks.md>, <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, <https://learn.chatgpt.com/docs/build-skills.md>, verified 2026-11-08.
+- Codex install and sign-in: <https://github.com/openai/codex>, read 2026-11-09. Codex commands (including `/init`, `/model`, `/ps`, `/stop`, `/status`): <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, read 2026-11-09. Hooks, sub-agents, skills: <https://learn.chatgpt.com/docs/hooks.md>, <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, <https://learn.chatgpt.com/docs/build-skills.md>, verified 2026-11-08.
 - The install pattern is from the author's own harness, described conceptually. Example files and session excerpts are illustrations written for this page.
 
 {% include page_nav.html %}

@@ -11,7 +11,7 @@ nav_order: 1
 
 As of 2026-11-09. Sub-topic of [The improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}), in [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}).
 
-The [improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) is a manual practice that agents gradually take over. Through 2026, researchers and vendors tried to automate it end to end: a system that reads its own traces and rewrites its own prompts, skills or tools. This page summarises what that work found and what it means for a personal harness.
+The [improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) is a manual practice that agents gradually take over. Through 2026, researchers and vendors tried to automate it end to end: a system that reads its own traces and rewrites its own prompts, skills or tools. This page summarises what that work found, the evidence it adds for enforcing fixes rather than writing more instructions, and what it means for a personal harness.
 
 ## The common shape
 
@@ -34,25 +34,92 @@ Across the papers and production reports, the recurring architecture is an outer
 
 ### Karpathy's autoresearch
 
-A small design pattern for one optimisation task. The agent may edit one file, the evaluator is protected, the experiment budget and the metric are fixed, and each change is kept or discarded from repeated trials after a person confirms the setup. The clean separation between what the agent may edit and what judges it is the part most worth copying.
+A small design pattern for one optimisation task.
+
+| Part | Rule |
+|---|---|
+| What the agent may edit | One file |
+| The evaluator | Protected; the agent cannot change it |
+| Budget and metric | Fixed before the run |
+| Keep or discard | Decided from repeated trials |
+| Setup | Confirmed by a person before the loop starts |
+
+The separation between what the agent may edit and what judges it carries over directly to a personal harness: the agent edits the hook or the skill, and the task set and its checks stay out of its reach.
 
 ### Self-Harness and HarnessOpt-Bench
 
-Self-Harness mines failures from traces, proposes edits to the harness, and validates them against regressions. HarnessOpt-Bench evaluates how well models do at this kind of harness optimisation, with a trusted held-out evaluation. Both treat the evaluation protocol as the core of the method.
+- Self-Harness
+  - Mines failures from traces.
+  - Proposes edits to the harness.
+  - Validates each edit against regressions before keeping it.
+- HarnessOpt-Bench
+  - Measures how well models do at harness optimisation itself.
+  - Uses a trusted, held-out evaluation that the optimiser never sees.
+
+Both put the evaluation protocol at the centre of the method.
 
 ### Production practice
 
-OpenAI described building self-improving agents with Codex for a production domain, where feedback becomes documentation, and rules that need enforcement become tooling. That is the same progression as the [enforcement ladder]({{ '/sections/17-building-a-harness/' | relative_url }}#3-prefer-a-fix-that-a-program-enforces), carried out by agents.
+OpenAI described building self-improving agents with Codex for a production domain. The progression it reports maps onto the [layers of a harness]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers):
+
+1. Feedback from reviewers becomes documentation the agent reads (layer 1).
+2. Rules that need enforcement become tooling (layers 2 to 4).
+3. Agents carry out both steps, with people reviewing the result.
 
 ### The counter-result
 
-One study found that automatic harness changes did no better than simply running the model more. Before trusting an automatic loop, compare it against that baseline: the same model, the same budget, more runs and no harness changes.
+One study found that automatic harness changes did no better than simply running the model more. Before trusting an automatic loop, compare it against that baseline:
+
+| Arm | Model | Harness | Budget |
+|---|---|---|---|
+| Automatic loop | Same | Changed by the loop | Fixed |
+| Baseline | Same | Unchanged | Same budget, spent on more runs |
+
+If the two arms score the same, keep the simpler baseline.
+
+## Evidence for enforcing over instructing
+
+Several 2026 studies measured what the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#the-four-layers) assume: that instructions alone hold less well than checks, and hold worse as they multiply and as a session goes on.
+
+| Study | What it measured | Finding |
+|---|---|---|
+| TRACE (compiling user corrections into runtime enforcement) | Corrections kept in memory, against corrections compiled into runtime checks | Memory alone: "Mem0 memory still leaves 57.5% of applicable preference checks violated." Compiled checks: "TRACE reduces held-out preference violation from 100.0% to 37.6% on in-distribution tasks and from 100.0% to 2.0% on out-of-distribution tasks." |
+| Instruction Stacking Collapse | Follow rate as the number of instructions grows | "Follow rate falls from ∼0.96 at one instruction to 0.604 (Sonnet), 0.433 (Gemini), and 0.201 (GPT-5-mini) at twenty." |
+| Instruction adherence in coding agent configuration files | 1,650 Claude Code sessions, varying file size, structure and conflicts | No detectable effect of file structure, but compliance decays within a session: "approximately 5.6% lower odds of compliance per step" |
+| Evaluating AGENTS.md | Task success with and without repository context files | Context files "do not generally improve task success rates, while increasing inference cost by over 20% on average" |
+| Probe-and-refine tuning of repository guidance | How the context file is produced | A file tuned against real probes reached "33.0% mean resolve rate vs. 28.3% for the static knowledge base used to initialize it and 25.5% for an unguided baseline" |
+
+### What the evidence supports
+
+1. Turn corrections into checks where a program can detect the failure.
+   - TRACE's out-of-distribution result is the strongest case, with its caveats below.
+2. Keep the number of standing instructions small.
+   - The follow-rate drop is per instruction, so every added rule lowers the odds for the others.
+3. Expect instructions to fade over a long session.
+   - A check runs at the same strength at step 200 as at step 1.
+4. Write context files from evidence.
+   - The probe-and-refine result favours lines tested against real tasks over a static list.
+
+<details markdown="1">
+<summary>Caveats</summary>
+
+- TRACE used a simulated user and 19 hand-curated held-out tasks.
+- The configuration-file study found no effect of file size itself; its decay finding is about steps within a session.
+- The follow-rate figures come from a benchmark of stacked instructions and vary widely by model.
+- I took these figures from my own research survey (sources accessed 2026-09-08) and have not re-read the papers for this page.
+
+</details>
 
 ## What this means for a personal harness
 
 ### Protect the evaluator
 
-If the agent can change the evaluator, it can make any change look good. Keep the task set and the scoring script outside what the loop may edit, and review changes to them separately.
+If the agent can change the evaluator, it can make any change look good.
+
+- Keep the task set and the scoring script outside what the loop may edit.
+  - In a repository, a separate directory with its own review rule works.
+- Review changes to the evaluator separately from changes to the harness.
+- Watch for a loop that improves the score by narrowing what the checks look at.
 
 ### Your sample is small
 
@@ -75,7 +142,12 @@ The half-width of a normal-approximation interval for a pass rate p over n tasks
 
 ### Keep the person on promotion
 
-The reports agree that the system should not approve its own change. In a personal harness, that means an agent may draft the fix, write the test and open the pull request, and you merge it.
+The reports agree that the system should not approve its own change. In a personal harness:
+
+1. An agent drafts the fix.
+2. The same or another agent writes the test for it.
+3. An agent opens the pull request with the test output.
+4. You review and merge it.
 
 ## Sources
 
@@ -86,5 +158,10 @@ These were gathered by my own research survey in 2026-09 and are not yet verifie
 - HarnessOpt-Bench: Evaluating LLMs at Harness Optimization: <https://arxiv.org/abs/2608.06301>, not yet verified against the primary source.
 - OpenAI, Building self-improving tax agents with Codex: <https://openai.com/index/building-self-improving-tax-agents-with-codex/>, not yet verified against the primary source.
 - Automatic harness changes doing no better than running the model more: <https://arxiv.org/abs/2607.12227>, verified 2026-11-09.
+- TRACE, Getting Better at Working With You: Compiling User Corrections into Runtime Enforcement for Coding Agents: <https://arxiv.org/abs/2606.13174>, not yet verified against the primary source.
+- Instruction Stacking Collapse: <https://arxiv.org/html/2608.02639>, not yet verified against the primary source.
+- Instruction Adherence in Coding Agent Configuration Files: <https://arxiv.org/abs/2605.10039>, not yet verified against the primary source.
+- Evaluating AGENTS.md: <https://arxiv.org/abs/2602.11988>, not yet verified against the primary source.
+- Probe-and-Refine Tuning of Repository Guidance for Coding Agents: <https://arxiv.org/abs/2606.20512>, not yet verified against the primary source.
 
 {% include page_nav.html %}

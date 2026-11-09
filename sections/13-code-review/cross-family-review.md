@@ -32,7 +32,17 @@ Cross-family review means the agent that reviews a change comes from a different
 
 ### Self-preference
 
-Peer-reviewed work at NeurIPS 2024 found that language models can recognise their own outputs at better than chance, that they score their own outputs higher than others' when human raters judge them equal, and that the stronger a model's self-recognition, the stronger its self-preference. Controlled experiments in the same work pointed to the link being causal. A 2026 study across 20 models found that a model's capability did not predict low self-preference: stronger models were not automatically fairer judges of their own work.
+Self-preference is a model's tendency to rate its own output above equal-quality output from others. The evidence:
+
+| Study | Finding |
+|:--|:--|
+| NeurIPS 2024 (GPT-4, Llama 2) | Models recognise their own outputs at better than chance |
+| Same study | They score their own outputs higher than others' when human raters judge them equal |
+| Same study | The stronger the self-recognition, the stronger the self-preference; controlled experiments pointed to a causal link |
+| 2026, 20 models | Capability did not predict low self-preference |
+| Same 2026 study | Judging on several separate dimensions reduced measured bias by 31.5% |
+
+The last row is a second lever besides changing the family: ask the reviewer to judge named criteria one at a time, which the four-part brief below does.
 
 ### Same-family review
 
@@ -120,7 +130,15 @@ Anthropic's April 2026 postmortem is the clearest example of the first limit. A 
 
 ## From my harness
 
-Codex reviews what Claude writes and the reverse, and each commit records which model and family did the work and which reviewed it. Cross-family review is preferred but never blocks a merge: a same-family review is accepted and recorded as weaker. The review brief always carries the "no change warranted is valid" line.
+How review runs in my harness:
+
+1. The author is usually a Claude model; the reviewer is a Codex model, and the reverse when Codex wrote the change.
+2. Each commit records which model and family did the work and which reviewed it.
+3. Cross-family review is preferred and never blocks a merge.
+   - When no other family is available, a same-family review in a fresh context is accepted and recorded as weaker.
+4. Every review brief carries the "no change warranted is a valid result" line.
+
+Steps 1 and 2 are built into the review workflow and its commit tool (layer 2 of the harness); the brief line in step 4 is layer 1.
 
 ## Sources
 

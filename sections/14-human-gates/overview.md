@@ -14,7 +14,7 @@ As of 2026-11-09.
 
 Stop 10 on the talk path, about 3 minutes.
 
-An agent that runs for hours needs to know which calls are its own and which belong to you. Decide that in advance: outward, destructive, spending and architectural actions wait for a person, and everything else the agent decides and records. Ask rarely and well, because each question stops the work. And keep your original words, because a request that passes through several agents loses pieces on the way.
+An agent that runs for hours needs to know which calls are its own and which belong to you. Decide that in advance: outward, destructive, spending and architectural actions wait for a person, and the agent decides everything else and records why. Ask rarely and well, because each question stops the work. Keep your original words, because a request that passes through several agents loses pieces on the way. Enforce the gates in the system, so they hold when the agent's attention is elsewhere.
 
 ![Sequence diagram of one task. The person asks the agent to build an export. The agent asks the authority test whether to add a new package; the test says it is architectural, so the agent writes options and a pick to the review queue. The agent asks whether to rename a helper; the test says decide and record. The person reads the queue in one sitting and rules no package; the ruling returns to the agent verbatim, and the agent returns the result with its decision log.]({{ '/assets/images/14-human-gates/who-decides-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -24,51 +24,42 @@ An agent that runs for hours needs to know which calls are its own and which bel
 
 | Idea | In one line | Go deeper |
 |---|---|---|
-| Human gate | A point where the agent stops for a person's decision | [Decision authority]({{ '/sections/14-human-gates/decision-authority.html' | relative_url }}) |
-| Authority test | Four questions that decide who decides | [The authority test]({{ '/sections/14-human-gates/decision-authority.html#the-authority-test' | relative_url }}) |
-| Held decision | A question written as options and a recommendation, kept in one queue | [Held decisions]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}) |
-| Drift | Requirements lost as work passes between agents | [Alignment]({{ '/sections/14-human-gates/alignment-and-drift.html' | relative_url }}) |
-| Enforced gate | A rule the tool applies whatever the model thinks | [Permission rules]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}) |
+| Human gate | a point where the agent stops for a person's decision | [What a human gate is](#what-a-human-gate-is) |
+| Authority test | four questions that decide who decides | [Decision authority and escalation]({{ '/sections/14-human-gates/decision-authority.html' | relative_url }}) |
+| Held decision | a question written as options and a recommendation, kept in one queue | [Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}) |
+| Drift | requirements lost as work passes between agents | [Alignment with the original request]({{ '/sections/14-human-gates/alignment-and-drift.html' | relative_url }}) |
+| Enforced gate | a rule, hook or check that holds whatever the model decides | [Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}) |
+| Gate hook | your own code that refuses a tool call before it runs | [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}) |
 
 > If an action is reversible and inside the agent's task, the agent decides and writes down why. Otherwise it asks once, with options.
 
+### Pages in this section
+
+1. This overview: the whole topic in one page.
+2. [Decision authority and escalation]({{ '/sections/14-human-gates/decision-authority.html' | relative_url }}): the authority test, investigating before asking, and where to escalate.
+   - [Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}): the template and the queue.
+3. [Alignment with the original request]({{ '/sections/14-human-gates/alignment-and-drift.html' | relative_url }}): how drift happens and the check that catches it.
+4. [Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}): allow, ask and deny rules, permission modes, and where they sit in the enforcement layers.
+   - [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}): a PreToolUse hook from first draft to tested.
+
 ## What a human gate is
 
-A human gate is a point where an agent must stop and get a person's decision before it continues. Everything else the agent does on its own. Where you put the gates decides two failure modes:
+A human gate is a point where an agent must stop and get a person's decision before it continues. Everything else the agent does on its own.
+
+- The gate names a kind of action, such as "any push to main" or "any spend over $20".
+- It says who decides: the person, or for some design calls a stronger model.
+- It says how the agent asks: a held decision in the review queue, or a prompt at the moment of action.
+
+Where you put the gates decides two failure modes:
 
 | Mistake | What happens |
 |---|---|
 | A missing gate | the agent publishes, deletes or spends without anyone agreeing |
 | An extra gate | the agent waits hours on a call it could have made, and the person learns to approve without reading |
 
-### Gates are enforcement layers
-
-A gate held only by an instruction is followed less reliably as a session grows long, the agent juggles several tasks, or the context window fills. A systems approach puts each gate into the system, in layers:
-
-1. Instructions in context files, skills and prompts.
-   - "Ask before you push." This guides the model and is the second line of defence.
-2. Workflows and tools that build the step in.
-   - A merge skill that opens a pull request and never pushes to main.
-3. Hooks, scripts and linters that refuse or flag at the moment of action.
-   - A PreToolUse hook or a deny rule that refuses `git push --force`.
-4. Validation and tests before a change lands.
-   - A branch protection rule or a pre-merge gate that rejects an unreviewed change.
-
-Layers 2 to 4 do the enforcing. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3 in general; [Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}) covers the gates Claude Code and Codex enforce themselves.
-
-### Example: one gate, moved into the system
-
-1. A team writes "never force-push to main" in its `CLAUDE.md`.
-2. An agent in a long session, rebasing to fix a conflict, force-pushes anyway.
-3. The team fixes the system rather than adding another line to the context file:
-   - a deny rule, `"Bash(git push --force *)"`, in `.claude/settings.json`;
-   - a hook that refuses any push whose target is main, with a refusal naming the pull request route;
-   - branch protection on main, so even a push that slips through is rejected.
-4. The next time, the call is refused before it runs, and the agent reads the refusal and opens a pull request.
-
 ## Which actions need a person
 
-Decide in advance which actions need a person, and write the list down. The usual list has five kinds of action:
+Decide in advance which actions need a person, and write the list down. The usual list has five kinds:
 
 | Kind | Examples | Why a person decides |
 |---|---|---|
@@ -78,7 +69,13 @@ Decide in advance which actions need a person, and write the list down. The usua
 | Architectural | a new design, a new dependency, a change to a public interface | it constrains every later change |
 | Marked by the person | anything the person flagged as pending their call | they said so |
 
-Contained technical calls go to the agent: which test to write first, how to name a helper, which of two equivalent libraries to use inside one module. The agent records each such decision and its reason, so the person can audit them later without having been asked.
+Contained technical calls go to the agent:
+
+- which test to write first;
+- how to name a helper;
+- which of two equivalent libraries to use inside one module.
+
+The agent records each such decision and its reason, so the person can audit them later without having been asked.
 
 ![Decision path. An agent wants to act. If the action is outward, destructive, spending or architectural, the person decides through a held decision. Otherwise the agent investigates first, then decides and records why, unless a gate still applies, in which case it goes to the person.]({{ '/assets/images/14-human-gates/gate-flow.svg' | relative_url }}){: style="width:100%"}
 
@@ -88,11 +85,13 @@ Contained technical calls go to the agent: which test to write first, how to nam
 
 An agent finishing a feature has five actions ahead of it:
 
-1. Rename a local variable. The agent decides.
-2. Choose between two test layouts. The agent decides and notes why.
-3. Add a new third-party package. Architectural, so it asks.
-4. Delete an old branch it created itself and has proved merged. Contained, and nothing is lost because the commits are on the remote, so it proceeds and records it.
-5. Post the release note to the team channel. Outward, so it asks.
+| Action | Kind | Who decides |
+|---|---|---|
+| Rename a local variable | contained | the agent |
+| Choose between two test layouts | contained | the agent, with a note on why |
+| Add a new third-party package | architectural | the person |
+| Delete a branch it created and has proved merged | destructive in form, but nothing is lost: the commits are on the remote | the agent, once a program has checked the proof |
+| Post the release note to the team channel | outward | the person |
 
 <details markdown="1">
 <summary>Aside: why "reversible" is the test underneath the list</summary>
@@ -106,7 +105,7 @@ The five kinds on the list share one property: undoing them is hard, impossible,
 Each question costs the person time and stops the work until they answer. An agent that asks about every choice trains the person to approve without reading. Two habits keep questions rare:
 
 1. Investigate before asking.
-   - Read the error in full, check the docs and the code, look for an existing script or automated route.
+   - Read the error in full, check the docs and the code, and look for an existing script or automated route.
    - Try the reversible fix.
    - Ask only if a gate still applies afterwards.
 2. Apply the authority test.
@@ -123,7 +122,11 @@ Each question costs the person time and stops the work until they answer. An age
 
 ### Example: a blocked agent that did not need to ask
 
-An agent's test run fails because a login token expired. The tempting move is to stop and ask the person to log in. The investigating move is to check whether the harness has an automated login for that service, run it, and confirm the token works by calling the service. Only if no automated route exists does the agent ask, and then it says exactly which step needs a person.
+A test run fails because a login token expired.
+
+1. The tempting move: stop and ask the person to log in.
+2. The investigating move: check whether the harness has an automated login for that service, run it, and confirm the token works by calling the service.
+3. Only if no automated route exists does the agent ask, and then it names the one step that needs a person.
 
 ```text
 agent> Integration tests fail: 401 Unauthorized from the storage API.
@@ -141,7 +144,7 @@ When an agent does need a person, it writes the question as a held decision that
 - Recommendation: the reasoning first, then the pick.
 - Consequences: what happens next under each option, with cost and time.
 
-The question goes into one review queue, a file or folder every agent writes to, so the person answers several at once when they have time. A file survives the end of the session; a chat message does not. The sub-page [Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}) has the template.
+The question goes into one review queue, a file or folder every agent writes to, so the person answers several at once when they have time. A file survives the end of the session; a chat message does not. [Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}) has the template.
 
 ### Example: a question that is easy to answer
 
@@ -155,7 +158,12 @@ The question goes into one review queue, a file or folder every agent writes to,
 
 ## Alignment: keep the person's words
 
-Agents drift from the original request as work passes through several hands. The person asks for three things; the lead agent's brief to a sub-agent summarises them as two; the sub-agent's report says "done". Each step looked reasonable and every check was green, but one requirement is gone.
+Agents drift from the original request as work passes through several hands:
+
+1. The person asks for three things.
+2. The lead agent's brief to a sub-agent summarises them as two.
+3. The sub-agent's report says "done".
+4. Each step looked reasonable and every check was green, but one requirement is gone.
 
 The fix keeps the original words and checks each result against them:
 
@@ -163,7 +171,9 @@ The fix keeps the original words and checks each result against them:
 2. Carry it unchanged into every brief.
    - The task framing for each agent goes in a separate block marked non-authoritative.
 3. Before calling work complete, run a drift check.
-   - Every requirement the person named is either delivered or explicitly escalated. [Alignment with the original request]({{ '/sections/14-human-gates/alignment-and-drift.html' | relative_url }}) walks through the mechanism.
+   - Every requirement the person named is either delivered or explicitly escalated.
+
+[Alignment with the original request]({{ '/sections/14-human-gates/alignment-and-drift.html' | relative_url }}) walks through the mechanism.
 
 ![Sequence diagram. The person asks the lead agent for A, B and C. The lead briefs a sub-agent with A and B plus the verbatim request. The drift check fails because C is missing, the lead writes a held decision, the person says build C now, and a second pass ends with the drift check passing.]({{ '/assets/images/14-human-gates/drift-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -185,25 +195,54 @@ export button        agent decision: deferred     FAIL: dropping a requirement i
 
 5. The agent writes a held decision with two options: build the endpoint now (half a day), or ship without the button and file a dated task. The person picks the first.
 
-## Gates in the tool: permissions and auto mode
+## Enforcing gates: layers, permissions and auto mode
 
-Claude Code and Codex both enforce gates in the tool itself. In Claude Code, a tool call meets three parts:
+A gate held only by an instruction is followed less reliably as a session grows long, the agent juggles several tasks, or the context window fills. A systems approach puts each gate into the system, in layers:
 
-1. A PreToolUse hook, your own code, runs first.
+1. Instructions in context files, skills and prompts.
+   - "Ask before you push." This guides the model and is the second line of defence.
+2. Workflows and tools that build the step in.
+   - A merge skill that opens a pull request and never pushes to main.
+3. Hooks, scripts and linters that refuse or flag at the moment of action.
+   - A PreToolUse hook or a deny rule that refuses a force-push.
+4. Validation and tests before a change lands.
+   - Branch protection or a pre-merge gate that rejects an unreviewed change.
+
+Layers 2 to 4 do the enforcing. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3 in general.
+
+### What Claude Code enforces itself
+
+In Claude Code, a tool call meets three parts:
+
+1. A PreToolUse hook, your own code, runs before the permission prompt.
    - It can refuse the call, force a prompt, or say nothing.
 2. The permission rules from `/permissions` and the `permissions` block in `settings.json`.
    - Deny is checked first, then ask, then allow; the first match decides.
    - A matching deny or ask rule applies even if the hook allowed the call.
 3. The permission mode, for calls no rule matched.
-   - Auto mode replaces most prompts with a background classifier that checks each action against your request.
+   - `default` prompts on first use of each tool; `acceptEdits` accepts file edits; `plan` explores without editing.
+   - `auto` replaces most prompts with a background classifier that checks each action against your request.
 
-[Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}) has the details and worked configurations, and [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}) builds a hook step by step.
+Codex has the same two ideas as an approval policy and a sandbox mode (not yet verified against the Codex docs for this page). [Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}) has the details and worked configurations, and [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}) builds a hook step by step.
 
 ![Sequence diagram with two alternatives. A push to main reaches the PreToolUse hook, which denies it and tells the agent to open a pull request. A push to a branch passes the hook with no decision, matches an ask rule, the person is prompted and says yes once, and the push runs.]({{ '/assets/images/14-human-gates/permission-layers-sequence.svg' | relative_url }}){: style="width:100%"}
 
 *One push, through the permission layers: the hook refuses a push to main, and an ask rule prompts for a push to a branch.*
 
-> Permission rules apply whatever the model decides, so they hold the gates you most need to keep.
+<!-- IMAGE NEEDED: a screenshot of a Claude Code permission prompt in the terminal, showing a Bash command and the allow/deny choices; search: "Claude Code permission prompt", "Claude Code allow command dialog" -->
+
+### Example: one gate, moved into the system
+
+1. A team writes "never force-push to main" in its `CLAUDE.md`.
+2. An agent in a long session, rebasing to fix a conflict, force-pushes anyway.
+3. The team fixes the system rather than adding another line to the context file:
+   - a deny rule, `"Bash(git push --force *)"`, in `.claude/settings.json`;
+   - a hook that refuses any push whose target is main, with a refusal naming the pull request route;
+   - branch protection on main, so even a push that slips through is rejected.
+4. The next time, the call is refused before it runs, and the agent reads the refusal and opens a pull request.
+
+{: .warning }
+> A Bash deny rule matches the command text. `Bash(git push --force *)` does not match `git push -f origin main`, and a deny rule does not match the same program inside `sh -c`. That is why the hook, which reads the whole command, and branch protection, which checks on the server, sit behind it.
 
 ### Example: a starter rule set
 
@@ -212,12 +251,18 @@ Claude Code and Codex both enforce gates in the tool itself. In Claude Code, a t
   "permissions": {
     "allow": ["Bash(npm run test *)", "Bash(git commit *)"],
     "ask":   ["Bash(git push *)"],
-    "deny":  ["Read(./.env)", "Bash(rm -rf *)"]
+    "deny":  ["Read(./.env)", "Read(./secrets/**)"]
   }
 }
 ```
 
-Tests and commits run without a prompt, pushes always ask, and the secrets file and recursive deletes are refused.
+| Rule | Effect |
+|---|---|
+| `allow` tests and commits | they run without a prompt |
+| `ask` on pushes | every push prompts, even in a mode that would otherwise run it |
+| `deny` on the secrets file and folder | Claude's file tools cannot read them |
+
+Commit this as `.claude/settings.json` so every session in the repository gets the same gates.
 
 ## Examples from my own harness
 
@@ -231,13 +276,15 @@ To start: write the list of actions an agent must never take alone, then enforce
 ## Pitfalls and lessons
 
 - Gating too much leaves agents waiting on calls they could make. Push contained decisions to the agents and keep a record of each one.
-- A gate written only as an instruction is followed less often as a session grows long. Move the gates you care about into permission rules or hooks.
+- A gate written only as an instruction is followed less often as a session grows long. Move the gates you care about into permission rules, hooks or checks.
+- A broad allow rule added to stop prompts, such as `Bash(*)`, removes every gate the prompts were providing.
 - A recommendation without the options behind it is hard to overrule. Ask for the options even when the agent is confident.
 - The drift check came from applying the systems approach to one failure: an agent's decision dropped a feature the request had named, with every other gate green. The fix went into the system as a gate, with a context-file line as the second layer.
 
 ## Sources
 
-- Permission rules, their order and the permission modes: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Permission rules, their order, the permission modes and how hooks interact with them: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Codex approval policy and sandbox mode: not yet verified against the primary source for this page.
 - The decision procedure, the stored request and held decisions: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

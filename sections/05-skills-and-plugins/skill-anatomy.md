@@ -48,7 +48,14 @@ A skill is a folder. The only required file is `SKILL.md`. Everything else in th
 
 #### Why scripts matter
 
-A step that says "count the open issues and sort them by age" invites the model to do arithmetic in prose. A step that says "run `tools/open_issues.py --sort age`" gets the same answer every time and costs only the output in the window. Put deterministic work in scripts and keep judgment in the steps.
+A script is the part of a skill that a program does exactly, which makes it the enforcing part of the procedure (layer 2 of the [four layers]({{ '/sections/02-ai-harnesses/' | relative_url }})).
+
+| Step written as | What happens |
+|---|---|
+| "Count the open issues and sort them by age" | The model does the counting in prose, and the answer can differ between runs |
+| "Run `tools/open_issues.py --sort age`" | The same answer every run, and only the output enters the window |
+
+Put deterministic work in scripts and keep judgment in the steps.
 
 ### Where skills live
 
@@ -68,8 +75,8 @@ Give skills at different levels different names. When two levels define the same
 
 | Field | Required | What it does |
 |---|---|---|
-| `name` | Yes | The skill's name and its slash command. Lowercase, digits and hyphens |
-| `description` | Yes | What the skill does and when to use it. Always in the window |
+| `name` | Yes | The skill's name and its slash command. Lowercase letters, digits and hyphens, up to 64 characters in the Agent Skills specification |
+| `description` | Yes | What the skill does and when to use it. Always in the window. Up to 1,024 characters in the specification |
 | `disable-model-invocation` | No | `true`: only a person can start it |
 | `user-invocable` | No | `false`: only the model can start it; hidden from the menu |
 | `allowed-tools` | No | Tools the skill may use without asking for permission while it runs |
@@ -77,7 +84,7 @@ Give skills at different levels different names. When two levels define the same
 | `model` | No | Run the skill on a named model |
 | `context` | No | `fork` runs the skill in a separate sub-agent context |
 
-The [invocation page]({{ '/sections/05-skills-and-plugins/invocation-and-chaining.html' | relative_url }}#who-can-start-a-skill) covers the two invocation fields in depth. The [descriptions sub-page]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) covers `description`.
+The two length limits come from the Agent Skills specification and were not re-checked for this page; a client can set its own. The [invocation page]({{ '/sections/05-skills-and-plugins/invocation-and-chaining.html' | relative_url }}#who-can-start-a-skill) covers the two invocation fields in depth. The [descriptions sub-page]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) covers `description`.
 
 #### Example: a full frontmatter block
 
@@ -90,7 +97,9 @@ allowed-tools: Bash(gh issue view:*), Bash(git checkout:*), Bash(npm test:*)
 ---
 ```
 
-`allowed-tools` lets the skill read the issue, make a branch and run the tests without a permission prompt at each call. Anything outside that list still asks.
+- `allowed-tools` lets the skill read the issue, make a branch and run the tests without a permission prompt at each call.
+- Anything outside that list still asks.
+- Keep the list narrow: `Bash(npm test:*)` allows the test command, where `Bash` alone would allow every shell command.
 
 ### The body
 
@@ -110,6 +119,10 @@ The body is instructions for the agent, written as steps. Three habits make a bo
 
 Anthropic calls this progressive disclosure: the client shows the model only as much of a skill as the current step needs.
 
+1. Layer 1, the name and description, is in the window on every turn for every model-invocable skill.
+2. Layer 2, the body, enters when the skill starts.
+3. Layer 3, a file in the folder, enters when a step reads it; a script contributes only its output.
+
 ### The sequence
 
 ![Sequence diagram with five lanes: Person, Client, Context window, Model and Skill folder. At session start the client puts every skill's name and description into the window. The person types /release 2.4.0; the client reads SKILL.md and the body enters the window. At step 2 the model reads checklist.md; at step 3 it runs bump_version.py and only the output enters the window. The model reports back.]({{ '/assets/images/05-skills-and-plugins/skill-loading-sequence.png' | relative_url }})
@@ -126,7 +139,11 @@ Anthropic calls this progressive disclosure: the client shows the model only as 
 
 ### Running in a forked context
 
-`context: fork` runs the skill in its own sub-agent context. The skill's reading and tool output stay in that context, and only its final result returns to the main conversation. Use it for a skill that reads a lot to produce a little, such as a review that reads 40 files and returns ten findings.
+`context: fork` runs the skill in its own sub-agent context.
+
+- The skill's reading and tool output stay in that context.
+- Only its final result returns to the main conversation.
+- Use it for a skill that reads a lot to produce a little, such as a review that reads 40 files and returns ten findings.
 
 ![Sequence diagram with three lanes: Main conversation, Forked context and Repository. The main conversation starts /review on the current diff in a forked context. The fork runs git diff and gets 12 changed files, then reads callers and tests, 28 more files, so 40 files sit in the fork's window. The fork returns 10 findings, one paragraph each, to the main conversation, which then fixes the two high findings.]({{ '/assets/images/05-skills-and-plugins/forked-review-sequence.png' | relative_url }})
 *A forked review. The 40 files stay in the fork's window; the main conversation receives only the findings.*
@@ -157,6 +174,14 @@ argument-hint: "[issue-number]"
 ```
 
 Typing `/fix-issue 412` makes step 1 read `gh issue view 412`.
+
+#### Edge cases
+
+| Typed | `$ARGUMENTS` | What to write in the skill |
+|---|---|---|
+| `/fix-issue 412` | `412` | Nothing extra |
+| `/fix-issue` | Empty | A step that says what to do with no number, such as "ask for the issue number" |
+| `/fix-issue 412 and add a test` | `412 and add a test` | Treat the first word as the number and the rest as notes, and say so in the step |
 
 ### Injected command output
 
@@ -196,7 +221,11 @@ Write three short lines: done, next, blocked. Use only the data above.
 
 ## The Agent Skills standard
 
-Skills follow the Agent Skills open standard: a folder with a `SKILL.md`, a name and a description in frontmatter, and Markdown instructions. Anthropic gave the standard to the Agentic AI Foundation in October 2026. Codex reads the same format, from `.agents/skills`.
+Skills follow the Agent Skills open standard.
+
+- The format: a folder with a `SKILL.md`, a name and a description in frontmatter, and Markdown instructions.
+- Governance: Anthropic gave the standard to the Agentic AI Foundation in October 2026.
+- Clients: Codex reads the same format, from `.agents/skills`.
 
 ### Moving a skill between clients
 
@@ -211,7 +240,20 @@ The core moves unchanged. Client-specific fields are ignored by the other client
 
 #### Example: one skill, two clients
 
-A team keeps its `bug-report` skill in one folder and links it into both `.claude/skills/` and `.agents/skills/`. The skill uses only `name`, `description` and numbered steps, so both clients run it the same way, and a fix lands in both at once.
+1. The team keeps its `bug-report` skill in one folder.
+2. It links that folder into both `.claude/skills/` and `.agents/skills/`.
+3. The skill uses only `name`, `description` and numbered steps, so both clients run it the same way.
+4. A fix to the one folder reaches both clients.
+
+## Checking a skill works
+
+A skill is code written in prose, so check it the way you would check a script:
+
+1. Start a new session, so the window holds the current description.
+2. Ask for the task in the words a person would use, without typing the command, and confirm the model picks the skill.
+3. Type the command with and without arguments, and read the result of each step.
+4. Run the scripts in the folder on their own, with tests.
+5. Add the skill to a frontmatter test such as the [one on the overview]({{ '/sections/05-skills-and-plugins/' | relative_url }}#a-frontmatter-test).
 
 ## Pitfalls
 
@@ -219,6 +261,7 @@ A team keeps its `bug-report` skill in one folder and links it into both `.claud
 - Work a script could do exactly, left to the model, gives a different answer each run.
 - A forked skill that needs earlier conversation produces a confident wrong result.
 - A skill from a stranger runs its injected commands as you.
+- An edited `SKILL.md` is not used until `/reload-skills` or a new session.
 
 ## Sources
 
