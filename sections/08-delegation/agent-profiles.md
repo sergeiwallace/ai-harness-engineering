@@ -248,7 +248,6 @@ On current versions, `/agents` prints a reminder to ask Claude or edit the agent
 | Plan | Gathering context during plan mode before a plan is presented |
 | General-purpose | Complex, multi-step tasks that need both exploration and action |
 
-
 ### Starting one explicitly
 
 ```text

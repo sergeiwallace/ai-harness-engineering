@@ -94,6 +94,7 @@ A harness strong in both steers the agent toward the right action and catches th
 
 ### Instructions and enforcement
 
+
 Some parts are text the model reads and interprets. Others are code that runs the same way every time.
 
 | | Instructions | Enforcement in code |
@@ -104,6 +105,9 @@ Some parts are text the model reads and interprets. Others are code that runs th
 | Fails by | being dropped when the model juggles tasks or the window is full | being wrong, slow or not installed |
 
 Claude Code's docs describe `CLAUDE.md` as "context, not enforced configuration", and point to a `PreToolUse` hook "to block an action regardless of what Claude decides".
+
+![The Swiss cheese model with the four layers of a harness labelled. An agent action enters at the left and passes four slices in order: 1, instructions in context files, skills and prompts, which guide because the model reads them; 2, workflows and tools, with the steps built in; 3, hooks, scripts and linters, which check at the moment of action; 4, validation and tests before a change lands. Layers 2 to 4 are enforced by a program. Each slice has holes; where the holes in every slice line up, a bad change lands.]({{ '/assets/images/diagrams/02-what-is-a-harness/swiss-cheese-harness-layers.svg' | relative_url }})
+*Figure: the Swiss cheese model applied to a harness. Each layer catches some mistakes, and a bad change lands only where the holes in every layer line up. Adapted from [Swiss cheese model of accident causation](https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png) by Davidmack, after James Reason, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/); labels added, shared under the same licence.*
 
 ![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
 *Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*
@@ -120,7 +124,6 @@ The ladder, from the layer that guides to the layers that enforce:
 | 4. Validation and tests | tests, CI, link checkers, review before a change lands | programs and reviewers on the result | a link checker that walks the built site before publish | design and judgment problems no check encodes; those go to a person |
 
 My harness puts each rule as high on this ladder as it can be checked, and keeps the context-file line as a second layer. Rules that cannot be checked from an action, such as design judgment, stay as guidance with a review step behind them. The [systems approach](#a-systems-approach-to-harness-engineering) section below explains the layers, and [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#one-rule-moved-into-the-system) follows one rule into the system.
-
 
 ## Context injection
 
@@ -299,7 +302,7 @@ They are how a harness reaches past the local machine, and how you share a set o
 Adding a remote server at project scope writes it to `.mcp.json`, which the team commits:
 
 ```text
-$ claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
+claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
 ```
 
 ```json
