@@ -11,9 +11,14 @@ last_updated: "2026-11-09"
 
 # Harness memory and context
 
-The full section on this topic is [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}).
+- Part of [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}).
+- The full section on this topic is [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}).
 
-The context window is what the model can hold in one session. Memory is what carries from one session to the next. A task tracker is memory for work. Together they decide whether a long project gets smarter over time or repeats itself.
+The context window is what the model can hold in one session.
+
+- Memory is what carries from one session to the next.
+- A task tracker is memory for work.
+- Together they decide whether a long project gets smarter over time or repeats itself.
 
 ## Contents
 {: .no_toc .text-delta }

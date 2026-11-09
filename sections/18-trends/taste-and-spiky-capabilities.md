@@ -15,7 +15,7 @@ Models are now strong at many tasks that look hard and still weak at neighbourin
 
 ![The jagged frontier of AI capabilities: a wavy blue line of AI abilities crosses a dashed curve of tasks of equal difficulty, so one task on the curve falls inside the frontier, a neighbouring one falls outside it, and a third sits on it.]({{ '/assets/images/18-trends/jagged-frontier-mollick.jpg' | relative_url }}){: style="width:100%"}
 
-*Placeholder image: the jagged frontier, tasks of equal difficulty landing inside or outside what AI does well. Source: [Ethan Mollick, Centaurs and Cyborgs on the Jagged Frontier](https://www.oneusefulthing.org/p/centaurs-and-cyborgs-on-the-jagged), used with credit; no licence stated.*
+*The jagged frontier, tasks of equal difficulty landing inside or outside what AI does well. Source: [Ethan Mollick, Centaurs and Cyborgs on the Jagged Frontier](https://www.oneusefulthing.org/p/centaurs-and-cyborgs-on-the-jagged), used with credit; no licence stated.*
 
 ## 1. Spiky capabilities
 
@@ -54,15 +54,15 @@ Two of these studies are small: 16 developers in the productivity trial and 18 i
 
 ![METR's time-horizon chart on a log scale: the length of task, in human time, that each model completes with 50% success, rising from seconds for GPT-2 in 2019 to several hours for Claude Opus 4.5 in late 2025, with wide error bars on recent models.]({{ '/assets/images/18-trends/metr-time-horizon-1-1.png' | relative_url }}){: style="width:100%"}
 
-*Placeholder image: task time horizons from 2019 to 2025, doubling about every 196 days over the whole period. Source: [METR, Time Horizon 1.1](https://metr.org/blog/2026-01-29-time-horizon-1-1/), CC BY as marked on the chart.*
+*Task time horizons from 2019 to 2025, doubling about every 196 days over the whole period. Source: [METR, Time Horizon 1.1](https://metr.org/blog/2026-01-29-time-horizon-1-1/), CC BY as marked on the chart.*
 
 ![Our World in Data chart of AI test scores relative to human performance, one line per benchmark, with benchmarks reaching the human level at very different times.]({{ '/assets/images/18-trends/owid-ai-test-scores.png' | relative_url }}){: style="width:100%"}
 
-*Placeholder image: benchmarks reach human-level scores at very different times, another view of an uneven profile. Source: [Our World in Data, Test scores of AI systems on various capabilities relative to human performance](https://ourworldindata.org/grapher/test-scores-ai-capabilities-relative-human-performance), data from Kiela et al. (2023), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).*
+*Benchmarks reach human-level scores at very different times, another view of an uneven profile. Source: [Our World in Data, Test scores of AI systems on various capabilities relative to human performance](https://ourworldindata.org/grapher/test-scores-ai-capabilities-relative-human-performance), data from Kiela et al. (2023), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).*
 
 ![METR chart comparing forecast and observed effects of AI tools on experienced developers: experts and the developers themselves forecast a speedup, while the observed result was a slowdown.]({{ '/assets/images/18-trends/metr-forecast-vs-observed.png' | relative_url }}){: style="width:100%"}
 
-*Placeholder image: forecast speedups against the observed 19% slowdown. Source: [METR, Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/), used with credit.*
+*Forecast speedups against the observed 19% slowdown. Source: [METR, Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/), used with credit.*
 
 ### 1.3 Tasks on either side of the frontier
 
@@ -111,7 +111,7 @@ In the work agents do, taste shows up as:
 
 ![METR Sankey diagram of 102 agent runs across 18 tasks: 63 failed the tests, and of the 39 that passed, the 35 reviewers skimmed contained no pull request mergeable without changes.]({{ '/assets/images/18-trends/metr-tests-vs-mergeable.png' | relative_url }}){: style="width:100%"}
 
-*Placeholder image: runs that pass the tests are still not mergeable as written. Source: [METR, Research Update: Algorithmic vs. Holistic Evaluation](https://metr.org/blog/2025-08-12-research-update-towards-reconciling-slowdown-with-time-horizons/), used with credit.*
+*Runs that pass the tests are still not mergeable as written. Source: [METR, Research Update: Algorithmic vs. Holistic Evaluation](https://metr.org/blog/2025-08-12-research-update-towards-reconciling-slowdown-with-time-horizons/), used with credit.*
 
 When ability runs without taste, the result is often what Simon Willison calls slop: "if it's mindlessly generated and thrust upon someone who didn't ask for it, slop is the perfect term for it."
 

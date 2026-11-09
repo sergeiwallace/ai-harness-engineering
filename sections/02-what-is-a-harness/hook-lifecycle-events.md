@@ -24,7 +24,7 @@ Each hook event is a moment in the session where the harness pauses and asks you
 
 ![The Claude Code hook lifecycle, simplified, top to bottom. SessionStart once per session injects context. Inside the turn, once per user prompt, UserPromptSubmit validates or blocks the prompt. Inside it, the agentic loop runs once per tool call: PreToolUse can allow, deny, ask the user or rewrite the tool input; the tool executes; PostToolUse reacts to the result, gives feedback or rewrites the output; then the loop repeats. Stop can block the stop until tests pass. SessionEnd once per session does cleanup and logging.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle-ran-the-builder.png' | relative_url }})
 
-*Placeholder image: the Claude Code hook lifecycle. Source: [Ran the Builder, "Agentic Coding Hooks: Deterministic AI Guardrails"](https://ranthebuilder.cloud/blog/agentic-coding-hooks-deterministic-ai-guardrails/), used with credit.*
+*The Claude Code hook lifecycle. Source: [Ran the Builder, "Agentic Coding Hooks: Deterministic AI Guardrails"](https://ranthebuilder.cloud/blog/agentic-coding-hooks-deterministic-ai-guardrails/), used with credit.*
 
 ### The main events
 
@@ -162,7 +162,10 @@ Fires when the agent decides it is done. A hook that returns `"decision": "block
 
 #### Worked example
 
-A Stop hook runs the fast test suite. If any test fails, it blocks the stop with the failing test names. The agent cannot end its turn claiming success while the tests are red.
+A Stop hook runs the fast test suite.
+
+- If any test fails, it blocks the stop with the failing test names.
+- The agent cannot end its turn claiming success while the tests are red.
 
 > A Stop hook that always blocks traps the agent in a loop. The input field `stop_hook_active` is true when a stop hook already sent the agent back; check it and let that stop through, with a note to the person.
 {: .warning }

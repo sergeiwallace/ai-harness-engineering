@@ -11,7 +11,11 @@ last_updated: "2026-11-09"
 
 # Prompt-driven orchestration
 
-In prompt-driven orchestration a lead agent, or a coordinator session, holds the plan and directs other agents through briefs and agent profiles. This page covers the lead's job, the Claude Code tools it uses, how it splits work, briefs, how it joins and checks results, when it should hand off to a script, and how it fails. The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with programmatic orchestration. A sub-topic page covers [chaining skills into a pipeline]({{ '/sections/10-orchestration/skill-pipelines.html' | relative_url }}).
+In prompt-driven orchestration a lead agent, or a coordinator session, holds the plan and directs other agents through briefs and agent profiles:
+
+- This page covers the lead's job, the Claude Code tools it uses, how it splits work, briefs, how it joins and checks results, when it should hand off to a script, and how it fails.
+- The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with programmatic orchestration.
+- A sub-topic page covers [chaining skills into a pipeline]({{ '/sections/10-orchestration/skill-pipelines.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -25,7 +29,10 @@ In prompt-driven orchestration a lead agent, or a coordinator session, holds the
 
 *Figure: a lead agent splits work, joins the results, and only then writes the next brief. Made with archify.*
 
-The lead does four things, in a loop: plan the next steps, write a brief for each, start the agents, then read and check what came back. It does not do the leaf work itself. That keeps its context for the plan and the results, the same reason a [coordinator session]({{ '/sections/09-session-coordination/coordinator-sessions.html' | relative_url }}) routes instead of working.
+The lead does four things, in a loop: plan the next steps, write a brief for each, start the agents, then read and check what came back:
+
+- It does not do the leaf work itself.
+- That keeps its context for the plan and the results, the same reason a [coordinator session]({{ '/sections/09-session-coordination/coordinator-sessions.html' | relative_url }}) routes instead of working.
 
 ### Planning in rounds
 
@@ -91,11 +98,17 @@ A lead agent building an export feature splits it like this:
 | Write the end-to-end test | Write | Format spec only | Own |
 | Review the result | Read | Exporter and test | Shared |
 
-The two reads start together. The test writer starts as soon as the spec read finishes, without waiting for the exporter. The review waits for both writers.
+The two reads start together:
+
+- The test writer starts as soon as the spec read finishes, without waiting for the exporter.
+- The review waits for both writers.
 
 ## Briefs
 
-The brief is the only thing a sub-agent knows about the task. A rule that is not in the brief does not reach the sub-agent. [Templates and stubs]({{ '/sections/07-templates-and-stubs/' | relative_url }}) covers the fields; for orchestration the ones that matter most are the output format and the evidence wanted back, because the lead has to join several results.
+The brief is the only thing a sub-agent knows about the task:
+
+- A rule that is not in the brief does not reach the sub-agent.
+- [Templates and stubs]({{ '/sections/07-templates-and-stubs/' | relative_url }}) covers the fields; for orchestration the ones that matter most are the output format and the evidence wanted back, because the lead has to join several results.
 
 ```markdown
 ## Objective

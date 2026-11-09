@@ -11,7 +11,11 @@ last_updated: "2026-11-09"
 
 # Permissions and settings
 
-Settings configure the harness itself. Permissions are the part of settings that decide which actions the agent may take without asking. Claude Code's docs put it plainly: "Permission rules are enforced by Claude Code, not by the model." They are the first hard control in the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), and the allow list decides how often you are interrupted.
+Settings configure the harness itself.
+
+- Permissions are the part of settings that decide which actions the agent may take without asking.
+- Claude Code's docs put it plainly: "Permission rules are enforced by Claude Code, not by the model."
+- They are the first hard control in the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), and the allow list decides how often you are interrupted.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -76,7 +80,7 @@ Lists such as `permissions.allow` merge across all levels; no level removes anot
 
 ## Permission rules
 
-![A vertical flow chart of one tool call, for example git push, through the permission checks. PreToolUse hooks run first, before any rule; a deny there refuses the call and the hook says why. With no decision from the hooks, the rules are checked in order from every scope. If a deny rule matches, the call is refused and never runs. If an ask rule matches, such as Bash(git push *), the person is prompted and the call runs if they approve. If an allow rule matches, such as tests, linters or git status, it runs with no prompt. If no rule matches, the permission mode set by defaultMode decides.]({{ '/assets/images/diagrams/02-ai-harnesses/permission-path-flow.svg' | relative_url }})
+![A vertical flow chart of one tool call, for example git push, through the permission checks. PreToolUse hooks run first, before any rule; a deny there refuses the call and the hook says why. With no decision from the hooks, the rules are checked in order from every scope. If a deny rule matches, the call is refused and never runs. If an ask rule matches, such as Bash(git push \*), the person is prompted and the call runs if they approve. If an allow rule matches, such as tests, linters or git status, it runs with no prompt. If no rule matches, the permission mode set by defaultMode decides.]({{ '/assets/images/diagrams/02-ai-harnesses/permission-path-flow.svg' | relative_url }})
 *Figure: one tool call, checked by hooks first and rules second: deny, then ask, then allow. Made with archify.*
 
 *One push, checked by hooks first and rules second. The diagram writes the rule as `Bash(git push:*)`, an equivalent form of `Bash(git push *)`. Our own diagram, made with archify.*
@@ -89,7 +93,10 @@ Lists such as `permissions.allow` merge across all levels; no level removes anot
 | `ask` | prompts the person | actions you want to see: pushes, installs |
 | `deny` | refused | actions that must never happen: reading secrets |
 
-Rules are checked in a fixed order: deny, then ask, then allow. The first match in that order decides, however specific a later rule is. A deny rule that names a tool with no pattern, such as `"WebFetch"`, removes the tool from the model's context entirely.
+Rules are checked in a fixed order: deny, then ask, then allow.
+
+- The first match in that order decides, however specific a later rule is.
+- A deny rule that names a tool with no pattern, such as `"WebFetch"`, removes the tool from the model's context entirely.
 
 ### Rule syntax
 

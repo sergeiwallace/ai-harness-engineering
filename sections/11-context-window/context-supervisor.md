@@ -12,7 +12,10 @@ last_updated: "2026-11-09"
 
 # A context supervisor
 
-A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}). A context supervisor is a small piece of automation that watches how full a session's context is and, past a threshold, saves state and compacts, so a long autonomous run does not depend on the agent noticing in time. This page covers the built-in options to try first, the parts of a supervisor, how they fit together, a minimal hook, and the failure modes.
+A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}):
+
+- A context supervisor is a small piece of automation that watches how full a session's context is and, past a threshold, saves state and compacts, so a long autonomous run does not depend on the agent noticing in time.
+- This page covers the built-in options to try first, the parts of a supervisor, how they fit together, a minimal hook, and the failure modes.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -92,7 +95,10 @@ The numbers follow my own practice of compacting at about 50 to 60 percent; tune
 
 ## A minimal hook
 
-A sketch of the reminder step as a `PostToolUse` hook. A `PostToolUse` hook reaches Claude through JSON output: `hookSpecificOutput.additionalContext` is added to Claude's context next to the tool result. How you read the percentage depends on your setup; this one calls a command that prints it.
+A sketch of the reminder step as a `PostToolUse` hook:
+
+- A `PostToolUse` hook reaches Claude through JSON output: `hookSpecificOutput.additionalContext` is added to Claude's context next to the tool result.
+- How you read the percentage depends on your setup; this one calls a command that prints it.
 
 ```bash
 #!/usr/bin/env bash

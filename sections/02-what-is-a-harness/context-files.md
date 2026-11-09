@@ -13,9 +13,14 @@ last_updated: "2026-11-09"
 
 # Harness context files
 
-The full section on this topic is [Context files]({{ '/sections/04-context-files/' | relative_url }}).
+- Part of [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}).
+- The full section on this topic is [Context files]({{ '/sections/04-context-files/' | relative_url }}).
 
-A context file is the standing brief a harness hands the model at the start of every session. It is the cheapest component to add, and a long or vague one is followed poorly. This page covers what a context file is for, what belongs in one, how to write rules a model follows, and how a context file relates to the rest of the harness. Three sub-topic pages go deeper: [layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}), [size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}) and [compiling]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
+A context file is the standing brief a harness hands the model at the start of every session.
+
+- It is the cheapest component to add, and a long or vague one is followed poorly.
+- This page covers what a context file is for, what belongs in one, how to write rules a model follows, and how a context file relates to the rest of the harness.
+- Three sub-topic pages go deeper: [layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}), [size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}) and [compiling]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -203,7 +208,11 @@ A rule nobody breaks any more may be compensating for an older model.
 
 ### When an agent makes a mistake
 
-Adding another detailed rule to the context file each time an agent does something wrong is an anti-pattern. The file grows, each rule gets less attention, and the model still applies them unevenly when it juggles several things, switches tasks or works with a nearly full window. A rule of thumb for when: the second time you type the same correction, change the harness; act on the first occurrence when it will clearly recur or a repeat would be costly ([when to change the harness]({{ '/sections/02-what-is-a-harness/' | relative_url }}#when-to-change-the-harness)). Following the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), the fix goes into the system first:
+Adding another detailed rule to the context file each time an agent does something wrong is an anti-pattern.
+
+- The file grows, each rule gets less attention, and the model still applies them unevenly when it juggles several things, switches tasks or works with a nearly full window.
+- A rule of thumb for when: the second time you type the same correction, change the harness; act on the first occurrence when it will clearly recur or a repeat would be costly ([when to change the harness]({{ '/sections/02-what-is-a-harness/' | relative_url }}#when-to-change-the-harness)).
+- Following the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), the fix goes into the system first:
 
 1. Ask which part of the system let the mistake through.
 2. Build the fix into a workflow or tool where you can: a skill step, a script that does the fiddly part, a template with the right fields.

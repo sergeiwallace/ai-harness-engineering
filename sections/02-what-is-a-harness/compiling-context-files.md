@@ -131,7 +131,10 @@ This is the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_u
 <details markdown="1">
 <summary>The temporary worktree trap</summary>
 
-Agents in my harness each work in their own git worktree. An installer run from one of them once linked the live context files into that worktree, which was deleted when the agent finished, and every session lost its context file. The installer now re-roots itself to the main checkout before it does anything, and a test pins that no live link ever points into a temporary worktree.
+Agents in my harness each work in their own git worktree.
+
+- An installer run from one of them once linked the live context files into that worktree, which was deleted when the agent finished, and every session lost its context file.
+- The installer now re-roots itself to the main checkout before it does anything, and a test pins that no live link ever points into a temporary worktree.
 
 </details>
 

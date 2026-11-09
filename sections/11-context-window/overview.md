@@ -11,7 +11,11 @@ last_updated: "2026-11-09"
 
 # Context window and memory
 
-A session's context window is everything the model can see at once: your context files, the conversation, every file it read and every command's output. As it fills, an agent follows instructions less reliably, and near the limit the session compacts: it replaces the history with a summary. Whatever was not written down is gone. Keeping a long session useful comes down to four habits, and the tools that enforce them:
+A session's context window is everything the model can see at once: your context files, the conversation, every file it read and every command's output:
+
+- As it fills, an agent follows instructions less reliably, and near the limit the session compacts: it replaces the history with a summary.
+- Whatever was not written down is gone.
+- Keeping a long session useful comes down to four habits, and the tools that enforce them:
 
 1. Measure how full the window is.
 2. Before compacting, write the task, the decisions and the next step to a file.
@@ -177,7 +181,7 @@ Enforced by: the send tool refuses a second send of the same task id.
 ```
 
 - Recording the failure lets the agent apply the general idea to a new case.
-- The "Enforced by" line points to the fix in the system: a lesson guides, and a tool or hook makes the mistake impossible. See [where a fix belongs]({{ '/sections/11-context-window/memory-files.html' | relative_url }}#where-a-fix-belongs).
+- The "Enforced by" line points to the fix in the system: a lesson guides, and a tool or hook makes the mistake impossible. The same hooks and checks can also enforce how you want the output to be from the start. See [where a fix belongs]({{ '/sections/11-context-window/memory-files.html' | relative_url }}#where-a-fix-belongs).
 
 ## The task tracker
 

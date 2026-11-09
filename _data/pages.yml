@@ -354,3 +354,6 @@
 - url: "/sections/19-chat-and-desktop-clients/mcp-apps.html"
   title: "MCP Apps: interactive UI in chat clients"
   level: 1
+- url: "/sections/19-chat-and-desktop-clients/tabs-and-surfaces.html"
+  title: "Chat, Projects, Cowork, Code and mobile"
+  level: 1

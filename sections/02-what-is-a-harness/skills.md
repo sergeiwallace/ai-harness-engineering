@@ -11,7 +11,8 @@ last_updated: "2026-11-09"
 
 # Harness skills
 
-The full section on this topic is [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+- Part of [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}).
+- The full section on this topic is [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 
 A skill is a procedure packaged so the agent can follow it on demand. It is how a prompt you keep retyping becomes a step-by-step method that runs the same way every time, without paying for its full text on every turn.
 
@@ -186,12 +187,18 @@ description: Diagnose and fix a reproducible defect. Reproduce, find the root ca
 
 ## Skills in my harness
 
-My harness has skills for the procedures I run most: landing a change end to end, fixing a bug, delegating work to another agent with a full brief, reviewing a change with a model from another family, saving session state before compaction, and drafting messages in my voice. Each began as a prompt I typed more than twice. A path rule with skill-authoring standards loads whenever a `SKILL.md` is edited, so new skills follow the same shape.
+My harness has skills for the procedures I run most: landing a change end to end, fixing a bug, delegating work to another agent with a full brief, reviewing a change with a model from another family, saving session state before compaction, and drafting messages in my voice.
+
+- Each began as a prompt I typed more than twice.
+- A path rule with skill-authoring standards loads whenever a `SKILL.md` is edited, so new skills follow the same shape.
 
 <details markdown="1">
 <summary>Testing a skill</summary>
 
-Run the skill on a real task in a fresh session and read the transcript. Check that it triggered from a natural request, that each step ran in order, and that the report has every field. When a step is skipped, the fix is usually in the step's wording or a missing check.
+Run the skill on a real task in a fresh session and read the transcript.
+
+- Check that it triggered from a natural request, that each step ran in order, and that the report has every field.
+- When a step is skipped, the fix is usually in the step's wording or a missing check.
 
 </details>
 

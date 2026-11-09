@@ -68,7 +68,10 @@ So the weight moves up:
 | Entry point and integration | A middle band | The default: one test per acceptance criterion, through the real command or route |
 | Unit | The wide base | Only tests that pass the [value gate](#the-value-gate) |
 
-Kent C. Dodds's 2019 advice, "Write tests. Not too many. Mostly integration.", described the same shift before agents. The cost of end-to-end tests has not gone away (see the flakiness aside on the [overview]({{ '/sections/12-testing/#heavy-test-runs-on-a-shared-machine' | relative_url }})), so "drive the entry point" usually means a fast, hermetic run of the real command or route, not a full browser session for every case.
+Two caveats:
+
+- Kent C. Dodds's 2019 advice, "Write tests. Not too many. Mostly integration.", described the same shift before agents.
+- The cost of end-to-end tests has not gone away (see the flakiness aside on the [overview]({{ '/sections/12-testing/#heavy-test-runs-on-a-shared-machine' | relative_url }})), so "drive the entry point" usually means a fast, hermetic run of the real command or route, not a full browser session for every case.
 
 <!-- IMAGE NEEDED: the "testing trophy" shape (static, unit, integration largest, end to end) next to the classic pyramid; search: testing trophy Kent C Dodds, testing trophy vs pyramid -->
 

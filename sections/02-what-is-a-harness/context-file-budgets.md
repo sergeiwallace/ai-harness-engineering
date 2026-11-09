@@ -161,7 +161,10 @@ A global context file has grown past its fail threshold, and the build stops.
 + Test standards load from the test path rule on test files only.
 ```
 
-The eleven lines moved to a path rule that loads only on test files. The context file keeps one line saying where they went. Every session that never touches a test saves those lines; every session that does gets them at the right moment.
+The eleven lines moved to a path rule that loads only on test files.
+
+- The context file keeps one line saying where they went.
+- Every session that never touches a test saves those lines; every session that does gets them at the right moment.
 
 ### The check that the rule survived
 

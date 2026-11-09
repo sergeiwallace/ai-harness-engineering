@@ -13,7 +13,12 @@ last_updated: "2026-11-09"
 
 # Goals and loops
 
-A goal keeps an agent working until a condition is met. A loop repeats a prompt on a schedule. Both turn a single answer into sustained work, and both need an exit condition and a limit. This page covers `/goal` and its evaluator, writing a condition it can judge, Stop hooks as the enforced version of a goal, `/loop` and scheduled tasks, and how each one ends. The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) is the short version; a sub-topic page covers [hill-climbing and quality ratchets]({{ '/sections/10-orchestration/hill-climbing.html' | relative_url }}).
+A goal keeps an agent working until a condition is met:
+
+- A loop repeats a prompt on a schedule.
+- Both turn a single answer into sustained work, and both need an exit condition and a limit.
+- This page covers `/goal` and its evaluator, writing a condition it can judge, Stop hooks as the enforced version of a goal, `/loop` and scheduled tasks, and how each one ends.
+- The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) is the short version; a sub-topic page covers [hill-climbing and quality ratchets]({{ '/sections/10-orchestration/hill-climbing.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -80,7 +85,10 @@ A goal is restored when you resume the session, with its turn count, timer and t
 | Command output the agent showed | Whether a command was really run, if its output was not shown |
 | The agent's own claims | Whether those claims are true |
 
-So the condition has to name evidence the agent will print. "The bug is fixed" invites the agent to say so. "The regression test's output, shown after the last change, reports it passing" asks for something the evaluator can read.
+So the condition has to name evidence the agent will print:
+
+- "The bug is fixed" invites the agent to say so.
+- "The regression test's output, shown after the last change, reports it passing" asks for something the evaluator can read.
 
 ## Writing a condition
 

@@ -13,7 +13,12 @@ last_updated: "2026-11-09"
 
 # Compaction and saving state
 
-Compaction replaces a session's history with a summary so the session can keep going. It is necessary on any long task and it loses detail every time. This page covers what survives, when to compact, the three ways to shrink a conversation, how to steer the summary, how to write state so nothing important depends on the summary, how to resume automatically, and the edge cases. The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version. Sub-topic pages cover [a context supervisor]({{ '/sections/11-context-window/context-supervisor.html' | relative_url }}) that automates the routine, and [context in Claude Code and Codex]({{ '/sections/11-context-window/claude-code-and-codex-context.html' | relative_url }}).
+Compaction replaces a session's history with a summary so the session can keep going:
+
+- It is necessary on any long task and it loses detail every time.
+- This page covers what survives, when to compact, the three ways to shrink a conversation, how to steer the summary, how to write state so nothing important depends on the summary, how to resume automatically, and the edge cases.
+- The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version.
+- Sub-topic pages cover [a context supervisor]({{ '/sections/11-context-window/context-supervisor.html' | relative_url }}) that automates the routine, and [context in Claude Code and Codex]({{ '/sections/11-context-window/claude-code-and-codex-context.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -140,7 +145,11 @@ A focus helps the summary, but it does not replace the state note. The summary c
 <details markdown="1">
 <summary>Why not keep the state in the tracker alone?</summary>
 
-The tracker holds what the tasks are and their status. The state note holds what the session was in the middle of: the half-formed diagnosis, the next command. Both survive compaction; they answer different questions. A short tracker comment can point at the note.
+The tracker holds what the tasks are and their status:
+
+- The state note holds what the session was in the middle of: the half-formed diagnosis, the next command.
+- Both survive compaction; they answer different questions.
+- A short tracker comment can point at the note.
 
 </details>
 

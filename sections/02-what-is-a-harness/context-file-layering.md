@@ -12,7 +12,10 @@ last_updated: "2026-11-09"
 
 # Context file layering
 
-A session rarely reads one context file. It reads several, from broad to narrow, and combines them. Knowing which files load, when, and which wins when two disagree is what lets you put each rule exactly where it applies.
+A session rarely reads one context file.
+
+- It reads several, from broad to narrow, and combines them.
+- Knowing which files load, when, and which wins when two disagree is what lets you put each rule exactly where it applies.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -170,7 +173,10 @@ My harness keeps its test standards, its public writing rules and its skill-auth
 
 *Which context files reach the model, and when. The diagram simplifies compaction: the project-root `CLAUDE.md` is re-read from disk at once, while folder files and path rules come back the next time a matching file is touched. Our own diagram, made with archify.*
 
-An agent spends an hour on documentation, then switches to tests. A test-style rule written in the project file has been in the context all that hour, buried under an hour of messages. The same rule as a path rule arrives fresh at the moment the agent opens the first test file.
+An agent spends an hour on documentation, then switches to tests.
+
+- A test-style rule written in the project file has been in the context all that hour, buried under an hour of messages.
+- The same rule as a path rule arrives fresh at the moment the agent opens the first test file.
 
 ## Layering in a multi-machine harness
 
@@ -184,7 +190,10 @@ My harness runs on several machines with different tools and access.
 <details markdown="1">
 <summary>Why an overlay and not a separate file</summary>
 
-A separate file per machine repeats the base, and the copies drift. An overlay is a short section that says only what differs, and the build places it after the base so it reads as the narrower layer. See [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
+A separate file per machine repeats the base, and the copies drift.
+
+- An overlay is a short section that says only what differs, and the build places it after the base so it reads as the narrower layer.
+- See [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
 
 </details>
 

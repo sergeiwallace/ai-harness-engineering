@@ -12,7 +12,10 @@ last_updated: "2026-11-09"
 
 # Hook failure modes
 
-A hook is code, and code fails. A failed guard leaves everyone believing the rule is enforced when it is not. This page lists the ways hooks fail and the check that catches each one.
+A hook is code, and code fails.
+
+- A failed guard leaves everyone believing the rule is enforced when it is not.
+- This page lists the ways hooks fail and the check that catches each one.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -44,7 +47,10 @@ A hook is code, and code fails. A failed guard leaves everyone believing the rul
 
 ### The mechanism
 
-Only exit code 2, or an explicit deny in JSON, blocks. A Python guard that raises an exception exits with 1, which the harness treats as a non-blocking hook error, and the action continues. Claude Code's hooks reference warns about exactly this: "If your hook is meant to enforce a policy, use `exit 2`."
+Only exit code 2, or an explicit deny in JSON, blocks.
+
+- A Python guard that raises an exception exits with 1, which the harness treats as a non-blocking hook error, and the action continues.
+- Claude Code's hooks reference warns about exactly this: "If your hook is meant to enforce a policy, use `exit 2`."
 
 ```text
 $ echo 'not json' | python3 guard.py; echo "rc=$?"

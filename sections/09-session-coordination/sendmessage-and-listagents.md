@@ -10,7 +10,10 @@ last_updated: "2026-11-09"
 
 # SendMessage and ListAgents
 
-A sub-topic of [message channels and fallbacks]({{ '/sections/09-session-coordination/message-channels.html' | relative_url }}). Claude Code's cross-session messaging lets one of your sessions send another a plain-text message. This page covers what the two tools do, how sessions are named and addressed, how a message is delivered, the settings that control incoming messages, what a message cannot do, the limits, and how agent teams compare.
+A sub-topic of [message channels and fallbacks]({{ '/sections/09-session-coordination/message-channels.html' | relative_url }}):
+
+- Claude Code's cross-session messaging lets one of your sessions send another a plain-text message.
+- This page covers what the two tools do, how sessions are named and addressed, how a message is delivered, the settings that control incoming messages, what a message cannot do, the limits, and how agent teams compare.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -35,7 +38,10 @@ You do not call either tool yourself. Claude finds the target and sends when it 
 Explain what we just did to the session working on the payments API
 ```
 
-Claude writes the message itself. A message carries text only, never the sender's conversation or files. To move a whole conversation, resume that session instead.
+Claude writes the message itself:
+
+- A message carries text only, never the sender's conversation or files.
+- To move a whole conversation, resume that session instead.
 
 ### Requirements
 
@@ -127,7 +133,10 @@ Claude Code decides per message from the two sessions' permission modes:
 | Bypasses prompts | Bypasses too | Delivered |
 | Bypasses prompts | Prompts | Held for your approval |
 
-A held message opens an approval dialog in an interactive session. Unanswered, it is dropped after `dialogExpiry`, five minutes by default. A session holds at most 100 messages and drops the oldest past that.
+A held message opens an approval dialog in an interactive session:
+
+- Unanswered, it is dropped after `dialogExpiry`, five minutes by default.
+- A session holds at most 100 messages and drops the oldest past that.
 
 #### Example: a headless worker that takes messages
 

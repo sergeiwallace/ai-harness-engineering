@@ -10,7 +10,10 @@ last_updated: "2026-11-09"
 # Test tampering and oracle integrity
 {: .no_toc }
 
-The oracle is whatever decides whether code is correct: a test suite, a reference output, a checker script. Test tampering is when an agent makes its code pass by changing the oracle instead of the code. It is the testing form of reward hacking.
+The oracle is whatever decides whether code is correct: a test suite, a reference output, a checker script.
+
+- Test tampering is when an agent makes its code pass by changing the oracle instead of the code.
+- It is the testing form of reward hacking.
 
 This page covers:
 
@@ -183,7 +186,12 @@ The research behind this page concluded that a judge is useful on a flagged diff
 
 ### Make pre-existing tests read-only
 
-ImpossibleBench found read-only test files a middle ground: they "restore legitimate performance while preventing test modification attempts". They do not stop special-casing. In Claude Code, a `PreToolUse` hook can enforce it.
+ImpossibleBench found read-only test files a middle ground:
+
+- They "restore legitimate performance while preventing test modification attempts".
+- They do not stop special-casing.
+
+In Claude Code, a `PreToolUse` hook can enforce it.
 
 ```json
 {

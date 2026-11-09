@@ -9,7 +9,10 @@ last_updated: "2026-11-09"
 
 # Memory files and lessons
 
-Memory files carry what a session learned into the next session. This page covers what memory is for, Claude Code's auto memory, how to write a lesson that transfers, how to lay out an index that stays inside its load limit, where a fix for a repeated mistake belongs, and how memory differs from context files and the task tracker. The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version.
+Memory files carry what a session learned into the next session:
+
+- This page covers what memory is for, Claude Code's auto memory, how to write a lesson that transfers, how to lay out an index that stays inside its load limit, where a fix for a repeated mistake belongs, and how memory differs from context files and the task tracker.
+- The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -156,6 +159,11 @@ fi
 
 A memory lesson or a new line in a context file guides the model, and the model applies it inconsistently: when it juggles several things, switches tasks, or works in a nearly full context window. Adding another detailed rule every time a model makes a mistake grows the context files without making the mistake impossible.
 
+Hooks, checks and tests in the system do two jobs:
+
+- They enforce how you want the output to be from the start: conventions, structure, style, required sections.
+- They stop the mistakes you have already seen.
+
 When a mistake matters or repeats, put the fix in the system, and keep the lesson as the second line of defence.
 
 | Layer | Example for "re-sent a task after a timeout" | Enforces? |
@@ -194,7 +202,7 @@ Keeping them apart stops either from crowding the other.
 - A size check on the index, so it never grows past what loads.
 - A task tracker as the record of all work; the task panel in the terminal only displays it.
 
-To start: one notes file for state. When the agent repeats a mistake, look first for a check or a tool change that prevents it, and write the lesson to explain the check.
+To start: one notes file for state. When the agent repeats a mistake, or you want every output to follow a convention, look first for a check or a tool change that enforces it, and write the lesson to explain the check.
 
 ## Pitfalls and lessons
 

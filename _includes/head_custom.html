@@ -30,6 +30,19 @@
   .main-content td.cell-nowrap, .main-content th.cell-nowrap { white-space: nowrap; }
   .main-content table.table-tight th, .main-content table.table-tight td { padding: 0.35rem 0.45rem; font-size: 0.8125rem; }
   .main-content table.table-squeeze th, .main-content table.table-squeeze td { overflow-wrap: anywhere; }
+  /* site-qa v1 */
+  .main-content th, .main-content td { overflow-wrap: normal !important; word-break: normal !important; hyphens: none; }
+  .main-content td code { overflow-wrap: anywhere !important; }
+  .main-content table.table-squeeze td { overflow-wrap: anywhere !important; }
+  .main-content table.table-squeeze th { overflow-wrap: normal !important; }
+  .page-nav { flex-wrap: nowrap !important; font-size: 0.8125rem !important; }
+  .page-nav > span { flex: 1 1 0 !important; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .main-content img[src$="local-maximum.png"] { width: auto !important; max-width: min(100%, 399px) !important; }
+  @media (min-width: 1600px) {
+    .side-bar { width: calc((100% - 91.5rem) / 2 + 16.5rem); }
+    .main { margin-left: Max(16.5rem, calc((100% - 91.5rem) / 2 + 16.5rem)); max-width: 75rem; }
+  }
+  @media (min-width: 2200px) { html { font-size: 112.5% !important; } }
 </style>
 <script>/* tables-fit v2: keep a short first column on one line; step down only where a table still overflows */
 (function () {

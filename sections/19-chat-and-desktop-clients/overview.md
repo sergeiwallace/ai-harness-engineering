@@ -26,14 +26,17 @@ The short answer:
 
 ## Tabs and surfaces
 
+[Chat, Projects, Cowork, Code and mobile]({{ '/sections/19-chat-and-desktop-clients/tabs-and-surfaces.html' | relative_url }}) covers each surface in detail, with what is new, how each harness concept maps onto it, and Remote Control.
+
+
 | Surface | What it is | How much of a harness applies |
 |---|---|---|
 | Chat | A conversation in the web, desktop or mobile app | Instructions and habits; connectors and [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}) |
-| Projects | Conversations that share instructions and files | Project instructions play the role of a context file (unverified; check the claude.ai help pages) |
-| Cowork | An agent in the desktop app that works on tasks with your files and connectors | Plugins and connectors install there, with a different set of components than Claude Code; interactive connectors are available |
+| Projects | Classic Projects share instructions and files across chats; new Projects (beta, Pro, Max and Ultra) run one cloud Claude Code thread per task | Project instructions and memory act as context files; cloud threads read `CLAUDE.md` but not the repository's skills or settings |
+| Cowork | "The same agentic architecture that powers Claude Code, with no terminal required", running in an isolated environment on Anthropic's servers, on desktop, web and mobile | Skills, plugins and connectors from your claude.ai settings; approval modes; not your local Claude Code hooks |
 | Code | Claude Code inside the desktop app | Almost the whole harness: the same engine, configuration, project memory and MCP servers as the terminal |
 | Claude Code on the web | Claude Code sessions that run in the cloud | The repository's harness; not the plugins in your local settings |
-| Mobile | The Claude apps on phones | Conversations, connectors and interactive apps; no local harness |
+| Mobile | The Claude apps on phones | Conversations, connectors and interactive apps; Remote Control can drive a Claude Code session on your machine (Pro, Max, Ultra, and Team or Enterprise if an Owner enables it; not with API keys, Bedrock, Vertex AI, Foundry or a gateway) |
 
 ## The three tiers
 
@@ -163,6 +166,7 @@ To start: copy the project instructions example above into a chat project and us
 
 - [Harness habits in a chat app]({{ '/sections/19-chat-and-desktop-clients/harness-habits-in-a-chat-app.html' | relative_url }})
 - [MCP Apps: interactive UI in chat clients]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }})
+- [Chat, Projects, Cowork, Code and mobile]({{ '/sections/19-chat-and-desktop-clients/tabs-and-surfaces.html' | relative_url }})
 
 ## Sources
 

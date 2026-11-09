@@ -11,9 +11,13 @@ last_updated: "2026-11-09"
 
 # Agent profiles
 
-The full section on this topic is [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}).
+- Part of [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}).
+- The full section on this topic is [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}).
 
-An agent profile fixes a role: what it is for, which model runs it, and which tools it may use. The main session starts a sub-agent from a profile, hands it a brief, and gets back a summary. Profiles are how a harness turns "ask another agent" into a repeatable division of labour.
+An agent profile fixes a role: what it is for, which model runs it, and which tools it may use.
+
+- The main session starts a sub-agent from a profile, hands it a brief, and gets back a summary.
+- Profiles are how a harness turns "ask another agent" into a repeatable division of labour.
 
 ## Contents
 {: .no_toc .text-delta }

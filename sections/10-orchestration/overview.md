@@ -11,7 +11,11 @@ last_updated: "2026-11-09"
 
 # Orchestration and workflows
 
-Orchestration is how multi-step work gets done without you driving every step. In prompt-driven orchestration a lead agent holds the plan and directs other agents through briefs. In programmatic orchestration a script holds the plan and starts agents for each step. Goals and loops keep either kind going until a condition is met, and every loop needs an exit condition and a limit.
+Orchestration is how multi-step work gets done without you driving every step:
+
+- In prompt-driven orchestration a lead agent holds the plan and directs other agents through briefs.
+- In programmatic orchestration a script holds the plan and starts agents for each step.
+- Goals and loops keep either kind going until a condition is met, and every loop needs an exit condition and a limit.
 
 ![A sequence diagram. In a parallel fragment the lead briefs two readers, who return a table and notes. The lead rechecks a count, then briefs a writer, which reports a commit, and the lead verifies the diff.]({{ '/assets/images/10-orchestration/lead-splits-and-joins.svg' | relative_url }}){: style="width:100%"}
 

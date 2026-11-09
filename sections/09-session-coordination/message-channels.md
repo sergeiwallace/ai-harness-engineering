@@ -13,7 +13,10 @@ last_updated: "2026-11-09"
 
 # Message channels and fallbacks
 
-Sessions coordinate by sending each other messages, and no single channel reaches every session. This page covers the kinds of channel, how to order them as one primary with fallbacks, how to probe a target before sending, how to confirm delivery, the last-resort channel, and what each extra channel costs. The [section overview]({{ '/sections/09-session-coordination/' | relative_url }}) is the short version; the sub-topic page covers the built-in [SendMessage and ListAgents]({{ '/sections/09-session-coordination/sendmessage-and-listagents.html' | relative_url }}) in depth.
+Sessions coordinate by sending each other messages, and no single channel reaches every session:
+
+- This page covers the kinds of channel, how to order them as one primary with fallbacks, how to probe a target before sending, how to confirm delivery, the last-resort channel, and what each extra channel costs.
+- The [section overview]({{ '/sections/09-session-coordination/' | relative_url }}) is the short version; the sub-topic page covers the built-in [SendMessage and ListAgents]({{ '/sections/09-session-coordination/sendmessage-and-listagents.html' | relative_url }}) in depth.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -42,7 +45,10 @@ Sessions coordinate by sending each other messages, and no single channel reache
 
 ## One primary, ordered fallbacks
 
-A message sent through a channel the target does not read leaves the sender waiting. With several equal channels, the sender has to guess and the target has to check them all. With one primary and an ordered list of fallbacks, both sides follow the same rule:
+A message sent through a channel the target does not read leaves the sender waiting:
+
+- With several equal channels, the sender has to guess and the target has to check them all.
+- With one primary and an ordered list of fallbacks, both sides follow the same rule:
 
 1. Try the primary channel.
 2. If it cannot reach the target, try the next one.

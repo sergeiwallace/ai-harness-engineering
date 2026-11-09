@@ -13,7 +13,10 @@ last_updated: "2026-11-09"
 
 # Programmatic workflows
 
-Programmatic orchestration holds the plan in code: a script or a graph decides which agent runs when, with what input, and what happens after. This page covers Claude Code's dynamic workflows in depth (starting, the script, limits, resume, saving, cost), graph frameworks such as LangGraph, and how to design a workflow that resumes cleanly. The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with [prompt-driven orchestration]({{ '/sections/10-orchestration/prompt-driven-orchestration.html' | relative_url }}); the sub-topic page compares [orchestration frameworks]({{ '/sections/10-orchestration/orchestration-frameworks.html' | relative_url }}).
+Programmatic orchestration holds the plan in code: a script or a graph decides which agent runs when, with what input, and what happens after:
+
+- This page covers Claude Code's dynamic workflows in depth (starting, the script, limits, resume, saving, cost), graph frameworks such as LangGraph, and how to design a workflow that resumes cleanly.
+- The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with [prompt-driven orchestration]({{ '/sections/10-orchestration/prompt-driven-orchestration.html' | relative_url }}); the sub-topic page compares [orchestration frameworks]({{ '/sections/10-orchestration/orchestration-frameworks.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -135,7 +138,10 @@ Rules the runtime applies to the script:
 
 ### Resume
 
-Resume works within the same session. A paused run resumes with `p` in `/workflows`; for a stopped run, ask Claude to relaunch it. The runtime replays the run in the order agents start:
+Resume works within the same session:
+
+- A paused run resumes with `p` in `/workflows`; for a stopped run, ask Claude to relaunch it.
+- The runtime replays the run in the order agents start:
 
 | Agent's state in the last run | On relaunch |
 |---|---|
@@ -217,7 +223,10 @@ Claude Code's runtime tracks each agent's result for you. A script you write you
 
 #### Make each step idempotent
 
-Running a step twice gives the same result as running it once. A step that writes "batch 14 done" with its output can be skipped on resume; a step that appends to a shared file without a marker duplicates on resume. An agent that stalls and restarts leaves the files it already changed, so the same rule applies inside a dynamic workflow.
+Running a step twice gives the same result as running it once:
+
+- A step that writes "batch 14 done" with its output can be skipped on resume; a step that appends to a shared file without a marker duplicates on resume.
+- An agent that stalls and restarts leaves the files it already changed, so the same rule applies inside a dynamic workflow.
 
 #### Persist state between steps
 

@@ -13,9 +13,15 @@ last_updated: "2026-11-09"
 
 # Harness hooks
 
-The full section on this topic is [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
+- Part of [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}).
+- The full section on this topic is [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
 
-A hook is a command the harness runs at a fixed point in a session. It sees what the agent is about to do or has just done, and it can let the action through, refuse it with a reason, or add text to the conversation. A rule in a hook holds whether or not the model remembers it. This page covers how a hook is configured, what it receives, what it can return, and how to write one. Three sub-topic pages go further: [Hook lifecycle events]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}), [Guard hooks]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) and [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}).
+A hook is a command the harness runs at a fixed point in a session.
+
+- It sees what the agent is about to do or has just done, and it can let the action through, refuse it with a reason, or add text to the conversation.
+- A rule in a hook holds whether or not the model remembers it.
+- This page covers how a hook is configured, what it receives, what it can return, and how to write one.
+- Three sub-topic pages go further: [Hook lifecycle events]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}), [Guard hooks]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) and [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -263,13 +269,20 @@ $ echo '{"tool_input":{"command":"kill 41822"}}' | python3 no_pattern_kill.py; e
 rc=0
 ```
 
-Test both arms. A guard tested only on the case it should block can be a guard that blocks everything. My harness keeps a test file per hook with both a positive and a negative case for every rule the hook enforces.
+Test both arms.
+
+- A guard tested only on the case it should block can be a guard that blocks everything.
+- My harness keeps a test file per hook with both a positive and a negative case for every rule the hook enforces.
 
 </details>
 
 ## Hooks in my harness
 
-Many of my harness's hooks came from the same pattern, which is the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) in practice: an agent broke a written rule, and the fix went into the system as a hook, with the written rule kept as a second layer. Today a rule that can be checked from the tool input goes to a hook first. The refusal text repeats the rule at the moment it applies. A few of the kinds, described conceptually:
+Many of my harness's hooks came from the same pattern, which is the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) in practice: an agent broke a written rule, and the fix went into the system as a hook, with the written rule kept as a second layer.
+
+- Today a rule that can be checked from the tool input goes to a hook first.
+- The refusal text repeats the rule at the moment it applies.
+- A few of the kinds, described conceptually:
 
 | Kind | Event | What it does |
 |---|---|---|

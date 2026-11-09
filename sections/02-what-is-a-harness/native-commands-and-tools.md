@@ -11,9 +11,14 @@ last_updated: "2026-11-09"
 
 # Native commands and tools
 
-The basics of both tools are in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}).
+- Part of [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}).
+- The basics of both tools are in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}).
 
-Native tools are what the model can call before you add anything. Native commands are what a person types. Together they are the floor of every harness: skills call the tools, hooks watch them, permission rules name them. This page lists them, shows how a tool call moves through the harness, and gives the checks to run before you build something that already exists.
+Native tools are what the model can call before you add anything.
+
+- Native commands are what a person types.
+- Together they are the floor of every harness: skills call the tools, hooks watch them, permission rules name them.
+- This page lists them, shows how a tool call moves through the harness, and gives the checks to run before you build something that already exists.
 
 ## Contents
 {: .no_toc .text-delta }

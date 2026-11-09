@@ -38,7 +38,10 @@ One way to handle these is to give each shared action one owner session per mach
 
 *Figure: two merge requests become a queue under one owner. Made with archify.*
 
-A worker that finishes a change does not merge it. It sends the owner a short request: the branch, what it changes, and the evidence that it passed. The owner merges requests one at a time, runs the affected tests on the merged result, and replies.
+A worker that finishes a change does not merge it:
+
+- It sends the owner a short request: the branch, what it changes, and the evidence that it passed.
+- The owner merges requests one at a time, runs the affected tests on the merged result, and replies.
 
 ### Example: a merge request message
 

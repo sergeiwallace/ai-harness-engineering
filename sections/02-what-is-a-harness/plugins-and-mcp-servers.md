@@ -11,7 +11,10 @@ last_updated: "2026-11-09"
 
 # Plugins and MCP servers
 
-MCP servers connect a harness to services beyond the local machine. Plugins package skills, agent profiles, hooks and MCP servers so they install together. One extends what the agent can reach; the other makes a set of extensions shareable.
+MCP servers connect a harness to services beyond the local machine.
+
+- Plugins package skills, agent profiles, hooks and MCP servers so they install together.
+- One extends what the agent can reach; the other makes a set of extensions shareable.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -56,8 +59,8 @@ The Model Context Protocol (MCP) is an open standard for connecting a model to o
 ### Claude Code
 
 ```text
-claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
-claude mcp add --env NOTES_DIR=/srv/notes notes -- python3 tools/notes_server.py
+$ claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
+$ claude mcp add --env NOTES_DIR=/srv/notes notes -- python3 tools/notes_server.py
 ```
 
 For a stdio server, everything after `--` is the command that starts it; the options before `--` belong to Claude Code.
@@ -104,7 +107,10 @@ url = "https://mcp.example.com/docs"
 
 ### Naming and permissions
 
-MCP tools appear to the model and to your rules as `mcp__<server>__<tool>`. A server that comes from a plugin is named `mcp__plugin_<plugin>_<server>__<tool>`. Permission rules and hook matchers write patterns differently.
+MCP tools appear to the model and to your rules as `mcp__<server>__<tool>`.
+
+- A server that comes from a plugin is named `mcp__plugin_<plugin>_<server>__<tool>`.
+- Permission rules and hook matchers write patterns differently.
 
 | Where | Pattern | Matches |
 |---|---|---|

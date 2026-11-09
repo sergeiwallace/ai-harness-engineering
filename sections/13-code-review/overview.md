@@ -301,7 +301,12 @@ When many agents finish at once, merges queue up, and the merged result is a com
 
 ## Where review sits in the harness
 
-This site treats harness engineering as a systems approach: when an agent gets something wrong, the fix goes into the system, enforced by code wherever possible, and each new gap gets the same treatment. The harness has four layers, and review spans the enforcing ones:
+This site treats harness engineering as a systems approach: the way you want the output to be, and each fix for a gap, goes into the system, enforced by code wherever possible. Review checks work in both directions:
+
+- Proactively, they encode how a change should look: required tests, a changed-path scope, no unknown dependencies, conventions the linter knows.
+- Reactively, they catch a kind of defect that has already slipped through once.
+
+The harness has four layers, and review spans the enforcing ones:
 
 1. Instructions in context files, skills and prompts.
    - Example: a review brief that says "no change warranted is a valid result".
@@ -309,7 +314,8 @@ This site treats harness engineering as a systems approach: when an agent gets s
 2. Workflows and tools that build the steps in.
    - Example: a review command that always runs in a fresh context and records the reviewing family.
 3. Hooks, scripts and linters that refuse or flag at the moment of action.
-   - Example: a dependency check that refuses an unknown package, or a test-edit flag on the branch.
+   - Proactive example: a linter that enforces the project's naming and structure conventions on every change.
+   - Reactive example: a dependency check that refuses an unknown package, or a test-edit flag on the branch.
 4. Validation and tests before a change lands.
    - Example: the merge gate, then agent review with verified findings, then human approval where required.
 

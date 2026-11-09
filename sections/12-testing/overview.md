@@ -14,7 +14,12 @@ stop_minutes: "2"
 # Testing agent-written code
 {: .no_toc }
 
-When an agent writes the code, it usually writes the tests too. The tests then double as the score the agent works toward, and an agent can make a test pass without meeting the intent behind it. This overview covers six testing practices for agent-written code, each with a worked example, and links to a topic page wherever a practice has more depth.
+When an agent writes the code, it usually writes the tests too. Two things follow:
+
+- Tests state how the code should behave, so they encode the intent before any code exists.
+- Tests are also the score the agent works toward, and an agent can make a test pass without meeting the intent behind it.
+
+This overview covers six testing practices for agent-written code, each with a worked example and a link to a topic page where there is more depth.
 
 | Practice | What it means | Go deeper |
 |:--|:--|:--|
@@ -212,7 +217,12 @@ Tests come from acceptance criteria written before the code. That is separate fr
 | Tests first | Writes the tests from the spec, then the code | About the same tokens as no TDD; quality effect unclear |
 | Spec first | Writes acceptance criteria first; tests derive from them | Spec-grounded test generation found 9.8 points more real bugs in another study |
 
-The spec has to exist before the code. Without it, nobody can tell whether a failing test or the code is wrong, and agents tamper with tests most often in exactly that situation (next section). The [topic page]({{ '/sections/12-testing/entry-point-testing.html#test-ordering-and-the-spec' | relative_url }}) shows what a proportional spec looks like.
+The spec has to exist before the code:
+
+- Without it, nobody can tell whether a failing test or the code is wrong.
+- Agents tamper with tests most often in exactly that situation (next section).
+
+The [topic page]({{ '/sections/12-testing/entry-point-testing.html#test-ordering-and-the-spec' | relative_url }}) shows what a proportional spec looks like.
 
 ## Oracle integrity
 
@@ -401,7 +411,15 @@ flock /tmp/test-suite.lock pytest -n 4
 <details markdown="1">
 <summary>Aside: how flaky end-to-end tests cost real time</summary>
 
-Integration and end-to-end tests are more often flaky than unit tests. A widely cited figure puts about 16% of Google's tests as flaky, with 84% of pass-to-fail transitions in its CI caused by flakiness rather than real bugs. Those figures are from 2016 to 2020 and give an order of magnitude only. The mitigation is hermetic tests: each test owns its temporary files, ports and processes, and cleans up what it started.
+Integration and end-to-end tests are more often flaky than unit tests:
+
+| Figure | Value |
+|:--|:--|
+| Google tests that were flaky | About 16% |
+| Pass-to-fail transitions in its CI caused by flakiness | 84% |
+| Age of the figures | 2016 to 2020; an order of magnitude only |
+
+The mitigation is hermetic tests: each test owns its temporary files, ports and processes, and cleans up what it started.
 
 </details>
 
@@ -422,7 +440,12 @@ How much testing to ask for depends on the model:
 
 ## Where tests sit in the harness
 
-This site treats harness engineering as a systems approach: when an agent gets something wrong, the fix goes into the system, enforced by code wherever possible, and each new gap gets the same treatment. Tests are the last of four layers in that system:
+This site treats harness engineering as a systems approach: the way you want the output to be, and each fix for a gap, goes into the system, enforced by code wherever possible. Tests work in both directions:
+
+- Proactively, a test states how the code should behave: the outputs, the formats, the required fields.
+- Reactively, a regression test stops a mistake that has already happened from coming back.
+
+Tests are the last of four layers in that system:
 
 1. Instructions in context files, skills and prompts.
    - Example: a testing rule that loads when the agent edits a test file, or the model-tier line above.
@@ -430,11 +453,17 @@ This site treats harness engineering as a systems approach: when an agent gets s
 2. Workflows and tools that build the steps in.
    - Example: a bug-fix procedure whose steps include "commit the failing test before the fix".
 3. Hooks, scripts and linters that refuse or flag at the moment of action.
-   - Example: a hook that blocks edits to existing test files, or a script that lists changed tests on a branch.
+   - Proactive example: a linter that requires every test to call the real entry point.
+   - Reactive example: a hook that blocks edits to existing test files, or a script that lists changed tests on a branch.
 4. Validation and tests before a change lands.
    - Example: the merge gate runs the tests the diff touches and refuses the merge when one fails.
 
-Layers 2 to 4 do the enforcing. A testing lesson that only becomes another line in a context file tends to be missed on a busy run; the same lesson as a gate check runs on every change. The [bug-fix diagram](#testing-agent-written-code) at the top of this page shows layers 1, 2 and 4 in one run, and [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3.
+Layers 2 to 4 do the enforcing:
+
+- A testing rule that is only a line in a context file tends to be missed on a busy run.
+- The same rule as a gate check runs on every change.
+
+The [bug-fix diagram](#testing-agent-written-code) at the top of this page shows layers 1, 2 and 4 in one run, and [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3.
 
 ## From my harness
 
