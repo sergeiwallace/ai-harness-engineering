@@ -107,9 +107,6 @@ The first three are prompt-driven; the last is programmatic.
 | Where is the plan? | In the lead's context | In code |
 | Changing the plan mid-run | The lead decides | Edit and relaunch the script |
 
-> Either kind can come first. One common path is to run a chain prompt-driven while its steps are still changing, and turn it into a script once it runs the same way every time.
-{: .note }
-
 ## Goals and loops
 
 Both kinds of orchestration need something that keeps the work going after the first answer, and something that stops it. Claude Code has three ways to keep one session running between prompts:
@@ -166,9 +163,6 @@ Exit code 2 from the hook keeps Claude working, with the hook's message as the r
 Recurring loops expire 7 days after creation. For work that should run without an open session, Claude Code also has cloud and Desktop scheduled tasks.
 
 ### Exit conditions and limits
-
-> Every loop needs an exit condition and a limit. A condition alone can be wrong or unreachable; a limit alone can stop good work early. With both, the loop ends when the work is done or has stalled, and its report says which.
-{: .warning }
 
 | Mechanism | Its exit condition | Its limit |
 |---|---|---|

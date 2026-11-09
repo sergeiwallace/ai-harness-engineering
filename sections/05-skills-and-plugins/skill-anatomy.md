@@ -108,8 +108,6 @@ The body is instructions for the agent, written as steps. Three habits make a bo
 2. Name the exact command or file at each step. "Run the tests" is weaker than "run `npm test -- --coverage`".
 3. End with what to report and where to save it, so the result is in a known place.
 
-> A body is read on every use, so its length is a cost each time. If a section is needed only at one step, move it to a reference file and have that step read it.
-
 ## How loading works
 
 ### The three layers
@@ -215,8 +213,6 @@ Retry expired uploads https://github.com/example/app/pull/88
 
 Write three short lines: done, next, blocked. Use only the data above.
 ```
-
-> Injected commands run with your permissions when the skill loads. Treat a skill from someone else like a script from someone else: read it before you install it.
 
 ## The Agent Skills standard
 

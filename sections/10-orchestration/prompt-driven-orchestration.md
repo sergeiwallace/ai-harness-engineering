@@ -115,13 +115,6 @@ When every sub-agent returns the same shape, joining is mechanical.
 
 ## Joining and checking results
 
-<details markdown="1">
-<summary>Why the lead checks before it joins results</summary>
-
-The lead treats each sub-agent's summary as unverified until checked. Agents report work they did not do, and a summary can drop the caveat that changes the conclusion. A lead that only merges summaries passes every sub-agent's mistake on as its own conclusion.
-
-</details>
-
 | The sub-agent reports | The lead checks | How |
 |---|---|---|
 | "Committed abc123 in my worktree" | The commit exists and touches the files named | `git -C <worktree> show --stat abc123` |
@@ -176,9 +169,6 @@ The `tools` list has no `Edit` or `Write`, so the lead cannot make the change it
 - What helps: pass the original request verbatim alongside each brief, as a fixed block in the brief template ([templates and stubs]({{ '/sections/07-templates-and-stubs/' | relative_url }})).
 
 ### The engine grows
-
-> Adding a fix for each failure grows an orchestration engine until the fixes cause failures. Cutting steps can work better than adding them.
-{: .warning }
 
 - What happens: each failure gets a new instruction, a new step or a new special case in the lead's brief, and the brief becomes long enough that the lead follows parts of it.
 - What helps:

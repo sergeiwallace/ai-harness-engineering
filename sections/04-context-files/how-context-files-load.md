@@ -99,8 +99,6 @@ A context file can import another with `@path`.
 | Rules shared between two clients (`@AGENTS.md`) | Long procedures; an import loads them every session |
 | Personal instructions shared across worktrees (`@~/.claude/...`), since a gitignored `CLAUDE.local.md` exists only in one worktree | Files that change often |
 
-> An import is not a link. To keep detail out of the window until it is needed, link to it with a trigger or make it a skill (see [Hub and spoke and path rules]({{ '/sections/04-context-files/hub-and-spoke-and-path-rules.html' | relative_url }})).
-
 ### Comments and exclusions
 
 - Block-level HTML comments (`<!-- maintainer notes -->`) are stripped before the content reaches the model; use them for notes to people. Comments inside code blocks are kept.

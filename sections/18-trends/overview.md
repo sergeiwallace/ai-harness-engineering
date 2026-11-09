@@ -85,8 +85,6 @@ The [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the
 
 A harness whose enforcement sits in layers 2 to 4 needs less rework when the model changes, because the parts that do the enforcing do not depend on the model.
 
-> Note: re-test on a model change you did not choose, too. A client can change its default model, and the harness is then running against a new model without anyone deciding it.
-
 ## 2. Harness engineering has names now
 
 ### 2.1 Context engineering
@@ -165,22 +163,6 @@ See [Coordinating several sessions]({{ '/sections/09-session-coordination/' | re
   - Move patterns a program can detect into a pattern check, so they do not depend on the model reading the list.
 
 To start: the next time your model changes, run five tasks you know well on the old and the new model, and compare the outputs side by side.
-
-## Pitfalls and lessons
-
-<details markdown="1">
-<summary>Assuming a newer model needs the same harness</summary>
-
-Some rules written for an older model make a newer one worse. For example, a rule that forces step-by-step planning could slow a model that already plans well on its own. Re-test before assuming.
-
-</details>
-
-<details markdown="1">
-<summary>Building what the client is about to ship</summary>
-
-Clients add features quickly. A coordination layer, a memory system or a review command you build this month may arrive natively next month. Prefer small mechanisms you can retire over large ones you have to maintain.
-
-</details>
 
 ## Pages in this section
 

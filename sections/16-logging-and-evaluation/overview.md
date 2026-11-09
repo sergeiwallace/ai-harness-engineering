@@ -115,8 +115,6 @@ The harness has its own bottlenecks, and they are often somewhere unexpected. In
 
 *An illustration of where the time to merge can go. Your proportions will differ; measure them.*
 
-> Time each stage from the logs before you change any of them.
-
 ## Watch the spend
 
 ![Sequence diagram. The agent gives the budget check a 40,000-call batch and a measured sample. The check asks the spend ledger what remains, learns $100 is left, and refuses the job at about $264. The agent proposes a small model and a sample to the person, who approves, and the estimate is recorded in the ledger.]({{ '/assets/images/16-logging-and-evaluation/budget-check-sequence.svg' | relative_url }}){: style="width:100%"}
@@ -196,13 +194,6 @@ Agents are not deterministic, so one run per task tells you little. Two measures
 | `claude plugin eval` | compares a plugin's results against a run without it |
 | OpenTelemetry export | sends Claude Code metrics and events to your own monitoring |
 | A JSONL ledger and `jq` | answers ad hoc questions about your own runs |
-
-<details markdown="1">
-<summary>Aside: public benchmarks have errors too</summary>
-
-A public benchmark score is a useful signal and a poor substitute for your own tasks. Benchmarks contain broken tasks: about 30 percent of one benchmark's tasks were reported broken (not yet verified against the primary source). Your own failures are the tasks that matter for your harness.
-
-</details>
 
 ## Examples from my own harness
 

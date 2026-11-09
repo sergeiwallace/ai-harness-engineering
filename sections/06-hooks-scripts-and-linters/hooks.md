@@ -91,8 +91,6 @@ The hook reads the fields it needs, usually with `jq`, and ignores the rest.
 | 2 | Stop, don't do this | The action is blocked and the hook's standard error comes back as feedback |
 | Other | The hook itself failed | An error is shown; the action proceeds |
 
-> Exit code 1 does not block. A guard that exits 1 on a dangerous command reports an error and lets the command run. Use 2.
-
 #### Structured JSON output
 
 A hook can also print a JSON object on standard output for finer control. On `PreToolUse` it can allow, deny or ask the person:

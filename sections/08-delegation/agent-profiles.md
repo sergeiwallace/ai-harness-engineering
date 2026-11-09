@@ -173,8 +173,6 @@ The Markdown under the frontmatter is the role's standing instructions. It is th
 | What the role always ignores, such as style the linter enforces | Which files to start from |
 | What it always checks before reporting | The length cap for this answer |
 
-> Note: the body is the instruction layer. A limit that matters for safety is more reliable in `tools`, where the runtime enforces it.
-
 ## Worked example: two profiles side by side
 
 <details markdown="1" open>
@@ -291,9 +289,9 @@ The lead can name a profile, or the runtime picks one from the descriptions. In 
 
 ### Enforcing
 
-A tool not in the list is not available to call, so figure 1's reviewer gets "no such tool" when it tries to edit. No sentence in a brief can add a tool to a profile.
-
-> Important: when a brief and a profile disagree about tools, the profile applies. A tool missing from the profile is unavailable whatever the brief says, so safety limits are safer in the profile.
+- A tool not in the list is not available to call.
+  - In figure 1, the reviewer gets "no such tool" when it tries to edit.
+- No sentence in a brief can add a tool to a profile.
 
 ## Designing a role set
 

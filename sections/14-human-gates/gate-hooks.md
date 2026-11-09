@@ -80,8 +80,6 @@ if __name__ == "__main__":
 
 ## Fail closed
 
-> When the guard fails, the dangerous action must still be unreachable.
-
 If the hook above crashes, for example on malformed input, Python exits with code 1 and prints no decision:
 
 | Exit | Meaning to Claude Code | Push |

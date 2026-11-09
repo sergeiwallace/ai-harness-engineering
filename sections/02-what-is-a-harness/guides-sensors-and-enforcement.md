@@ -221,9 +221,6 @@ When you adopt someone else's setup, or open your own after a few months, three 
 2. What enforces in code? List the hooks, checks and gates. For each, find the rule it enforces and the incident it came from.
 3. What has not fired in a long time? A rule nobody breaks any more, or a check that never fails, may compensate for an older model and can go.
 
-> A copied harness brings its author's habits and problems with it. Build from the problems you hit yourself.
-{: .important }
-
 ## Pitfalls
 
 | Pitfall | Better |

@@ -155,9 +155,6 @@ The client can display an `Edit` as a diff for you to approve. A `sed` command s
 
 `Read` returns line numbers and can read a range of lines, so the model takes only the part it needs. A shell `cat` returns the whole file, up to the output limit above.
 
-> Prefer the narrowest tool that does the job. A permission rule or hook can check a narrow tool's call by its arguments, and its output is usually smaller.
-{: style="border-left: 4px solid #0f766e; background: #f0fdfa; padding: 0.75rem 1rem;"}
-
 ## Writing a tool the model will use well
 
 ### The description does the work

@@ -26,9 +26,6 @@ A sub-topic of [programmatic workflows]({{ '/sections/10-orchestration/programma
 | Your coding agent's workflow feature | A script the agent writes and runs, such as Claude Code's dynamic workflows | The work is coding work inside that agent | Tied to that agent |
 | A framework | A graph, a crew or a set of agents with handoffs | A product feature, many tools, several models, long-lived state | A dependency and its concepts |
 
-> For orchestration that helps you write code, a script or your coding agent's workflow feature is often enough. Frameworks add more when the orchestration ships as part of a product.
-{: .note }
-
 ## The frameworks
 
 ### LangGraph

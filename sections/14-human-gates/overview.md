@@ -30,8 +30,6 @@ An agent that runs for hours needs to know which calls are its own and which bel
 | Enforced gate | a rule, hook or check that holds whatever the model decides | [Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}) |
 | Gate hook | your own code that refuses a tool call before it runs | [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}) |
 
-> If an action is reversible and inside the agent's task, the agent decides and writes down why. Otherwise it asks once, with options.
-
 ### Pages in this section
 
 1. This overview: the whole topic in one page.
@@ -91,13 +89,6 @@ An agent finishing a feature has five actions ahead of it:
 | Add a new third-party package | architectural | the person |
 | Delete a branch it created and has proved merged | destructive in form, but nothing is lost: the commits are on the remote | the agent, once a program has checked the proof |
 | Post the release note to the team channel | outward | the person |
-
-<details markdown="1">
-<summary>Aside: why "reversible" is the test underneath the list</summary>
-
-The five kinds on the list share one property: undoing them is hard, impossible, or visible to other people. That is why a deletion of a proved-merged branch can be exempt while a deletion of a database table cannot. When you meet an action the list does not name, ask whether a revert would fully undo it and whether anyone outside the task would see it. The [authority test]({{ '/sections/14-human-gates/decision-authority.html#question-2-is-it-outward-destructive-spending-or-architectural' | relative_url }}) spells this out.
-
-</details>
 
 ## Asking too often is also a failure
 

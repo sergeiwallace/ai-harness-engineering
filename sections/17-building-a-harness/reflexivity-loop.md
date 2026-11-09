@@ -103,8 +103,6 @@ Make the smallest change that would have stopped this case, at a layer that enfo
 3. A test or validation that catches the result before it lands (layer 4).
 4. Then, at most, one context-file line that names the guard (layer 1, the second line of defence).
 
-> Warning: answering each mistake with a new, detailed context-file rule is an anti-pattern. The rule set grows, the agent applies it less consistently in long or busy sessions, and the same failure comes back. See [Ad hoc rules after every mistake]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}#ad-hoc-rules-after-every-mistake).
-
 The ladder, from soft to hard:
 
 | Rung | The rule lives in | It holds when |
@@ -218,8 +216,6 @@ Read the next week against the decision table in step 5:
 | Did the hook fire on real failures? | Five times, each followed by a test run and a fix | Keep |
 | Did it block a correct finish? | Never | No narrowing needed |
 
-> Note: the hook's message tells the agent what to do next. [Writing refusal messages]({{ '/sections/17-building-a-harness/refusal-messages.html' | relative_url }}) covers how to write one. A refusal that only says "blocked" tends to be retried in the same way.
-
 ## Who runs the loop
 
 Early on, you do. Later, agents can run most of it:
@@ -248,23 +244,9 @@ To start: pick the item at the top of your friction log and take it through all 
 ## Pitfalls
 
 <details markdown="1">
-<summary>A new context-file rule for every mistake</summary>
-
-Each rule is small, but together they grow into a long list the agent applies unevenly, and the list starts to contradict itself. Put the fix into a workflow, hook or test instead, and keep the context file to lines that name the guards.
-
-</details>
-
-<details markdown="1">
 <summary>Fixing the symptom in the prompt</summary>
 
 Adding "IMPORTANT: always run the tests" in capital letters keeps the rule on the softest rung. If the agent already had the rule, more emphasis rarely helps for long. Move to a check.
-
-</details>
-
-<details markdown="1">
-<summary>Skipping the measure step</summary>
-
-A change that is never measured stays forever, whether it helped or not. Unmeasured changes are a common source of complexity creep.
 
 </details>
 

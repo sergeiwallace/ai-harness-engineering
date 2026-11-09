@@ -51,8 +51,6 @@ Two sources state the same order:
 | OpenClaw's test-audit skill | "Bug regression tests must fail on the pre-fix code for the intended reason." |
 | Anthropic's Claude Code best practices | "write a failing test that reproduces the issue, then fix it" |
 
-> The agent-specific risk is a test written after the fix, which passes on both the old and new code. It has the form of a regression test and does not detect the bug.
-
 ## The method, step by step
 
 ### 1. Reproduce
@@ -143,21 +141,6 @@ Then cover the rest of the root cause:
 | 5 | The live system, where one exists | The fix holds outside the test environment |
 
 Each ring is slower and runs less often. Stopping at ring 1 is the common agent shortcut.
-
-<details markdown="1">
-<summary>Aside: the proof a reviewer should ask for</summary>
-
-A credible bug-fix report records five things:
-
-1. The reproduction fails on the clean base.
-2. The same reproduction passes with the fix.
-3. Preservation tests pass.
-4. The fix did not alter the frozen test or the gate.
-5. The result was re-run from a clean checkout.
-
-Do not accept an agent's statement that a failure is "pre-existing". Run the test on the base commit and see.
-
-</details>
 
 ## Where each rule is enforced
 

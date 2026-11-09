@@ -121,9 +121,6 @@ Registered for every tool in `.claude/settings.json`:
 }
 ```
 
-> When the measurement is unavailable, the hook says nothing. A guess dressed as a reading is worse than no reading.
-{: .note }
-
 ## Failure modes
 
 | Failure | Sign | Response |

@@ -153,8 +153,6 @@ See [Goal and loop commands]({{ '/sections/03-claude-code-and-codex/goal-and-loo
 | Bash, file read and file edit tools | Available | Available |
 | Use for | Scripted work that should follow the project's rules | Evaluations and read-only jobs that must not depend on the machine |
 
-> `--bare` keeps the edit and Bash tools and drops the hooks that would refuse a dangerous command. For a job that edits or pushes, run without `--bare`, or restrict the tools with `--tools` or `--disallowedTools`.
-
 ### A CI job
 
 ```yaml

@@ -89,8 +89,6 @@ Keep the called skill model-invocable and put the gate where it holds:
 1. A confirmation step inside the skill: "Show the tag and the changelog and wait for the person to say yes."
 2. A hook on the dangerous command itself, such as the tag push, which refuses unless a condition holds. Section 6 covers [hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}).
 
-> The gate belongs on the dangerous action. A setting on the skill controls only one of the ways to reach that action.
-
 ### Worked example: a test that finds the trap
 
 A test can find the trap before it reaches a session:

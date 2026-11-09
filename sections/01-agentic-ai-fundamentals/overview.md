@@ -19,9 +19,6 @@ Stop 2 on the talk path, about 2 minutes. This overview explains how a language 
 ![Diagram: a coding agent as one tall map. You give the task to the client; the client loads context files and memory and sends the whole context to the model; the model's tool call passes a permission gate, which consults hooks; the tool runner edits files, runs the shell or fetches from the web and MCP servers; the tool result returns to the model]({{ '/assets/images/01-agentic-ai-fundamentals/agent-loop-map.svg' | relative_url }}){: style="width: 100%" }
 *Figure: one coding agent, top to bottom. The model only chooses; the client assembles context, checks each request and runs it; you steer from the top.*
 
-> An agent is a model in a loop that asks a client to run tools for it. Everything the model knows comes from the context the client sends on each turn.
-{: style="border-left: 4px solid #0f766e; background: #f0fdfa; padding: 0.75rem 1rem;"}
-
 | | The model | The client (Claude Code, Codex) |
 |---|---|---|
 | Job | reads the context, decides the next step | assembles context, runs tools, enforces rules |

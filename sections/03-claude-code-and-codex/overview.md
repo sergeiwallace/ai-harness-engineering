@@ -363,8 +363,6 @@ A forty-minute test suite does not have to block the session.
   ⎿  EXIT 1
 ```
 
-> Every line a monitor feeds back costs context. Filter it to the lines that should change what the agent does next, such as failures and the exit code.
-
 Codex lists its background terminals with `/ps` and stops them with `/stop`. [Background work and headless runs]({{ '/sections/03-claude-code-and-codex/background-work-and-headless-runs.html' | relative_url }}) covers background shells, Monitor patterns and their trade-offs.
 
 ### Headless runs
@@ -391,8 +389,6 @@ Both clients run in a terminal, in editors, and as desktop or web apps. Claude C
 | Editor extension | Work beside the code you are reading | Same engine and settings as the terminal |
 | Desktop and web | Starting or reviewing work away from a terminal | A cloud session runs on a fresh clone and does not read your user or local settings |
 | Headless (`claude -p`) | CI jobs and scripts | Skills and hooks run; terminal-only commands do not |
-
-> A cloud session is a different machine. It reads the repository's committed files and your organization's server-managed settings, and nothing from your own home directory. A hook that only exists in `~/.claude/settings.json` does not run there.
 
 ### One setup, two surfaces
 
@@ -428,8 +424,6 @@ The full table is on [Claude Code and Codex compared]({{ '/sections/03-claude-co
    - A test that catches it before a change lands.
    - Then one context-file line that explains the check.
 6. Add one piece at a time, so a new failure has one suspect.
-
-> A context-file line on its own is applied unevenly, especially when the model is busy, switches tasks or is near a full window. Adding a new detailed rule for each mistake is an anti-pattern; [Context files]({{ '/sections/04-context-files/' | relative_url }}#where-it-sits-in-a-harness) shows the layers.
 
 ## Common pitfalls
 

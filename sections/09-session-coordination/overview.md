@@ -64,9 +64,6 @@ You start four sessions: one fixes a bug, one writes a design doc, one migrates 
 
 You learn about each event only by visiting its tab.
 
-> Each session did its own work correctly. The rejected push, the unreviewed rebase and the forty-minute wait came from nobody tracking all four sessions.
-{: .important }
-
 ## Ways to run several agents
 
 Coordinating separate sessions is one of four ways Claude Code runs more than one agent. They differ in who holds the plan and how long the agents live.

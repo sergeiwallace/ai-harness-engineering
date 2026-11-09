@@ -49,9 +49,13 @@ Each restatement looks reasonable on its own. The table shows how they add up.
 
 ### Why checks miss it
 
-Every gate in the chain checks the work against the brief it received. The worker's tests pass against the worker's brief. The planner's plan matches the lead's summary. No gate compares the result with the person's words, because no gate has them.
+Every gate in the chain checks the work against the brief it received:
 
-> Important: each gate compares the work with the brief that gate received. None of them compares it with the person's original words.
+| Gate | Checks against | Has the person's words? |
+|---|---|---|
+| Worker's tests | The worker's brief | No |
+| Planner's plan review | The lead's summary | No |
+| Lead's acceptance | Its own plan | No |
 
 ## The incident
 

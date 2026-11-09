@@ -75,8 +75,6 @@ On ordinary benchmark tasks, models that succeeded mostly changed the code. Tamp
 | Escalation-channel study (2026), eight models | Baseline hacking on tasks with defective checkers: 11.1% for claude-fable-5, 13.3% for gpt-5.6-sol |
 | Test overfitting on SWE-bench (2026) | When refinement succeeded, models mostly changed the code under test, not the test |
 
-> This evidence points controls at the moment an agent cannot pass a test. A control that reviews every diff mostly reviews diffs with no tampering in them.
-
 <details markdown="1">
 <summary>Aside: does telling the agent "a grader will check" help or hurt?</summary>
 

@@ -88,13 +88,6 @@ You type `/bug-report` with the error, or the model picks the skill itself when 
   4. Saved: docs/bugs/2026-11-09-checkout-missing-customer.md
 ```
 
-<details markdown="1">
-<summary>Skills and the old custom commands</summary>
-
-Before skills, Claude Code had custom slash commands: one Markdown file per command in `.claude/commands/`. Those files still work, and a command and a skill with the same name start the same way. A skill adds a folder for scripts and reference files, frontmatter that controls who can start it, and loading of its parts on demand. New procedures go in skills.
-
-</details>
-
 ## Where skills fit in a harness
 
 A harness enforces its rules in four layers, described in the [AI harnesses overview]({{ '/sections/02-what-is-a-harness/' | relative_url }}): instructions; workflows and tools; hooks, scripts and linters; validation and tests. A skill spans the first two.
@@ -121,8 +114,6 @@ A team has a 40-line release procedure. In the context file it would cost 40 lin
 | The changelog template | File in the skill folder | Needed at one step only |
 | "Check the version matches in three files" | Script the skill runs | A program can do it exactly |
 | "Never tag from a branch other than main" | Hook on `git tag` | Must hold every time, and code can check it |
-
-> A skill is followed when it runs, and nothing forces it to run. Section 6 covers [the enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}), which places each kind of rule.
 
 ## How a skill loads
 

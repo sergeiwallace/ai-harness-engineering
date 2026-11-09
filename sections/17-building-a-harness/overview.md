@@ -157,8 +157,6 @@ Each guard has a cost:
 - Its refusal messages take context.
   - Keep each [refusal message]({{ '/sections/17-building-a-harness/refusal-messages.html' | relative_url }}) to two or three lines that name the next step.
 
-> Note: the agent reads a refusal message as its next instruction. After a bare "Blocked", agents tend to retry the same action. After "Force push is blocked; push a new branch and open a pull request", the next try can succeed.
-
 ## 4. Let agents do the improvement work
 
 In a mature harness, an agent files the bug, writes the fix, adds the check and opens the pull request, and you review the result. An illustrative exchange, shortened:
@@ -231,8 +229,6 @@ Every fix adds a mechanism. Over months, a harness can become a patchwork of ove
 | A guard fires often on correct work | Narrow it, or move it to a later gate |
 | Reusable parts and personal settings in one file | Split them, so each can be tested on its own |
 
-> Warning: schedule removal the same way you schedule fixes, or the harness only grows. The [complexity creep page]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}) gives a pruning procedure and a way to measure each mechanism.
-
 ## 6. A possible first week
 
 ![Sequence diagram of one session with a first-week harness. You type a review command; the agent loads CLAUDE.md and the review skill; each edit triggers a PostToolUse hook that runs the formatter and linter; when the agent runs git push, the approval rule asks you, you approve, and the push runs.]({{ '/assets/images/17-building-a-harness/first-week-session.svg' | relative_url }}){: style="width:100%"}
@@ -257,22 +253,6 @@ Each of the four is under a page long. The [first-week page]({{ '/sections/17-bu
   - A later session fixes the harness and adds a regression test for the fix.
 
 To start: keep a friction log for one week before you build anything.
-
-## Pitfalls and lessons
-
-<details markdown="1">
-<summary>Each added rule and tool costs tokens and time on every run</summary>
-
-A line in a context file is read at the start of every session. A hook runs on every matching tool call. Individually they are cheap; together they decide how much of the context window is left for the task. Remove the ones that no longer help.
-
-</details>
-
-<details markdown="1">
-<summary>What works depends on the model</summary>
-
-A rule that helped one model generation can hurt the next. Re-test your rules when you change models, and see [Re-testing after a model change]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}).
-
-</details>
 
 ## Pages in this section
 

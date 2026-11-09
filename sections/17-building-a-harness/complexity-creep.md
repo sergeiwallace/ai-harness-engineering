@@ -34,8 +34,6 @@ Every fix in the [improvement loop]({{ '/sections/17-building-a-harness/reflexiv
 | Understanding | With many overlapping mechanisms, the reason for a refusal is hard to find, and fixes start to fight each other | Ask, for each refusal in a week of transcripts, whether its reason was clear from the message alone |
 | False blocks | A guard that fires on correct work teaches the agent to work around it | Sample refusals and check whether the refused action was correct |
 
-> Warning: put removal on a schedule, the same as fixes, or the harness only grows.
-
 ## Ad hoc rules after every mistake
 
 The most common path into complexity creep is answering each mistake with another context-file rule. It feels like a fix, because the rule describes exactly what went wrong. Over time it fails in a predictable way.
@@ -57,6 +55,8 @@ The most common path into complexity creep is answering each mistake with anothe
 | "Do not commit to main" | A permission rule or a branch protection rule | 3 |
 | "Remember to update the changelog" | A merge gate that fails when code changed and the changelog did not | 4 |
 
+Keep a context-file line only as the second layer: one short line that tells the agent the guard exists, so it is not surprised when the guard refuses.
+
 ### Deciding what to do with a correction
 
 When a correction arrives, check it against what the harness already has before adding anything. The TRACE study uses five outcomes for this, which work as a checklist:
@@ -70,12 +70,6 @@ When a correction arrives, check it against what the harness already has before 
 | New | Nothing covers it | Add one mechanism, at the layer that can enforce it |
 
 Noop, Update and Supersede add nothing new, and Split and New add only what the correction needs. Running every correction through these five keeps the rule set from growing by one rule per mistake.
-
-### The context-file line
-
-Keep a context-file line only as the second layer: one short line that tells the agent the guard exists, so it is not surprised when the guard refuses.
-
-> Note: a rule that no program can check, such as a point of taste, does belong in a context file. Keep those few and short, and review them when the model changes.
 
 ## Pruning on the same loop
 

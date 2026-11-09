@@ -234,9 +234,6 @@ Workers keep running when the coordinator exits or crashes; nothing is lost if t
 3. Ask each worker with an in-flight task for its status.
 4. Re-send only the tasks whose session is gone, with their original ids.
 
-> A coordinator that keeps its task list only in its conversation cannot do step 2. Write every request to the tracker in step 1 of the cycle.
-{: .warning }
-
 ## Examples from my own harness
 
 - A coordination layer built on [firstmate](https://github.com/kunchenguid/firstmate), an open-source project by GitHub user kunchenguid. I use [my own public fork](https://github.com/sergeiwallace/firstmate) with customizations for my setup.

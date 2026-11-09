@@ -59,8 +59,6 @@ Four lines save the agent from guessing the test command, editing generated code
 | A short line explaining each check the system enforces | The fix for a repeated mistake; build it into a workflow, hook or test |
 | Misleading facts about the environment | Facts that change weekly |
 
-> A context file is read and interpreted, so it is followed most of the time. Claude Code's docs call `CLAUDE.md` "context, not enforced configuration". When a rule must hold every time, enforce it in a workflow, a [hook]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) or a test, and keep the line as the explanation.
-
 ### Where it sits in a harness
 
 A context file guides general behaviour. The model applies it unevenly: less reliably when it juggles several things, switches tasks or works near a full context window. In a systems approach to a harness it is one of four layers, and the second line of defence.

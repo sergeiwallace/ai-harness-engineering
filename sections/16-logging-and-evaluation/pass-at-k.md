@@ -57,8 +57,6 @@ For p = 0.7:
 
 *One agent, two stories. Retries make it look reliable; consistency requirements make it look fragile.*
 
-> At k = 1 the two measures are equal. They diverge as k grows.
-
 ## Which one to use
 
 | Measure | Use when | Example |

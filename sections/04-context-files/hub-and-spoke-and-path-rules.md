@@ -91,8 +91,6 @@ A spoke is a procedure: numbered steps, the commands, the checks, what to do whe
 | Detail can be long and precise | The agent may skip the read if the trigger is vague |
 | Each procedure has one home | Linking out moves the size problem into the spokes |
 
-> A spoke that grows to thousands of lines is no easier to follow than a long context file. Give each spoke a size budget too, and split it when it grows.
-
 ### Spoke document or skill
 
 Claude Code's documentation recommends skills for task-specific instructions that do not need to be in context all the time. A skill is a spoke with its trigger built in.
@@ -161,8 +159,6 @@ Use a path rule when the rule applies to one kind of file: tests, docs, migratio
 | Compaction | A loaded rule is summarised away and returns only on the next matching touch | See [Context files after compaction]({{ '/sections/04-context-files/after-compaction.html' | relative_url }}) |
 | Size | A rule that loads on demand and is over 40,000 characters (200K window) loads only its start | Split it into several rule files; each counts on its own |
 | Codex | Path-scoped rules are not documented | Put an `AGENTS.md` in the folder that holds those files |
-
-> A path rule is still an instruction. For a convention that must hold on every file of a kind, a linter on those paths does the enforcing and the rule explains it.
 
 ## Choosing between them
 

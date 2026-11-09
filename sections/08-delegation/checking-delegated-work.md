@@ -171,9 +171,8 @@ The [brief's Output field]({{ '/sections/07-templates-and-stubs/briefs.html' | r
 
 ### Summaries compress
 
-A summary has a length budget, and the qualifier is the first thing to go because the headline still reads as true without it.
-
-> Important: check the artifact the report describes: the commits, the diff, the test output or the cited passage.
+- A summary has a length budget.
+- The qualifier is the first thing to go, because the headline still reads as true without it.
 
 ## Pitfalls
 

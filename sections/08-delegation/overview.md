@@ -147,11 +147,12 @@ Claude Code's `isolation: worktree` profile setting does this for a sub-agent: a
 
 ### Remove only on proof
 
-A worktree holds work until it is merged. Remove one only after checking that its content reached the main branch and that no process still runs in it. Removing it early deletes unmerged work.
+A worktree holds work until it is merged. Before removing one, check two things:
 
-> Warning: isolation can fail. A sub-agent can commit onto its parent's branch, or write into a second repository's main checkout because only the first had a worktree. Check where the commits landed.
+1. Its content reached the main branch.
+2. No process still runs in it.
 
-The full lifecycle, from creation to proved removal, is on [worktree isolation]({{ '/sections/08-delegation/worktree-isolation.html' | relative_url }}).
+Removing it early deletes unmerged work. The full lifecycle, from creation to proved removal, is on [worktree isolation]({{ '/sections/08-delegation/worktree-isolation.html' | relative_url }}).
 
 ## Bounding the fan-out
 

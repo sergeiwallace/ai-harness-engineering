@@ -68,8 +68,6 @@ Agents message each other directly and share a task list, with a lead that coord
 
 <!-- IMAGE NEEDED: sub-agents reporting back to one main agent beside an agent team whose teammates share a task list and message each other; search: subagents vs agent teams diagram, claude code agent teams (candidate: the comparison diagram on the Claude Code agent teams docs page; check its reuse terms first) -->
 
-> Note: these shapes are options, and a harness can use more than one. Most delegation today is hub-shaped, with a tree where one part is large.
-
 ## Nesting
 
 ### The depth limit

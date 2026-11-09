@@ -17,9 +17,6 @@ An agent run ends in one of four ways: the model says it is done, a person stops
 
 This page is part of [The agent loop]({{ '/sections/01-agentic-ai-fundamentals/the-agent-loop.html' | relative_url }}). It covers each exit, the Claude Code settings and commands behind it, and a checklist for long runs.
 
-> A final answer records what the model believes about its own work. A completion check tests the stated condition before the run is allowed to end.
-{: style="border-left: 4px solid #0f766e; background: #f0fdfa; padding: 0.75rem 1rem;"}
-
 ## Contents
 {: .no_toc .text-delta }
 
@@ -57,9 +54,6 @@ When the model writes a reply with no tool call, the client treats it as the end
 |---|---|---|
 | Premature completion | the model's "done" rests on what is in its context, which may be partial | it ran one test, saw it pass, and reported the task complete without running the suite |
 | False report | the final answer is prose about its own work, which can be wrong | it says "all tests pass" after a compaction dropped the record of what was run |
-
-> Check the tool calls in the transcript to see which commands ran and what they printed. The final message records what the model believes it did.
-{: style="border-left: 4px solid #b91c1c; background: #fef2f2; padding: 0.75rem 1rem;"}
 
 ### Worked example: reporting a blocked task
 
@@ -226,9 +220,6 @@ A completion check can create the loop it was meant to prevent. If the condition
 | A `Stop` hook | Claude Code overrides it after 8 consecutive blocks with no tool call in between (`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` changes the number); the hook should also check `stop_hook_active` |
 | `/goal` | the evaluator can return "impossible"; the loop also stops if Claude answers several turns in a row without using a tool |
 | A wrapper script | only the retry count you write into it |
-
-> Give every completion check its own exit: a cap on how often it sends the agent back, after which the run stops and reports what blocks it.
-{: style="border-left: 4px solid #b91c1c; background: #fef2f2; padding: 0.75rem 1rem;"}
 
 ## A stopping checklist for long runs
 

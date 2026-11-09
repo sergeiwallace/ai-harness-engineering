@@ -64,9 +64,6 @@ Compaction replaces a session's history with a summary so the session can keep g
 | Path-scoped rules loaded mid-session | They load again only when matching files are touched |
 | Files beyond the five most recent | They have to be read again |
 
-> The summary can drop any detail. Write anything the next step depends on to a file before compacting.
-{: .warning }
-
 ## When to compact
 
 ### By fill level

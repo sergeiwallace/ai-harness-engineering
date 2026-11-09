@@ -134,8 +134,6 @@ Two renders of the same page can differ by a few pixels because of font anti-ali
 
 ## What a screenshot does not prove
 
-> A screenshot records what was on the screen at one moment. Whether the feature works needs a test.
-
 - It does not prove behaviour. A button that renders correctly may do nothing when clicked. Pair the shot with a test that clicks it.
 - It does not prove other states. The shot shows one viewport, one user, one set of data.
 - It can be stale. A screenshot taken before the last edit proves nothing about the code under review. Take it after the final change, and say when.

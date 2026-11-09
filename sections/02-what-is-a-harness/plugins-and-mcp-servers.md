@@ -128,9 +128,9 @@ MCP has two costs: tool definitions in the context, and tool results.
 Without tool search, a server with thirty tools can cost more than your whole context file. Connect only the servers a project needs either way.
 
 > Claude Code's docs: "Verify you trust each server before connecting it. Servers that fetch external content can expose you to prompt injection risk." A server runs with your credentials; treat everything it returns as untrusted input.
+{: .warning }
 
 <!-- IMAGE NEEDED: a prompt injection reaching the agent through an MCP tool result (outside page, MCP server, tool result, agent); search: MCP prompt injection diagram, tool poisoning MCP, indirect prompt injection agent diagram -->
-{: .warning }
 
 ## Plugins
 

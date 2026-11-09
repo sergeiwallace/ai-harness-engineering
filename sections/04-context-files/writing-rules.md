@@ -221,8 +221,6 @@ The files are illustrations written for this page; the hook's exit code 2 blocks
 | Does a newer model still make this mistake? | Delete it |
 | Is it a procedure? | Move it to a spoke with a one-line trigger |
 
-> Context files grow faster than they are pruned. Schedule the pruning pass, and give the file a size budget that a check enforces (see [Compiled shared context files]({{ '/sections/04-context-files/compiled-shared-context.html' | relative_url }})).
-
 ## Keeping the file true
 
 Context files go stale when the mechanisms they describe change.

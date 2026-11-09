@@ -166,8 +166,6 @@ Reversible: yes, the writer is one function.
 
 ## Worked examples
 
-> Each example below names the question of the authority test that decided it.
-
 ### Example 1: a new dependency
 
 | Step | What happens |

@@ -56,8 +56,6 @@ Claude Code's team runs this shape on its own code review: separate agents vote 
 | A quote of the exact code | Medium | The lines that do or do not perform the check |
 | Reasoning without reference to the code | Not evidence | "This looks like it could fail" |
 
-> Require a trace or a test with each verdict, and treat a verdict with neither as unclear.
-
 ### A verifier brief
 
 ```text

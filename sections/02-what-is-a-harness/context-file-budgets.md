@@ -139,9 +139,6 @@ When a file is over budget, work down this list in order. Each step keeps the ru
 7. Move rules that must always hold to [hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}), and keep a short line saying the hook exists.
 8. Only then remove a rule, and record that you did.
 
-> Before removing any line, check it is not the only place the rule is written down. A trim that deletes a rule's only copy loses the rule.
-{: .warning }
-
 ## A worked example
 
 ### The situation

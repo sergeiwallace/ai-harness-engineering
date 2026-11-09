@@ -76,9 +76,6 @@ A mode sets what happens to every call that no rule decides. Claude Code's modes
 
 `dontAsk` never appears in the Shift+Tab cycle, and `bypassPermissions` appears there only if it was enabled at start-up.
 
-> Bypass mode turns off every check the client makes, and a wrong command can still do real damage. Use it only where nothing important is reachable: a container, a disposable virtual machine or a scratch clone.
-{: style="border-left: 4px solid #b91c1c; background: #fef2f2; padding: 0.75rem 1rem;"}
-
 ## Permission rules
 
 ### The shape of a rule

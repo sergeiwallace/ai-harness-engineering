@@ -166,9 +166,6 @@ The simplest hook answers with its exit code.
 | 2 | block, on events that can block | the action is refused or the agent is sent back, with standard error as the reason |
 | any other, including 1 | a non-blocking error | the action continues, and a hook error notice is shown |
 
-> Exit code 1 does not block. A guard that crashes with an ordinary error lets the action through. See [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}#fail-open-by-accident).
-{: .warning }
-
 ### JSON output
 
 For a richer answer, the hook prints JSON and exits 0.

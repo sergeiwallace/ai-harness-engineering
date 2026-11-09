@@ -56,8 +56,6 @@ A sub-agent starts with an empty context. What it has at launch:
 
 Everything else the parent knows stays with the parent: its conversation, the person's corrections, the rules it picked up during the session.
 
-> Note: writing "follow the project rules" in a brief does not deliver the rules. The sub-agent may never open the file.
-
 #### A systems approach to the gap
 
 A rule reaching a sub-agent through its brief is the weakest layer, because a model applies written instructions inconsistently. The fix for a rule that matters goes into the system, in layers:
@@ -248,8 +246,6 @@ On this site, an injected prompt is text that reaches a session that is already 
 | Another session has news | Cross-session messaging starts a turn in an idle session | Only for sessions without messaging |
 | Compaction just happened | A `SessionStart` hook with the `compact` matcher adds a reminder | No |
 | The window is nearly full | None: `/compact` sent as a message arrives as text | Yes |
-
-> Note: the security attack with the same name, where untrusted content smuggles instructions to a model, is a different thing. It is covered in [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 
 ### Why type into the terminal
 

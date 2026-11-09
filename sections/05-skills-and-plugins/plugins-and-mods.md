@@ -149,8 +149,6 @@ Every enabled plugin costs context on every turn:
 
 Disabling the two unused plugins removes eight skill descriptions, two agent descriptions and twelve tool schemas from every turn.
 
-> Install what you use. Disable a plugin you use rarely and enable it for the session that needs it.
-
 ## Mods
 
 A mod is a plugin with a hooks module.

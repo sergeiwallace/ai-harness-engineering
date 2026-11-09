@@ -124,15 +124,6 @@ The em dash rule rarely fires on the new model, but a rare failure in public wri
 
 ## Pitfalls
 
-> Warning: changing the harness and the model in the same step makes the result unreadable. If the score moves, you cannot tell which change moved it.
-
-<details markdown="1">
-<summary>Trusting a score from one run</summary>
-
-Model output varies from run to run. A difference between one run on each model is often noise. Run several times and look at the spread.
-
-</details>
-
 <details markdown="1">
 <summary>Re-testing only the rules you remember</summary>
 

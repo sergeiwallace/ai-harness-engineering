@@ -130,8 +130,6 @@ Setting and locking modes:
 - `defaultMode` sets the mode new sessions start in.
 - `disableBypassPermissionsMode` and `disableAutoMode` stop those modes from being used. They are most useful in managed settings, where nobody can override them.
 
-> In auto mode your deny and ask rules still apply; the classifier handles the calls they do not match.
-
 ### Example: choosing a mode for a long run
 
 A person starts an overnight refactor.

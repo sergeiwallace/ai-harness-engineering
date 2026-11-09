@@ -48,9 +48,6 @@ The components sort into five functions around the agent loop: context injection
 | Context window | How much room is left right now? | `/context`, `/compact` | `/status`, `/compact` | [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) |
 | Task tracking | What work is open, and who owns it? | an issue tracker the agent can call | the same | [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}#task-tracking) |
 
-> Every row is something you can add to, configure or replace. The table has no row for the model: by the 2026 definition, the harness is everything except the model.
-{: .note }
-
 ## What a harness is
 
 ### The working definition

@@ -17,9 +17,6 @@ The context window is everything the model can see on one turn. A rule outside i
 - compaction: what survives it and how to compact well;
 - prompt caching: why resending the context is cheaper than it looks, and what breaks the cache.
 
-> When an agent ignores a rule, check first whether the rule was in its context at that moment, and how much else was in the context with it.
-{: style="border-left: 4px solid #0f766e; background: #f0fdfa; padding: 0.75rem 1rem;"}
-
 ## Contents
 {: .no_toc .text-delta }
 
@@ -133,9 +130,6 @@ Claude Code's own documentation says it treats `CLAUDE.md` and auto memory "as c
 | Drift | the agent follows a convention for an hour, then a test file lands in the wrong folder | move the convention into a check, such as a lint rule on file locations |
 | Re-asking | it reads a file it already read, or asks a question answered earlier | compact with a focus, or start fresh with a handoff note |
 | Mixing tasks | after two unrelated tasks, it applies the first task's assumptions to the second | `/clear` between unrelated tasks |
-
-> Start a fresh session for unrelated work, and give it the files that task needs. `/clear` starts a new conversation and keeps project memory.
-{: style="border-left: 4px solid #b91c1c; background: #fef2f2; padding: 0.75rem 1rem;"}
 
 ## Compaction
 

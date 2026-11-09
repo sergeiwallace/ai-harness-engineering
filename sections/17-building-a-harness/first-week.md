@@ -64,8 +64,6 @@ Any line you find yourself rewriting more emphatically after a mistake belongs o
 
 Every line is read at the start of every session and competes with the task for attention. Keep it to the six to ten lines you have needed so far. The same file works for Codex if you name it `AGENTS.md`, or keep one and point the other at it.
 
-> Note: the line "A hook runs it" tells the agent that a guard handles formatting. As a harness grows, more context-file lines take this form and describe a guard.
-
 ## Day 2: one skill
 
 ### Pick the prompt you type most
@@ -222,8 +220,6 @@ In the same `.claude/settings.json`:
 | `deny` | The command is refused outright, and the agent cannot read your `.env` file |
 
 A `Bash(...:*)` rule matches commands that start with that text, so each spelling needs its own entry: `git push --force` and `git push -f` are listed separately above. A force push written another way, such as `git push origin +main`, needs a hook that parses the command. Codex has its own approval and sandbox settings that play the same role.
-
-> Warning: if you approve prompts without reading them, the rule protects nothing. Keep the `ask` list short enough that each prompt gets your attention.
 
 ## Day 5: read the friction log
 

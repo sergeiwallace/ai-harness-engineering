@@ -16,9 +16,6 @@ A model keeps nothing between calls, so everything an agent "remembers" is somet
 - handoff notes, and how to make sure they get written;
 - where each kind of state belongs, from a plan file to a check in CI.
 
-> The model keeps nothing between sessions. Work carries over through files the next session reads: context files, plan files, memory files and git history.
-{: style="border-left: 4px solid #0f766e; background: #f0fdfa; padding: 0.75rem 1rem;"}
-
 ## Contents
 {: .no_toc .text-delta }
 
@@ -85,9 +82,6 @@ Two things come back on resume without being in the transcript's text:
 | Different task | | yes, so the old task's history does not crowd the new one |
 | Near the window limit, or compacted several times | | yes, with a handoff note |
 | The session went down a wrong path | | yes; or `/rewind` to before the wrong turn |
-
-> A resumed session still contains its earlier mistakes. If the last session went down a wrong path, start a fresh session with a handoff note.
-{: style="border-left: 4px solid #b91c1c; background: #fef2f2; padding: 0.75rem 1rem;"}
 
 ## Handoff notes
 

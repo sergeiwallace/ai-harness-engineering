@@ -125,41 +125,12 @@ the stage. "No change warranted" is a valid result.
 2. The build audit flags a missing test for the exempt endpoints.
 3. The build agent adds it, and the next round is clean.
 
-> Each stage's agent started fresh and read only the previous stage's file. None of them needed the whole history in context.
-{: .note }
-
-#### Research
-
-The research agent reads the service's request path and three rate-limiting approaches, and writes a doc: token bucket per client fits, the existing cache can hold the counters, two endpoints are exempt by contract.
-
-#### Decide
-
-The decision agent writes the plan: token bucket, limits in a config file, exempt endpoints listed, acceptance criteria as tests ("the 101st request in a minute gets 429").
-
-#### Audit the plan
-
-Round one finds that the plan does not say what happens when the cache is down. That is a must-fix; the plan gains "fail open, log a warning". Round two finds nothing new. The stage ends.
-
-#### Build and audit
-
-The build agent writes the code and the tests from the acceptance criteria. The build audit flags a missing test for the exempt endpoints; the build agent adds it; the next round is clean.
-
-> Each stage's agent started fresh and read only the previous stage's file. None of them needed the whole history in context.
-{: .note }
-
 ## Designing your own
 
 1. Name each stage's input file and output file.
 2. Give each stage an end condition a reader can check.
 3. Put a person between stages where a decision is theirs to make ([human gates]({{ '/sections/14-human-gates/' | relative_url }})).
 4. Cap every loop.
-
-<details markdown="1">
-<summary>When a pipeline is too much</summary>
-
-A two-line fix does not need research, a plan doc and two audits. Pipelines pay off on work that spans days, involves decisions a person will want to read, or will be handed between sessions. For small work, one agent with a clear `/goal` is enough.
-
-</details>
 
 ## From pipeline to workflow
 

@@ -220,13 +220,6 @@ Registered in `.claude/settings.json`:
 
 For work that should run without an open session, use cloud scheduled tasks, Desktop scheduled tasks or a scheduled CI job.
 
-<details markdown="1">
-<summary>Goal or loop?</summary>
-
-Use a goal when the work has an end you can describe. Use a loop when the work is a check that repeats on a clock, whether or not anything changed. A deploy watch is a loop; finishing a migration is a goal.
-
-</details>
-
 ## How goals and loops end
 
 | Ending | `/goal` | `/loop` | Stop hook |

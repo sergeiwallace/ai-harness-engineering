@@ -228,8 +228,6 @@ if failed:
 json.dump({k: min(v, baseline[k]) for k, v in current.items()}, open("quality-baseline.json", "w"))
 ```
 
-> A ratchet suits agents well: an agent that adds a warning is told at once, and an agent that removes one moves the baseline for everyone.
-
 ## What gates cost
 
 | Cost | What happens | Mitigation |

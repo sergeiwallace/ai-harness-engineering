@@ -250,13 +250,6 @@ For Amazon Bedrock and similar cloud providers:
 
 Whether `/loop` needs a sign-in is unverified.
 
-<details markdown="1">
-<summary>Why a feature can be missing without an error</summary>
-
-A feature that needs a claude.ai sign-in does not always fail loudly on a cloud provider; it can be absent from the command list. A procedure written on a personal account can then break for a colleague on a work account. Say in each procedure which route it assumes, and test it on that route.
-
-</details>
-
 ## Pitfalls and lessons
 
 | Pitfall | What to do |

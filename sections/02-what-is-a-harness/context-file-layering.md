@@ -100,9 +100,6 @@ The files are combined; each one adds to the context.
 - Codex orders them the same way and states that files closer to the working folder override earlier guidance.
 - Neither tool resolves a contradiction reliably. If two files disagree, fix one of them.
 
-> A rule that appears in two layers costs tokens twice and drifts apart over time. Put each rule in exactly one layer.
-{: .warning }
-
 ## Imports
 
 ### The import line

@@ -67,8 +67,6 @@ An agent needs the review comments on a pull request.
 gh pr view 412 --json comments,reviews
 ```
 
-> Each rung down the ladder is slower and breaks more often than the one above it.
-
 ## The ways an agent gets a browser
 
 | Route | Whose browser | Provider | Good for |

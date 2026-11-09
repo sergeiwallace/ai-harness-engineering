@@ -79,8 +79,6 @@ Needed only when a neighbouring skill is close.
 | Fix | Both rewritten with scope and triggers, as in the table above |
 | Check | The same request in a new session now runs `review` |
 
-> Test a description change in a new session. In the session where you edited it, the old description may still be in the window.
-
 ## Length
 
 A description is paid on every turn for every enabled model-invocable skill, so one or two sentences is the usual size. Words in the window on every turn:
@@ -89,13 +87,6 @@ A description is paid on every turn for every enabled model-invocable skill, so 
 |---|---|---|---|
 | 25 | 250 | 750 | 2,500 |
 | 100 | 1,000 | 3,000 | 10,000 |
-
-<details markdown="1">
-<summary>Where the detail goes instead</summary>
-
-A description that tries to list every case grows long and still misses some. Put the cases in the body, where they cost only on use. The description needs only enough to choose correctly; the body handles what to do once chosen.
-
-</details>
 
 ## Descriptions for person-only skills
 

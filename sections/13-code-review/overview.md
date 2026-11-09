@@ -299,15 +299,6 @@ When many agents finish at once, merges queue up, and the merged result is a com
 
 <!-- IMAGE NEEDED: a merge queue, several pull requests lined up, each tested against main plus the ones ahead of it before merging; search: GitHub merge queue diagram, merge queue how it works -->
 
-<details markdown="1">
-<summary>Aside: evidence that review alone is not enough</summary>
-
-- Anthropic's April 2026 Claude Code postmortem describes a context-management defect that passed several human and automated code reviews, unit and end-to-end tests, automated verification and internal use.
-- A stronger reviewer found it once given the other repositories needed for full context.
-- The functionally-correct-but-vulnerable patches in the [security review](#security-review) section are the same lesson from another direction.
-
-</details>
-
 ## Where review sits in the harness
 
 This site treats harness engineering as a systems approach: when an agent gets something wrong, the fix goes into the system, enforced by code wherever possible, and each new gap gets the same treatment. The harness has four layers, and review spans the enforcing ones:

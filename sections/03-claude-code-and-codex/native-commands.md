@@ -128,8 +128,6 @@ Each unit has its own worktree, so units do not collide on the same files, and t
 | An edit made by a sub-agent | Usually not |
 | Anything a shell command did outside the files, such as a push or a deploy | No |
 
-> `/rewind` does not replace git. Commit at each checkpoint you may want to return to, including changes made through the shell.
-
 ### Compact with a focus
 
 `/compact` without a focus keeps what the summariser thinks matters. With a focus it keeps what you name:

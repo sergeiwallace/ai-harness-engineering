@@ -165,8 +165,6 @@ An agent that reaches a correct result by a route you did not expect should pass
 | Pass rate flat, cost up | revert: the change only costs |
 | Pass rate down | revert |
 
-> With 30 tasks, a difference of one or two passes is within run-to-run variation. Grow the task set before trusting a small gain.
-
 <details markdown="1">
 <summary>Aside: how big a difference is real?</summary>
 

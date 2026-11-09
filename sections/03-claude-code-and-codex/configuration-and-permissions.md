@@ -147,8 +147,6 @@ Claude Code matches everything before the first `*` as written, and it splits co
 - The separators Claude Code splits on are `&&`, `||`, `;`, `|`, `|&`, `&` and newlines.
 - Approving a compound command with "don't ask again" saves one rule per subcommand.
 
-> A deny rule matches the command text the agent usually writes; the same program called another way (a full path, `bash -c`, a script) is not matched. For a prohibition that must hold, a PreToolUse hook that inspects the command does the enforcing; see [Hooks in settings](#hooks-in-settings).
-
 ### How rules combine
 
 ![Sequence of three tool calls: make test matches allow and runs after the PreToolUse hook; git push matches ask, you answer yes and it runs; reading .env matches deny and is refused]({{ '/assets/images/03-claude-code-and-codex/permission-check-sequence.svg' | relative_url }})

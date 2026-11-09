@@ -162,13 +162,6 @@ Its tests cover both arms: `pkill -f pytest`, `cd x && pkill y`, `sudo /usr/bin/
 | What the agent sees | nothing at the moment of the mistake | a refusal with the safe command |
 | Outcome | other sessions' runs stopped | the agent kills its own process by id |
 
-<details markdown="1">
-<summary>Why the context-file line was not enough</summary>
-
-The agent was deep in a long task, the line was one of many, and the action looked routine. A written rule has to be recalled at the right moment; a guard runs at that moment every time. The line stays in the context file, now with a note that a hook enforces it, so the agent knows why the refusal will come.
-
-</details>
-
 ## Guards and permissions together
 
 | Need | Better tool | Why |

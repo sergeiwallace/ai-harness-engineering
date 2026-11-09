@@ -146,8 +146,6 @@ check that would confirm it (a command, a test, a trace). Sort into:
 "No change warranted" is a valid and useful result. Do not invent findings.
 ```
 
-> Claude Code's best-practices page warns that a reviewer told to hunt for gaps "leads to over-engineering: extra abstraction layers, defensive code, and tests for cases that can't happen." A brief that only says "find problems" invites invented ones. See [Review rounds and stop rules]({{ '/sections/13-code-review/review-loops.html' | relative_url }}).
-
 ## When the reviewer and the author disagree
 
 A cross-family reviewer will sometimes be wrong, and the author will sometimes argue a real finding away. A path that settles it with evidence:

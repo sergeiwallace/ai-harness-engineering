@@ -276,8 +276,6 @@ An agent cannot skip git hooks unless it passes `--no-verify`, and a tool-call h
 | Tokens | Injected text is read on every event | Inject only when it applies |
 | Maintenance | Guards go stale as the harness changes | Tests for the guards; one registration manifest |
 
-> A guard that refuses should also say what will pass, so the next attempt fixes the command.
-
 ## Examples from my own harness
 
 - Guards that started as written rules agents broke: a process-kill guard, a shell-tracing guard, a wildcard-delete guard, a pipe-status guard and an evidence-citation guard. The [guard page]({{ '/sections/06-hooks-scripts-and-linters/writing-a-guard.html' | relative_url }}#guards-from-broken-rules) tells each story.

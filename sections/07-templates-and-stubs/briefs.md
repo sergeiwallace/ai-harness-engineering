@@ -109,8 +109,6 @@ One sentence naming the end state.
 - It may start from a different place: the old copy of a file, the wrong branch.
 - It may repeat the parent's dead ends.
 
-> Tip: name what the parent already ruled out. "The config loader is not the cause; it was checked" saves a sub-agent from repeating the parent's dead end.
-
 ### Output
 
 #### What it holds

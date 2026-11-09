@@ -126,9 +126,6 @@ Enforced by: the send tool refuses a second send of the same task id.
 
 ### Keep it under the load limit
 
-> Lines of `MEMORY.md` past 200 lines or 25KB are not loaded at session start, so the lessons there stop applying. Keep one line per entry and archive old ones.
-{: .warning }
-
 | Index | Load limit | Warning when near it |
 |---|---|---|
 | Claude Code's `MEMORY.md` | 200 lines or 25KB | Yes: Claude Code reminds Claude after it writes the file |
