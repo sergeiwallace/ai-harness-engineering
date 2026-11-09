@@ -109,6 +109,7 @@ repo/
 | `web/Button.tsx` | root file, `web/CLAUDE.md` |
 | `services/billing/tests/test_refund.py` | root file, `services/billing/CLAUDE.md`, `tests.md` |
 | `services/search/migrations/0042.sql` | root file, `services/search/CLAUDE.md`, `migrations.md` |
+
 ## Codex
 
 ### The walk

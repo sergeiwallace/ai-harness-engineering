@@ -20,8 +20,11 @@ Model calls cost money per token, and agents make a lot of them. Most of the tim
 - [Two kinds of spend](#two-kinds-of-spend)
 - [Estimating spend](#estimating-spend)
 - [The budget check](#the-budget-check)
+  - [Making the check unavoidable](#making-the-check-unavoidable)
+  - [Interactive spend](#interactive-spend)
 - [Worked example](#worked-example)
 - [Examples from my own harness](#examples-from-my-own-harness)
+- [Pitfalls](#pitfalls)
 
 ## Two kinds of spend
 
@@ -88,7 +91,36 @@ def preflight(calls, tokens_in, tokens_out, model, remaining, margin=1.2):
 
 The refusal message names the alternatives, so the agent that hits it knows what to propose. Spending is one of the actions a person decides ([Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }})), so raising the budget goes to them.
 
+`remaining` comes from the spend ledger, not from memory:
+
+```python
+import json
+
+def remaining(budget, ledger="logs/model-calls.jsonl", month="2026-11"):
+    records = (json.loads(line) for line in open(ledger) if line.strip())
+    spent = sum(r["usd"] for r in records if r["ts"].startswith(month))
+    return budget - spent
+```
+
 > A check before each job catches large spends with one decision. A check on every call slows interactive work and still misses a loop of many small calls.
+
+### Making the check unavoidable
+
+A preflight the agent is asked to run is an instruction. Build it into the system:
+
+1. The batch runner calls `preflight()` itself and will not start without a passing estimate.
+2. A hook or deny rule refuses direct calls to the paid API's script outside the runner.
+3. The estimate and the actual cost both go to the ledger, so a run that costs far more than its estimate shows up in the next query.
+
+### Interactive spend
+
+Interactive sessions are hard to gate without stopping the work, so watch them instead:
+
+| Signal | Source | Action |
+|---|---|---|
+| Session cost far above its usual range | `claude_code.cost.usage` per session from telemetry, or the ledger | look for a loop: the same command or file read again and again |
+| One role costs much more than others | the ledger grouped by agent | check its model and effort settings |
+| Cost rises after a harness change | the ledger before and after | evaluate the change ([Evaluating a harness change]({{ '/sections/16-logging-and-evaluation/evaluating-changes.html' | relative_url }})) |
 
 ## Worked example
 
@@ -114,7 +146,14 @@ The person approves steps 1 and 2.
 - Spend is estimated from local session transcripts at list price, reported per session, repository and account, and always labelled an estimate rather than an invoice.
 - Before any pipeline or training run, a preflight states the expected cost, and rented compute is always shut down at the end and verified by its state.
 
-To start: before your next batch job, run it on 50 items, multiply, and write the estimate down before you run the rest.
+To start: before your next batch job, run it on 50 items and multiply. Then put that arithmetic into the runner, so every later job estimates itself before it starts.
+
+## Pitfalls
+
+- An estimate from a guessed token count can be off by several times. Measure on a sample of real inputs.
+- A list-price estimate is not an invoice. Batch discounts and prompt caching can lower the real cost, and retries raise it; label the number as an estimate.
+- A budget with no owner never gets raised or lowered on purpose. Name who decides.
+- A job that retries on every error can spend its whole budget on one failing input. Cap retries per item.
 
 ## Sources
 

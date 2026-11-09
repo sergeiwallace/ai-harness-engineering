@@ -247,7 +247,7 @@ What the agent can do in the world. Every action goes through a tool, so the too
 
 #### What they are
 
-Native tools are what the harness gives the model before you add anything. In Claude Code these include Read, Write and Edit for files, Glob and Grep for search, Bash for the shell, WebFetch and WebSearch for the web, and Agent (also called Task) for starting a sub-agent. Native commands are the built-in slash commands a person types: `/init`, `/compact`, `/context`, `/memory`, `/agents`, `/hooks`, `/permissions`, `/mcp`, `/model` and others.
+Native tools are what the harness gives the model before you add anything. In Claude Code these include `Read`, `Write` and `Edit` for files, `Bash` for the shell (searches with `find` and `grep` run there on macOS and Linux), `WebFetch` and `WebSearch` for the web, `Agent` for starting a sub-agent, `Skill` for running a skill, and task tools for a session task list. Native commands are the built-in slash commands a person types: `/init`, `/compact`, `/context`, `/memory`, `/agents`, `/hooks`, `/permissions`, `/mcp`, `/model` and others.
 
 #### Why they matter
 
@@ -268,7 +268,7 @@ Two native commands, with the kind of output they give (shortened and illustrati
 
 #### Worked example
 
-Before writing a skill that "summarises the session so far", check `/compact`: it already summarises, and it takes an instruction for what to keep. Before writing a search helper, check that Grep (which wraps ripgrep) does not already cover it. The [topic page]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}) has a full table of tools and commands, with Codex equivalents. The basics of both tools are in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}).
+Before writing a skill that "summarises the session so far", check `/compact`: it already summarises, and it takes an instruction for what to keep. Before writing a search helper, check that a plain `grep` or `find` through `Bash`, or the `LSP` tool for definitions and references, does not already cover it. The [topic page]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}) has a full table of tools and commands, with Codex equivalents. The basics of both tools are in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}).
 
 ### Plugins and MCP servers
 

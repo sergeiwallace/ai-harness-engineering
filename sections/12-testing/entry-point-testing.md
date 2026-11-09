@@ -177,7 +177,7 @@ The test feeds the hook the payload shape Claude Code sends and checks the exit 
 
 | Input | Expected | Why |
 |:--|:--|:--|
-| `git push --force-with-lease` | Decide and test it: allow or block | It matches the `--force` pattern; the policy must say which |
+| `git push --force-with-lease` | Blocked as written (exit 2) | It matches the `--force` pattern; if the policy allows it, change the pattern and pin the new behaviour with a test |
 | `git push origin main && rm -rf build` | Allowed by this hook | Another hook handles `rm`; this test pins the scope |
 | A payload with no `tool_input.command` | Exit 0 | The hook must not crash on other payload shapes |
 

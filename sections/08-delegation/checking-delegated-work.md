@@ -52,6 +52,8 @@ A summary keeps the headline and loses the qualifier. "The API supports batching
 
 ### For a code change
 
+<!-- IMAGE NEEDED: a terminal showing git log --oneline and git diff --stat output for a branch; search: git diff stat terminal screenshot, git log oneline terminal -->
+
 1. Commits exist where expected: `git -C <worktree> log --oneline <base>..HEAD`.
 2. Files changed: `git -C <worktree> diff --stat <base>..HEAD`.
 3. The change matches the brief: read the diff, not the summary of it.
@@ -80,6 +82,33 @@ Send the report back with the evidence: the command and its output. Do not fix i
 | Does a decision rest on a cited source? | Accept | Read the key passage, then accept |
 
 </details>
+
+## Automating the checks
+
+The routine above works when the lead remembers to run it. In the systems approach it is a step in the collection workflow, so it runs on every report. The code-change checks fit in a few lines of shell:
+
+```bash
+# collect.sh <worktree> <report-file>: refuse a report the artifacts do not back
+base=origin/main; wt="$1"; report="$2"
+ahead=$(git -C "$wt" rev-list --count "$base"..HEAD)
+[ "$ahead" -gt 0 ] || { echo "refused: no commits on the branch"; exit 1; }
+git -C "$wt" diff --quiet "$base"...HEAD && { echo "refused: empty diff"; exit 1; }
+grep -Eq '[0-9]+ passed' "$report" || { echo "refused: no test output quoted"; exit 1; }
+echo "artifacts present: now read the diff against the brief"
+```
+
+1. The sub-agent finishes and writes its report.
+2. The workflow runs the collection script before the lead reads the report.
+3. A refusal goes back to the sub-agent with the script's message as the evidence.
+4. A pass means the artifacts exist; the lead still reads the diff against the brief and reruns the tests where the result matters.
+
+| Check | Automated | Left to the lead |
+|---|---|---|
+| Commits exist on the branch | Yes | |
+| The diff is not empty | Yes | |
+| The report quotes test output | Yes | |
+| The diff matches the brief | | Yes |
+| A cited passage says what the summary says | | Yes |
 
 ## Worked examples
 

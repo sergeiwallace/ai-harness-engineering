@@ -241,7 +241,8 @@ On this site, an injected prompt is text that reaches a session that is already 
 
 | Moment | Native route | Terminal route needed? |
 |---|---|---|
-| The session's own background work ends, goal still open | `/goal` delivers the result as a new turn and runs idle check-ins | No |
+| A background shell or sub-agent the session started finishes | Claude Code wakes the idle session with the result, with or without a goal | No |
+| Watching that work before it finishes | Optional: the Monitor tool, or a scheduled check such as `/loop` | No |
 | A job outside the session ends, such as a CI run | Channels, where available | Yes, where channels are not |
 | Another session has news | Cross-session messaging starts a turn in an idle session | Only for sessions without messaging |
 | Compaction just happened | A `SessionStart` hook with the `compact` matcher adds a reminder | No |
@@ -256,7 +257,7 @@ On this site, an injected prompt is text that reaches a session that is already 
 - Claude Code's documentation says both, and documents no hook that runs a slash command.
 - So a harness that needs a session to run `/compact` at a given moment types it into that session's terminal, then checks that it was submitted.
 
-![A sequence across five participants. A background job finishes and tells the goal waker. The waker calls the injection library with the session name and text; the library clears the input, types and submits into the terminal pane. The pane still shows the text in the input box, so the library sends submit again, and the session starts a new turn to continue its goal. Later the session's context reaches 81 percent; the waker asks the library to save state and then send /compact with a focus line, and the pane reports that compaction finished.]({{ '/assets/images/07-templates-and-stubs/injection-wake.png' | relative_url }}){: style="width:100%"}
+![A sequence across five participants. A background job that runs outside the session finishes and tells the waker, labelled goal waker in the drawing. The waker calls the injection library with the session name and text; the library clears the input, types and submits into the terminal pane. The pane still shows the text in the input box, so the library sends submit again, and the session starts a new turn to continue its goal. Later the session's context reaches 81 percent; the waker asks the library to save state and then send /compact with a focus line, and the pane reports that compaction finished.]({{ '/assets/images/07-templates-and-stubs/injection-wake.png' | relative_url }}){: style="width:100%"}
 
 *The terminal route: waking a session after a job that ran outside it, then compacting it. Built with archify.*
 
@@ -291,7 +292,7 @@ The four parts of the library, the native routes in detail and the failure modes
 
 ![A lifecycle from left to right: goal armed, agent works, turn ends, evaluator reads, goal met. From the evaluator, not yet loops back to agent works, and a stated blocker leads to a blocker-reported state. From agent works, a started job leads to an idle state that returns on an injected wake-up.]({{ '/assets/images/07-templates-and-stubs/goal-evaluator.png' | relative_url }}){: style="width:100%"}
 
-*A goal from start to stop. The wake-up arrow is the case of a job outside the session; Claude Code wakes the session itself for its own background work. Built with archify.*
+*A goal from start to stop. The wake-up arrow is the case of a job the session did not start; a background shell or sub-agent the session started wakes it on its own, with or without a goal. Built with archify.*
 
 | Vague goal | Checkable goal |
 |---|---|
@@ -320,7 +321,7 @@ Briefs grow, because each incident adds a block. A long brief costs tokens on ev
 - A stub and a template for each kind of document I write often, plus prompt stubs for briefs and goal templates for long runs.
 - The brief stub above, with its safety rules copied word for word, and a launch guard that refuses a brief missing them.
 - The original-request block, stored with a hash and checked at launch.
-- One shared prompt-injection library, used by the goal waker, the context supervisor and the compaction path.
+- One shared prompt-injection library, used by the waker for external jobs, the context supervisor and the compaction path.
 
 To start: one template for the task you delegate most.
 
@@ -345,7 +346,11 @@ To start: one template for the task you delegate most.
 
 - Commands in cross-session messages arrive as text: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
 - Built-in commands in scheduled `/loop` fires arrive as text: <https://code.claude.com/docs/en/scheduled-tasks.md>, verified 2026-11-09.
-- `/goal` evaluator reads only the conversation: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- `/goal` commands, verdicts and check-ins: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- Skills, `.claude/commands/`, `$ARGUMENTS` and `$N` placeholders, `disable-model-invocation`, `argument-hint`: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
+- Codex custom prompts, their placeholders and their deprecation in favour of skills: <https://learn.chatgpt.com/docs/custom-prompts>, verified 2026-11-09.
+- `SessionStart` hook with the `compact` matcher: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
+- Channels: <https://code.claude.com/docs/en/channels.md>, verified 2026-11-09.
 - The stubs, templates, original-request block and injection library are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

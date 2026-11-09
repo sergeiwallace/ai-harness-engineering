@@ -197,6 +197,7 @@ Any two are manageable. With all three, one successful injection can read someth
 | Private data | run research sessions with no secrets in their environment |
 | Untrusted text | keep sessions that hold production credentials off the open web |
 | A way out | deny `curl`, `wget` and outbound fetches in the session's rules, and set a sandbox network allowlist |
+
 </details>
 
 ## Layered defences

@@ -35,6 +35,8 @@ When several agents write to one repository at once, each needs its own checkout
 
 ### What a worktree gives
 
+<!-- IMAGE NEEDED: one git repository with several worktrees, each a separate directory on its own branch, sharing one object store; search: git worktree diagram, git worktrees explained -->
+
 - Its own directory on disk.
 - Its own branch, checked out only there.
 - One shared repository history, so creating it is fast and it sees every branch.
@@ -155,6 +157,29 @@ lead> Engineer B: main moved. Rebase agent-b/add-tests onto main, rerun tests, r
 ```
 
 The lead does not resolve B's conflict in its own checkout. It hands it back to the agent that knows the change.
+
+## Commands and edge cases
+
+### The `git worktree` commands
+
+| Command | What it does |
+|---|---|
+| `git worktree add <path> -b <branch> <base>` | Creates a worktree at `<path>` on a new branch from `<base>` |
+| `git worktree list --porcelain` | Lists every worktree with its path, commit and branch, in a form scripts can parse |
+| `git worktree remove <path>` | Removes a worktree; refuses if it has uncommitted changes or untracked files, unless `--force` |
+| `git worktree prune` | Clears records of worktrees whose directories were deleted by hand |
+| `git worktree lock <path>` | Protects a worktree from `prune`, for example one on a removable drive |
+| `git worktree move <path> <new-path>` | Moves a worktree to another directory |
+
+### Edge cases
+
+| Case | What happens | What to do |
+|---|---|---|
+| Checking out a branch that another worktree already has | Git refuses: one branch can be checked out in one worktree at a time | Give each agent its own branch |
+| A worktree directory deleted with `rm` | Git still lists it until pruned | `git worktree prune`, and remove worktrees with `git worktree remove` instead |
+| Dependencies and build output | Each worktree has its own files, so a virtual environment or `node_modules` is not shared | Install dependencies per worktree, or point each at a shared cache |
+| A branch merged by squash | Its commits are not ancestors of main, so `git branch --merged` does not list it | Compare content against main before calling it merged |
+| Uncommitted work at removal | `git worktree remove` refuses | Commit or discard it on purpose; `--force` only after checking what it deletes |
 
 ## How isolation fails
 

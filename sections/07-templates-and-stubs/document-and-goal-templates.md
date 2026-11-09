@@ -17,7 +17,7 @@ A document template is the full shape of one kind of document, with a descriptio
 
 ![A lifecycle from left to right: goal armed, agent works, turn ends, evaluator reads, goal met. From the evaluator, not yet loops back to agent works, and a stated blocker leads to a blocker-reported state. From agent works, a started job leads to an idle state that returns on an injected wake-up.]({{ '/assets/images/07-templates-and-stubs/goal-evaluator.png' | relative_url }}){: style="width:100%"}
 
-*Figure 1. A goal from start to stop: the evaluator reads the conversation after every turn. The "injected wake-up" arrow is the case of a job outside the session; for the session's own background work, Claude Code delivers the result as a new turn itself (see [injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}#goal-check-ins)). Built with archify.*
+*Figure 1. A goal from start to stop: the evaluator reads the conversation after every turn. The "injected wake-up" arrow is the case of a job the session did not start. A background shell or sub-agent the session started wakes it with its result on its own, with or without a goal (see [injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}#background-work-the-session-started)). Built with archify.*
 
 ## Contents
 {: .no_toc .text-delta }
@@ -292,7 +292,7 @@ Templates drift too: a heading nobody fills becomes noise, and a heading everyon
 ## Related pages
 
 - [Sub-agent briefs]({{ '/sections/07-templates-and-stubs/briefs.html' | relative_url }}): the prompt stub, read once at launch.
-- [Injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}): goal check-ins and the other routes that wake an idle session.
+- [Injected prompts]({{ '/sections/07-templates-and-stubs/injected-prompts.html' | relative_url }}): how background work the session started, messages and goal check-ins wake an idle session.
 - [Logging and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}): checking results over many runs.
 
 ## Sources

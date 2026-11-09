@@ -48,7 +48,7 @@ In figure 1 the launch guard checks the brief's fixed blocks because they are th
 |---|---|---|
 | The lead agent, in Claude Code | Its Agent tool, naming a profile | The tool call's prompt is the brief |
 | The lead, without naming a profile | The runtime picks a profile from the descriptions | Same |
-| A person | An `@` mention of the sub-agent in a prompt | The rest of the prompt is the brief |
+| A person | An `@` mention of the sub-agent in a prompt | Claude writes the brief from the person's message |
 | A skill that wraps the stub | `/<skill-name> args`, which fills the stub | The filled skill text is the brief |
 
 The last row is the one that makes briefs consistent: a skill copies the fixed blocks every time. The worked example is on the overview: [a brief stub as a skill]({{ '/sections/07-templates-and-stubs/' | relative_url }}#worked-example-a-brief-stub-as-a-skill).
@@ -67,6 +67,13 @@ A stub is the template; a brief is one filled copy.
 Two briefs from the same stub differ only in what they are about, so a reviewer can compare any brief with the stub line by line.
 
 ## The six fields
+
+<!-- IMAGE NEEDED: an annotated prompt or brief with each section labelled in the margin; search: annotated prompt template, prompt anatomy diagram, labelled form fields -->
+
+Each field below has what it holds and what goes wrong without it:
+
+- Filled for the task: Objective, Inputs, Output, Tools and scope, When stuck.
+- Fixed text from the stub: Boundaries.
 
 ### Objective
 
@@ -319,7 +326,8 @@ Checks 4 and 5 are judgment, so a reader makes them, or the lead before it sends
 
 ## Sources
 
-- Sub-agent context and profiles: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
+- Sub-agent context, profiles and `@` mentions: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
+- Skills and argument placeholders: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
 - The brief stub, its fixed boundaries and the brief check are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

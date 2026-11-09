@@ -42,13 +42,34 @@ Some sub-agents start helpers of their own: a researcher starts search helpers; 
 
 ### Team
 
-Agents message each other directly, without a lead in the middle. Claude Code's agent teams do this; the feature is experimental and off by default.
+Agents message each other directly and share a task list, with a lead that coordinates. In Claude Code this is agent teams, which are experimental and off by default.
 
-| Fits when | Costs |
+```json
+{
+  "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" }
+}
+```
+
+| Part | Role |
 |---|---|
-| Agents need to negotiate a shared piece, such as an interface | No single place holds the whole picture; harder to bound |
+| Team lead | The main session; spawns teammates and coordinates work |
+| Teammates | Separate Claude Code instances, each with its own context window |
+| Task list | Shared work items with states pending, in progress and completed; tasks can depend on others |
+| Mailbox | Messages between agents, delivered automatically |
 
-> Note: these are options, and a harness can use more than one. Most delegation today is hub-shaped, with a tree where one part is large.
+| Fits when | Costs and limits |
+|---|---|
+| Parallel research or review, where teammates challenge each other's findings | Token use scales with the number of teammates |
+| New modules where each teammate owns separate files | One team per session; teammates cannot start teams of their own |
+| Debugging with competing hypotheses | Experimental: in-process teammates are not restored on resume, and task status can lag |
+
+- The documentation suggests starting with three to five teammates.
+- Three hooks enforce quality gates on a team. With exit code 2, `TeammateIdle` sends feedback and keeps the teammate working, and `TaskCreated` or `TaskCompleted` sends feedback and stops the task from being created or marked complete.
+- With agent teams enabled, a sub-agent that Claude names launches as a teammate, so teams can form when nobody asked for one. Setting the variable to `0` turns that off.
+
+<!-- IMAGE NEEDED: sub-agents reporting back to one main agent beside an agent team whose teammates share a task list and message each other; search: subagents vs agent teams diagram, claude code agent teams (candidate: the comparison diagram on the Claude Code agent teams docs page; check its reuse terms first) -->
+
+> Note: these shapes are options, and a harness can use more than one. Most delegation today is hub-shaped, with a tree where one part is large.
 
 ## Nesting
 
@@ -166,7 +187,7 @@ A lead plans a database migration with these bounds: up to four engineers, resea
 ## Sources
 
 - Nesting depth and `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
-- Agent teams: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-08.
+- Agent teams, enabling them, task list, hooks and limitations: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-09.
 - The role limits and the contention check are from the author's own harness, described conceptually. The examples are illustrations written for this page.
 
 {% include page_nav.html %}

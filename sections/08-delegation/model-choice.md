@@ -32,6 +32,8 @@ Delegation lets each part of a task run on a model suited to it. A common split,
 
 ### A common split
 
+<!-- IMAGE NEEDED: a chart of language-model capability against cost per token, showing small, mid and large tiers; search: llm cost vs capability chart, model price performance frontier -->
+
 This is the split my harness uses. A team with one model, or a tight budget, makes different choices.
 
 | Tier | Use it for | Why | Typical role |
@@ -71,6 +73,15 @@ model: haiku
 ---
 Return a Markdown table: file, line, one-line context. No commentary.
 ```
+
+### For every sub-agent at once
+
+| Variable | Effect |
+|---|---|
+| `CLAUDE_CODE_SUBAGENT_MODEL` | A default model for sub-agents whose profile names none |
+| `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` | Every sub-agent uses `CLAUDE_CODE_SUBAGENT_MODEL`, ignoring profile `model` fields (v2.1.257 and later) |
+
+The force setting suits a session that must stay on one model, for example under a cost cap or an organization's model allowlist.
 
 ### Effort is separate from tier
 
@@ -162,6 +173,7 @@ See [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
 - `/model` and `/effort`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
 - Profile `model` field and `inherit`: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
+- `CLAUDE_CODE_SUBAGENT_MODEL` and `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`: <https://code.claude.com/docs/en/agent-teams.md> (model selection), verified 2026-11-09; the force variable's effect on ordinary sub-agents is taken from that page's link to the sub-agents docs and not checked there.
 - The tier split and cross-family review practice are from the author's own harness, described conceptually. The worked example is an illustration written for this page.
 
 {% include page_nav.html %}

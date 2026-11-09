@@ -19,6 +19,7 @@ Every rule, hook, skill and model choice in a harness is a bet that it makes the
 ## Contents
 
 - [The loop](#the-loop)
+- [When to evaluate, and what it costs](#when-to-evaluate-and-what-it-costs)
 - [Building the task set](#building-the-task-set)
 - [Grading](#grading)
 - [Running fairly](#running-fairly)
@@ -31,6 +32,13 @@ Every rule, hook, skill and model choice in a harness is a bet that it makes the
 
 ## The loop
 
+1. Fix the task set, the model and the number of runs per task.
+2. Run the baseline with the current harness.
+3. Change one thing.
+4. Run the same tasks, the same number of times.
+5. Compare pass rate, cost and time, separately for capability and regression tasks.
+6. Keep the change or revert it, and record the result next to the change.
+
 ![Start from a fixed task set of 20 to 50 real failures. Run a baseline each task k times, change one thing, run again with the same tasks and the same k, compare pass rate, cost and time, then keep or revert the change before the next one.]({{ '/assets/images/16-logging-and-evaluation/eval-loop.svg' | relative_url }}){: style="width:100%"}
 
 *The evaluation loop. One change per pass round the loop.*
@@ -38,6 +46,18 @@ Every rule, hook, skill and model choice in a harness is a bet that it makes the
 ![Sequence diagram of the same loop as it runs: the runner gives each task to the agent with the old harness and then the new one, grades each result, and records pass, cost and time in the ledger before reporting keep or revert.]({{ '/assets/images/16-logging-and-evaluation/eval-run-sequence.svg' | relative_url }}){: style="width:100%"}
 
 *What happens during one evaluation, step by step.*
+
+## When to evaluate, and what it costs
+
+| Change | Evaluate? |
+|---|---|
+| A new hook, gate or workflow step that every task passes through | yes |
+| A new model, or a new model version | yes, across the whole set |
+| A plugin or skill you plan to turn on by default | yes |
+| A wording fix in one skill used by one task type | a few tasks of that type |
+| A typo in a comment | no |
+
+An evaluation is itself a paid job. 30 tasks, 3 runs each, before and after, is 180 agent runs. At an illustrative $0.45 per run that is about $81, so run it through the same [budget check]({{ '/sections/16-logging-and-evaluation/spend-and-budgets.html' | relative_url }}) as any other batch.
 
 ## Building the task set
 
@@ -152,6 +172,8 @@ Report them separately. A change that solves two capability tasks and breaks thr
 
 ## Tools
 
+<!-- IMAGE NEEDED: the report from a `claude plugin eval` run, showing a plugin's results against a run without it; search: "claude plugin eval report", "Claude Code plugin evals" -->
+
 | Tool | What it does | When to use it |
 |---|---|---|
 | `claude plugin eval` | compares a plugin's results against a run without it | before turning a plugin on by default |
@@ -203,6 +225,8 @@ To start: ten tasks taken from your own past failures, run before and after one 
 - Without a baseline, you cannot tell whether a harness change helped.
 - A task set built from the cases the change was designed for will always show a gain. Include tasks the change was not aimed at.
 - Public benchmarks have errors; about 30 percent of one benchmark's tasks were reported broken (not yet verified against the primary source). Prefer your own tasks for your own harness.
+- A grader that is part of the harness under test can move with the change. Keep the grader and the task set outside the thing being changed.
+- A task that leaks its answer, such as a hidden test the agent can read in the repository, measures copying. Keep the success check out of the agent's reach.
 
 ## Sources
 

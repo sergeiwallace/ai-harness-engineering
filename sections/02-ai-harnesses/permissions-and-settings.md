@@ -10,7 +10,7 @@ nav_order: 5
 
 As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
-Settings configure the harness itself. Permissions are the part of settings that decide which actions the agent may take without asking. They are the first hard control: a denied action is refused whatever the model decides, and the allow list decides how often you are interrupted.
+Settings configure the harness itself. Permissions are the part of settings that decide which actions the agent may take without asking. Claude Code's docs put it plainly: "Permission rules are enforced by Claude Code, not by the model." They are the first hard control in the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering), and the allow list decides how often you are interrupted.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -22,33 +22,50 @@ Settings configure the harness itself. Permissions are the part of settings that
 
 ### Scopes
 
-| Scope | File | Shared | Typical contents |
+| Scope | File | Applies to | Typical contents |
 |---|---|---|---|
-| Managed policy | set by an administrator | every user on the machine | organisation limits; cannot be overridden |
-| User | `~/.claude/settings.json` | you, every project | your hooks, your default model, personal allow rules |
-| Project | `.claude/settings.json` | committed, the team | project hooks, shared allow and deny rules |
-| Local | `.claude/settings.local.json` | you, this project, not committed | experiments, machine-specific paths |
+| Managed | `managed-settings.json`, an MDM policy, or server-managed settings | everyone the organisation deploys it to | security policy and compliance limits |
+| User | `~/.claude/settings.json` | you, every project on this machine | your hooks, default model, personal allow rules |
+| Shared project | `.claude/settings.json` | everyone in the project, once committed | project hooks, shared allow and deny rules, plugins |
+| Project local | `.claude/settings.local.json` | you, this project | personal overrides; your "don't ask again" approvals |
+
+- Claude Code writes `.claude/settings.local.json` itself when you choose "Yes, and don't ask again" on a prompt, and adds it to your global git excludes so it stays out of commits.
+- Settings files are strict JSON: a comment or a trailing comma is an error. Add `"$schema": "https://json.schemastore.org/claude-code-settings.json"` for autocomplete in your editor.
+- Claude Code reloads settings when they change, so most edits, including `permissions` and `hooks`, reach a running session without a restart.
 
 ### Precedence
 
-When scopes disagree, the harness resolves them in a fixed order.
+For an ordinary key, the highest level that sets it wins.
 
-1. Managed policy wins over everything and cannot be overridden.
-2. For ordinary settings, the more specific scope wins: local over project over user.
-3. Permission lists are merged across all scopes.
-4. Within the merged lists, deny beats ask, and ask beats allow.
+1. Managed settings.
+2. The command line: `claude --settings '<json or file>'`, for one session.
+3. Project local.
+4. Shared project.
+5. User.
+
+Lists such as `permissions.allow` merge across all levels; no level removes another level's entries.
 
 | Example | Result |
 |---|---|
-| user allows `Bash(git push:*)`, project asks for it | ask |
-| project allows `Read(./.env)`, user denies it | deny |
-| local sets `model: sonnet`, user sets `model: opus` | sonnet in this project |
+| user allows `Bash(git push *)`, project asks for it | ask: ask rules beat allow rules |
+| project allows `Read(./.env)`, user denies it | deny: deny rules beat everything |
+| local sets `"model": "claude-sonnet-5"`, shared project sets an Opus model | Sonnet, for you, in this project |
+| managed settings set a key | that value, whatever your own files say |
+
+### Checking what loaded
+
+| Command | Shows |
+|---|---|
+| `/status` | which settings files loaded (the Setting sources line), including any managed source |
+| `/permissions` | the rules by scope; add or remove them |
+| `claude doctor` | entries Claude Code rejected, and why |
 
 ### What else lives in settings
 
 ```json
 {
-  "model": "opus",
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "claude-opus-5-5",
   "env": { "PYTHONDONTWRITEBYTECODE": "1" },
   "permissions": { "allow": [], "ask": [], "deny": [], "defaultMode": "default" },
   "hooks": {},
@@ -60,27 +77,47 @@ When scopes disagree, the harness resolves them in a fixed order.
 
 ![A sequence diagram of one tool call through the permission checks. The model asks the harness to run git push. The harness sends the event to the PreToolUse hooks first; a deny there ends the call, and here the hook exits 0 with no decision. The harness then matches the permission rules from every scope, where deny beats ask beats allow, and the rule Bash(git push:*) says ask. The harness prompts the person, who approves. The harness runs the command and returns the output to the model as the tool result.]({{ '/assets/images/02-ai-harnesses/permission-decision.png' | relative_url }})
 
-*One push, checked by hooks first and rules second. Our own diagram, made with archify.*
+*One push, checked by hooks first and rules second. The diagram writes the rule as `Bash(git push:*)`, an equivalent form of `Bash(git push *)`. Our own diagram, made with archify.*
 
 ### The three lists
 
 | List | Effect | Use for |
 |---|---|---|
-| `allow` | runs without a prompt | safe, frequent actions: tests, reads, `git status` |
+| `allow` | runs without a prompt | safe, frequent actions: tests, linters, `git status` |
 | `ask` | prompts the person | actions you want to see: pushes, installs |
 | `deny` | refused | actions that must never happen: reading secrets |
+
+Rules are checked in a fixed order: deny, then ask, then allow. The first match in that order decides, however specific a later rule is. A deny rule that names a tool with no pattern, such as `"WebFetch"`, removes the tool from the model's context entirely.
 
 ### Rule syntax
 
 | Rule | Matches |
 |---|---|
-| `Bash(npm run test:*)` | any command starting `npm run test` |
-| `Bash(git diff:*)` | `git diff` with any arguments |
-| `Read(./.env)` | reading the `.env` file in the project |
-| `Read(./secrets/**)` | anything under `secrets/` |
-| `Edit(src/**)` | edits under `src/` |
-| `WebFetch(domain:docs.example.com)` | fetching from one domain |
-| `mcp__notes__send` | one MCP tool |
+| `Bash(npm run test *)` | `npm run test` and anything after it, as a prefix |
+| `Bash(git status)` | exactly `git status` |
+| `Bash(ls *)` | `ls` and `ls -la`, but not `lsof`: the space before `*` is part of the rule |
+| `Read(./.env)` | the `.env` file in the current folder |
+| `Read(**/.env)` | any `.env` at or under the current folder |
+| `Read(~/Documents/*.pdf)` | PDFs in your home Documents folder |
+| `Read(//etc/**)` | an absolute path from the filesystem root |
+| `Edit(/src/**/*.ts)` | TypeScript under `src/`, relative to the settings file's project |
+| `WebFetch(domain:docs.example.com)` | fetches from one domain |
+| `mcp__notes__send`, `mcp__notes__*` | one MCP tool, or every tool from one server |
+
+- `Read` and `Edit` paths use gitignore pattern syntax: `*` within one folder, `**` across folders.
+- `Bash(ls:*)` is an older equivalent of `Bash(ls *)`; the prompt writes the space form.
+- Put the `*` after the subcommand: `Bash(git log *)` limits the rule to `git log`.
+
+### Compound commands
+
+Claude Code splits a command on `&&`, `||`, `;`, `|`, `&` and newlines before it matches rules.
+
+1. An allow rule approves a compound command only if every part is allowed: `Bash(npm test *)` does not approve `npm test && curl ...`.
+2. A deny or ask rule applies if any part matches, including a part inside a subshell or a `for` loop.
+3. A rule matches the command text as written. `Bash(curl *)` does not match `/usr/bin/curl ...` or `sh -c 'curl ...'`.
+
+> For limits that must hold against every spelling, match on the effect: the sandbox for files and network, or a [guard hook]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) that parses the command. A pattern that tries to constrain arguments, such as `Bash(curl http://github.com/ *)`, misses `curl -X GET http://github.com/...` and redirects.
+{: .warning }
 
 ### A worked example
 
@@ -88,49 +125,96 @@ When scopes disagree, the harness resolves them in a fixed order.
 {
   "permissions": {
     "allow": [
-      "Bash(uv run pytest:*)",
-      "Bash(uv run ruff:*)",
+      "Bash(uv run pytest *)",
+      "Bash(uv run ruff *)",
       "Bash(git status)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)"
+      "Bash(git diff *)",
+      "Bash(git log *)"
     ],
-    "ask": ["Bash(git push:*)", "Bash(uv add:*)"],
+    "ask": ["Bash(git push *)", "Bash(uv add *)"],
     "deny": ["Read(./.env)", "Read(./.env.*)", "Read(./secrets/**)"]
   }
 }
 ```
 
-The tests, the linter and read-only git commands run unasked, which removes most prompts in a working afternoon. Adding a dependency and pushing wait for you. The secrets are unreachable.
+1. The tests, the linter and read-only git commands run unasked, which removes most prompts in a working afternoon.
+2. Adding a dependency and pushing wait for you.
+3. The secrets cannot be read through the `Read` tool.
+4. A `cat .env` through `Bash` is a separate route; the sandbox or a `Bash` deny rule closes it.
 
-> A prefix rule on Bash matches the start of the command string. `Bash(git diff:*)` does not stop `git diff; curl ...` from being judged by the rest of the command, and harness versions differ in how they treat compound commands. For rules that must hold against every spelling, use a [guard hook]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}).
-{: .warning }
+### Project rules and workspace trust
+
+A cloned repository's `.claude/settings.json` could allow anything, so Claude Code holds part of it back.
+
+| From the shared project file | Applies |
+|---|---|
+| `deny` and `ask` rules | at once |
+| `allow` rules, extra directories, most `env` values, marketplaces | after you trust the folder |
+| `defaultMode: auto` or `bypassPermissions` | never; set them in user or managed settings |
+
+### Hooks and rules together
+
+`PreToolUse` hooks run before the permission prompt.
+
+| Hook returns | A deny rule matches | An ask rule matches | No rule matches |
+|---|---|---|---|
+| deny | refused | refused | refused |
+| allow | refused | prompts | runs |
+| ask | refused | prompts | prompts |
+| no decision | refused | prompts | the normal default for that tool |
+
+A hook can always refuse, and it can never override a deny or ask rule. See [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}).
 
 ## Permission modes
 
 | Mode | Behaviour | When |
 |---|---|---|
-| `default` | asks for anything not allowed | normal work |
-| `acceptEdits` | file edits run unasked; shell still asks | a trusted editing task |
-| `plan` | read-only; the agent proposes a plan | before a large change |
-| `bypassPermissions` | nothing asks | only in an isolated sandbox or container |
+| `default` (shown as Manual) | prompts on first use of each tool that needs approval | normal work |
+| `acceptEdits` | accepts file edits and common file commands (`mkdir`, `touch`, `mv`, `cp`) inside the working folders | a trusted editing task |
+| `plan` | reads and runs read-only commands; does not edit source files | before a large change |
+| `auto` | no routine prompts; a background classifier checks shell commands and network requests against your request | long tasks you trust, where available |
+| `dontAsk` | denies every call that would have prompted | unattended runs with a tight allow list |
+| `bypassPermissions` | skips prompts, except for a short list of actions no mode approves | only in an isolated container or VM |
 
-Codex has the same idea in two settings: an approval policy (when to ask) and a sandbox mode (what the shell may touch: read-only, the workspace, or full access).
+- Set the default with `permissions.defaultMode`, or for one session with `--permission-mode`.
+- An organisation can forbid the riskiest modes with `permissions.disableBypassPermissionsMode` and `permissions.disableAutoMode` set to `"disable"`.
+
+Codex has the same idea in two settings:
+
+| Codex setting | Values |
+|---|---|
+| `approval_policy` | `on-request`, `never`, or a granular table |
+| `sandbox_mode` | `read-only`, `workspace-write`, `danger-full-access` |
+
+<!-- IMAGE NEEDED: a screenshot of a Claude Code permission prompt for a Bash command, with its Yes / Yes, and don't ask again / No options; search: claude code permission prompt screenshot, claude code bash approval dialog -->
 
 ## Sandboxing
 
-A sandbox limits what a command can reach at the operating-system level. It holds even when a rule or hook misses a spelling.
+A sandbox limits what a command can reach at the operating-system level. It holds even when a rule or hook misses a spelling, because it acts on the effect of the command, not its text.
 
 | Limit | Typical setting |
 |---|---|
-| Write access | the project folder and a temporary folder only |
-| Read access | the project and the tools it needs; not your home folder's secrets |
-| Network | off, or a list of allowed hosts |
+| write access | the project folder and a temporary folder only |
+| read access | the project and the tools it needs; not your home folder's secrets |
+| network | off, or a list of allowed hosts |
 
-Use the three together:
+Claude Code turns it on with `sandbox.enabled`; an organisation can enforce it from managed settings. Use the three controls together:
 
 1. A sandbox for the broad limit.
 2. Permission rules for the everyday prompts.
 3. Hooks for the cases a pattern cannot express.
+
+<!-- IMAGE NEEDED: three nested rings around one agent: sandbox (files and network), permission rules (per tool call), hooks (parsed checks); search: agent sandbox layers diagram, defense in depth AI agent permissions -->
+
+## Pitfalls
+
+| Pitfall | Result | Fix |
+|---|---|---|
+| "Yes, and don't ask again" on a broad prefix | a rule wider than you meant, saved to your local file | edit the rule in `/permissions` to the narrow form |
+| an allow rule in the shared project file | it waits for workspace trust, so teammates still see prompts | expected; trust the folder |
+| a deny rule on `Read(./.env)` only | `cat .env` through `Bash` still works | add a sandbox read limit or a `Bash` rule |
+| `bypassPermissions` on your own machine | every action runs, including deletes and pushes | use it only inside a disposable container |
+| a broken settings file | Claude Code skips it or the broken entry | read the Settings Error or Warning; run `claude doctor` |
 
 ## Settings in my harness
 
@@ -139,17 +223,19 @@ My harness keeps settings in source and installs them, like its [compiled contex
 - Every machine gets the same hooks and shared permission rules from one source.
 - Machine-specific differences live in that machine's overlay: which tools exist, which actions need approval there.
 - Approval is policy: a command that would work is still held for a person when it reaches an outside service.
-- The installer reports what it changed, and `/hooks` and `/permissions` in a live session confirm it arrived.
+- After an install, `/status`, `/hooks` and `/permissions` in a live session confirm what arrived.
 
 ## Related pages
 
 - [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}): hooks are declared in the same files.
+- [Native commands and tools]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}): the tool names rules match.
 - [Human gates]({{ '/sections/14-human-gates/' | relative_url }}): which actions should wait for a person.
 
 ## Sources
 
-- Claude Code settings and permissions: <https://code.claude.com/docs/en/settings.md>, <https://code.claude.com/docs/en/iam.md>.
-- Codex approvals and sandbox: <https://developers.openai.com/codex/security>.
+- Claude Code settings and precedence: <https://code.claude.com/docs/en/settings.md>, verified 2026-11-09.
+- Claude Code permissions, rule syntax and modes: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Codex `approval_policy` and `sandbox_mode`: <https://learn.chatgpt.com/docs/config-file/config-reference>, verified 2026-11-09.
 - The settings install and overlays are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

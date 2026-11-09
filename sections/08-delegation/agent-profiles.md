@@ -217,6 +217,57 @@ and the exact test command with its last line of output.
 | Model | Strongest | Mid |
 | Output | Findings table | Commits and a test line |
 
+## Creating, listing and starting profiles
+
+### Ways to define a profile
+
+| Way | Lasts | Example |
+|---|---|---|
+| A Markdown file in `.claude/agents/` | Checked in; the whole team gets it | `.claude/agents/reviewer.md` |
+| A Markdown file in `~/.claude/agents/` | Every project of one person | `~/.claude/agents/researcher.md` |
+| Ask Claude to write one | Saved as one of the files above | "Create a read-only reviewer sub-agent" |
+| The `--agents` command-line flag | That session only; nothing is saved | JSON, below |
+
+```bash
+claude --agents '{
+  "code-reviewer": {
+    "description": "Expert code reviewer. Use proactively after code changes.",
+    "prompt": "You are a senior code reviewer. Focus on code quality, security, and best practices.",
+    "tools": ["Read", "Grep", "Glob", "Bash"],
+    "model": "sonnet"
+  }
+}'
+```
+
+On current versions, `/agents` prints a reminder to ask Claude or edit the agent directories directly; up to v2.1.197 it opened an interactive editor.
+
+### Built-in sub-agents
+
+| Name | What it is for |
+|---|---|
+| Explore | Fast, read-only searching and analysis of a codebase |
+| Plan | Gathering context during plan mode before a plan is presented |
+| General-purpose | Complex, multi-step tasks that need both exploration and action |
+
+
+### Starting one explicitly
+
+```text
+@"code-reviewer (agent)" look at the auth changes
+```
+
+- The `@` mention makes that sub-agent run instead of leaving the choice to Claude.
+- The full message still goes to Claude, which writes the sub-agent's task prompt from it.
+
+### Foreground and background
+
+| Mode | Behaviour |
+|---|---|
+| Foreground | Blocks the main conversation until it finishes; permission prompts pass through as they come up |
+| Background | Runs while you keep working; a permission prompt surfaces in the main session, naming the sub-agent |
+
+With nothing configured, a sub-agent that Claude starts from the main conversation runs in the background. Background sub-agents have a smaller built-in tool set than foreground ones.
+
 ## How the runtime uses a profile
 
 ### Picking
@@ -323,7 +374,7 @@ The trailer names are illustrative. Any consistent set works, as long as every d
 
 ## Sources
 
-- Sub-agent profiles, locations, fields and `isolation`: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
+- Sub-agent profiles, locations and priority, fields, `isolation`, `--agents`, `/agents`, built-in sub-agents, `@` mentions, foreground and background: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
 - Codex sub-agents: <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, verified 2026-11-08.
 - The role set, the authority check and the trailers are from the author's own harness, described conceptually. The other examples are illustrations written for this page.
 

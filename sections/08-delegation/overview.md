@@ -263,7 +263,7 @@ To start: one read-only researcher profile and one brief template.
 
 - Sub-agent profiles, fields, `isolation`, nesting depth: <https://code.claude.com/docs/en/sub-agents.md>, verified 2026-11-09.
 - `/tasks`, `/subtask`, `/fork`, `/model`, `/effort`: <https://code.claude.com/docs/en/commands.md>, verified 2026-11-09.
-- Agent teams: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-08.
+- Agent teams: <https://code.claude.com/docs/en/agent-teams.md>, verified 2026-11-09.
 - Codex sub-agents: <https://learn.chatgpt.com/docs/agent-configuration/subagents.md>, verified 2026-11-08.
 - The profiles, launch guards, trailers and worktree audit are from the author's own harness, described conceptually. The other examples are illustrations written for this page. Figure 1 was drawn with archify for this page.
 

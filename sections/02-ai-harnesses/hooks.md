@@ -24,7 +24,7 @@ A hook is a command the harness runs at a fixed point in a session. It sees what
 
 ![Where hooks fire in a session: SessionStart, then UserPromptSubmit, then a loop of PreToolUse, the tool, and PostToolUse, then Stop, which can send the agent back to work; PreCompact, SubagentStop and SessionEnd fire alongside.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle.svg' | relative_url }})
 
-*Hook events across one session. Orange events can change what happens next.*
+*The main hook events across one session. Orange events can change what happens next. Claude Code has many more events than shown here; [Hook lifecycle events]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}) lists them.*
 
 ### Hooks and the other controls
 
@@ -35,13 +35,26 @@ A hook is a command the harness runs at a fixed point in a session. It sees what
 | Git hook | at commit or push | the staged change | refuse the commit or push |
 | CI check | after push | the whole repository | fail the build |
 
-A permission rule matches a pattern. A hook runs code, so it can parse a shell command, read a file the agent is about to write, check the git state or call another tool before it decides. Use a [permission rule]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) when a pattern is enough and a hook when it is not.
+A permission rule matches a pattern. A hook runs code, so it can:
+
+- parse a shell command into its parts;
+- read the file the agent is about to write;
+- check the git state or the time of day;
+- call another tool or service before it decides.
+
+Use a [permission rule]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) when a pattern is enough and a hook when it is not. The two combine: a hook can always refuse, and a hook's allow never overrides a deny or ask rule.
 
 ## Configuring a hook
 
 ### The settings entry
 
-Hooks are declared in `settings.json` at user, project or local scope, under the event they listen to. A matcher picks which tools trigger the hook; it is a regular expression on the tool name.
+Hooks are declared under the event they listen to, in any of these places:
+
+- `settings.json` at user, project, local or managed scope;
+- a plugin's `hooks/hooks.json`;
+- the front matter of a skill or a sub-agent, scoped to that skill or agent.
+
+A matcher picks which tools trigger the hook.
 
 ```json
 {
@@ -70,17 +83,32 @@ Hooks are declared in `settings.json` at user, project or local scope, under the
 
 ### Matchers
 
-| Matcher | Fires on |
-|---|---|
-| `Bash` | every shell command |
-| `Edit\|Write` | file edits and new files |
-| `mcp__.*` | every tool from any MCP server |
-| `mcp__github__.*` | every tool from one MCP server |
-| empty or omitted | every tool, for tool events; the event itself for others |
+| Matcher | Read as | Fires on |
+|---|---|---|
+| `Bash` | exact name | every shell command |
+| `Edit\|Write` | a list of exact names | file edits and new files |
+| `mcp__github__.*` | a regular expression | every tool from one MCP server |
+| `mcp__.*` | a regular expression | every MCP tool |
+| `mcp__github` | exact name | nothing: no tool has that name |
+| `*`, `""` or omitted | match all | every tool, or the event itself for non-tool events |
+
+A matcher made only of letters, digits, `_`, `-`, spaces, `,` and `\|` is an exact name or a list; any other character makes it an unanchored JavaScript regular expression. Use `^...$` to match a whole name.
+
+### Hook types and timeouts
+
+| `type` | Runs | Default timeout |
+|---|---|---|
+| `command` | a shell command, with the event on standard input | 600 seconds |
+| `http` | a POST to a URL | 600 seconds |
+| `mcp_tool` | a tool on a connected MCP server | 600 seconds |
+| `prompt` | a single model call that judges the event | 30 seconds |
+| `agent` | a sub-agent that can use tools before it judges | 60 seconds |
+
+Some events have shorter defaults, such as 30 seconds for `UserPromptSubmit`. All hooks that match one event run in parallel, so one hook cannot rely on another having run first.
 
 ### Seeing what is installed
 
-The `/hooks` command lists every hook the session has loaded, by event and source.
+The `/hooks` command shows the hook configuration the session has loaded, by event and source. Its output looks roughly like this (illustrative):
 
 ```text
 > /hooks
@@ -112,7 +140,16 @@ The harness writes the event to the hook's standard input as one JSON object.
 }
 ```
 
-The fields after `hook_event_name` depend on the event. `PostToolUse` adds the tool's response; `UserPromptSubmit` carries the prompt; `Stop` carries a flag saying whether a stop hook has already sent the agent back once.
+Every event carries common fields: `session_id`, `transcript_path`, `cwd`, `permission_mode` and `hook_event_name`. The rest depend on the event.
+
+| Event | Adds |
+|---|---|
+| `PreToolUse` | `tool_name`, `tool_input` |
+| `PostToolUse` | the tool's input and its response |
+| `UserPromptSubmit` | the prompt |
+| `Stop`, `SubagentStop` | `stop_hook_active`, true when a stop hook has already sent the agent back |
+| `SubagentStop` | `agent_type`, `agent_transcript_path`, `last_assistant_message` |
+| `SessionStart` | the source: `startup`, `resume`, `clear` or `compact` |
 
 ## What a hook returns
 
@@ -120,11 +157,11 @@ The fields after `hook_event_name` depend on the event. `PostToolUse` adds the t
 
 The simplest hook answers with its exit code.
 
-| Exit code | Meaning | What the model sees |
+| Exit code | Meaning | What happens |
 |---|---|---|
-| 0 | allow, no comment | nothing, or the hook's output where the event adds it to context |
-| 2 | block | the hook's standard error, as the reason |
-| any other | the hook itself failed | the action continues; the person sees an error |
+| 0 | success | JSON on standard output is applied; plain text is added as context on `SessionStart` and `UserPromptSubmit`; standard error is never shown to the model |
+| 2 | block, on events that can block | the action is refused or the agent is sent back, with standard error as the reason |
+| any other, including 1 | a non-blocking error | the action continues, and a hook error notice is shown |
 
 > Exit code 1 does not block. A guard that crashes with an ordinary error lets the action through. See [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#fail-open-by-accident).
 {: .warning }
@@ -143,13 +180,20 @@ For a richer answer, the hook prints JSON and exits 0.
 }
 ```
 
-| Field | Effect |
-|---|---|
-| `permissionDecision: "allow"` | runs the tool without a permission prompt |
-| `permissionDecision: "ask"` | shows the person a prompt |
-| `permissionDecision: "deny"` | refuses, and the reason goes to the model |
-| `additionalContext` | adds text to the conversation without blocking |
-| `decision: "block"` on Stop | sends the agent back to work with the reason |
+| Field | Event | Effect |
+|---|---|---|
+| `permissionDecision: "deny"` | `PreToolUse` | refuses; `permissionDecisionReason` goes to the model |
+| `permissionDecision: "allow"` | `PreToolUse` | skips the prompt, unless a deny or ask rule matches |
+| `permissionDecision: "ask"` | `PreToolUse` | shows the person a prompt |
+| `permissionDecision: "defer"` | `PreToolUse` | leaves the decision to the normal permission flow |
+| `updatedInput` | `PreToolUse` | replaces the tool's arguments before it runs |
+| `additionalContext` | several | adds text the model sees, without blocking |
+| `decision: "block"` with `reason` | `PostToolUse` | shows the reason beside the result; the tool has already run |
+| `updatedToolOutput` | `PostToolUse` | replaces the output the model sees, for example to redact it |
+| `decision: "block"` with `reason` | `Stop`, `SubagentStop` | sends the agent back to work |
+
+> `updatedInput` can turn a risky call into a safe one, such as adding `--dry-run`, without a refusal. Use it with care: the model believes it ran what it asked for, so say what you changed in `additionalContext`.
+{: .note }
 
 ## Writing a hook
 
@@ -163,10 +207,13 @@ import re
 import shlex
 import sys
 
+import os
+
 event = json.load(sys.stdin)
 command = event.get("tool_input", {}).get("command", "")
 
 PATTERN_KILLS = {"pkill", "killall"}
+PREFIXES = {"sudo", "env", "nohup", "time"}
 
 def words(cmd):
     try:
@@ -174,9 +221,13 @@ def words(cmd):
     except ValueError:
         return cmd.split()
 
-for segment in re.split(r"[;&|]+", command):
-    parts = words(segment)
-    if parts and parts[0] in PATTERN_KILLS:
+def program(parts):
+    while parts and (parts[0] in PREFIXES or "=" in parts[0]):
+        parts = parts[1:]
+    return os.path.basename(parts[0]) if parts else ""
+
+for segment in re.split(r"[;&|\n]+", command):
+    if program(words(segment)) in PATTERN_KILLS:
         print(
             "Refused: a pattern kill can stop processes that are not yours. "
             "Find the process with `ps -eo pid,etime,args`, then `kill <pid>`.",
@@ -190,10 +241,13 @@ sys.exit(0)
 ### What makes it a good hook
 
 1. It reads only what it needs from the event.
-2. It splits compound commands, so `cd x && pkill y` is still caught.
-3. Its refusal says why and what to do instead, in one sentence each.
-4. It exits 0 for everything it does not recognise, so it never blocks unrelated work.
-5. It runs in milliseconds; hooks on `Bash` run before every shell command.
+2. It splits compound commands on `;`, `&`, `|` and newlines, so `cd x && pkill y` is still caught.
+3. It looks past `sudo`, `env` and variable assignments, and strips the path, so `sudo /usr/bin/pkill` is caught too.
+4. Its refusal says why and what to do instead, in one sentence each.
+5. It exits 0 for everything it does not recognise, so it never blocks unrelated work.
+6. It runs in milliseconds; hooks on `Bash` run before every shell command.
+
+It does not catch `kill $(pgrep node)`, which kills by pattern through a substitution. [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#bypass-by-spelling) lists spellings like this; each one belongs in the hook's tests.
 
 <details markdown="1">
 <summary>Testing a hook before you install it</summary>
@@ -214,7 +268,7 @@ Test both arms. A guard tested only on the case it should block can be a guard t
 
 ## Hooks in my harness
 
-Many of my harness's hooks came from the same pattern: an agent broke a written rule, and the fix went into the system as a hook, with the written rule kept as a second layer. Today a rule that can be checked from the tool input goes to a hook first. The refusal text repeats the rule at the moment it applies. A few of the kinds, described conceptually:
+Many of my harness's hooks came from the same pattern, which is the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) in practice: an agent broke a written rule, and the fix went into the system as a hook, with the written rule kept as a second layer. Today a rule that can be checked from the tool input goes to a hook first. The refusal text repeats the rule at the moment it applies. A few of the kinds, described conceptually:
 
 | Kind | Event | What it does |
 |---|---|---|
@@ -235,6 +289,14 @@ into plain, separate commands and run them from <its worktree>.
 
 The refusal names the safe form of the same action, so the agent's next try succeeds.
 
+## Hooks in Codex
+
+Codex declares hooks in a `[hooks]` table in `config.toml`.
+
+- Its documented events include `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`, `SubagentStart`, `SubagentStop`, `Stop` and `SessionEnd`, plus model-request and interrupt events of its own.
+- A separate `notify` key runs a command with a JSON payload for notifications.
+- The event names match Claude Code's closely. This page has not verified that the input and output formats match, so check the Codex configuration reference before porting a hook.
+
 ## Sub-topics
 
 - [Hook lifecycle events]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}): each event, what it receives and what it can change.
@@ -243,7 +305,9 @@ The refusal names the safe form of the same action, so the agent's next try succ
 
 ## Sources
 
-- Claude Code hooks reference: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-08.
+- Claude Code hooks reference: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09.
+- Hooks and permission rules: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- Codex hooks configuration: <https://learn.chatgpt.com/docs/config-file/config-reference>, verified 2026-11-09.
 - The hook kinds and refusal texts are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

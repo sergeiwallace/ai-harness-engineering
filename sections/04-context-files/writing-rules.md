@@ -148,10 +148,10 @@ The workflow change, in the `Makefile`:
 
 ```make
 test:        ## changed tests only, the default
-	files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
-	if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
+ files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
+ if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
 test-all:    ## the full suite; runs in the pre-push gate
-	pytest tests -q
+ pytest tests -q
 ```
 
 The hook, in `.claude/settings.json`:

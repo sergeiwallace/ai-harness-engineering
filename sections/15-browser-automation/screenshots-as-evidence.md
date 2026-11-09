@@ -16,12 +16,24 @@ An agent's report that a UI change worked is a claim. A screenshot of the result
 
 ## Contents
 
+- [When to take one](#when-to-take-one)
 - [The evidence loop](#the-evidence-loop)
 - [Taking a useful screenshot](#taking-a-useful-screenshot)
 - [Comparing screenshots](#comparing-screenshots)
 - [What a screenshot does not prove](#what-a-screenshot-does-not-prove)
 - [Worked examples](#worked-examples)
 - [Examples from my own harness](#examples-from-my-own-harness)
+- [Pitfalls](#pitfalls)
+
+## When to take one
+
+| Change | Screenshot? | What to capture |
+|---|---|---|
+| Layout, styling, a new UI element | yes | before and after, at each viewport width the change affects |
+| Copy or label text | yes | the element, after |
+| A bug that shows on screen | yes | the broken state, then the fixed state |
+| Backend logic with no visible change | no | a test is the evidence |
+| A refactor that should change nothing visible | yes, as a check | a pixel diff of before and after that shows no change |
 
 ## The evidence loop
 
@@ -84,22 +96,35 @@ from PIL import Image, ImageChops
 
 before = Image.open("settings-375-before.png").convert("RGB")
 after = Image.open("settings-375-after.png").convert("RGB")
-diff = ImageChops.difference(before, after)
-box = diff.getbbox()
-print("no change" if box is None else f"changed region: {box}")
+if before.size != after.size:
+    print(f"page size changed: {before.size} -> {after.size}")
+else:
+    box = ImageChops.difference(before, after).getbbox()
+    print("no change" if box is None else f"changed region: {box}")
 ```
 
-`getbbox()` returns the rectangle that contains every changed pixel. If your change was to the email field and the box covers the whole page, something else moved.
+| Output | Reading |
+|---|---|
+| `no change` | nothing moved; expected for a refactor, a failure for a visual fix |
+| `changed region: (16, 120, 359, 610)` | only that rectangle changed; check it covers what you changed and nothing else |
+| `page size changed` | the page grew or shrank, often because content moved below the fold |
 
 ### In a test: snapshot assertions
 
 Playwright Test can store a reference image and fail when the page drifts from it beyond a threshold:
 
 ```js
-await expect(page).toHaveScreenshot("settings.png", { maxDiffPixelRatio: 0.01 });
+await expect(page).toHaveScreenshot("settings.png", { maxDiffPixels: 100 });
 ```
 
-This turns a one-off check into a regression test. See [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
+| Step | Command or behaviour |
+|---|---|
+| First run | no reference exists; the test writes the screenshot as the baseline, which you review and commit |
+| Later runs | the test compares against the baseline and fails beyond the threshold |
+| An intended visual change | `npx playwright test --update-snapshots`, then review the new images before committing |
+| File names | include the browser and platform, such as `settings-chromium-linux.png`, because rendering differs between them |
+
+This turns a one-off check into a regression test, a layer-4 check that holds on every change. Run it in the same environment that produced the baseline. See [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
 
 <details markdown="1">
 <summary>Aside: why snapshot tests use thresholds</summary>
@@ -156,9 +181,16 @@ agent> Pixel diff: only the form region changed (x 16-359, y 120-610).
 
 To start: build the screenshot into the workflow, for example a script your UI tasks run after every change that captures the page and fails if the image is missing from the pull request. A context-file line asking for screenshots is the second layer.
 
+## Pitfalls
+
+- A screenshot of a logged-in page can show names, emails or account numbers. Use test accounts and fixture data, crop to the element, or mask regions (Playwright's `mask` option; not verified for this page).
+- Updating snapshot baselines without looking at the new images turns the regression test into a rubber stamp. Review every changed image.
+- A full-page screenshot of a long page is a large image in the agent's context. Capture the element that changed.
+- A baseline made on one machine fails on another with different fonts. Generate and compare baselines in the same environment, such as the CI container.
+
 ## Sources
 
-- Playwright `toHaveScreenshot`: <https://playwright.dev/docs/test-snapshots>, not yet verified against the primary source for this page.
+- Playwright visual comparisons: baseline creation, `--update-snapshots`, platform-specific file names, `threshold` and `maxDiffPixels`: <https://playwright.dev/docs/test-snapshots>, verified 2026-11-09.
 - The screenshot skill and the capture checks: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

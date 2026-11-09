@@ -13,7 +13,17 @@ redirect_from:
 
 As of 2026-11-09. Part of [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
-Agent review is cheap enough to run many times. A common failure is a loop in which each round's reviewer finds something, the author fixes it, and the next reviewer finds something else. The code gains defensive layers, and the loop ends when someone stops it. This page covers why open-ended review does not converge, the three rules that make it converge, how to read a recurring finding, and why adversarial review over-engineers code.
+Agent review is cheap enough to run many times, which makes a new failure common: a loop in which each round's reviewer finds something, the author fixes it, and the next reviewer finds something else. The code gains defensive layers, and the loop ends only when someone stops it.
+
+This page covers:
+
+1. why open-ended review loops do not converge;
+2. three rules that make them converge, with the commands and briefs;
+3. how to read a recurring finding;
+4. a review loop described as states with explicit exits;
+5. pitfalls.
+
+Its sub-topic, [Verifying review findings]({{ '/sections/13-code-review/verifying-findings.html' | relative_url }}), covers checking each finding before anyone fixes it.
 
 <figure>
   <img src="{{ '/assets/images/13-code-review/review-rounds.svg' | relative_url }}" width="100%" alt="Sequence diagram with four lanes: owner, author agent, reviewer and findings ledger. Round 1 logs five findings and the author fixes two must-fix ones. Round 2 reviews the new diff only and logs one finding that is a sibling of round 1; the owner asks for the root cause to be fixed. Round 3 reviews the new diff and logs zero new findings, so the loop stops.">
@@ -63,10 +73,16 @@ A clean round then never becomes a stable end point.
 Evidence from three directions:
 
 - My own work, especially with Codex and GPT models: an open-ended "find problems" review produced more defensive, less clear code with each round.
-- Anthropic's prompting guidance: newer models over-react to aggressive wording and tend to over-engineer, including defensive code.
-- Anthropic's workflows page still recommends independent agents that review each other's work.
+- Anthropic's Claude Code best-practices page: a reviewer told to hunt for gaps "leads to over-engineering: extra abstraction layers, defensive code, and tests for cases that can't happen."
+- The same page still recommends a separate verifier "so the agent doing the work isn't the one grading it."
 
-Together they support independent review with a bounded mandate: named criteria, a severity for each finding, and permission to report nothing.
+Together they support independent review with a bounded mandate:
+
+| Bounded mandate | What it looks like in the brief |
+|:--|:--|
+| Named criteria | "Review against AC1 to AC4" |
+| A severity per finding | must-fix, worth considering, optional |
+| Permission to report nothing | "No change warranted is a valid result" |
 
 ## Three rules for convergence
 
@@ -83,10 +99,19 @@ Write the acceptance criteria before review starts, and sort every finding again
 
 ### 2. Review only the new diff
 
-After the first round, each re-review sees only what changed since the last approved state:
+After the first round, each re-review sees only what changed since the last reviewed state:
 
 ```bash
-git diff <last-reviewed-sha>..HEAD > round-2.patch
+git diff <last-reviewed-sha>..HEAD > review/round-2.patch
+```
+
+The round-2 brief then limits the scope:
+
+```text
+Review only review/round-2.patch, against the criteria in review/criteria.md.
+These changes respond to the round-1 findings in review/round-1.md.
+Report a finding outside this patch only if it breaks a criterion.
+"No change warranted" is a valid result.
 ```
 
 - A fresh reviewer then cannot reopen code that round 1 already settled.
@@ -94,7 +119,7 @@ git diff <last-reviewed-sha>..HEAD > round-2.patch
 
 ### 3. Stop when findings stop being new
 
-The loop ends when a round produces no new must-fix finding. Two checks keep that honest:
+The loop ends when a round produces no new must-fix finding. Three checks keep that honest:
 
 | Signal | What it might mean | Check |
 |:--|:--|:--|
@@ -148,16 +173,41 @@ The research behind this page proposes a review loop with named states and expli
 | Audit | The budget is spent | Escalate to the owner |
 | Fix | The fix and its closure evidence are complete | Confirm |
 | Confirm | The targeted fix is confirmed | Audit |
+| Re-specify | A reviewed, narrower version of the change is ready | Admit |
 | Stabilise | Risk-tiered confirmation is satisfied | Promote (merge) |
 
-No single round cap fits every kind of work. Thresholds should vary with risk and be tuned from what actually escapes.
+<!-- IMAGE NEEDED: a state diagram of a review loop with states Admit, Audit, Fix, Confirm, Stabilise, Re-specify, Escalate, Promote and labelled transitions; search: state machine diagram code review loop, review workflow state diagram -->
+
+No single round cap fits every kind of work. Thresholds should vary with risk and be tuned from what actually escapes:
+
+- an escaped defect after a short loop argues for more confirmation on that kind of change;
+- loops that keep reaching the budget with no blocker argue for re-specifying earlier.
 
 <details markdown="1">
 <summary>Aside: what agent frameworks provide</summary>
 
-Most agent frameworks offer a loop limit: a maximum number of steps or iterations, a required termination condition, or a maximum message count for a reviewer loop. These stop runaway execution. None of them checks whether successive findings share a root cause.
+Most agent frameworks offer a loop limit, which stops runaway execution and does not check whether successive findings share a root cause:
+
+| Framework | Loop limit |
+|:--|:--|
+| LangGraph | A maximum super-step recursion limit |
+| Google ADK | `LoopAgent` requires a termination mechanism |
+| CrewAI | `max_iter`, default 20 |
+| AutoGen GraphFlow | A reviewer loop with an explicit exit plus `MaxMessageTermination(10)` in its example |
+
+These are as summarised in the research behind this page; check each framework's current documentation before relying on a default.
 
 </details>
+
+## Pitfalls
+
+| Pitfall | Why it bites | Fix |
+|:--|:--|:--|
+| Fixing every finding from every round | The code grows defensive layers | Only must-fix findings start a new round |
+| Re-reviewing the whole change each round | Settled code is reopened | Review only the new diff |
+| A turn cap as the only stop rule | The loop ends on budget, not on convergence | Stop when findings stop being new |
+| Patching each sibling finding | The same cause keeps producing findings | Fix the invariant and test it |
+| A first round with zero findings, accepted as is | The reviewer may not have read the change | Ask for the hunks it read |
 
 ## From my harness
 
@@ -175,5 +225,6 @@ Steps 1, 2 and 5 are built into the audit workflow (layer 2 of the harness); ste
 
 - Claude Code best practices: <https://code.claude.com/docs/en/best-practices.md>, verified 2026-11-08.
 - Claude Code code review at Anthropic (65% to 78%): <https://claude.dev/blog/solving-code-review-at-anthropic/>, verified 2026-11-09.
+- Framework loop limits: as summarised in the research behind this page; not re-verified against each framework's documentation.
 
 {% include page_nav.html %}

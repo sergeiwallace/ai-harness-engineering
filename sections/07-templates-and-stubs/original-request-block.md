@@ -27,6 +27,8 @@ The original-request block is a fixed block at the top of every brief that holds
 
 ### How it happens
 
+<!-- IMAGE NEEDED: the telephone game (Chinese whispers), a message changing as it passes from person to person; search: telephone game illustration, chinese whispers drawing, message distortion chain -->
+
 A request passes through several hands before anyone builds it:
 
 1. The person asks a lead agent.

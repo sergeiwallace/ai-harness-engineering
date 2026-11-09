@@ -22,6 +22,7 @@ Observability is being able to answer questions about a system from what it reco
 
 - [What to record](#what-to-record)
 - [JSON Lines ledgers](#json-lines-ledgers)
+  - [Capturing every tool call with a hook](#capturing-every-tool-call-with-a-hook)
 - [Commit provenance](#commit-provenance)
 - [Claude Code telemetry](#claude-code-telemetry)
 - [Measuring the harness itself](#measuring-the-harness-itself)
@@ -111,6 +112,58 @@ record(event="gate", stage="full-tests", seconds=1260, exit=0)
 jq -s 'group_by(.stage) | map({stage: .[0].stage, seconds: (map(.seconds) | add)})' logs/gate.jsonl
 ```
 
+### Capturing every tool call with a hook
+
+A PostToolUse hook runs after each matching tool call, so the ledger fills without the agent being asked. Register it in `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR\"/tools/log_tool_call.py" }] }
+    ]
+  }
+}
+```
+
+The script reads the call from standard input and appends one line:
+
+```python
+#!/usr/bin/env python3
+"""PostToolUse hook: append one line per Bash call to logs/tools.jsonl."""
+import json
+import re
+import sys
+import time
+from pathlib import Path
+
+SECRET = re.compile(r"(?i)(token|secret|password|api[_-]?key)=\S+")
+
+try:
+    call = json.load(sys.stdin)
+    command = call.get("tool_input", {}).get("command", "")
+    line = {
+        "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "session": call.get("session_id"),
+        "tool": call.get("tool_name"),
+        "command": SECRET.sub(r"\1=<redacted>", command)[:500],
+    }
+    log = Path("logs/tools.jsonl")
+    log.parent.mkdir(exist_ok=True)
+    with log.open("a") as f:
+        f.write(json.dumps(line) + "\n")
+except Exception:
+    pass  # a logging failure must never block the agent's work
+sys.exit(0)
+```
+
+| Design choice | Why |
+|---|---|
+| Always exit 0 | a logging hook must not stop work; it is the opposite of a [gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}), which fails closed |
+| Redact `token=`-style values and cap the length | the log must not become a store of secrets |
+| One line per call, appended | concurrent sessions can write to the same file |
+
 ### One ledger per subsystem
 
 Keep a ledger for each part of the harness rather than one file for everything:
@@ -148,7 +201,26 @@ git log --format='%(trailers:key=Model,valueonly)' main..HEAD | sort | uniq -c
 
 #### What it is good for
 
-When a bug turns up, provenance tells you which configuration wrote the code. Over time it shows which models and roles produce changes that survive review, and which produce changes that get reverted.
+- When a bug turns up, provenance tells you which configuration wrote the code.
+- Over time it shows which models and roles produce changes that survive review, and which get reverted.
+- In an evaluation, it ties each commit to the harness version that produced it.
+
+#### Enforcing it
+
+Asking agents to add trailers works until a long session forgets. A `commit-msg` git hook refuses a commit without them:
+
+```bash
+#!/usr/bin/env bash
+# .git/hooks/commit-msg: refuse agent commits without provenance trailers
+msg="$1"
+if grep -q '^Co-Authored-By: Claude' "$msg"; then
+  for key in Model Effort Agent; do
+    grep -q "^$key: " "$msg" || { echo "commit refused: missing '$key:' trailer" >&2; exit 1; }
+  done
+fi
+```
+
+Git does not version `.git/hooks`, so install the hook from a tracked file, for example with `git config core.hooksPath .githooks`.
 
 ## Claude Code telemetry
 
@@ -170,6 +242,8 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 | Events | `claude_code.user_prompt`, `claude_code.tool_result`, `claude_code.api_request`, `claude_code.api_error` |
 
 To check the setup, start a session and look for `claude_code.session.count` in your backend.
+
+<!-- IMAGE NEEDED: a monitoring dashboard (for example Grafana) showing Claude Code OpenTelemetry metrics such as cost and token usage over time; search: "Claude Code OpenTelemetry dashboard", "claude_code.cost.usage Grafana" -->
 
 > These exporter variables are ignored in a repository's `.claude/settings.json`. Set them in your shell, in managed settings or in your user settings, so a cloned repository cannot redirect your telemetry.
 

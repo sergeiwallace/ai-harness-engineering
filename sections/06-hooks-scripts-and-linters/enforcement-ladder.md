@@ -35,8 +35,10 @@ A fix belongs in the system, enforced by code wherever a program can check it.
 
 ## The four layers
 
-![A five-step staircase from least to most enforced: context rule, path rule, skill, hook or guard, test or CI gate. Each step up is more consistent and more costly.]({{ '/assets/images/06-hooks-scripts-and-linters/enforcement-ladder.svg' | relative_url }})
-*The five mechanisms on this page, from least to most consistently enforced. Steps 1 and 2 are layer 1; step 3 is layer 2; step 4 is layer 3; step 5 is layer 4.*
+![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled Hazards passes through holes that happen to line up in every slice and comes out as Losses.]({{ '/assets/images/06-hooks-scripts-and-linters/swiss-cheese-model.png' | relative_url }})
+*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Re-encoded as PNG; no other changes.*
+
+The layers in order, from the one the model reads to the one that checks the finished change. Steps 1 and 2 on this page are layer 1, step 3 is layer 2, step 4 is layer 3 and step 5 is layer 4.
 
 | Layer | Mechanisms on this page | Enforces | When it acts |
 |---|---|---|---|

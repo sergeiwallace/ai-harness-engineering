@@ -30,28 +30,58 @@ A skill is a procedure packaged so the agent can follow it on demand. It is how 
   check.py          a script a step runs
 ```
 
+### Where skills live
+
+| Scope | Claude Code | Codex |
+|---|---|---|
+| you, every project | `~/.claude/skills/<name>/SKILL.md` | `$HOME/.agents/skills/<name>/SKILL.md` |
+| one project, shared | `.claude/skills/<name>/SKILL.md` | `.agents/skills/<name>/SKILL.md`, in any folder from the working folder up to the repository root |
+| organisation | the managed settings folder | `/etc/codex/skills` |
+| a plugin | `<plugin>/skills/<name>/SKILL.md` | bundled skills such as `skill-creator` |
+| start it by hand | `/name` | `$name` in the prompt, or `/skills` |
+
+Both tools build on the open Agent Skills format, so a skill with a `name` and a `description` works in both. Each adds its own optional fields.
+
 ### The front matter
 
 ```markdown
 ---
 name: release-notes
 description: Draft release notes from merged changes since the last tag. Use when asked for release notes or a changelog.
-allowed-tools: Read, Grep, Bash(git log:*), Bash(git tag:*)
+argument-hint: "[since-tag]"
+allowed-tools: Read Grep Bash(git log *) Bash(git tag *)
 ---
 ```
 
+Claude Code's main fields:
+
 | Field | Does |
 |---|---|
-| `name` | the `/name` command and the id in the skill list |
-| `description` | the one line the model sees on every turn; decides when the skill triggers |
-| `allowed-tools` | narrows what the skill may use while it runs |
-| `disable-model-invocation` | when true, only the person can start it with `/name` |
+| `name` | the `/name` command; defaults to the folder name |
+| `description` | what the skill does and when to use it; the model reads it on every turn to decide when to start the skill |
+| `when_to_use` | extra trigger phrases; with `description`, cut at 1,536 characters in the listing |
+| `argument-hint` | shown while typing, such as `[issue-number]` |
+| `arguments` | named arguments, used as `$name` in the body |
+| `allowed-tools` | tools the skill may use without a permission prompt during the turn it runs |
+| `disallowed-tools` | tools removed while the skill is active |
+| `disable-model-invocation` | `true`: only the person can start it |
+| `user-invocable` | `false`: only the model can start it |
+| `context: fork` | runs the skill in a forked sub-agent, with `agent` naming which one |
+| `paths` | glob patterns that limit when the model loads it |
+| `model`, `effort` | model and effort for the rest of the turn |
+
+> `allowed-tools` grants; it does not restrict. To keep a skill away from a tool, use `disallowed-tools` or a permission deny rule.
+{: .warning }
 
 ### Progressive loading
 
 ![A skill loads in three stages: name and description always, the SKILL.md body on use, and reference files and scripts per step.]({{ '/assets/images/02-ai-harnesses/skill-loading.svg' | relative_url }})
 
-Only the description is paid for on every turn. The body arrives when the skill is used, and its reference files only when a step reads them. This is what lets a harness carry many skills without crowding the window.
+1. Every turn: only the name and description sit in the context.
+2. On use: the rendered `SKILL.md` body enters the conversation as one message, and stays there for later turns of the session.
+3. Per step: reference files load when a step reads them, and scripts run without their source entering the context.
+
+This is what lets a harness carry many skills without crowding the window. Once used, a long skill body does take room for the rest of the session, which is one more reason to keep it short.
 
 ## How a skill triggers
 
@@ -69,8 +99,16 @@ The model reads every skill's description and starts a skill when the task match
 Typing `/name` starts the skill directly. Text after the name is passed as arguments.
 
 ```text
-> /release-notes since v2.3.0
+> /release-notes v2.3.0
 ```
+
+| In the body | Becomes |
+|---|---|
+| `$ARGUMENTS` | all the arguments, `v2.3.0` here |
+| `$ARGUMENTS[0]` or `$0` | the first argument |
+| `$since` | a named argument declared in `arguments` |
+
+If the body has no placeholder, Claude Code appends the arguments as `ARGUMENTS: <value>`.
 
 - Skills with side effects, such as deploying or sending a message, are often set with `disable-model-invocation: true`, so only the person can start them.
 - A skill the person starts still runs under the same permission rules and hooks as any other work.
@@ -156,17 +194,32 @@ Run the skill on a real task in a fresh session and read the transcript. Check t
 
 ## Skills, commands and plugins
 
-| | Skill | Custom command | Plugin |
+Claude Code has merged custom commands into skills. A file at `.claude/commands/deploy.md` and a skill folder named `deploy` under `.claude/skills/` both create `/deploy`; old command files keep working, and on a name clash the skill wins.
+
+| | Skill | Command file | Plugin |
 |---|---|---|---|
-| What it is | a folder with `SKILL.md` | a single prompt file | a package of skills, agents, hooks and MCP servers |
-| Triggered by | the model or `/name` | `/name` | installs the parts it contains |
-| Best for | multi-step procedures | a short reusable prompt | sharing a set with others |
+| What it is | a folder with `SKILL.md` and supporting files | one Markdown file | a package of skills, agents, hooks and MCP servers |
+| Started by | the model or `/name` | `/name`, or the model | installs the parts it contains |
+| Best for | multi-step procedures with scripts and references | a short reusable prompt | sharing a set with others |
+
+## Pitfalls
+
+| Pitfall | Result | Fix |
+|---|---|---|
+| a vague description | the skill never starts on its own | name the situations and the words a person uses |
+| a description that matches too much | the skill starts on unrelated tasks | narrow it, or set `paths` |
+| a skill with side effects the model can start | it runs when you did not mean it to | `disable-model-invocation: true` |
+| a long body | it stays in the conversation after use | move detail to reference files |
+| steps the model must get exactly right | skipped or done differently each time | a script, run by the step |
+
+<!-- IMAGE NEEDED: the folder of one skill (SKILL.md, reference file, script) next to the slash-command menu where it appears; search: claude code skills folder structure, agent skills SKILL.md diagram, agentskills.io -->
 
 See [Plugins and MCP servers]({{ '/sections/02-ai-harnesses/plugins-and-mcp-servers.html' | relative_url }}).
 
 ## Sources
 
-- Claude Code skills: <https://code.claude.com/docs/en/skills.md>.
+- Claude Code skills: <https://code.claude.com/docs/en/skills.md>, verified 2026-11-09.
+- Codex skills: <https://learn.chatgpt.com/docs/build-skills>, verified 2026-11-09.
 - Agent Skills format: <https://agentskills.io/>.
 - The skill examples are from the author's own harness, described conceptually.
 

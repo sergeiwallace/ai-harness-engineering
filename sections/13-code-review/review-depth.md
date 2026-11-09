@@ -11,7 +11,23 @@ nav_order: 2
 
 As of 2026-11-09. Part of [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
-When an agent hands back a large diff, there is a strong pull toward one of two shortcuts: read the biggest file and trust the rest, or read every line with equal care until attention runs out. The first leaves the unread files unchecked, and the second runs out of attention. The research behind this page recommends complete accounting with variable depth: every changed file is listed and classified, every hand-written behaviour change is read, and extra reasoning goes to the hunks where the risk is. This page gives the definitions, the six-step review sequence, the risk triggers, and the one narrow case where sampling is safe.
+When an agent hands back a large diff, there are two common shortcuts, and both leave gaps:
+
+| Shortcut | Gap |
+|:--|:--|
+| Read the biggest file and trust the rest | The unread files are unchecked |
+| Read every line with equal care | Attention runs out, often before the risky hunks |
+
+The research behind this page recommends complete accounting with variable depth: every changed file is listed and classified, every hand-written behaviour change is read, and extra reasoning goes to the hunks where the risk is.
+
+This page covers:
+
+1. four terms that make the distinction precise;
+2. what the evidence on review size says, for people and for agents;
+3. the six-step review sequence, with the commands for each step;
+4. the risk triggers that call for a deeper read;
+5. the one narrow case where sampling is safe;
+6. pitfalls.
 
 <figure>
   <img src="{{ '/assets/images/13-code-review/review-depth.svg' | relative_url }}" width="100%" alt="Sequence diagram with five lanes: reviewer, inventory, diff, surrounding code and gates. The reviewer lists 14 changed files and compares them to the task. It reads all code and test hunks, finds an auth hunk and a loosened test, traces the auth callers and finds a skipped check. It runs pinned tests and scans, then reconciles the inventory against the findings.">
@@ -43,10 +59,10 @@ With these terms, "read everything" means complete coverage of behaviour changes
 
 | Source | Finding | How far it transfers |
 |:--|:--|:--|
-| A Cisco case study | Reviews under 200 lines found more defects per line | Observational; assumed defect density was constant |
-| Kemerer and Paulk | Defect removal fell above about 200 lines per hour of review | About human self-review pace |
-| Qt, VTK and ITK releases | Higher review coverage linked with fewer post-release defects in three of four releases | Coverage helps; alone it is not enough |
-| Google's guidance | About 100 lines is reasonable; 1,000 is usually too large | Mature practice, not an experiment |
+| A Cisco case study (2006) | Reviews under 200 lines found more defects per line | Observational; assumed defect density was constant across sizes |
+| Kemerer and Paulk (2009) | Defect removal fell above about 200 lines per hour of review | About deliberate human review pace |
+| Qt, VTK and ITK releases (2016) | Higher review coverage linked with fewer post-release defects in three of four releases | Coverage helps; alone it is not enough |
+| Google's public guidance | About 100 lines is reasonable; 1,000 is usually too large | Mature practice, not an experiment |
 
 The often-repeated "200 to 400 lines in 60 to 90 minutes finds 70% to 90% of defects" could not be traced to a peer-reviewed source and is best left out of policy.
 
@@ -71,14 +87,22 @@ The human size numbers are a warning for agents, with no measured threshold. The
 
 ### 1. Inventory
 
-Generate the list with git:
+Generate the list with git, never by hand:
 
 ```bash
 git diff --stat --find-renames origin/main...HEAD
-git diff --name-status origin/main...HEAD
+git diff --name-status --find-renames origin/main...HEAD
 ```
 
-Classify each path. Reject paths the task did not declare.
+Classify each path. For the 14-file branch in the diagram:
+
+| Class | Files | How it is reviewed |
+|:--|--:|:--|
+| Code | 9 | Read every behaviour-changing hunk |
+| Test | 3 | Read first; run the [test-edit check]({{ '/sections/12-testing/test-edit-detection.html' | relative_url }}) |
+| Generated | 2 | Regenerate and confirm a zero diff, instead of reading |
+
+Then compare the list with the paths the task declared. A changed path outside them is a finding before any reading starts.
 
 ### 2. Check intent and blast radius
 
@@ -88,10 +112,11 @@ Compare the inventory to what the task asked for:
 - Public interfaces the diff changes, and their callers outside the diff.
 
 ```bash
-git grep -n "export_items(" -- ':!tests' | grep -v -f <(git diff --name-only origin/main...HEAD)
+# Callers of a changed function, in files the branch did not touch (a rough filter)
+git grep -n "export_items(" -- ':!tests' | grep -v -F -f <(git diff --name-only origin/main...HEAD)
 ```
 
-The command lists callers of a changed function in files the branch did not touch. Also list what should have changed but did not, which the diff cannot show: a config default, a doc page, a second code path.
+Also list what should have changed but did not, which the diff cannot show: a config default, a doc page, a second code path.
 
 ### 3. Read every behaviour change
 
@@ -106,7 +131,7 @@ Record what was excluded and what verifies it, for example "2 generated files: r
 
 ### 4. Deepen by risk
 
-Where a risk trigger fires (next section), trace beyond the hunk:
+Where a [risk trigger](#risk-triggers) fires, trace beyond the hunk:
 
 | Trigger | What to trace |
 |:--|:--|
@@ -124,10 +149,17 @@ Run the checks yourself, in a clean environment, and compare the results with th
 - For a bug fix, red then green: the regression test fails on the base commit and passes on the branch.
 - Regeneration of generated files, with a zero-diff check.
 
+The red-then-green check, with the base in its own worktree so the branch checkout is untouched:
+
 ```bash
-git switch --detach origin/main && pytest tests/test_export.py::test_csv_quotes   # expect FAIL
-git switch --detach HEAD@{1}     && pytest tests/test_export.py::test_csv_quotes   # expect PASS
+git worktree add --detach /tmp/review-base origin/main
+cp tests/test_export.py /tmp/review-base/tests/
+( cd /tmp/review-base && pytest -q tests/test_export.py::test_csv_quotes )   # expect FAIL
+pytest -q tests/test_export.py::test_csv_quotes                             # expect PASS
+git worktree remove --force /tmp/review-base
 ```
+
+[The bug-fix regression test]({{ '/sections/12-testing/regression-tests.html#where-each-rule-is-enforced' | relative_url }}) turns the same check into a gate.
 
 ### 6. Reconcile
 
@@ -140,23 +172,20 @@ Before approving, check the whole review once more:
 
 ## Risk triggers
 
-Any one of these overrides a small line count and calls for a deeper or specialist read.
+Any one of these overrides a small line count and calls for a deeper or specialist read:
 
-<details markdown="1">
-<summary>The full trigger list</summary>
+| Area | Examples | Why it needs depth |
+|:--|:--|:--|
+| Security | Authentication, authorisation, secrets, cryptography, privacy, untrusted input | A small change can open a large hole; see [security review]({{ '/sections/13-code-review/#security-review' | relative_url }}) |
+| Rules and automation | CI, hooks, agent instructions, repository rules, security configuration | These change the rules every later change is judged by |
+| The oracle | Deleted tests, loosened assertions, new skips, broad mocks, snapshot churn, coverage exclusions | The change may weaken its own check |
+| Supply chain | Dependencies, lockfiles, install scripts, package names, network calls | New code runs at install time or reaches the network |
+| State | Schema or data migrations, destructive operations, rollback paths, irreversible state | Mistakes are hard or impossible to undo |
+| Timing | Concurrency, caching, retries, timeouts, swallowed errors, cleanup | Failures appear only under load or interruption |
+| Contracts | Public APIs, serialisation formats, contracts between repositories, shared templates | Callers outside the diff break |
+| Shape | Large deletions, moved files, generated output with no generator, edits outside the declared paths | The diff hides what actually changed |
 
-- Authentication, authorisation, secrets, cryptography, privacy or untrusted input.
-- CI, hooks, agent instructions, repository rules or security configuration.
-- Deleted tests, loosened assertions, new skips, broad mocks, snapshot churn or coverage exclusions.
-- Dependencies, lockfiles, install scripts, package names or network calls.
-- Schema or data migrations, destructive operations, rollback paths or irreversible state.
-- Concurrency, caching, retries, timeouts, swallowed errors or cleanup.
-- Public APIs, serialisation formats, contracts between repositories or shared templates.
-- Large deletions, moved files, generated output with no generator, or edits outside the declared paths.
-
-</details>
-
-For agent work, the second item covers the agent's own instructions, hooks and CI. A change there changes the rules every later change is judged by, so it counts as a trigger even when it is small.
+GitHub rulesets can attach required reviewers to specific paths, so a trigger like "CI configuration" can route to a named person automatically.
 
 ## When sampling is safe
 
@@ -176,14 +205,33 @@ In this case the sample is for diagnosis, and a deterministic verifier provides 
 
 An agent renames `load_cfg` to `load_config` across 60 files. The checks:
 
-| Check | Command or action | Covers |
-|:--|:--|:--|
-| The changed files are exactly the callers | `git grep -l load_cfg origin/main` matches the changed-file list | All 60 |
-| No old name remains | `git grep -n load_cfg` returns nothing | All 60 |
-| Build and tests pass | The merge gate | All 60 |
-| Read for diagnosis | The definition, the first and last call sites, one test, and the one file where the name appeared inside a string | 5 files |
+```bash
+# 1. The changed files are exactly the files that used the old name on main
+diff <(git grep -l load_cfg origin/main | sed 's#^origin/main:##' | sort) \
+     <(git diff --name-only origin/main...HEAD | sort)
 
-The grep and the build cover all 60 files; the five read files are for diagnosis.
+# 2. No old name remains on the branch
+git grep -n load_cfg && echo "old name still present"
+```
+
+| Check | Covers |
+|:--|:--|
+| The two lists match (no `diff` output) | All 60 files, and no extras |
+| No old name remains | All 60 files |
+| Build and tests pass in the merge gate | All 60 files |
+| Read the definition, the first and last call sites, one test, and the one file where the name appeared inside a string | 5 files, for diagnosis |
+
+`git grep` on a tree prefixes each path with `origin/main:`, which is why the first command strips it. The grep and the build cover all 60 files; the five read files are for diagnosis.
+
+## Pitfalls
+
+| Pitfall | Why it bites | Fix |
+|:--|:--|:--|
+| Spot-checking a hand-written change | Unread files are unreviewed, whatever the sample showed | Complete accounting; sample only under the seven conditions |
+| Reading generated files line by line | Attention goes to the wrong place | Regenerate and diff |
+| Trusting the author's "all tests pass" | The report is a claim | Run the evidence yourself in a clean checkout |
+| Reviewing only what is in the diff | Missing changes are invisible there | Ask what should have changed but did not |
+| One context for a 2,000-line change | The last files get the least attention | Split, or review slices in fresh contexts |
 
 ## From my harness
 
@@ -196,9 +244,11 @@ The rule I review delegated work by is the working rule in the [code review over
 
 ## Sources
 
+- Cisco code review case study: <https://static0.smartbear.co/support/media/resources/cc/book/code-review-cisco-case-study.pdf>, verified 2026-07-26.
+- Kemerer and Paulk, design and code reviews (PSP data): <https://sites.pitt.edu/~ckemerer/PSP_Data.pdf>, verified 2026-07-26.
+- Modern code review and software quality (Qt, VTK, ITK): <https://rebels.cs.uwaterloo.ca/papers/emse2016_mcintosh.pdf>, verified 2026-07-26.
 - Google, what to look for in a code review: <https://google.github.io/eng-practices/review/reviewer/looking-for.html>, verified 2026-07-26.
 - Google, small changes: <https://google.github.io/eng-practices/review/developer/small-cls.html>, verified 2026-07-26.
-- Modern code review and software quality (Qt, VTK, ITK): <https://rebels.cs.uwaterloo.ca/papers/emse2016_mcintosh.pdf>, verified 2026-07-26.
 - GitHub rulesets (path-specific required reviewers): <https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets>, verified 2026-07-26.
 
 {% include page_nav.html %}

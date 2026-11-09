@@ -31,6 +31,14 @@ A harness is a system you keep changing, so you need two instruments. Logs tell 
 | Evaluation | A fixed task set, before and after one change | [Evaluating a harness change]({{ '/sections/16-logging-and-evaluation/evaluating-changes.html' | relative_url }}) |
 | pass@k, pass^k | Success in any of k tries, or in all of them | [pass@k and pass^k]({{ '/sections/16-logging-and-evaluation/pass-at-k.html' | relative_url }}) |
 
+### Pages in this section
+
+1. This overview: the whole topic in one page.
+2. [Logging and observability]({{ '/sections/16-logging-and-evaluation/logging-and-observability.html' | relative_url }}): what to record, JSONL ledgers, commit provenance, Claude Code telemetry, and measuring the harness.
+   - [Spend tracking and budget checks]({{ '/sections/16-logging-and-evaluation/spend-and-budgets.html' | relative_url }}): estimating cost and stopping a job before it runs.
+3. [Evaluating a harness change]({{ '/sections/16-logging-and-evaluation/evaluating-changes.html' | relative_url }}): task sets, graders, fair runs and reading the result.
+   - [pass@k and pass^k]({{ '/sections/16-logging-and-evaluation/pass-at-k.html' | relative_url }}): the two measures of repeated attempts, with the arithmetic.
+
 ## Log what agents do
 
 An agent session does a lot you never see: dozens of commands, file edits, retries, model calls. When something goes wrong, or when a run is slow or expensive, the log is the only record. Log at least:
@@ -43,13 +51,37 @@ An agent session does a lot you never see: dozens of commands, file edits, retri
 | What it cost | tokens in and out, estimated dollars | was it worth it? |
 | Who | model, effort level, agent role | which configuration produced this? |
 
-Append-only JSON Lines files (one JSON object per line) are a good default. They are easy to write from any script, easy to query with `jq` or Python, and they never need a migration.
+Append-only JSON Lines files, one JSON object per line, are a good default:
+
+- easy to write from any script;
+- easy to query with `jq` or Python;
+- no migration when a field is added.
 
 ```json
 {"ts":"2026-11-09T14:02:11Z","agent":"reviewer","model":"opus","event":"tool","tool":"Bash","command":"npm test -- settings","seconds":41,"exit":0}
 ```
 
-Claude Code can also export metrics and events over OpenTelemetry, including session counts, token use and cost. [Logging and observability]({{ '/sections/16-logging-and-evaluation/logging-and-observability.html' | relative_url }}) shows the setup.
+### Build the logging into the system
+
+Asking agents to log their own work is an instruction, applied inconsistently. Two mechanisms record every call without the agent's help:
+
+| Mechanism | What it records | Setup |
+|---|---|---|
+| A PostToolUse hook | each tool call as it completes, appended to your own JSONL ledger | a hook entry in `.claude/settings.json` |
+| OpenTelemetry export | session counts, token use, cost, tool results, API requests | `CLAUDE_CODE_ENABLE_TELEMETRY=1` and an exporter, set in your shell or user settings |
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR\"/tools/log_tool_call.py" }] }
+    ]
+  }
+}
+```
+
+The hook receives the completed call as JSON on standard input and appends one line to the ledger. [Logging and observability]({{ '/sections/16-logging-and-evaluation/logging-and-observability.html' | relative_url }}) shows the ledger format and the telemetry setup.
 
 ![Sequence diagram. In a loop over every tool call, the agent's test run and commit each trigger a logging hook that appends a line to a JSONL ledger with the duration, exit code, model and agent. Later the person queries the ledger for seconds by stage, learns the full test run takes 20 minutes, and asks the agent to shard the full suite.]({{ '/assets/images/16-logging-and-evaluation/logging-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -69,7 +101,16 @@ jq -s 'group_by(.agent) | map({agent: .[0].agent, usd: (map(.usd) | add)}) | sor
 
 ## Measure the harness itself
 
-The harness has its own bottlenecks, and they are often somewhere unexpected. In a busy setup, most of the time from first commit to merge can be spent waiting for the final full test run. Measure each stage before optimising any of them.
+The harness has its own bottlenecks, and they are often somewhere unexpected. In a busy setup, most of the time from first commit to merge can be spent waiting for the final full test run. Measure each stage before optimising any of them:
+
+| Stage | Log at start and end | Typical fix when it is the slow one |
+|---|---|---|
+| Writing the change | agent session start, first commit | smaller tasks, better briefs |
+| Focused tests | test command start and exit | run only the tests the change touches |
+| Review | review requested, review returned | a cheaper reviewer for small diffs |
+| Waiting for a slot | queued, started | more runners, or batching changes |
+| Final full test run | start, exit | shard the suite; cache dependencies |
+| Merge | merge started, merged | fewer conflicts through smaller changes |
 
 ![An illustrative timeline of one change: writing, focused tests, review, a wait for a slot and a long final full test run. The waits and the final run take most of the time. The proportions are an illustration, not a measurement.]({{ '/assets/images/16-logging-and-evaluation/merge-time.svg' | relative_url }}){: style="width:100%"}
 
@@ -90,7 +131,7 @@ Put a budget check before any job that makes paid model calls, so unplanned spen
    - Tokens per call come from a measured sample, multiplied by the price.
 3. It compares the estimate with what is left in the budget, read from the spend ledger.
 4. It refuses a job that would exceed it, and names cheaper options.
-   - Raising the budget goes to the person. [Spend tracking and budget checks]({{ '/sections/16-logging-and-evaluation/spend-and-budgets.html' | relative_url }}) has a worked example.
+   - Raising the budget goes to the person, because spending is one of the [human gates]({{ '/sections/14-human-gates/' | relative_url }}).
 
 ### Example: a batch that did not run
 
@@ -117,7 +158,7 @@ Anthropic's guide to agent evaluation puts it this way: "When we evaluate 'an ag
 
 OpenAI recommends the same discipline as eval-driven development, with evals run on every change. [Evaluating a harness change]({{ '/sections/16-logging-and-evaluation/evaluating-changes.html' | relative_url }}) covers task sets, graders and how many runs you need.
 
-### Example: does the new rule help?
+### Example: does the new hook help?
 
 A team adds a hook that refuses a commit when the focused tests have not run since the last edit. They run 30 tasks from past failures, three times each, before and after (the numbers are an illustration):
 
@@ -178,8 +219,12 @@ To start: ten tasks taken from your own past failures, run before and after one 
 - Slow gates are a cost too. Measure what each gate costs, and give it a budget.
 - One run per task measures luck. Run each task several times.
 - A log that records only successes hides the failures you need. Log the exit code and the error.
+- A log that records full command lines or environment variables can record secrets. Strip tokens before writing, and never log the environment.
+- An evaluation with a different model in the two runs measures the model, not your change.
 
 ## Sources
+
+- `/insights`: described from the Claude Code command list; not re-checked against the docs for this page.
 
 - Anthropic on agent evals: <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents> (2026-01-09), verified 2026-11-08.
 - OpenAI evaluation best practices: <https://developers.openai.com/api/docs/guides/evaluation-best-practices>, verified 2026-11-08.

@@ -14,7 +14,7 @@ An injected prompt, on this site, is text that reaches a session that is already
 
 > Note: the security attack called prompt injection, where untrusted content smuggles instructions to a model, is a different thing. It is covered in [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 
-![A sequence across five participants. A background job finishes and tells the goal waker. The waker calls the injection library with the session name and text; the library clears the input, types and submits into the terminal pane. The pane still shows the text in the input box, so the library sends submit again, and the session starts a new turn to continue its goal. Later the session's context reaches 81 percent; the waker asks the library to save state and then send /compact with a focus line, and the pane reports that compaction finished.]({{ '/assets/images/07-templates-and-stubs/injection-wake.png' | relative_url }}){: style="width:100%"}
+![A sequence across five participants. A background job that runs outside the session finishes and tells the waker, labelled goal waker in the drawing. The waker calls the injection library with the session name and text; the library clears the input, types and submits into the terminal pane. The pane still shows the text in the input box, so the library sends submit again, and the session starts a new turn to continue its goal. Later the session's context reaches 81 percent; the waker asks the library to save state and then send /compact with a focus line, and the pane reports that compaction finished.]({{ '/assets/images/07-templates-and-stubs/injection-wake.png' | relative_url }}){: style="width:100%"}
 
 *Figure 1. The terminal route: waking an idle session after a job that ran outside it, then compacting it. Built with archify.*
 
@@ -30,7 +30,7 @@ An injected prompt, on this site, is text that reaches a session that is already
 
 | Need | Native route in Claude Code | When the terminal route is still needed |
 |---|---|---|
-| Wake a session when its own background work ends | `/goal`: the result of a background shell or sub-agent arrives as a new turn, and idle check-ins start turns on their own | The work ran outside the session (a CI job, another machine), or no goal is set, or the idle check-ins ran out |
+| Wake a session when its own background work ends | A background shell or sub-agent the session started wakes the idle session with its result when it finishes, with or without a goal | The work ran outside the session (a CI job, another machine) and the session did not start it |
 | Pass news from another session | Cross-session messaging: a message to an idle session starts a new turn | The receiving session has no messaging (older version, bare mode) or refuses inbound messages |
 | Push an external event, such as a CI result | Channels: an MCP server pushes events into the open session | Channels are unavailable: research preview, and not offered on Amazon Bedrock, Google Cloud's Agent Platform or Microsoft Foundry |
 | Add context after compaction | A `SessionStart` hook with the `compact` matcher; its stdout becomes context | Rarely |
@@ -49,24 +49,39 @@ This follows the systems approach: the harness builds the behaviour into tools a
 
 ## The native routes
 
-### Goal check-ins
+### Background work the session started
 
-While a `/goal` is active, Claude Code handles the common "wake when the job ends" case itself.
+A background shell command or sub-agent started by the session wakes the idle session with its result when it finishes. This happens with or without a goal set.
 
-- If a sub-agent or background shell command is still running when a turn ends, the goal's evaluation is skipped for that turn.
-- When the background work finishes, Claude Code delivers the result to Claude as a new turn, with no prompt needed.
-- After 30 minutes of waiting on background work, a check-in is due: Claude lists the running tasks, reads their output, and fixes or stops stuck ones.
-  - Later check-ins wait twice as long each time, up to four times the first interval: 1 hour, then every 2 hours.
-  - In an interactive session, Claude Code starts at most three idle check-ins per goal between your prompts.
-- `CLAUDE_CODE_GOAL_CHECKIN_MINUTES` changes the first interval; `0` turns check-ins and automatic retries off.
+1. The session starts a long command in the background, such as the full test suite, or a background sub-agent.
+2. The session finishes its turn and goes idle.
+3. The process finishes.
+4. Claude Code starts a new turn with the result, and the session continues.
+
+Watching is optional:
+
+| Tool | Use it for |
+|---|---|
+| Claude Code's Monitor tool | Following a background process's progress before it finishes |
+| A scheduled check, such as `/loop` or a cron job | Checking on work at intervals, including external work the session did not start |
 
 #### Edge cases
 
 | Case | What happens |
 |---|---|
-| The job runs outside the session, for example in CI | Claude Code does not see it end; a harness waker or a channel has to tell the session |
-| Three idle check-ins have run | Idle check-ins pause until you send another prompt |
-| Non-interactive session (`claude -p`) | Check-ins arrive only at the end of a turn |
+| The job runs outside the session, for example in CI, and the session did not start it | Claude Code does not see it end; a scheduled check, a channel or a harness waker has to tell the session |
+| The process was started outside Claude Code, in another terminal | It is not associated with the session, so it does not wake it |
+
+### Goal check-ins
+
+Goal check-ins are a separate `/goal` feature for background work that runs long while a goal is active.
+
+- If a sub-agent or background shell command is still running when a turn ends, the goal's evaluation is skipped for that turn.
+- After 30 minutes of waiting on background work, a check-in is due: Claude lists the running tasks, reads their output, and fixes or stops stuck ones.
+  - Later check-ins wait twice as long each time, up to four times the first interval: 1 hour, then every 2 hours.
+  - In an interactive session, Claude Code starts at most three idle check-ins per goal between your prompts; after the third, they pause until you send another prompt.
+  - In a non-interactive session (`claude -p`), check-ins arrive only at the end of a turn.
+- `CLAUDE_CODE_GOAL_CHECKIN_MINUTES` changes the first interval; `0` turns check-ins and automatic retries off.
 
 ### Cross-session messages
 
@@ -161,7 +176,7 @@ A harness that types into terminals from several places needs one shared library
 
 | Caller in my harness | When it uses the terminal route | Payload |
 |---|---|---|
-| Goal waker | A job that ran outside the session finished and the session is idle | "The job finished; continue the goal" |
+| External-job waker | A job the session did not start, such as a CI run, finished and the session is idle | "The CI run finished; read its result and continue" |
 | Context supervisor | Usage passes a threshold | Save state, then `/compact` with a focus line |
 | Compaction path | A compaction that should have fired did not | `/compact` |
 
@@ -235,7 +250,7 @@ Without this step, an injection that typed but never submitted looks the same as
 | Typed over a person | A person's half-written prompt is mixed with the payload | Do not inject into a session a person is typing in |
 | Injection loop | A waker re-wakes a session that is working | Inject only when idle, and rate-limit |
 | Dry run arms a real one | A test of the injector types for real | Test against a scratch pane, never a live session |
-| Native route already did it | The session gets the same wake-up twice | Skip the terminal route when a goal check-in or message covers the case |
+| Native route already did it | The session gets the same wake-up twice | Skip the terminal route for background work the session started, and when a message covers the case |
 
 > Warning: never type into another person's or another session's live pane by hand to "help". Use the library, with its target check and its verify step, or send a message.
 
@@ -257,7 +272,8 @@ Without this step, an injection that typed but never submitted looks the same as
 
 ## Sources
 
-- `/goal`, background work, check-ins and `CLAUDE_CODE_GOAL_CHECKIN_MINUTES`: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- Goal check-ins and `CLAUDE_CODE_GOAL_CHECKIN_MINUTES`: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-09.
+- A background shell or sub-agent started by the session waking it on completion, with or without a goal: Claude Code behaviour as used by the author.
 - Cross-session messaging, delivery, `crossSessionInbound`, `notify_when_idle`, commands arriving as text: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-09.
 - `SessionStart` and `PreCompact` matchers and output: <https://code.claude.com/docs/en/hooks.md>, verified 2026-11-09. The hooks reference documents no way for a hook to run a slash command; that is an absence in the docs as read, not a stated limit.
 - Channels: <https://code.claude.com/docs/en/channels.md>, verified 2026-11-09.

@@ -23,7 +23,10 @@ An agent that runs the same task several times does not always get the same resu
 - [The arithmetic](#the-arithmetic)
 - [Which one to use](#which-one-to-use)
 - [Estimating from runs](#estimating-from-runs)
+  - [Average per task, not over the pooled runs](#average-per-task-not-over-the-pooled-runs)
+  - [Choosing n and k](#choosing-n-and-k)
 - [Worked examples](#worked-examples)
+- [Pitfalls](#pitfalls)
 
 ## Definitions
 
@@ -103,9 +106,29 @@ print(pass_at_k(10, 7, 3), pass_hat_k(10, 7, 3))   # 0.992, 0.292
 <details markdown="1">
 <summary>Aside: why the per-task estimate differs from the formula</summary>
 
-With 10 runs and 7 successes, the formula with p = 0.7 gives pass^3 = 0.343, while the subset estimate gives 0.292. The subset estimate samples without replacement from the runs you actually have, which is the more honest reading of a small sample. The gap shrinks as n grows.
+With 10 runs and 7 successes, the formula with p = 0.7 gives pass^3 = 0.343, while the subset estimate gives 0.292. The subset estimate samples without replacement from the runs you actually have, which reads a small sample more closely. The gap shrinks as n grows.
 
 </details>
+
+### Average per task, not over the pooled runs
+
+Tasks differ in difficulty, and pooling them hides it. Two tasks, each run many times:
+
+| Task | p | pass^3 |
+|---|---|---|
+| A, easy | 1.0 | 1.000 |
+| B, hard | 0.4 | 0.064 |
+| Mean of the per-task values | | 0.532 |
+| From the pooled p of 0.7 | 0.7 | 0.343 |
+
+The pooled figure says the agent gets three in a row about a third of the time. In fact it always succeeds on A and almost never on B. Report per-task values, or their mean, and look at the hard tasks by name.
+
+### Choosing n and k
+
+| Choice | Guidance |
+|---|---|
+| k | match it to the use: 1 for a single trusted answer, the retry budget for pass@k, the run length you need clean for pass^k (7 for a week of nightly runs) |
+| n, runs per task | at least k; more runs give a steadier estimate, at the cost of a longer and more expensive evaluation |
 
 ## Worked examples
 
@@ -129,9 +152,16 @@ With 10 runs and 7 successes, the formula with p = 0.7 gives pass^3 = 0.343, whi
 
 Version B improves both, but the reliability gain (pass^3 nearly doubles) is much larger than the capability gain. For an unattended agent, that is the number to report.
 
+## Pitfalls
+
+- Reporting pass@k for an agent that runs unattended makes it look more reliable than it is. Use pass^k for that case.
+- Computing pass^k from a pooled success rate hides the hard tasks. Average per task.
+- Runs that share state, such as a cache or a dirty working tree, are not independent. Start each run from a clean copy.
+- Comparing pass@3 for one version with pass@5 for another mixes two values of k. Fix k before the runs.
+
 ## Sources
 
 - pass@k, pass^k, capability and regression evals: Anthropic, <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents> (2026-01-09), verified 2026-11-08.
-- The per-task estimator for pass@k follows the unbiased estimator common in code-generation evaluation; the formulas on this page are standard combinatorics.
+- The per-task pass@k estimator is the unbiased estimator introduced for code-generation evaluation in Chen et al., "Evaluating Large Language Models Trained on Code" (2021), <https://arxiv.org/abs/2107.03374>, not re-checked for this page. The pass^k analogue and the other formulas on this page are standard combinatorics.
 
 {% include page_nav.html %}

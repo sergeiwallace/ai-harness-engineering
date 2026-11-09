@@ -55,7 +55,7 @@ Three parts work together on each browser task:
 | Flag | Why |
 |---|---|
 | `--remote-debugging-port=9222` | opens the CDP endpoint on a local port |
-| `--user-data-dir=<dir>` | a separate profile, so the agent never sees your cookies or history; recent Chrome versions refuse remote debugging on the default profile |
+| `--user-data-dir=<dir>` | a separate profile, so the agent never sees your cookies or history; since Chrome 136 the debugging switches are ignored on the default profile, so this flag is required |
 | `--headless=new` | no window at all; omit it and position the window off screen if a site behaves differently headless |
 | `--no-first-run` | skips the welcome screens in a fresh profile |
 
@@ -75,7 +75,11 @@ The last command returns a JSON object with the browser version and a `webSocket
 
 [Background browser profiles]({{ '/sections/15-browser-automation/background-profiles.html' | relative_url }}) goes deeper on profiles, focus and running several agents at once.
 
-A fresh profile per run is the safest: nothing carries over, so one run cannot leak into the next. A persistent automation profile is useful when a task needs a login that you set up once by hand, for example an internal dashboard. Keep it separate from your own profile either way, and keep its directory out of any repository.
+| Profile | Use when | Keep in mind |
+|---|---|---|
+| Fresh per run, `mktemp -d` | tests, screenshots, public pages | nothing carries over, so one run cannot leak into the next |
+| Persistent, dedicated | a login you set up once by hand, such as an internal dashboard | the directory holds session cookies; keep it out of any repository |
+| Your own | never | it gives the agent every site you are signed into |
 
 > Bind the debugging port to localhost only, which is Chrome's default. Anyone who can reach the port can control the browser and read every page in it.
 
@@ -83,7 +87,14 @@ A fresh profile per run is the safest: nothing carries over, so one run cannot l
 
 ### With Playwright
 
-Playwright can launch its own browser or attach to one you started:
+Install the Python package and a browser build once per project:
+
+```bash
+uv add playwright
+uv run playwright install chromium
+```
+
+Playwright can launch its own browser, as in the worked example below, or attach to one you started with the flags above:
 
 ```python
 from playwright.sync_api import sync_playwright
@@ -157,6 +168,19 @@ A full page of HTML in the agent's context is expensive and mostly noise. Split 
 - Files: `page.txt` for the text, `shot.png` for the screenshot, `console.log` for browser errors.
 - Exit code: 0 for a pass, 1 for a failed check, 2 for a script error.
 
+Capturing the page text and console errors into files:
+
+```python
+errors = []
+page.on("console", lambda msg: errors.append(msg.text) if msg.type == "error" else None)
+page.goto(URL)
+open("page.txt", "w").write(page.inner_text("body"))
+open("console.log", "w").write("\n".join(errors))
+print(f"console errors: {len(errors)} (see console.log)")
+```
+
+The agent reads one summary line, and opens `console.log` only if the count is not zero.
+
 ## A complete worked example
 
 #### The task
@@ -199,16 +223,19 @@ agent> "Data", right of "Import", as the design asked.
 - One CDP skill is the entry point for every browser task. It starts with the non-browser routes, then drives a dedicated profile in the background so it never steals focus from my screen.
 - A small library of reusable scripts sits behind the skill, so agents call a tested script instead of writing a new scraper each time.
 
-To start: save the screenshot script above, point it at your local app, and ask the agent to run it after every front-end change.
+To start: save the check script above and make it part of the command your front-end tasks already run, such as the test script, so it runs on every change without anyone asking for it.
 
 ## Pitfalls
 
 - Using your own profile gives the agent your logged-in sessions everywhere. Use a separate one.
 - Headless pages sometimes render differently, and some sites block headless browsers. Try an off-screen window before concluding a page is broken.
 - A script that prints the whole page into the agent's context wastes it. Print a summary; write the rest to a file.
+- The page text the script returns is untrusted content. See [Untrusted page content]({{ '/sections/15-browser-automation/prompt-injection.html' | relative_url }}).
+- A Chrome started with a debugging port and left running keeps that port open. Stop it by the process id you started when the task ends.
 
 ## Sources
 
+- Chrome 136 stops honouring the remote debugging switches on the default data directory: <https://developer.chrome.com/blog/remote-debugging-port> (2025-03-17), verified 2026-11-09.
 - Chrome DevTools Protocol: <https://chromedevtools.github.io/devtools-protocol/>, not yet verified against the primary source for this page.
 - Playwright `connect_over_cdp` and locators: <https://playwright.dev/python/docs/api/class-browsertype>, not yet verified against the primary source for this page.
 - The CDP skill and script library: from the author's own harness, described conceptually.
