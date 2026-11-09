@@ -55,6 +55,8 @@ Claude Code's hooks reference lists 33 events; Codex has 14. A harness uses a ha
 
 A hook can be a shell command, an HTTP call, an MCP tool call, a prompt to a model, or an agent. Command hooks are the most common.
 
+A mod can also register hooks as functions loaded into the client: see [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}).
+
 | Type | Runs | Good for | Watch for |
 |---|---|---|---|
 | Command | A program on your machine | Fast, exact checks | Start-up time on every call |

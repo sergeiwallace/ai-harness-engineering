@@ -37,6 +37,7 @@ The Model Context Protocol (MCP) is an open standard for connecting a model to o
 | Tools | `search_docs(query)`, `create_issue(title, body)`, `send_message(to, text)` |
 | Resources | a file, a database row, a page the model can read by reference |
 | Prompts | a reusable prompt the person can pick from a menu |
+| Interactive UI | a tool result that Claude web and desktop render in the conversation; see [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}) |
 
 ### Transports
 
@@ -55,8 +56,8 @@ The Model Context Protocol (MCP) is an open standard for connecting a model to o
 ### Claude Code
 
 ```text
-claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
-claude mcp add --env NOTES_DIR=/srv/notes notes -- python3 tools/notes_server.py
+$ claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
+$ claude mcp add --env NOTES_DIR=/srv/notes notes -- python3 tools/notes_server.py
 ```
 
 For a stdio server, everything after `--` is the command that starts it; the options before `--` belong to Claude Code.
@@ -147,6 +148,7 @@ my-plugin/
 ```
 
 - A plugin skill runs as `/<plugin>:<skill>`, so two plugins can ship skills with the same name.
+- A plugin whose hooks module registers function hooks loaded into the client is a mod; see [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}).
 - While you build one, load it straight from its folder with `claude --plugin-dir ./my-plugin`.
 
 <!-- IMAGE NEEDED: a plugin folder on the left (manifest, skill, agent, hooks, MCP server) and what each becomes in a session on the right; search: claude code plugin directory structure diagram, claude code plugin components -->

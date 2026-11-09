@@ -55,7 +55,8 @@ Hooks are declared under the event they listen to, in any of these places:
 
 - `settings.json` at user, project, local or managed scope;
 - a plugin's `hooks/hooks.json`;
-- the front matter of a skill or a sub-agent, scoped to that skill or agent.
+- the front matter of a skill or a sub-agent, scoped to that skill or agent;
+- a plugin's hooks module, as function hooks loaded into the client; see [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}).
 
 A matcher picks which tools trigger the hook.
 

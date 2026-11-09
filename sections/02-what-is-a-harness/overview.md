@@ -39,7 +39,7 @@ The components sort into five functions around the agent loop: context injection
 | Templates and briefs | What does a new agent get told? | skills, sub-agent briefs, `--append-system-prompt` | skills, prompt files | [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}) |
 | Native commands and tools | What can it do with no setup? | Read, Edit, Bash, Grep, `/compact` | shell, apply patch, `/status` | [Native commands and tools]({{ '/sections/02-what-is-a-harness/native-commands-and-tools.html' | relative_url }}) |
 | Skills | What procedures does it follow? | `.claude/skills/<name>/SKILL.md` | `.agents/skills/<name>/SKILL.md` | [Harness skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}) |
-| Plugins and MCP servers | What outside services can it reach? | `/plugin`, `.mcp.json` | `[mcp_servers.<id>]` in `config.toml` | [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}) |
+| Plugins and MCP servers | What outside services can it reach? | `/plugin`, `.mcp.json` | `[mcp_servers.<id>]` in `config.toml` | [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}); also [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}), [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}) |
 | Permissions and settings | What is it allowed to do unasked? | `settings.json` allow, ask, deny | `approval_policy`, `sandbox_mode` | [Permissions and settings]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) |
 | Hooks | What runs at fixed points, every time? | `hooks` in `settings.json` | `[hooks]` in `config.toml` | [Harness hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}) |
 | Scripts, linters and tests | What checks the result? | git hooks, CI, test suites | the same | [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}) |
@@ -124,6 +124,7 @@ The ladder, from the layer that guides to the layers that enforce:
 | 4. Validation and tests | tests, CI, link checkers, review before a change lands | programs and reviewers on the result | a link checker that walks the built site before publish | design and judgment problems no check encodes; those go to a person |
 
 My harness puts each rule as high on this ladder as it can be checked, and keeps the context-file line as a second layer. Rules that cannot be checked from an action, such as design judgment, stay as guidance with a review step behind them. The [systems approach](#a-systems-approach-to-harness-engineering) section below explains the layers, and [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#one-rule-moved-into-the-system) follows one rule into the system.
+
 
 ## Context injection
 
@@ -302,7 +303,7 @@ They are how a harness reaches past the local machine, and how you share a set o
 Adding a remote server at project scope writes it to `.mcp.json`, which the team commits:
 
 ```text
-claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
+$ claude mcp add --transport http --scope project docs-search https://mcp.example.com/docs
 ```
 
 ```json

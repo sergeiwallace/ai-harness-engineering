@@ -151,30 +151,13 @@ Disabling the two unused plugins removes eight skill descriptions, two agent des
 
 ## Mods
 
-A mod is a plugin with a hooks module.
+A mod is a plugin whose hooks module registers function hooks: JavaScript or TypeScript functions that Claude Code loads into its own process and calls on events such as tool calls, prompts and turns.
 
-- The hooks are JavaScript or TypeScript functions loaded into the client.
-- They can change how Claude Code looks and behaves, for example by drawing panes in the terminal beside the chat.
-- Mods need Claude Code 2.1.287 or later.
+- A function hook can watch an event, change it, or answer it in Claude Code's place, such as refusing a command or adding context to a prompt.
+- Changing the interface, with a pane, a band above the prompt, a toast or a new slash command, is one common use; a mod that only guards tool calls draws nothing.
+- Mods need Claude Code v2.1.287 or later in the terminal.
 
-### Hooks module and shell hooks
-
-| | Shell hook | Hooks module (mod) |
-|---|---|---|
-| Written in | Any language the shell can run | JavaScript or TypeScript |
-| Runs as | A new process per event | Functions loaded into the client |
-| Can draw in the terminal | No | Yes, panes and status areas |
-| Typical use | Guards and checks | Interface changes and live panes |
-
-#### Example: a context pane
-
-1. After each turn, the mod reads how full the context window is.
-2. It redraws a small pane beside the chat with the percentage.
-3. The person sees the number without asking and decides when to run `/compact`.
-
-<!-- IMAGE NEEDED: a Claude Code terminal with a mod-drawn pane or status area beside the chat; search: claude code mods, claude code terminal pane, claude code status line -->
-
-Section 11 covers [the context window]({{ '/sections/11-context-window/' | relative_url }}).
+[Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}) covers the event contract, the comparison with shell hooks, building and debugging a mod, and the context indicator from my harness.
 
 ## Shared code across skills
 

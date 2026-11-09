@@ -96,7 +96,7 @@ Section pages: [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-c
 1. [The building blocks]({{ slides_url }}#/9){:target="_blank" rel="noopener"}
 2. [Claude Code and Codex]({{ slides_url }}#/10){:target="_blank" rel="noopener"}
 3. [Native commands]({{ slides_url }}#/11){:target="_blank" rel="noopener"}
-4. [Context files]({{ slides_url }}#/12){:target="_blank" rel="noopener"}
+4. [Context files in practice]({{ slides_url }}#/12){:target="_blank" rel="noopener"}
 5. [Skills and plugins]({{ slides_url }}#/13){:target="_blank" rel="noopener"}
 6. [Templates and briefs]({{ slides_url }}#/14){:target="_blank" rel="noopener"}
 
@@ -121,7 +121,7 @@ Section page: [Agent profiles, sub-agents and delegation]({{ '/sections/08-deleg
 
 Section pages: [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}), [Orchestration and workflows]({{ '/sections/10-orchestration/' | relative_url }})
 
-1. [Coordinating several sessions]({{ slides_url }}#/22){:target="_blank" rel="noopener"}
+1. [A coordinator and worker sessions]({{ slides_url }}#/22){:target="_blank" rel="noopener"}
 2. [Two kinds of orchestration]({{ slides_url }}#/23){:target="_blank" rel="noopener"}
 3. [Goals and loops]({{ slides_url }}#/24){:target="_blank" rel="noopener"}
 
@@ -135,7 +135,7 @@ Section page: [Context window and memory]({{ '/sections/11-context-window/' | re
 
 Section pages: [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}), [Code review]({{ '/sections/13-code-review/' | relative_url }})
 
-1. [Testing agent-written code]({{ slides_url }}#/26){:target="_blank" rel="noopener"}
+1. [The test-first loop]({{ slides_url }}#/26){:target="_blank" rel="noopener"}
 2. [Path of one change]({{ slides_url }}#/27){:target="_blank" rel="noopener"}
 3. [Review practices]({{ slides_url }}#/28){:target="_blank" rel="noopener"}
 4. [Open-ended review]({{ slides_url }}#/29){:target="_blank" rel="noopener"}
@@ -158,7 +158,7 @@ Section page: [Logging, observability and evaluation]({{ '/sections/16-logging-a
 
 Section page: [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }})
 
-1. [Building your own harness]({{ slides_url }}#/34){:target="_blank" rel="noopener"}
+1. [The improvement loop]({{ slides_url }}#/34){:target="_blank" rel="noopener"}
 2. [Agents improving the harness]({{ slides_url }}#/35){:target="_blank" rel="noopener"}
 3. [Complexity creep]({{ slides_url }}#/36){:target="_blank" rel="noopener"}
 4. [A possible first week]({{ slides_url }}#/37){:target="_blank" rel="noopener"}
@@ -174,25 +174,26 @@ Section page: [Trends and model changes]({{ '/sections/18-trends/' | relative_ur
 
 One backup slide per section, used during questions. The [appendix index slide]({{ slides_url }}#/40){:target="_blank" rel="noopener"} links all of them. Each line below gives the slide, then the section overview it summarises.
 
-1. [Introduction detail]({{ slides_url }}#/41){:target="_blank" rel="noopener"}, overview: [Introduction]({{ '/' | relative_url }})
-2. [Agentic AI fundamentals detail]({{ slides_url }}#/42){:target="_blank" rel="noopener"}, overview: [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }})
-3. [What is a harness? detail]({{ slides_url }}#/43){:target="_blank" rel="noopener"}, overview: [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }})
-4. [Claude Code and Codex basics detail]({{ slides_url }}#/44){:target="_blank" rel="noopener"}, overview: [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }})
-5. [Context files detail]({{ slides_url }}#/45){:target="_blank" rel="noopener"}, overview: [Context files]({{ '/sections/04-context-files/' | relative_url }})
-6. [Skills, commands and plugins detail]({{ slides_url }}#/46){:target="_blank" rel="noopener"}, overview: [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }})
-7. [Hooks, scripts and linters detail]({{ slides_url }}#/47){:target="_blank" rel="noopener"}, overview: [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }})
-8. [Templates and stubs detail]({{ slides_url }}#/48){:target="_blank" rel="noopener"}, overview: [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }})
-9. [Agent profiles, sub-agents and delegation detail]({{ slides_url }}#/49){:target="_blank" rel="noopener"}, overview: [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }})
-10. [Coordinating several sessions detail]({{ slides_url }}#/50){:target="_blank" rel="noopener"}, overview: [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }})
-11. [Orchestration and workflows detail]({{ slides_url }}#/51){:target="_blank" rel="noopener"}, overview: [Orchestration and workflows]({{ '/sections/10-orchestration/' | relative_url }})
-12. [Context window and memory detail]({{ slides_url }}#/52){:target="_blank" rel="noopener"}, overview: [Context window and memory]({{ '/sections/11-context-window/' | relative_url }})
-13. [Testing agent-written code detail]({{ slides_url }}#/53){:target="_blank" rel="noopener"}, overview: [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }})
-14. [Code review detail]({{ slides_url }}#/54){:target="_blank" rel="noopener"}, overview: [Code review]({{ '/sections/13-code-review/' | relative_url }})
-15. [Human gates, decisions and alignment detail]({{ slides_url }}#/55){:target="_blank" rel="noopener"}, overview: [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }})
-16. [Browser automation detail]({{ slides_url }}#/56){:target="_blank" rel="noopener"}, overview: [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }})
-17. [Logging, observability and evaluation detail]({{ slides_url }}#/57){:target="_blank" rel="noopener"}, overview: [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }})
-18. [Building your own harness detail]({{ slides_url }}#/58){:target="_blank" rel="noopener"}, overview: [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }})
-19. [Trends and model changes detail]({{ slides_url }}#/59){:target="_blank" rel="noopener"}, overview: [Trends and model changes]({{ '/sections/18-trends/' | relative_url }})
-20. [Chat, desktop and web clients detail]({{ slides_url }}#/60){:target="_blank" rel="noopener"}, overview: [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }})
+1. [Introduction]({{ slides_url }}#/41){:target="_blank" rel="noopener"}, overview: [Introduction]({{ '/' | relative_url }})
+2. [Agentic AI fundamentals]({{ slides_url }}#/42){:target="_blank" rel="noopener"}, overview: [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }})
+3. [What is a harness?]({{ slides_url }}#/43){:target="_blank" rel="noopener"}, overview: [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }})
+4. [Claude Code and Codex basics]({{ slides_url }}#/44){:target="_blank" rel="noopener"}, overview: [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }})
+5. [Context files]({{ slides_url }}#/45){:target="_blank" rel="noopener"}, overview: [Context files]({{ '/sections/04-context-files/' | relative_url }})
+6. [Skills, commands and plugins]({{ slides_url }}#/46){:target="_blank" rel="noopener"}, overview: [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }})
+7. [Hooks, scripts and linters]({{ slides_url }}#/47){:target="_blank" rel="noopener"}, overview: [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }})
+8. [Templates and stubs]({{ slides_url }}#/48){:target="_blank" rel="noopener"}, overview: [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }})
+9. [Agent profiles, sub-agents and delegation]({{ slides_url }}#/49){:target="_blank" rel="noopener"}, overview: [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }})
+10. [Coordinating several sessions]({{ slides_url }}#/50){:target="_blank" rel="noopener"}, overview: [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }})
+11. [Orchestration and workflows]({{ slides_url }}#/51){:target="_blank" rel="noopener"}, overview: [Orchestration and workflows]({{ '/sections/10-orchestration/' | relative_url }})
+12. [Context window and memory]({{ slides_url }}#/52){:target="_blank" rel="noopener"}, overview: [Context window and memory]({{ '/sections/11-context-window/' | relative_url }})
+13. [Testing agent-written code]({{ slides_url }}#/53){:target="_blank" rel="noopener"}, overview: [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }})
+14. [Code review]({{ slides_url }}#/54){:target="_blank" rel="noopener"}, overview: [Code review]({{ '/sections/13-code-review/' | relative_url }})
+15. [Human gates, decisions and alignment]({{ slides_url }}#/55){:target="_blank" rel="noopener"}, overview: [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }})
+16. [Browser automation]({{ slides_url }}#/56){:target="_blank" rel="noopener"}, overview: [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }})
+17. [Logging, observability and evaluation]({{ slides_url }}#/57){:target="_blank" rel="noopener"}, overview: [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }})
+18. [Building your own harness]({{ slides_url }}#/58){:target="_blank" rel="noopener"}, overview: [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }})
+19. [Trends and model changes]({{ slides_url }}#/59){:target="_blank" rel="noopener"}, overview: [Trends and model changes]({{ '/sections/18-trends/' | relative_url }})
+20. [Chat, desktop and web clients]({{ slides_url }}#/60){:target="_blank" rel="noopener"}, overview: [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }})
+21. [Mods and function hooks]({{ slides_url }}#/61){:target="_blank" rel="noopener"}, page: [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }})
 
 {% include page_nav.html %}

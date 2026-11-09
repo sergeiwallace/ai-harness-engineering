@@ -65,6 +65,7 @@ Clients and servers exchange JSON-RPC 2.0 messages. The model never talks to a s
 | Tools | the model | actions the model can call, with a schema, like built-in tools |
 | Resources | the application or person | data the host can attach to the context, such as a file or a record |
 | Prompts | the person | reusable prompt templates, often shown as slash commands |
+| Interactive UI | the person | a tool can also return an interactive interface that Claude web and desktop render in the conversation; see [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}) |
 
 Most servers used in coding offer tools only.
 

@@ -28,6 +28,7 @@ A skill can be started by a person, by the model, or by another skill. This page
    - It is the model that starts the skill, so this is a form of way 2.
    - That detail decides how chains behave.
 
+
 ### The settings
 
 | Frontmatter | Person | Model | In the menu | Description in the window |

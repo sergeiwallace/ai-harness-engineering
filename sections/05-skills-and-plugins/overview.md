@@ -13,7 +13,7 @@ last_updated: "2026-11-09"
 
 Stop 4 on the talk path, about 1.5 minutes.
 
-A skill is a written procedure that the agent loads when it needs it and runs the same way each time. A built-in command is part of the client and acts on the session itself. A plugin packages skills with sub-agent profiles, hooks and MCP servers so a team installs them as one unit, and a mod is a plugin that changes how the client looks and behaves.
+A skill is a written procedure that the agent loads when it needs it and runs the same way each time. A built-in command is part of the client and acts on the session itself. A plugin packages skills with sub-agent profiles, hooks and MCP servers so a team installs them as one unit, and a mod is a plugin whose function hooks run inside the client on events such as tool calls and prompts.
 
 ![Sequence diagram with five lanes: Person, Client, Context window, Model and Skill folder. At session start the client puts the names and descriptions of every skill into the context window. The person types /release 2.4.0; the client reads SKILL.md and its body enters the window; the model starts step 1. At step 2 the model reads checklist.md and its contents enter the window. At step 3 the model runs bump_version.py and only the script output enters the window. The model reports to the person that the tag is ready.]({{ '/assets/images/05-skills-and-plugins/skill-loading-sequence.png' | relative_url }})
 *A release skill during a real task. The window holds every skill's description from the start; the body, the checklist and the script's output arrive only at the step that needs them.*
@@ -27,7 +27,8 @@ This overview covers each part with a worked example, the settings and commands 
 | [Skill anatomy and loading]({{ '/sections/05-skills-and-plugins/skill-anatomy.html' | relative_url }}) | The folder, every frontmatter field, the three loading layers, forked context, arguments, injected command output and the Agent Skills standard |
 | [Writing skill descriptions]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) (sub-page of the anatomy page) | How the model picks a skill, a description template, before-and-after pairs and a checklist |
 | [Invocation and chaining]({{ '/sections/05-skills-and-plugins/invocation-and-chaining.html' | relative_url }}) | Who may start a skill, the trap that stops chains, pipeline patterns and how chains fail |
-| [Plugins, marketplaces and mods]({{ '/sections/05-skills-and-plugins/plugins-and-mods.html' | relative_url }}) | Plugin layout and manifest, hosting a marketplace, the context cost, mods and a shared code library |
+| [Plugins, marketplaces and mods]({{ '/sections/05-skills-and-plugins/plugins-and-mods.html' | relative_url }}) | Plugin layout and manifest, hosting a marketplace, the context cost and a shared code library |
+| [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}) | Function hooks inside the client: events, the comparison with shell hooks, behaviour and interface mods, building and debugging |
 
 ## Contents
 {: .no_toc .text-delta }
@@ -371,21 +372,13 @@ The [plugins page]({{ '/sections/05-skills-and-plugins/plugins-and-mods.html' | 
 
 ## Mods
 
-A mod is a plugin with a hooks module.
+A mod is a plugin whose hooks module registers function hooks: JavaScript or TypeScript functions that Claude Code loads into its own process and calls on events such as tool calls, prompts and turns.
 
-- Its hooks are JavaScript or TypeScript functions loaded into the client. A shell hook runs as a separate process for each event.
-- It can change how Claude Code looks and behaves, such as drawing a pane in the terminal beside the chat.
-- Mods need Claude Code 2.1.287 or later.
+- A function hook can watch an event, change it, or answer it in Claude Code's place, such as refusing a command or adding context to a prompt.
+- Changing the interface, with a pane, a band above the prompt, a toast or a new slash command, is one common use; a mod that only guards tool calls draws nothing.
+- Mods need Claude Code v2.1.287 or later in the terminal.
 
-### Example: a context pane
-
-A context-pane mod in my harness works like this:
-
-1. After each turn, the mod reads how full the context window is.
-2. It redraws a one-line pane beside the chat with the percentage.
-3. The person sees the number without asking and decides when to run `/compact`.
-
-<!-- IMAGE NEEDED: a Claude Code terminal session with a custom pane or status line beside the chat showing context-window usage; search: claude code mod pane, claude code status line context usage -->
+[Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}) covers the event contract, the comparison with shell hooks, building and debugging a mod, and the context indicator from my harness.
 
 ## Shared code across skills
 
@@ -457,7 +450,7 @@ def test_no_skill_calls_a_person_only_skill():
 - Chained skills: the orchestration skill hands its launch step to the delegation skill.
 - A shared library for the command-line tools inside skills.
 - A core plugin that serves the same read-only tools to Claude Code and to Codex, so both clients query the same knowledge store the same way.
-- Mods that draw status panes inside the terminal session, such as a pane showing how full the context window is.
+- A mod that shows how full the context window is after each answer.
 
 To start: turn the prompt you type most often into a skill.
 

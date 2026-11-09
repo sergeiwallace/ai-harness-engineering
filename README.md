@@ -2,7 +2,7 @@
 
 Fundamentals & How to Build Your Own. A set of linked pages on agentic AI workflows and harness engineering with Claude Code and Codex, written alongside a 45-minute talk.
 
-Read it at <https://sergeiwallace.github.io/ai-harness-engineering/>.
+Read it on [the site](https://sergeiwallace.github.io/ai-harness-engineering/).
 
 <img src="assets/images/harness-llm-agent-code.jpg" alt="Illustration: a huge many-eyed monster labelled LLM, held by a harness of straps and reins, with a small agent at its head spraying a stream of code labelled your code" width="100%">
 
@@ -75,5 +75,5 @@ The illustration in `assets/images/` was supplied by the site owner. Its source 
 
 ## Credits
 
-- The site uses the Just the Docs theme (<https://github.com/just-the-docs/just-the-docs>).
-- The coordination examples use firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>).
+- The site uses the [Just the Docs](https://github.com/just-the-docs/just-the-docs) theme.
+- The coordination examples use [firstmate](https://github.com/kunchenguid/firstmate), an open-source project by GitHub user kunchenguid. I use [my own public fork](https://github.com/sergeiwallace/firstmate) with customizations for my setup.

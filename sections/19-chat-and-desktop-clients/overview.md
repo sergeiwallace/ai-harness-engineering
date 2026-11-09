@@ -24,6 +24,7 @@ Most of this site is about coding agents in a terminal: Claude Code and Codex. M
 | Carries over | Almost the whole harness | Claude Code desktop app, Claude Code on the web |
 | Applies in adapted form | Context, skills and habits, as instructions | The claude.ai chat app with projects; Cowork |
 | Does not apply | Anything that runs code on your machine | Hooks, local scripts, local permission rules |
+| New in chat clients | Interactive interfaces supplied by connectors | [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}), the chat counterpart to Claude Code mods |
 
 ## 1. What carries over: Claude Code desktop and web
 
@@ -77,6 +78,13 @@ The same plugin format installs on claude.ai and in Cowork, where a different se
 | Hooks the plugin adds | Run on matching events | Do not apply |
 
 See [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+
+Connectors can also bring their own interface into the conversation:
+
+- An MCP App is a connector tool that returns an interactive View, such as a form, chart or viewer, rendered in a sandboxed frame in the chat.
+  - Claude supports them on web, desktop and mobile, and other hosts such as ChatGPT and VS Code support the same extension.
+  - They are the chat clients' counterpart to Claude Code mods, which change the terminal client itself.
+- [MCP Apps: interactive UI in chat clients]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}) covers how they work, how to build one and their security model; [Claude Code mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}) covers the Claude Code side.
 
 ### 2.3 Every rule is an instruction
 
@@ -136,6 +144,7 @@ To start: copy the project instructions example above into a chat project and us
 ## Pages in this section
 
 - [Harness habits in a chat app]({{ '/sections/19-chat-and-desktop-clients/harness-habits-in-a-chat-app.html' | relative_url }})
+- [MCP Apps: interactive UI in chat clients]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }})
 
 ## Sources
 
