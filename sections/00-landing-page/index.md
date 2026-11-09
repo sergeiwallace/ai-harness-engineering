@@ -20,7 +20,7 @@ Fundamentals & How to Build Your Own
 
 ![Illustration: a huge many-eyed monster labelled LLM, held by a harness of straps and reins, with a small agent at its head spraying a stream of code labelled your code]({{ '/assets/images/harness-llm-agent-code.jpg' | relative_url }}){: style="width: 100%" }
 
-This site teaches how to work with AI coding agents such as Claude Code and Codex, and how to build a harness around them: the context, tools, checks and helpers that make an agent work the way you work.
+This wiki is a guide to working with AI agents such as Claude Code and Codex, and to building a harness around them: the context, tools, checks and helpers that make an agent work the way you want to work.
 
 - The same content serves a 45-minute talk and this set of linked pages.
 - This page is stop 1 on the talk path, about 2 minutes.
