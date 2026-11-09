@@ -20,7 +20,10 @@ Fundamentals & How to Build Your Own
 
 ![Illustration: a huge many-eyed monster labelled LLM, held by a harness of straps and reins, with a small agent at its head spraying a stream of code labelled your code]({{ '/assets/images/harness-llm-agent-code.jpg' | relative_url }}){: style="width: 100%" }
 
-This site teaches how to work with AI coding agents such as Claude Code and Codex, and how to build a harness around them: the context, tools, checks and helpers that make an agent work the way you work. The same content serves a 45-minute talk and this set of linked pages. This page is stop 1 on the talk path, about 2 minutes.
+This site teaches how to work with AI coding agents such as Claude Code and Codex, and how to build a harness around them: the context, tools, checks and helpers that make an agent work the way you work.
+
+- The same content serves a 45-minute talk and this set of linked pages.
+- This page is stop 1 on the talk path, about 2 minutes.
 
 ## Who this is for
 
@@ -52,8 +55,8 @@ A coding agent is a model in a loop: it reads its context, asks for an action, a
 | Context files | tell every session the project's facts and conventions | a `CLAUDE.md` naming the test command | [Context files]({{ '/sections/04-context-files/' | relative_url }}) |
 | Skills and templates | give the agent procedures and structures to follow | a release skill that runs the steps in order | [Skills]({{ '/sections/05-skills-and-plugins/' | relative_url }}), [Templates]({{ '/sections/07-templates-and-stubs/' | relative_url }}) |
 | Tools | decide what the agent can do | an MCP server for the issue tracker | [Fundamentals: tools]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}) |
-| Permissions and hooks | check each action as it happens, and refuse the wrong ones | a hook that refuses a commit while tests fail | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
-| Tests and validation | catch what got past the earlier parts, before a change lands | a CI job on every merge | [Testing]({{ '/sections/12-testing/' | relative_url }}) |
+| Permissions, hooks and linters | enforce how you want the output to be (conventions, structure, style), and stop the mistakes you have seen, at the moment of each action | a linter that requires a docstring on every public function; a hook that refuses a commit while tests fail | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
+| Tests and validation | check the output meets your standards, such as required sections or passing behaviour, and catch what got past the earlier parts, before a change lands | a CI job on every merge | [Testing]({{ '/sections/12-testing/' | relative_url }}) |
 | Memory and plans | carry state from one session to the next | a plan file with done, next and watch out | [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) |
 | Coordination | split work across agents and bring it back together | a coordinator that briefs sub-agents | [Delegation]({{ '/sections/08-delegation/' | relative_url }}), [Orchestration]({{ '/sections/10-orchestration/' | relative_url }}) |
 
@@ -75,7 +78,10 @@ Think of yourself as a conductor with an orchestra. On a long task the parts wor
 
 In a simpler setup you are the coordinator yourself and run one agent at a time; the same harness applies.
 
-My own harness appears throughout as one example of what is possible. It is described conceptually: what each mechanism does and how it is wired, without the code itself. A copied harness brings its author's habits and problems with it, so take the ideas and build from the problems you hit yourself.
+My own harness appears throughout as one example of what is possible:
+
+- it is described conceptually: what each mechanism does and how it is wired, without the code itself;
+- a copied harness brings its author's habits and problems with it, so take the ideas and build from the problems you hit yourself.
 
 ## The story
 
@@ -96,7 +102,16 @@ The talk takes a systems approach to harness engineering and to working with age
 - when the output is wrong or a gap shows up, the fix goes into the system;
 - the same approach is applied again to each new issue, often by the agents themselves, so the harness improves with use and the output gets better in a way the system enforces.
 
-Context files and instructions guide the model, but the model applies them unevenly. It drops rules more often when it handles several things at once, when it switches tasks, and when its context window is nearly full. Claude Code's own documentation says it treats `CLAUDE.md` "as context, not enforced configuration". Adding another detailed rule to a context file each time the model does something wrong is therefore an anti-pattern. The fix belongs in a layer that enforces it.
+Context files and instructions guide the model, but the model applies them unevenly. It drops rules more often:
+
+- when it handles several things at once;
+- when it switches tasks;
+- when its context window is nearly full.
+
+Claude Code's own documentation says it treats `CLAUDE.md` "as context, not enforced configuration". So:
+
+- adding another detailed rule to a context file each time the model does something wrong is an anti-pattern;
+- how you want the output to be, and the fix for each issue, belong in a layer that enforces them.
 
 ![Diagram: the systems approach as a loop. A work session hits an issue or gap; you or the agent ask which layer can enforce the fix; the fix goes into layer 2, workflows and tools, layer 3, hooks, scripts and linters, or layer 4, validation and tests, with a context-file line as layer 1, the second line of defence; the next session runs inside the improved system]({{ '/assets/images/00-introduction/systems-approach-loop.svg' | relative_url }}){: style="width: 100%" }
 *Figure: each issue goes back into the system. The enforcing layers carry the fix; the instruction layer repeats it for the model.*
@@ -108,10 +123,16 @@ A harness enforces its rules in four layers:
    - Over many sessions they are never enough on their own.
 2. Workflows and tools build the steps into what the agent runs.
    - A skill runs the steps in a fixed order; a tool accepts only valid input; a template gives the structure to fill in.
-3. Hooks, scripts and linters refuse or flag an action at the moment the model tries it.
-4. Validation and tests run before a change lands and catch what got past the earlier layers.
+3. Hooks, scripts and linters act at the moment the model tries something.
+   - Proactively, they enforce how you want the output to be: naming, structure, style, required sections.
+   - Reactively, they refuse or flag a mistake you have seen before.
+4. Validation and tests run before a change lands.
+   - They check the output meets your standards, and catch what got past the earlier layers.
 
-Layers 2 to 4 do the enforcing. Layer 1 stays as a second line of defence, so the model's default behaviour already matches what the checks require. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3 in depth, and [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}) covers the opposite risk: a harness that keeps adding mechanisms until nobody can follow it.
+Layers 2 to 4 do the enforcing. Layer 1 stays as a second line of defence, so the model's default behaviour already matches what the checks require.
+
+- [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers layer 3 in depth.
+- [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}) covers the opposite risk: a harness that keeps adding mechanisms until nobody can follow it.
 
 ### Worked example: commits with a failing test suite
 

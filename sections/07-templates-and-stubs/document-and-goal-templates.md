@@ -9,7 +9,11 @@ last_updated: "2026-11-09"
 
 # Document and goal templates
 
-A document template is the full shape of one kind of document, with a description of what goes under each heading. A goal template is the shape of a stop condition for `/goal`. Prompt stubs are read once, at launch, by one agent; these are read later, by many readers, or after every turn by an evaluator. This page covers both:
+A document template is the full shape of one kind of document, with a description of what goes under each heading.
+
+- A goal template is the shape of a stop condition for `/goal`.
+- Prompt stubs are read once, at launch, by one agent; these are read later, by many readers, or after every turn by an evaluator.
+- This page covers both:
 
 - Document templates for a research report, a design document and a bug report, with a worked example each and a check that enforces the headings in code.
 - Goal templates: how `/goal` evaluates a condition, its commands and limits, and how to write a condition the evaluator can check.
@@ -140,7 +144,7 @@ The order matches the [bug-fix flow]({{ '/sections/12-testing/' | relative_url }
 
 ### Checking a document against its template
 
-A template written down is an instruction; a check in code enforces it. A short script can refuse a document whose headings do not match its kind:
+A template written down is an instruction; a check in code enforces the shape you want every document of that kind to have, before any reader has hit a problem. A short script can refuse a document whose headings do not match its kind:
 
 ```python
 # check_headings.py: fail when a research report is missing a required heading

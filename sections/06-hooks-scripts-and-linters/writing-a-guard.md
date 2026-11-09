@@ -10,7 +10,13 @@ last_updated: "2026-11-09"
 
 # Writing a guard
 
-A guard is a [hook]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) that refuses an action. Whether agents can work with a guard depends on three things: what its refusal says, what it does with commands it cannot read, and whether the risky step is unreachable when the check fails. This page covers each, then tells the stories of five guards in my harness that started as written rules agents broke. It is a sub-topic of [Hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}).
+A guard is a [hook]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) that refuses an action. It can enforce how work should be done, such as refusing a commit without the required trailers, or stop a mistake that has happened, such as a pattern kill. Whether agents can work with a guard depends on:
+
+1. what its refusal says;
+2. what it does with commands it cannot read;
+3. whether the risky step is unreachable when the check fails.
+
+This page covers each, then the stories of five guards in my harness that started as written rules agents broke. It is a sub-topic of [Hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -150,7 +156,7 @@ A new script that repeats an existing check loses the cases the old one learned 
 
 ## Guards from broken rules
 
-Each of these started as a written rule in a context file or a brief. An agent broke it anyway, and the fix went into the system as a guard. Each entry lists the rule, the incident, what the guard refuses and the message the agent sees.
+Each of these started as a written rule in a context file or a brief; an agent broke it anyway, and the fix went into the system as a guard. Each entry lists the rule, the incident, what the guard refuses and the message the agent sees.
 
 ### The process-kill guard
 

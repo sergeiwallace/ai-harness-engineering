@@ -38,7 +38,9 @@ The components sort into five functions around the agent loop: context injection
 
 ![A layered map of a harness, read top to bottom. The person at the top sends a prompt or a slash command into Skills. Context injection: context files and the memory index load into the loop at session start, and a skill's steps load on use. In the middle, the agent loop, where the model reasons and decides and the context window is its working memory. Control: every tool call passes the hooks and guards, and permissions and settings send allow, ask and deny rules up into the agent loop. Action: allowed calls reach the native tools or MCP servers and plugins. Delegation: the Agent tool sends a brief to a sub-agent, which takes its role and tools from an agent profile and edits in its own worktree. Observe, verify, persist: the sub-agent's diff and report go to tests and review, a pass becomes a verified change, the task tracker closes the task, and lessons flow back up into memory for the next session.]({{ '/assets/images/02-ai-harnesses/harness-layers.png' | relative_url }})
 
-*The harness as layers around the agent loop. Green arrows are the main path of one task; red are control points; dashed purple are asynchronous or returning flows. Our own diagram, made with archify. Inspired by [Addy Osmani's harness anatomy](https://addyosmani.com/assets/images/harness-anatomy.jpeg), [Phil Schmid's agent harness diagram](https://www.philschmid.de/static/blog/agent-harness-2026/agent-harness.jpeg) and [a layered Claude Code architecture map on Substack](https://substack-post-media.s3.amazonaws.com/public/images/fd726fee-d916-4c94-8947-adb16f45d08d_2412x1488.jpeg).*
+*The harness as layers around the agent loop. Green arrows are the main path of one task; red are control points; dashed purple are asynchronous or returning flows. Our own diagram, made with archify.*
+
+Other views of a harness: [\[9\]](#ref-9) [\[10\]](#ref-10) [\[11\]](#ref-11)
 
 ## Contents
 {: .no_toc .text-delta }
@@ -836,16 +838,20 @@ In practice:
 | [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) | Memory files, the window, task tracking |
 | [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}) | Guides and sensors, the ladder, cost, reading a harness |
 
-## Sources
+## References
 
-- [Böckeler, "Harness engineering"](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html) (2026-04-02), verified 2026-11-08.
-- [Claude Code memory docs](https://code.claude.com/docs/en/memory.md), source of "context, not enforced configuration", verified 2026-11-09.
-- Claude Code docs: [hooks](https://code.claude.com/docs/en/hooks.md), [settings](https://code.claude.com/docs/en/settings.md), [skills](https://code.claude.com/docs/en/skills.md) and [sub-agents](https://code.claude.com/docs/en/sub-agents.md).
-- [Model Context Protocol](https://modelcontextprotocol.io/).
-- [Beads](https://github.com/steveyegge/beads).
-- Harness cost measurements: reported by [HarnessTax](https://harnesstax.github.io/) (UC Berkeley and Arena, 2026); not yet verified against the primary source.
-- [LangChain, "Improving deep agents with harness engineering" (2026-02-17)](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering), verified 2026-11-09.
-- [ShipWithAI, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)", DEV Community, 2026-05-08](https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j), read 2026-11-09.
-- The examples labelled as my harness are from the author's own harness, described conceptually.
+1. <span id="ref-1"></span>[Böckeler, "Harness engineering"](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html) (2026-04-02), verified 2026-11-08.
+2. <span id="ref-2"></span>[Claude Code memory docs](https://code.claude.com/docs/en/memory.md), source of "context, not enforced configuration", verified 2026-11-09.
+3. <span id="ref-3"></span>Claude Code docs: [hooks](https://code.claude.com/docs/en/hooks.md), [settings](https://code.claude.com/docs/en/settings.md), [skills](https://code.claude.com/docs/en/skills.md) and [sub-agents](https://code.claude.com/docs/en/sub-agents.md).
+4. <span id="ref-4"></span>[Model Context Protocol](https://modelcontextprotocol.io/).
+5. <span id="ref-5"></span>[Beads](https://github.com/steveyegge/beads).
+6. <span id="ref-6"></span>Harness cost measurements: reported by [HarnessTax](https://harnesstax.github.io/) (UC Berkeley and Arena, 2026); not yet verified against the primary source.
+7. <span id="ref-7"></span>[LangChain, "Improving deep agents with harness engineering" (2026-02-17)](https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering), verified 2026-11-09.
+8. <span id="ref-8"></span>[ShipWithAI, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)", DEV Community, 2026-05-08](https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j), read 2026-11-09.
+9. <span id="ref-9"></span>[Addy Osmani, harness anatomy diagram](https://addyosmani.com/assets/images/harness-anatomy.jpeg).
+10. <span id="ref-10"></span>[Phil Schmid, agent harness diagram](https://www.philschmid.de/static/blog/agent-harness-2026/agent-harness.jpeg).
+11. <span id="ref-11"></span>[A layered Claude Code architecture map, published on Substack](https://substack-post-media.s3.amazonaws.com/public/images/fd726fee-d916-4c94-8947-adb16f45d08d_2412x1488.jpeg).
+
+The examples labelled as my harness are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

@@ -56,7 +56,12 @@ This page sets the two clients side by side, building block by building block: w
 | 3 | `CLAUDE.local.md` and unscoped rules, at launch | In each directory: `AGENTS.override.md`, then `AGENTS.md`, then fallback names |
 | 4 | A subdirectory's file when the agent first reads or edits a file there | Stops at 32 KiB in total |
 
-In both, files closer to the working directory come later. Codex documents that they take precedence; Claude Code concatenates the files, and contradicting lines may be followed either way. The whole walk is on [How context files load]({{ '/sections/04-context-files/how-context-files-load.html' | relative_url }}).
+In both, files closer to the working directory come later.
+
+- Codex documents that the later files take precedence.
+- Claude Code concatenates the files, and contradicting lines may be followed either way.
+
+The whole walk is on [How context files load]({{ '/sections/04-context-files/how-context-files-load.html' | relative_url }}).
 
 #### Size limits
 

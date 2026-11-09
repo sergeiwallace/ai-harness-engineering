@@ -34,7 +34,7 @@ A context file guides the model's general behaviour. It is applied unevenly, and
 |---|---|---|
 | 1. Instructions: context files, skills, prompts | Guide behaviour and explain the checks | "`make test` runs changed tests; the full suite runs at push." |
 | 2. Workflows and tools | Build the right step in | `make test` runs only the changed tests by default |
-| 3. Hooks, scripts and linters | Refuse or flag at the moment of action | A PreToolUse hook refuses `make test-all` outside a push |
+| 3. Hooks, scripts and linters | Encode how the output should be, and refuse or flag a mistake at the moment of action | A PreToolUse hook refuses `make test-all` outside a push |
 | 4. Validation and tests | Catch what slips through before a change lands | The pre-push gate runs the full suite once |
 
 Layers 2 to 4 do the enforcing. A context-file line is at most a second layer on top of them; the rest of this page is about writing that layer well.
@@ -168,10 +168,10 @@ The workflow change, in the `Makefile`:
 
 ```make
 test:        ## changed tests only, the default
- files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
- if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
+	files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
+	if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
 test-all:    ## the full suite; runs in the pre-push gate
- pytest tests -q
+	pytest tests -q
 ```
 
 The hook, in `.claude/settings.json`:

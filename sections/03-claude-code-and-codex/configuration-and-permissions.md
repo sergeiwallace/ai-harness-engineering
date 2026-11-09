@@ -155,7 +155,11 @@ Claude Code matches everything before the first `*` as written, and it splits co
 
 #### Allow, ask and deny
 
-Rules from every file merge into one set, and a more restrictive rule from any file is not outvoted by an allow rule elsewhere. An `allow` in your local file does not outrank an `ask` from the project or managed file. If you chose "don't ask again" and still get asked, that is the reason.
+Rules from every file merge into one set.
+
+- A more restrictive rule from any file is not outvoted by an allow rule elsewhere.
+- An `allow` in your local file does not outrank an `ask` from the project or managed file.
+- So if you chose "don't ask again" and still get asked, an `ask` rule elsewhere is the reason.
 
 #### Workspace trust
 

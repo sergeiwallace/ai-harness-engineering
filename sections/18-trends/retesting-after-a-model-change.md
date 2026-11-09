@@ -15,7 +15,13 @@ talk_stop: "13"
 
 # Re-testing after a model change
 
-Most rules in a harness exist because of something the model got wrong. A new model gets different things wrong. Some rules stop helping, some start to hurt, and some failures appear that no rule covers. This page is a procedure for finding out which, using the same tools as [evaluating any harness change]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
+Many rules in a harness exist because of something the model got wrong, and a new model gets different things wrong:
+
+- Some rules stop helping.
+- Some start to hurt.
+- Some failures appear that no rule covers.
+
+This page is a procedure for finding out which, using the same tools as [evaluating any harness change]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
 
 ![Sequence diagram of re-testing a harness after a model change: run the same task set several times on the old and the new model, read the outputs and transcripts for idle rules and new failures, propose a change, approve it, then edit the rules and record the model and date.]({{ '/assets/images/18-trends/model-change-retest-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -36,7 +42,11 @@ Most rules in a harness exist because of something the model got wrong. A new mo
 
 ### 1. Keep a task set
 
-A task set is a small list of real tasks with a way to tell whether each one went well. Draw it from your [friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#21-keep-a-friction-log): each past failure becomes a task. Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures. [Building a task set]({{ '/sections/18-trends/building-a-task-set.html' | relative_url }}) covers how to write and read one.
+A task set is a small list of real tasks with a way to tell whether each one went well.
+
+- Draw it from your [friction log]({{ '/sections/17-building-a-harness/' | relative_url }}#21-keep-a-friction-log): each past failure becomes a task.
+- Anthropic suggests starting with 20 to 50 simple tasks drawn from real failures.
+- [Building a task set]({{ '/sections/18-trends/building-a-task-set.html' | relative_url }}) covers how to write and read one.
 
 ```yaml
 # tasks.yaml: one entry per past failure
@@ -53,7 +63,10 @@ A task set is a small list of real tasks with a way to tell whether each one wen
 
 #### Two kinds of check
 
-Some checks a program can run, such as whether the tests pass or whether a file changed. Others need judgment, such as whether a summary reads well. Run the first kind automatically, and read a sample of the second kind yourself.
+| Kind | Example | How to run it |
+|---|---|---|
+| A check a program can run | The tests pass; a file did or did not change | Automatically, every run |
+| A check that needs judgment | The summary reads well | Read a sample yourself |
 
 ### 2. Run both models on the same tasks
 
@@ -78,7 +91,10 @@ Look for three things:
 
 #### Read transcripts as well as scores
 
-A pass rate shows that something changed. The transcripts show what changed, and whether the agent read a rule, followed it, or worked around it. With a small task set, the transcripts are also the more reliable signal: see the noise table on [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}#your-sample-is-small).
+A pass rate shows that something changed.
+
+- The transcripts show what changed, and whether the agent read a rule, followed it, or worked around it.
+- With a small task set, the transcripts are also the more reliable signal: see the noise table on [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}#your-sample-is-small).
 
 ### 4. Change one thing at a time
 
@@ -118,7 +134,9 @@ The writing-tells change from the [overview]({{ '/sections/18-trends/' | relativ
 <details markdown="1">
 <summary>Why the old rule stayed, in a shorter form</summary>
 
-The em dash rule rarely fires on the new model, but a rare failure in public writing is still costly, and the rule is one line. Retiring a rule is right when it costs more than the failure it prevents. Here the cost was small, so it stayed, shortened.
+- The em dash rule rarely fires on the new model, but a rare failure in public writing is still costly, and the rule is one line.
+- Retiring a rule is right when it costs more than the failure it prevents.
+- Here the cost was small, so it stayed, shortened.
 
 </details>
 

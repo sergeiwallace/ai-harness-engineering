@@ -10,7 +10,12 @@ last_updated: "2026-11-09"
 
 # Building a task set
 
-A task set is the list of tasks you run before and after a change to see whether the change helped. It is what makes a [model re-test]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) or a [pruning decision]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}) a measurement. In the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the-four-layers), the task set is layer 4 for the harness itself: it validates a change to the harness before the change is kept. This page covers where tasks come from, how to write each one, and how to read the results.
+A task set is the list of tasks you run before and after a change to see whether the change helped.
+
+- It is what makes a [model re-test]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) or a [pruning decision]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}) a measurement.
+- In the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the-four-layers), it is layer 4 for the harness itself: it validates a change to the harness before the change is kept.
+
+This page covers where tasks come from, how to write each one, and how to read the results.
 
 ![Sequence diagram of turning a friction entry into a re-test task. You pick an entry from the friction log and write a task with a prompt and a check before any run. A runner loads the task, runs it three times on the model with the same harness, gets the final tree and transcript for each run, and runs the test suite on each; the check returns pass, pass, fail. The runner reports the pass rate with the failing transcript, and you keep the task for the next model change.]({{ '/assets/images/18-trends/task-set-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -68,7 +73,10 @@ Use program checks where you can. They are cheap to run several times, and they 
 <details markdown="1">
 <summary>Using a model as a grader</summary>
 
-A model can grade judgment checks, such as whether a summary covers the request. Before relying on it, grade a sample of results yourself and compare. If you and the grader disagree often, rewrite the grading instructions or keep that check manual.
+A model can grade judgment checks, such as whether a summary covers the request.
+
+1. Before relying on it, grade a sample of results yourself and compare.
+2. If you and the grader disagree often, rewrite the grading instructions or keep that check manual.
 
 </details>
 

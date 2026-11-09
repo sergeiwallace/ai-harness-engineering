@@ -13,7 +13,12 @@ stop_minutes: "4"
 
 # Agent profiles
 
-An agent profile is a file that turns a general agent into a role: it names the role, says when to use it, lists the tools it may call, picks its model, and carries its standing instructions. A brief describes one task. A profile describes the role across every task it is used for. This page covers the fields, how the runtime picks and enforces a profile, how to design a role set, and how to record which profile did which work. Choosing the model for each role has its own sub-page: [model choice]({{ '/sections/08-delegation/model-choice.html' | relative_url }}).
+An agent profile is a file that turns a general agent into a role: it names the role, says when to use it, lists the tools it may call, picks its model, and carries its standing instructions.
+
+- A brief describes one task.
+- A profile describes the role across every task it is used for.
+- This page covers the fields, how the runtime picks and enforces a profile, how to design a role set, and how to record which profile did which work.
+- Choosing the model for each role has its own sub-page: [model choice]({{ '/sections/08-delegation/model-choice.html' | relative_url }}).
 
 ![A sequence across five participants. The lead asks the agent runtime for a reviewer for a diff. The runtime reads the reviewer profile file and gets tools Read, Grep and Glob and model opus, then starts the reviewer with those tools only. The reviewer reads the changed files, then tries to fix a typo; the runtime answers that there is no such tool. The reviewer returns findings with file, line, severity and fix to the lead.]({{ '/assets/images/08-delegation/profile-launch.png' | relative_url }}){: style="width:100%"}
 
@@ -247,6 +252,7 @@ On current versions, `/agents` prints a reminder to ask Claude or edit the agent
 | Explore | Fast, read-only searching and analysis of a codebase |
 | Plan | Gathering context during plan mode before a plan is presented |
 | General-purpose | Complex, multi-step tasks that need both exploration and action |
+
 
 ### Starting one explicitly
 

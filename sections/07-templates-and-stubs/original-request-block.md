@@ -10,7 +10,10 @@ last_updated: "2026-11-09"
 
 # The original-request block
 
-The original-request block is a fixed block at the top of every brief that holds the person's words exactly as they were written. It exists because requests drift: each agent in a chain restates the one before, and a requirement can disappear while every check stays green. This page covers the drift, the incident that showed it, how the block is stored and checked, and how an agent uses it.
+The original-request block is a fixed block at the top of every brief that holds the person's words exactly as they were written.
+
+- It exists because requests drift: each agent in a chain restates the one before, and a requirement can disappear while every check stays green.
+- This page covers the drift, the incident that showed it, how the block is stored and checked, and how an agent uses it.
 
 ![A sequence across five participants. The person asks for A, B and C, with C using injection. The lead stores the words and hash in the request record. The lead sends a brief with a tidied summary to the launch guard, which compares the hash and refuses it. The lead copies the block unchanged and the guard launches the worker. The worker checks whether its plan keeps C, finds it would drop a named requirement, and tells the lead, which asks the person whether to keep C with injection or change the ask.]({{ '/assets/images/07-templates-and-stubs/request-guard.png' | relative_url }}){: style="width:100%"}
 
@@ -59,7 +62,11 @@ Every gate in the chain checks the work against the brief it received:
 
 ## The incident
 
-A person asked for a feature and named prompt injection as one of its mechanisms. Two hands later, an agent's decision record said "injection is not used", and the work went ahead without it. Every gate passed. The gap surfaced only when the person read the result and asked where the injection was.
+A person asked for a feature and named prompt injection as one of its mechanisms.
+
+- Two hands later, an agent's decision record said "injection is not used", and the work went ahead without it.
+- Every gate passed.
+- The gap surfaced only when the person read the result and asked where the injection was.
 
 Three things were missing, and the fix supplies each:
 
@@ -136,7 +143,11 @@ launch refused: original-request block does not match its record
 <details markdown="1">
 <summary>Why a hash and not a text comparison by eye</summary>
 
-An agent restating the request does not think of it as editing. It tidies a typo, drops a clause that "is covered elsewhere", or merges two sentences. Each looks harmless to a reader. A hash changes when any character of the text changes, so the guard catches each of these edits.
+An agent restating the request does not think of it as editing.
+
+- It tidies a typo, drops a clause that "is covered elsewhere", or merges two sentences.
+- Each looks harmless to a reader.
+- A hash changes when any character of the text changes, so the guard catches each of these edits.
 
 </details>
 
@@ -152,7 +163,10 @@ The agent uses the block as a reference to check against.
 
 ### At a decision that would drop something
 
-An agent may decide many things on its own. It may not decide to drop, narrow or contradict a requirement the person stated. When a choice would do that, the agent keeps the requirement or takes the question back to the person, with the conflict stated.
+An agent may decide many things on its own.
+
+- It may not decide to drop, narrow or contradict a requirement the person stated.
+- When a choice would do that, the agent keeps the requirement or takes the question back to the person, with the conflict stated.
 
 | Decision | The agent may | The agent may not |
 |---|---|---|

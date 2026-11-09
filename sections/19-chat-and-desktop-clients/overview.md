@@ -11,7 +11,12 @@ last_updated: "2026-11-09"
 
 # Desktop, Web & Mobile Apps
 
-Most of this site is about coding agents in a terminal: Claude Code and Codex. Many people use the same models through the Claude desktop app, the web app at claude.ai and the mobile apps, each with several tabs: Chat, Projects, Cowork and Code. The question for them is which parts of harness engineering still apply, and where.
+Most of this site is about coding agents in a terminal: Claude Code and Codex. Many people use the same models through the Claude apps instead:
+
+- The desktop app, the web app at claude.ai and the mobile apps.
+- Each with several tabs: Chat, Projects, Cowork and Code.
+
+The question for them is which parts of harness engineering still apply, and where.
 
 The short answer:
 
@@ -61,7 +66,10 @@ So a `CLAUDE.md`, a skill or an MCP server you set up for the terminal is there 
 
 ### 1.2 What to check on the web
 
-A web session runs in the cloud. A cloud session does not load the plugins in your local settings. Anything that lives only in your local configuration needs to be in the repository, or set up for the cloud environment, before a web session can use it.
+A web session runs in the cloud.
+
+- It does not load the plugins in your local settings.
+- Anything that lives only in your local configuration needs to be in the repository, or set up for the cloud environment, before a web session can use it.
 
 | Part | Terminal | Desktop app | Web (cloud session) |
 |---|---|---|---|
@@ -76,7 +84,11 @@ A web session runs in the cloud. A cloud session does not load the plugins in yo
 
 ### 2.1 Context
 
-In the claude.ai chat app, project instructions and uploaded files play the role of context files (unverified; check the claude.ai help pages). Keep project instructions as short as a good [context file]({{ '/sections/04-context-files/' | relative_url }}): the few rules that apply to every chat in the project, such as the audience, the format and how to end a reply. A long list is followed less consistently here too, and a chat app has no hook to catch what the model misses, so resist adding a new line after every bad answer.
+In the claude.ai apps, a Project's instructions and uploaded files play the role of context files.
+
+- Keep project instructions as short as a good [context file]({{ '/sections/04-context-files/' | relative_url }}): the few rules that apply to every chat in the project, such as the audience, the format and how to end a reply.
+- A long list is followed less consistently here too.
+- A chat app has no hook to catch what the model misses, so resist adding a new line after every bad answer.
 
 #### Worked example: project instructions
 

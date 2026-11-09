@@ -11,7 +11,15 @@ last_updated: "2026-11-09"
 
 Related: [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}).
 
-Models are now strong at many tasks that look hard and still weak at neighbouring tasks that look easy. They are weakest at taste: judging what is good, as opposed to what is correct. This page covers both ideas, uses the building of this site and its slide deck as a case study, and says what that means for steering agents. The last part gives my own view, labelled as opinion, with a counterpoint.
+Models are now strong at many tasks that look hard and still weak at neighbouring tasks that look easy. They are weakest at taste: judging what is good, beyond what is correct.
+
+This page covers:
+
+1. Spiky capabilities, with the evidence.
+2. What taste is, and why models find it hard.
+3. A case study: the building of this site and its slide deck.
+4. What that means for steering agents.
+5. My own view, labelled as opinion, with a counterpoint.
 
 ![The jagged frontier of AI capabilities: a wavy blue line of AI abilities crosses a dashed curve of tasks of equal difficulty, so one task on the curve falls inside the frontier, a neighbouring one falls outside it, and a third sits on it.]({{ '/assets/images/18-trends/jagged-frontier-mollick.jpg' | relative_url }}){: style="width:100%"}
 
@@ -21,7 +29,10 @@ Models are now strong at many tasks that look hard and still weak at neighbourin
 
 ### 1.1 What the term means
 
-A spiky, or jagged, capability profile is one where a model's skill does not follow human ideas of difficulty. In people, skills tend to go together: someone who can write a proof can usually compare two decimals. In models they often do not.
+A spiky, or jagged, capability profile is one where a model's skill does not follow human ideas of difficulty.
+
+- In people, skills tend to go together: someone who can write a proof can usually compare two decimals.
+- In models they often do not.
 
 - Andrej Karpathy popularised the term "jagged intelligence" in a July 2024 post; the example widely reported from it is a model that solves hard maths problems yet says 9.11 is larger than 9.9.
   - In his 2025 year in review he wrote that LLMs "display amusingly jagged performance characteristics", being "at the same time a genius polymath and a confused and cognitively challenged grade schooler".
@@ -189,7 +200,11 @@ Claims that agentic AI will soon replace people in knowledge work are overstated
 | People are jagged too | The case is that people and models have different shapes of strength, so the combination does better than either |
 | People misjudge AI help in both directions | METR's developers thought they were faster when they were slower; the same bias can make people underrate progress |
 
-My answer to the counterpoint: the pace is real, and I expect the taste gap to narrow. It is also the part of the work that is hardest to measure, so it is the part where progress is hardest to see and to trust. For now, I plan on keeping a person in the loop for every decision that depends on judgement.
+My answer to the counterpoint:
+
+- The pace is real, and I expect the taste gap to narrow.
+- Taste is also the part of the work that is hardest to measure, so it is where progress is hardest to see and to trust.
+- For now, I plan on keeping a person in the loop for every decision that depends on judgement.
 
 ## References
 

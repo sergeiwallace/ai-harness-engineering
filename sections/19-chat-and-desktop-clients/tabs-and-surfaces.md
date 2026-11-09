@@ -9,7 +9,11 @@ last_updated: "2026-11-09"
 
 # Chat, Projects, Cowork, Code and mobile
 
-The Claude apps on desktop, web and mobile now have several places to work: Chat, Projects, Cowork and the Code tab, plus Claude Code on the web and ways to reach a running session from a phone. Each one supports a different share of a harness. This page takes each surface in turn: what it is, what is new, and how the harness concepts from this site map onto it. It ends with Remote Control, which links a Claude Code session on your machine to the web and mobile apps.
+The Claude apps on desktop, web and mobile now have several places to work, and each supports a different share of a harness.
+
+- The surfaces: Chat, Projects, Cowork and the Code tab, plus Claude Code on the web and ways to reach a running session from a phone.
+- For each one: what it is, what is new, and how the harness concepts from this site map onto it.
+- At the end: Remote Control, which links a Claude Code session on your machine to the web and mobile apps.
 
 ## Surfaces at a glance
 
@@ -23,6 +27,22 @@ The Claude apps on desktop, web and mobile now have several places to work: Chat
 | Claude Code on the web | Web | A cloud session | The repository's harness |
 | Mobile | iOS and Android apps | The surface you connect to | Whatever that surface supports |
 
+## If you reach Claude through an API key or a cloud provider
+
+Much of this page needs a claude.ai subscription. Anthropic's feature-availability page lists these as "not reachable with an Anthropic Console API key or from a third-party provider":
+
+- Cloud sessions and Claude Code on mobile.
+- Claude Code Desktop, cloud scheduled tasks and Remote Control.
+- Code Review, Ultrareview, the Chrome extension, computer use, Artifacts, voice dictation and Claude Code in Slack.
+
+| Route | What you get |
+|---|---|
+| Claude Code CLI on any provider, Bedrock included | Everything local: sub-agents, hooks, commands, skills, `CLAUDE.md`, plugins, MCP servers, sandboxing and managed settings "work on every provider" |
+| Claude Desktop on third-party providers (Bedrock, Google Cloud's Agent Platform, Microsoft Foundry, a gateway, or the Claude API with a Console key) | "The full Claude Desktop experience (Chat, Cowork, and Code, including file creation, multi-step research, and sub-agent coordination)", with a local device identity, conversations stored on your disk and configuration through device management or the admin console |
+| Not available on those routes | Remote Control, cloud sessions, Dispatch and mobile Code; claude.ai account features such as Projects and memory are not listed for this mode (my reading of the sources) |
+
+Anthropic also notes that standard Desktop with Cowork on Team or Enterprise "is simpler to deploy and releases new features more quickly than Claude Desktop on 3P."
+
 ## Chat
 
 ### What it is
@@ -32,7 +52,8 @@ The Claude apps on desktop, web and mobile now have several places to work: Chat
 
 ### What is new
 
-- Memory that works across chats and Cowork, with editable topics and a setting for sensitive topics (release notes, 2026-08-25; wording not re-read).
+- Chat and Cowork share one home on desktop, web and mobile, per the Cowork help article; the release notes date the rollout to Pro and Max from 2026-09-16 (wording not re-read). Code stays a separate tab.
+- Memory, on by default for Free, Pro, Max and Ultra, saved as editable topics; each project has its own memory, and sensitive topics are off by default.
 - Design, deck and document artifacts that can be created in any conversation (release notes, 2026-09-16; wording not re-read).
 - Interactive connectors, built on [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}), on web, desktop and mobile.
 
@@ -168,7 +189,11 @@ In Anthropic's words, "Claude Cowork uses the same agentic architecture that pow
 
 Claude Code sessions that run in the cloud.
 
-- The repository's `CLAUDE.md` applies. Whether settings and hooks committed to the repository apply in a web session is not settled by the sources above; new Projects cloud threads, for example, do not read `.claude/settings.json`. Check the web documentation before relying on a repository hook there.
+- A cloud session runs in an isolated, Anthropic-managed virtual machine, or in your organisation's own environment, and keeps running after you close the laptop.
+- The repository's `CLAUDE.md`, its `.claude/agents/` sub-agents and its `.claude/settings.json` apply, for single-repository sessions outside a project; `SessionStart` hooks run, with a timeout.
+- Local-only plugins and commands such as `/plugin` and `/resume` do not.
+- Start one from claude.ai/code, the mobile app, the desktop app's Cloud environment, or `claude --cloud "task"`; pull one back to your terminal with `/teleport`.
+- It needs a claude.ai sign-in, and organisations with Zero Data Retention, HIPAA or customer-managed keys cannot use cloud sessions.
 - Plugins from your local settings do not load in a cloud session.
 - Team and Enterprise organisations can run cloud sessions in their own environment ("self-hosted environments").
 
@@ -251,6 +276,10 @@ So on a company setup that reaches the model through an API key, a cloud provide
 - [Claude Code docs: Continue local sessions from any device with Remote Control](https://code.claude.com/docs/en/remote-control), read 2026-11-09; Remote Control commands, availability, settings and the table of ways to work away from the terminal.
 - [Claude Code docs: Let Claude coordinate ongoing work with Projects](https://code.claude.com/docs/en/claude-projects), read 2026-11-09; new Projects.
 - [Claude Code docs: Claude Code Desktop](https://code.claude.com/docs/en/desktop), read 2026-11-09; the Code tab, Dispatch, and where Cowork takes its skills from.
+- [Claude Code docs: Feature availability](https://code.claude.com/docs/en/feature-availability), read 2026-11-09; what needs a claude.ai subscription.
+- [Claude Code docs: Use Claude Code in the cloud](https://code.claude.com/docs/en/claude-code-on-the-web), read 2026-11-09.
+- [Claude Code docs: Claude Code on mobile](https://code.claude.com/docs/en/mobile), read 2026-11-09.
+- [Claude Desktop on third-party providers: Overview](https://claude.com/docs/third-party/claude-desktop/overview), read 2026-11-09.
 - [Claude help: What are projects?](https://support.claude.com/en/articles/9517075-what-are-projects), read 2026-11-09 through a summary; classic Projects.
 - [Claude help: Get started with Cowork](https://support.claude.com/en/articles/13345190-get-started-with-cowork), read 2026-11-09 through a summary; Cowork.
 - [Claude help: Release notes](https://support.claude.com/en/articles/12138966-release-notes), read through a summary on 2026-11-09; dated entries are marked where the wording was not re-read.

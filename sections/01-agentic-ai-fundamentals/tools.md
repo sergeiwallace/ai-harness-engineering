@@ -11,7 +11,9 @@ last_updated: "2026-11-09"
 
 # Tools and tool calling
 
-A tool is a named action the client can carry out for the model: read a file, run a command, search the web. Tools are what separate an agent from a chat model, and they are the largest surface a harness controls. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#tools) is the short version. This page covers:
+A tool is a named action the client can carry out for the model: read a file, run a command, search the web. Tools are what separate an agent from a chat model, and they are the largest surface a harness controls.
+
+The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#tools) is the short version. This page covers:
 
 - what a tool is made of, and the messages that carry a call and its result;
 - the built-in tools of Claude Code, and the settings that bound their output;
@@ -173,7 +175,9 @@ Two schema details help too:
 
 ### Worked example: fixing a wrong pick
 
-A project adds two tools, `get_logs` and `search_logs`. The agent keeps calling `get_logs`, which returns the whole day's log, and floods its window. The descriptions were "Get logs" and "Search logs". Rewriting them fixes it:
+A project adds two tools, `get_logs` and `search_logs`. The agent keeps calling `get_logs`, which returns the whole day's log, and floods its window.
+
+The descriptions were "Get logs" and "Search logs". Rewriting them fixes it:
 
 | Before | After |
 |---|---|
@@ -217,12 +221,21 @@ Claude Code turns MCP tool search on by default: MCP tool definitions are deferr
 <details markdown="1">
 <summary>A rough worked estimate, without tool search</summary>
 
-Suppose each added tool's name, description and schema average 300 tokens. Ten MCP servers with eight tools each is 80 tools, or about 24,000 tokens, present before the task starts and sent on every turn. On a 200,000-token window that is 12 percent; on a one-million-token window it is under 3 percent. With tool search on, the same 80 tools cost roughly their names until one is used.
+Suppose each added tool's name, description and schema average 300 tokens.
+
+| Setup | Fixed cost on every turn |
+|---|---|
+| 10 MCP servers, 8 tools each, without tool search | 80 tools, about 24,000 tokens: 12 percent of a 200,000-token window, under 3 percent of a one-million-token window |
+| The same servers, with tool search on | roughly the 80 tool names, until one is used |
+
 </details>
 
 ### The variable cost: results
 
-Results are usually the larger cost, because they accumulate: every result stays in the history for the rest of the session. In Claude Code one `Bash` result reaches the model inline up to about 30,000 characters, roughly 7,500 tokens, and longer output goes to a file ([Limits on a tool's output](#limits-on-a-tools-output)). MCP tool output is limited to 25,000 tokens by default (`MAX_MCP_OUTPUT_TOKENS`), with a warning above 10,000.
+Results are usually the larger cost, because they accumulate: every result stays in the history for the rest of the session.
+
+- In Claude Code one `Bash` result reaches the model inline up to about 30,000 characters, roughly 7,500 tokens, and longer output goes to a file ([Limits on a tool's output](#limits-on-a-tools-output)).
+- MCP tool output is limited to 25,000 tokens by default (`MAX_MCP_OUTPUT_TOKENS`), with a warning above 10,000.
 
 | Call | What happens | Cheaper form |
 |---|---|---|

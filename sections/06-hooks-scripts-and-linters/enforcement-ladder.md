@@ -9,7 +9,16 @@ last_updated: "2026-11-09"
 
 # The enforcement ladder
 
-A harness can put a rule in several places, from a sentence the model reads to a check that runs before every merge. The ladder ranks them by how consistently they hold. This page covers the four layers, the five concrete mechanisms inside them, how to place a rule, what to do when an agent breaks one, and what each mechanism costs. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}), and it applies the [systems approach to harness engineering]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) from the AI harnesses overview.
+A harness can put a rule in several places, from a sentence the model reads to a check that runs before every merge. The ladder ranks them by how consistently they hold.
+
+This page covers:
+
+- the four layers and the five mechanisms inside them;
+- how to place a rule, whether it says how the output should be or stops a mistake;
+- what to do when an agent breaks a rule;
+- what each mechanism costs.
+
+It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) and applies the [systems approach to harness engineering]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) from the AI harnesses overview.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -28,9 +37,15 @@ A fix belongs in the system, enforced by code wherever a program can check it.
    - A sub-agent never sees a rule its brief did not carry.
 2. For these reasons, instructions in a context file are never sufficient on their own over many sessions.
 3. The enforcing is done by the layers that run as code or as fixed steps: workflows and tools; hooks, scripts and linters; validation and tests.
+   - Proactively, they encode how you want code, docs or any output to be: formatting, naming, structure, required sections.
+   - Reactively, they stop a mistake you have seen at the point it would happen again.
 4. The instruction stays as a second line of defence. It tells the model why, so the model plans around the rule and the checks refuse it less often.
 
-> Adding another detailed rule to a context file each time an agent does something wrong is an anti-pattern. The file grows, each rule is followed as unevenly as the last, and the mistake comes back. The correction goes into a workflow, tool, hook, script, linter or test.
+> Adding another detailed rule to a context file each time an agent does something wrong is an anti-pattern.
+>
+> - The file grows, and each rule is followed as unevenly as the last.
+> - The mistake comes back.
+> - The correction goes into a workflow, tool, hook, script, linter or test.
 
 ## The four layers
 
@@ -173,7 +188,10 @@ A broken rule is a gap in the system. The fix goes into the layer that can enfor
 <details markdown="1">
 <summary>Retiring a check</summary>
 
-A guard that refuses safe work often, or that the harness has outgrown, can be narrowed or removed. Before removing one, look at what it refused in the last month. If it still refuses real mistakes, narrow its pattern; if it refuses nothing, remove it and its registration together.
+A guard that refuses safe work often, or that the harness has outgrown, can be narrowed or removed. Look at what it refused in the last month first:
+
+- Still refuses real mistakes: narrow its pattern.
+- Refuses nothing: remove it and its registration together.
 
 </details>
 

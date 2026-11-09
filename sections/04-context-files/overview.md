@@ -13,7 +13,12 @@ stop_minutes: "6"
 
 # Context files
 
-A context file is a plain Markdown file of instructions that the client loads into the model's context: `CLAUDE.md` for Claude Code, `AGENTS.md` for Codex and several other tools. The agent sees it at the start of every session: how to build and test, the conventions, the commands to avoid. It is the cheapest part of a harness to write and the first one to add, and it guides behaviour without enforcing anything.
+A context file is a plain Markdown file of instructions that the client loads into the model's context.
+
+- `CLAUDE.md` for Claude Code; `AGENTS.md` for Codex and several other tools.
+- The agent sees it at the start of every session: how to build and test, the conventions, the commands to avoid.
+- It is the cheapest part of a harness to write and the first one to add.
+- It guides behaviour; it enforces nothing.
 
 This overview covers, in order:
 
@@ -61,12 +66,20 @@ Four lines save the agent from guessing the test command, editing generated code
 
 ### Where it sits in a harness
 
-A context file guides general behaviour. The model applies it unevenly: less reliably when it juggles several things, switches tasks or works near a full context window. In a systems approach to a harness it is one of four layers, and the second line of defence.
+A context file guides general behaviour, and the model applies it unevenly. It is followed less reliably when the model:
+
+- juggles several things at once;
+- switches tasks;
+- works near a full context window.
+
+In a systems approach to a harness it is one of four layers, and the second line of defence:
 
 1. Instructions: context files, skills and prompts guide the model and explain the checks.
 2. Workflows and tools build the right steps in, so the right path is the default.
-3. Hooks, scripts and linters refuse or flag a wrong action at the moment it happens.
-4. Validation and tests catch what slips through before a change lands.
+3. Hooks, scripts and linters act at the moment of action, in two ways.
+   - Proactively: they encode how you want code, docs or any output to be (conventions, structure, style, required sections).
+   - Reactively: they refuse or flag a mistake when it happens.
+4. Validation and tests check the result before a change lands: that it meets the standard you set, and that nothing you have seen fail before has come back.
    - Layers 2 to 4 do the enforcing.
    - Each time a gap shows up, the fix goes into the lowest layer that can prevent it, and the harness improves in a way that holds.
 

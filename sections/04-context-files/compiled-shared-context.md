@@ -11,7 +11,21 @@ stop_minutes: "6"
 
 # Compiled shared context files
 
-Once you work across several repositories, machines or clients, one hand-edited context file stops being enough. The same rules need to reach every session, with a few lines that differ per client and per machine, and the shared file needs a limit so it does not grow with every lesson. A compiled context file solves both: small source parts are joined by a script, checked against a size budget, written to a versioned directory and linked into place. This page describes the pattern as it works in my own harness, at the level of mechanism.
+Once you work across several repositories, machines or clients, one hand-edited context file stops being enough.
+
+| Need | What it takes |
+|---|---|
+| The same rules in every session | One source shared by every client and machine |
+| A few lines per client and per machine | Parts that are joined per target |
+| A file that does not grow with every lesson | A size limit that is enforced |
+
+A compiled context file covers all three:
+
+1. Small source parts are joined by a script.
+2. The result is checked against a size budget.
+3. It is written to a versioned directory and linked into place.
+
+This page describes the pattern as it works in my own harness, at the level of mechanism.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -28,7 +42,9 @@ Once you work across several repositories, machines or clients, one hand-edited 
 | Two clients that need slightly different files | | Yes |
 | Several machines with different tools and traps | | Yes |
 
-To start: one hand-written `CLAUDE.md` per repository. Add a user-level file when you notice the same lines in every repository. Compile when you have two clients or two machines to keep in step.
+1. Start with one hand-written `CLAUDE.md` per repository.
+2. Add a user-level file when you notice the same lines in every repository.
+3. Compile when you have two clients or two machines to keep in step.
 
 ### Built-in options to try first
 

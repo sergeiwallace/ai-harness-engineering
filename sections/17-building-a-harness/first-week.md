@@ -11,7 +11,14 @@ stop_minutes: "5"
 
 # A first-week harness
 
-You can start a useful harness in a week with four small files. Each one covers a different kind of [friction]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}): something the agent did not know, something you keep typing, something the agent keeps doing wrong, and something you want to approve first. This page gives a complete version of each for Claude Code, with notes on the Codex equivalent.
+You can start a useful harness in a week with four small files. Each one covers a different kind of [friction]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}):
+
+- Something the agent did not know.
+- Something you keep typing.
+- Something the agent keeps doing wrong, or a convention you want every output to follow.
+- Something you want to approve first.
+
+This page gives a complete version of each for Claude Code, with notes on the Codex equivalent.
 
 ![Sequence diagram of one session with a first-week harness. You type a review command; the agent loads CLAUDE.md and the review skill; each edit triggers a PostToolUse hook that runs the formatter and linter; when the agent runs git push, the approval rule asks you, you approve, and the push runs.]({{ '/assets/images/17-building-a-harness/first-week-session.svg' | relative_url }}){: style="width:100%"}
 
@@ -62,13 +69,20 @@ Any line you find yourself rewriting more emphatically after a mistake belongs o
 
 #### Why it is short
 
-Every line is read at the start of every session and competes with the task for attention. Keep it to the six to ten lines you have needed so far. The same file works for Codex if you name it `AGENTS.md`, or keep one and point the other at it.
+- Every line is read at the start of every session and competes with the task for attention.
+- Keep it to the six to ten lines you have needed so far.
+- The same file works for Codex if you name it `AGENTS.md`, or keep one and point the other at it.
 
 ## Day 2: one skill
 
 ### Pick the prompt you type most
 
-A skill sits in layer 1 or layer 2, depending on what it does. A skill whose text tells the agent how to work is guidance (layer 1). A skill that runs a script, fills a template or calls fixed commands builds the steps into the workflow (layer 2). A first skill is usually the first kind, and moves toward the second as you script its steps.
+A skill sits in layer 1 or layer 2, depending on what it does:
+
+- A skill whose text tells the agent how to work is guidance (layer 1).
+- A skill that runs a script, fills a template or calls fixed commands builds the steps into the workflow (layer 2).
+
+A first skill is usually the first kind, and moves toward the second as you script its steps.
 
 1. Look back over the last week of sessions.
 2. Find the instruction you typed most often.
@@ -184,7 +198,12 @@ fi
 <details markdown="1">
 <summary>Why a PostToolUse hook and not a PreToolUse one</summary>
 
-A PreToolUse hook runs before the tool and can stop it, which is right for a dangerous command such as a force push. A PostToolUse hook runs after the edit has happened, so it cannot undo it, but it can fix the result and tell the agent what is still wrong. Formatting changes the file and does not need to stop anything, so it fits after the edit. The [enforcement ladder]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}#4-change-the-system) shows a PreToolUse example.
+| Hook | When it runs | Suits |
+|---|---|---|
+| PreToolUse | Before the tool; it can stop it | A dangerous command, such as a force push |
+| PostToolUse | After the edit; it cannot undo it, but it can fix the result and tell the agent what is still wrong | Formatting, which changes the file and does not need to stop anything |
+
+The [enforcement ladder]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}#4-change-the-system) shows a PreToolUse example.
 
 </details>
 
@@ -219,7 +238,9 @@ In the same `.claude/settings.json`:
 | `ask` | Claude Code stops and asks you before any `git push` |
 | `deny` | The command is refused outright, and the agent cannot read your `.env` file |
 
-A `Bash(...:*)` rule matches commands that start with that text, so each spelling needs its own entry: `git push --force` and `git push -f` are listed separately above. A force push written another way, such as `git push origin +main`, needs a hook that parses the command. Codex has its own approval and sandbox settings that play the same role.
+- A `Bash(...:*)` rule matches commands that start with that text, so each spelling needs its own entry: `git push --force` and `git push -f` are listed separately above.
+- A force push written another way, such as `git push origin +main`, needs a hook that parses the command.
+- Codex has its own approval and sandbox settings that play the same role.
 
 ## Day 5: read the friction log
 

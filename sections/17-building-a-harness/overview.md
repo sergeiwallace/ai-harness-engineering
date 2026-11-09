@@ -13,7 +13,18 @@ stop_minutes: "5"
 
 # Building your own harness
 
-You build a harness with a systems approach: each time an agent's output falls short, you find the part of the system that let it through and change that part, so the fix is enforced on every later run. Repeating this for every gap is how a harness improves. This overview covers how to start, where each fix belongs, and how to keep the harness from growing into something nobody can follow. Each part links to a topic page that goes deeper.
+You build a harness with a systems approach, in two directions:
+
+- Proactively: encode how you want the output to be, such as conventions, structure, style and required sections, in workflows, hooks, checks and tests.
+- Reactively: each time an agent's output falls short, find the part of the system that let it through and change that part, so the fix is enforced on every later run.
+
+This overview covers:
+
+1. How to start.
+2. Where each fix belongs.
+3. How to keep the harness from growing into something nobody can follow.
+
+Each part links to a topic page that goes deeper.
 
 ![Sequence diagram of the improvement loop on one real task. The agent reads the rule to run tests, runs them early, makes one more edit and reports done; review finds a failing test; you record it and find that the rule was in context, so the gap is a check; the agent writes a Stop hook; on the next task the hook blocks a finish with untested edits, and the agent re-runs the tests and fixes a real failure.]({{ '/assets/images/17-building-a-harness/reflexivity-loop-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -22,7 +33,7 @@ You build a harness with a systems approach: each time an agent's output falls s
 | If you read only one thing | Where it goes deeper |
 |---|---|
 | Treat each failure as a gap in the system, and change the system | [The improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) |
-| Enforce the fix with a workflow, a hook or a test; a context-file line is the second layer | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
+| Hooks, checks and tests: enforce how you want the output to be, and stop the mistakes you have seen; a context-file line is the second layer | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
 | Your first week can be four small files | [A first-week harness]({{ '/sections/17-building-a-harness/first-week.html' | relative_url }}) |
 | A new context-file rule after every mistake is how complexity creep starts | [Complexity creep and pruning]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}) |
 | Agents can do most of the improvement work | [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}) |
@@ -45,14 +56,22 @@ A harness has four layers. The first guides the model; the other three enforce.
 |---|---|---|---|
 | 1. Instructions | Context files, prompts, and the guidance text in skills | Guides the model while it reads them | Applied inconsistently when the model juggles several things, switches tasks or has a nearly full context window |
 | 2. Workflows and tools | Commands and skills that run fixed steps, scripts, templates | Builds the right steps into how the work is done | Holds whenever the workflow is used |
-| 3. Hooks, scripts and linters | Checks at the moment of action | Refuses or flags the action as it happens | Runs on every matching event |
-| 4. Validation and tests | Test suites, merge gates, review | Catches what slipped through before it lands | Runs before every change lands |
+| 3. Hooks, scripts and linters | Checks at the moment of action | Applies your conventions (formatting, structure, required sections) and refuses or flags a wrong action as it happens | Runs on every matching event |
+| 4. Validation and tests | Test suites, merge gates, review | Checks that the result meets your standard, and catches what slipped through, before it lands | Runs before every change lands |
 
 Layers 2 to 4 do the enforcing. Layer 1 is the second line of defence: a context-file line can tell the agent about a guard, or cover knowledge that no check can encode, such as taste.
 
-Research on coding agents points the same way. In one study, corrections kept in memory still left 57.5% of the checked preferences violated, while compiling them into runtime checks cut out-of-distribution violations to 2.0%. In another, the share of instructions followed fell steeply as the count rose from one to twenty. The figures and caveats are in [Evidence for enforcing over instructing]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}#evidence-for-enforcing-over-instructing).
+Research on coding agents points the same way:
 
-A skill can sit in either layer. A skill whose text describes how to review code guides the model (layer 1). A skill that runs a script, fills a template or calls a fixed sequence of commands builds the steps in (layer 2).
+- Corrections kept in memory still left 57.5% of the checked preferences violated; compiling them into runtime checks cut out-of-distribution violations to 2.0%.
+- The share of instructions followed fell steeply as the count rose from one to twenty.
+
+The figures and caveats are in [Evidence for enforcing over instructing]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}#evidence-for-enforcing-over-instructing).
+
+A skill can sit in either layer:
+
+- A skill whose text describes how to review code guides the model (layer 1).
+- A skill that runs a script, fills a template or calls a fixed sequence of commands builds the steps in (layer 2).
 
 <!-- IMAGE NEEDED: the four layers as a vertical stack around one agent action, such as an edit or a push, showing where each layer acts: instructions before the action, workflows shaping it, hooks at the moment it runs, tests before the result lands. -->
 
@@ -90,7 +109,13 @@ Friction is the input to every change. A copied harness brings its author's fric
 
 ### 2.1 Keep a friction log
 
-Start with a list. Each time something goes wrong, write one line with the date, what happened, how often you have seen it, and what it cost. Do not fix anything yet. After a week, sort by count and cost. An illustrative log:
+Start with a list:
+
+1. Each time something goes wrong, write one line: the date, what happened, how often you have seen it, and what it cost.
+2. Do not fix anything yet.
+3. After a week, sort by count and cost.
+
+An illustrative log:
 
 ```text
 date        what happened                                     seen   cost
@@ -127,7 +152,12 @@ The full walk through this example is on [the improvement loop page]({{ '/sectio
 
 ## 3. Prefer a fix that a program enforces
 
-A rule in prose competes with everything else in the context window, so the agent follows it less reliably as a session grows long and busy. Workflows, hooks, scripts, tests and permission rules run the same way every time.
+A program enforces two kinds of rule the same way every time:
+
+- How the output should be: formatting, structure, naming, required sections, a template's headings.
+- What must not happen: a force push, an edit to a generated file, finishing with failing tests.
+
+A rule in prose competes with everything else in the context window, so the agent follows it less reliably as a session grows long and busy.
 
 ![Sequence diagram of a never-force-push rule moving down the ladder. Step 1: the agent reads the instruction and force-pushes anyway. Step 2: the agent writes a PreToolUse hook; next session the hook refuses the force push with exit 2 and tells the agent to push a new branch, which it does. Step 3: a permission rule denies force pushes before the command runs.]({{ '/assets/images/17-building-a-harness/enforcement-ladder-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -135,7 +165,10 @@ A rule in prose competes with everything else in the context window, so the agen
 
 ### 3.1 The enforcement ladder
 
-The ladder lists the mechanisms from softest to strictest. Put a fix on the softest rung that will hold it, and move it down when agents keep getting past it. A permission rule sits at the bottom even though it belongs to layer 3: the action cannot run at all, so nothing gets past it.
+The ladder lists the mechanisms from softest to strictest.
+
+- Put a rule on the softest rung that will hold it, and move it down when agents keep getting past it.
+- A permission rule sits at the bottom even though it belongs to layer 3: the action cannot run at all, so nothing gets past it.
 
 | Rung | Layer | Cost to write | How reliably it holds | Good for |
 |---|---|---|---|---|
@@ -195,7 +228,9 @@ Agents write most of the prompts in a large harness, so a short trigger helps th
 | Destructive action | You | Deleting data, rewriting history |
 | Architectural choice | You | Replacing a workflow, adding a new layer |
 
-[Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}) covers how to draw that line. Decisions that depend on judgement, such as design, visual form and prose, stay with a person for a further reason: models are still weak at taste. See [Taste and spiky capabilities]({{ '/sections/18-trends/taste-and-spiky-capabilities.html' | relative_url }}).
+[Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}) covers how to draw that line.
+
+Decisions that depend on judgement, such as design, visual form and prose, stay with a person for a further reason: models are still weak at taste. See [Taste and spiky capabilities]({{ '/sections/18-trends/taste-and-spiky-capabilities.html' | relative_url }}).
 
 ### 4.3 What the research says
 
@@ -215,11 +250,18 @@ Harness changes alone can move results a long way. LangChain kept the model fixe
 | Before | gpt-5.2-codex | Original | 52.8% |
 | After | gpt-5.2-codex | Changed, including a verification step before the agent may finish | 66.5% |
 
-One study of automatic harness changes found a weaker result: they did no better than simply running the model more. Compare any automatic loop against that baseline before trusting it. Details and sources: [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}).
+One study of automatic harness changes found a weaker result: they did no better than simply running the model more.
+
+- Compare any automatic loop against that baseline before trusting it.
+- Details and sources: [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}).
 
 ## 5. Complexity creep
 
-Every fix adds a mechanism. Over months, a harness can become a patchwork of overlapping rules, hooks and scripts that nobody can hold in their head, where a change in one place breaks another. You balance keeping things simple against building more systems around the models.
+Every fix adds a mechanism.
+
+- Over months, a harness can become a patchwork of overlapping rules, hooks and scripts that nobody can hold in their head.
+- A change in one place then breaks another.
+- You balance keeping things simple against building more systems around the models.
 
 | How it happens | What to do about it |
 |---|---|

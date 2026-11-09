@@ -12,7 +12,11 @@ stop_minutes: "6"
 
 # Goal and loop commands
 
-`/goal` and `/loop` keep a session going without you typing the next prompt. `/goal` keeps one task going until a condition holds; `/loop` re-runs a prompt over time. They fail in different ways, and longer autonomous runs in later sections are built on them.
+`/goal` and `/loop` keep a session going without you typing the next prompt.
+
+- `/goal` keeps one task going until a condition holds.
+- `/loop` re-runs a prompt over time.
+- They fail in different ways, and longer autonomous runs in later sections are built on them.
 
 ## Contents
 {: .no_toc .text-delta }

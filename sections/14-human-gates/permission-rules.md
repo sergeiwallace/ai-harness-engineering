@@ -13,7 +13,10 @@ last_updated: "2026-11-09"
 
 Part of [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}). Sub-page: [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}).
 
-Permission rules are the gates the tool enforces, as opposed to the gates an agent is asked to respect. Claude Code's documentation says: "Permission rules are enforced by Claude Code, not by the model. Instructions in your prompt or `CLAUDE.md` shape what Claude tries to do, but they don't change what Claude Code allows." This page covers Claude Code's rules, modes and hooks, with a short note on Codex.
+Permission rules are the gates the tool enforces, as opposed to the gates an agent is asked to respect.
+
+- Claude Code's documentation: "Permission rules are enforced by Claude Code, not by the model. Instructions in your prompt or `CLAUDE.md` shape what Claude tries to do, but they don't change what Claude Code allows."
+- This page covers Claude Code's rules, modes and hooks, with a short note on Codex.
 
 ## Contents
 
@@ -37,7 +40,10 @@ A systems approach puts each gate into the system, in layers:
 3. Hooks, scripts and linters at the moment of action: PreToolUse hooks, deny and ask rules, the sandbox.
 4. Validation and tests before a change lands: branch protection, the test gate, review.
 
-Layers 2 to 4 do the enforcing. This page is about layer 3 as Claude Code and Codex provide it. When an agent crosses a gate, the fix goes into one of layers 2 to 4; a new context-file line is at most a second layer.
+Layers 2 to 4 do the enforcing, both for how you want the work done and for mistakes you have seen.
+
+- This page is about layer 3 as Claude Code and Codex provide it.
+- When an agent crosses a gate, the fix goes into one of layers 2 to 4; a new context-file line is at most a second layer.
 
 ## Where rules live
 
@@ -180,7 +186,14 @@ if call.get("tool_name") == "Bash" and "git push" in command and " main" in comm
 sys.exit(0)
 ```
 
-This draft misses `git push origin HEAD:main` and lets the call through if it crashes. [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}) fixes both and adds tests. The reason string matters as much as the refusal: the agent reads it and changes course, so a useful reason names the allowed route. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers hooks in general.
+This draft has two gaps:
+
+- it misses `git push origin HEAD:main`;
+- it lets the call through if it crashes.
+
+[Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}) fixes both and adds tests. The reason string matters as much as the refusal: the agent reads it and changes course, so a useful reason names the allowed route.
+
+[Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers hooks in general.
 
 ## Codex approvals and sandbox
 

@@ -13,7 +13,11 @@ stop_minutes: "6"
 
 # Claude Code and Codex basics
 
-Claude Code (from Anthropic) and Codex (from OpenAI) are coding agents that work inside a repository. You start one in a terminal in a project folder and give it a task in plain language; it reads the code, runs commands, edits files and reports back. Every later section of this site builds on what these two clients provide before you customise anything.
+Claude Code (from Anthropic) and Codex (from OpenAI) are coding agents that work inside a repository.
+
+- You start one in a terminal, in a project folder, and give it a task in plain language.
+- It reads the code, runs commands, edits files and reports back.
+- Every later section of this site builds on what these two clients provide before you customise anything.
 
 This overview covers, in order:
 
@@ -148,7 +152,7 @@ Each block has a section of its own later on this site. Below is what each one i
 |---|---|---|
 | Context file | Instructions | Most of the time; less often in a busy or nearly full window |
 | Skill | Workflow: builds the steps in | Each time it runs |
-| Hook | Enforcement at the moment of action | Every time its event fires |
+| Hook | Encodes how output should be, and enforces at the moment of action | Every time its event fires |
 | Sub-agent | Workflow: separates the work | Each time it is called |
 | Tests and checks | Validation before a change lands | Every run |
 
@@ -187,12 +191,15 @@ Full treatment: [Skills, commands and plugins]({{ '/sections/05-skills-and-plugi
 
 ### Hooks
 
-A hook is a command the client runs on an event, such as before or after a tool call, when you submit a prompt, or when the agent tries to stop. A hook runs every time its event fires, whatever the model is attending to.
+A hook is a command the client runs on an event: before or after a tool call, when you submit a prompt, or when the agent tries to stop. It runs every time its event fires, whatever the model is attending to.
+
+- Proactively, a hook encodes how you want the output to be: formatting, file layout, required sections, conventions.
+- Reactively, it stops a mistake at the moment it happens.
 
 | Event | Typical use | Example |
 |---|---|---|
 | Before a tool call | Refuse something dangerous | Block a pattern kill such as `pkill -f` |
-| After a tool call | Clean up after an edit | Run the formatter on the edited file |
+| After a tool call | Shape the output as you want it | Run the formatter on the edited file; check a new doc page has its required sections |
 | On stop | Check the work is finished | Refuse to stop while tests fail |
 | At session start | Inject current state | Print the open tasks |
 
@@ -418,12 +425,13 @@ The full table is on [Claude Code and Codex compared]({{ '/sections/03-claude-co
 2. Give it real tasks for a few days and note each time it goes wrong.
 3. Write a short [context file]({{ '/sections/04-context-files/' | relative_url }}) with the commands and conventions the agent cannot guess.
 4. When a procedure repeats, make it a [skill]({{ '/sections/05-skills-and-plugins/' | relative_url }}), so the steps are built in.
-5. When a mistake repeats, fix it in the system.
+5. Encode how you want the output to be (formatting, structure, required sections) in a formatter, linter or hook, from the start.
+6. When a mistake repeats, fix it in the system.
    - A workflow or script that makes the right path the default.
    - A [hook]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) that refuses the wrong action.
    - A test that catches it before a change lands.
    - Then one context-file line that explains the check.
-6. Add one piece at a time, so a new failure has one suspect.
+7. Add one piece at a time, so a new failure has one suspect.
 
 ## Common pitfalls
 

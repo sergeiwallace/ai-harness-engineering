@@ -11,7 +11,13 @@ stop_minutes: "5"
 
 # Complexity creep and pruning
 
-Every fix in the [improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) adds a mechanism: a line in a context file, a hook, a script, a gate. Each one is reasonable on its own. Together they can grow into a patchwork that nobody can hold in their head, where a change in one place breaks another, and a growing share of the agent's context goes to rules. This page is about noticing that and pruning on the same loop.
+Every fix in the [improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) adds a mechanism: a line in a context file, a hook, a script, a gate. Each one is reasonable on its own. Together they can grow into a patchwork:
+
+- Nobody can hold it in their head.
+- A change in one place breaks another.
+- A growing share of the agent's context goes to rules.
+
+This page is about noticing that and pruning on the same loop.
 
 ## How complexity creeps in
 
@@ -36,7 +42,7 @@ Every fix in the [improvement loop]({{ '/sections/17-building-a-harness/reflexiv
 
 ## Ad hoc rules after every mistake
 
-The most common path into complexity creep is answering each mistake with another context-file rule. It feels like a fix, because the rule describes exactly what went wrong. Over time it fails in a predictable way.
+The most common path into complexity creep is answering each mistake with another context-file rule. It feels like a fix, because the rule describes exactly what went wrong, and over time it fails in a predictable way:
 
 1. The agent makes a mistake.
 2. You add a detailed rule to `CLAUDE.md` that names the mistake.

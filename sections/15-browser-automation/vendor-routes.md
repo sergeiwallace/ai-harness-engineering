@@ -11,7 +11,12 @@ last_updated: "2026-11-09"
 
 Part of [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 
-Claude Code ships two built-in ways to act outside the terminal. Claude in Chrome drives your own Chrome through an extension. Computer use lets the agent see and operate your screen. Both work on your real environment, with your logins and your windows, which is what makes them useful and what separates them from the [CDP route]({{ '/sections/15-browser-automation/cdp-and-playwright.html' | relative_url }}).
+Claude Code ships two built-in ways to act outside the terminal:
+
+- Claude in Chrome drives your own Chrome through an extension.
+- Computer use lets the agent see and operate your screen.
+
+Both work on your real environment, with your logins and your windows. That makes them useful, and it separates them from the [CDP route]({{ '/sections/15-browser-automation/cdp-and-playwright.html' | relative_url }}).
 
 ## Contents
 
@@ -151,7 +156,13 @@ Computer use lets Claude open apps, click, type and see your screen.
 
 ### Approving apps
 
-Enabling the server does not give Claude every app. The first time it needs an app in a session, a prompt shows which apps it wants, any extra permissions such as clipboard access, and how many other apps will be hidden. You choose "Allow for this session" or "Deny".
+Enabling the server does not give Claude every app. The first time it needs an app in a session, a prompt shows:
+
+- which apps it wants;
+- any extra permissions, such as clipboard access;
+- how many other apps will be hidden.
+
+You choose "Allow for this session" or "Deny".
 
 | Warning in the prompt | Applies to |
 |---|---|

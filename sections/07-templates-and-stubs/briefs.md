@@ -16,7 +16,11 @@ stop_minutes: "6"
 
 # Sub-agent briefs
 
-A brief is the prompt one agent writes to start another. It is the only channel from parent to child: the sub-agent starts with an empty context and knows what the brief tells it, plus its profile and the project's context files. This page covers each field of a brief in depth, a filled brief from end to end, how to review one, and the way briefs fail. The person's original words, which sit at the top of every brief, have their own page: [the original-request block]({{ '/sections/07-templates-and-stubs/original-request-block.html' | relative_url }}).
+A brief is the prompt one agent writes to start another.
+
+- It is the only channel from parent to child: the sub-agent starts with an empty context and knows what the brief tells it, plus its profile and the project's context files.
+- This page covers each field of a brief in depth, a filled brief from end to end, how to review one, and the way briefs fail.
+- The person's original words, which sit at the top of every brief, have their own page: [the original-request block]({{ '/sections/07-templates-and-stubs/original-request-block.html' | relative_url }}).
 
 ![A sequence across five participants. The person sends a request in exact words to the lead agent, which stores them with a hash. The lead sends a brief filled from the stub to the launch guard, which refuses it because the request block was edited. The lead resends with the block copied unchanged and the guard launches the sub-agent with the brief only. The sub-agent reads and searches the repository, reads thirty files and returns a nine-row table under the cap. The lead re-runs the search itself, gets the same nine callers, and returns the result to the person, checked against the request.]({{ '/assets/images/07-templates-and-stubs/brief-in-flight.png' | relative_url }}){: style="width:100%"}
 
@@ -188,7 +192,10 @@ The Boundaries block is the instruction layer. A model applies instructions inco
 | Scratch in your own temp directory | A guard checks paths | Same |
 | Never skip commit hooks | The commit tool refuses the flag | Same |
 
-When a rule is enforced in code, its brief line can shrink to a short reminder. Adding a new detailed line to the block after every mistake makes the brief longer without making the rule more reliable. See [keeping templates small]({{ '/sections/07-templates-and-stubs/' | relative_url }}#keeping-templates-small).
+When a rule is enforced in code, its brief line can shrink to a short reminder.
+
+- Adding a new detailed line to the block after every mistake makes the brief longer without making the rule more reliable.
+- See [keeping templates small]({{ '/sections/07-templates-and-stubs/' | relative_url }}#keeping-templates-small).
 
 ### When stuck
 

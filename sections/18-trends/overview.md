@@ -12,7 +12,13 @@ talk_stop: "13"
 
 # Trends and model changes
 
-A harness is tuned to a model, and models change every few months. The practice around harnesses is also changing quickly: it has names now, Anthropic reports merging about twelve times as many code changes per day in September 2026 as in May, and setups have started to move between tools. This overview covers what is changing and what to do about each change. Two topic pages go deeper: [Re-testing after a model change]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) and [Moving a harness between tools]({{ '/sections/18-trends/harness-portability.html' | relative_url }}).
+A harness is tuned to a model, and models change every few months. The practice around harnesses is changing quickly too:
+
+- It has names now: context engineering and harness engineering.
+- Anthropic reports merging about twelve times as many code changes per day in September 2026 as in May.
+- Setups have started to move between tools.
+
+This overview covers what is changing and what to do about each change. Topic pages go deeper: [Re-testing after a model change]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) and [Moving a harness between tools]({{ '/sections/18-trends/harness-portability.html' | relative_url }}).
 
 ![Sequence diagram of re-testing a harness after a model change. You ask the agent to compare the old and new model on the same task set; it runs each task several times on both, reads the outputs and transcripts, checks which rules never fire now and which new failures appear, proposes dropping one rule and adding one, and after your approval edits the rules and notes the model and date.]({{ '/assets/images/18-trends/model-change-retest-sequence.svg' | relative_url }}){: style="width:100%"}
 

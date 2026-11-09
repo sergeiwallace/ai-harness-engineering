@@ -124,7 +124,10 @@ The fields one by one, how the runtime picks a profile, and how the tool list is
 
 ### The collision problem
 
-Two agents editing one checkout overwrite each other's files, and their changes mix in one diff that nobody can review. A git worktree is a second checkout of the same repository, on its own branch, in its own directory. Give each writing agent its own.
+Two agents editing one checkout overwrite each other's files, and their changes mix in one diff that nobody can review.
+
+- A git worktree is a second checkout of the same repository, on its own branch, in its own directory.
+- Give each writing agent its own.
 
 ```bash
 git fetch origin

@@ -13,7 +13,14 @@ last_updated: "2026-11-09"
 
 Stop 4 on the talk path, about 1.5 minutes.
 
-A skill is a written procedure that the agent loads when it needs it and runs the same way each time. A built-in command is part of the client and acts on the session itself. A plugin packages skills with sub-agent profiles, hooks and MCP servers so a team installs them as one unit, and a mod is a plugin whose function hooks run inside the client on events such as tool calls and prompts.
+This section covers four ways to extend a harness:
+
+| Part | What it is |
+|---|---|
+| Skill | A written procedure the agent loads when it needs it and runs the same way each time |
+| Built-in command | Part of the client; acts on the session itself |
+| Plugin | Skills, sub-agent profiles, hooks and MCP servers packaged so a team installs them as one unit |
+| Mod | A plugin whose function hooks run inside the client on events such as tool calls and prompts |
 
 ![Sequence diagram with five lanes: Person, Client, Context window, Model and Skill folder. At session start the client puts the names and descriptions of every skill into the context window. The person types /release 2.4.0; the client reads SKILL.md and its body enters the window; the model starts step 1. At step 2 the model reads checklist.md and its contents enter the window. At step 3 the model runs bump_version.py and only the script output enters the window. The model reports to the person that the tag is ready.]({{ '/assets/images/05-skills-and-plugins/skill-loading-sequence.png' | relative_url }})
 *A release skill during a real task. The window holds every skill's description from the start; the body, the checklist and the script's output arrive only at the step that needs them.*

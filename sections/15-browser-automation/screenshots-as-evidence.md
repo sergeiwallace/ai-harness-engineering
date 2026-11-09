@@ -11,7 +11,12 @@ last_updated: "2026-11-09"
 
 Part of [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 
-An agent's report that a UI change worked is a claim. A screenshot of the result is evidence: the agent can look at it and compare it with what was asked, and a reviewer can check it without running anything. This page covers when to take one, how to compare two, and what a screenshot cannot prove.
+An agent's report that a UI change worked is a claim. A screenshot of the result is evidence:
+
+- the agent can look at it and compare it with what was asked;
+- a reviewer can check it without running anything.
+
+This page covers when to take one, how to compare two, and what a screenshot cannot prove.
 
 ## Contents
 
@@ -123,12 +128,20 @@ await expect(page).toHaveScreenshot("settings.png", { maxDiffPixels: 100 });
 | An intended visual change | `npx playwright test --update-snapshots`, then review the new images before committing |
 | File names | include the browser and platform, such as `settings-chromium-linux.png`, because rendering differs between them |
 
-This turns a one-off check into a regression test, a layer-4 check that holds on every change. Run it in the same environment that produced the baseline. See [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
+This turns a one-off check into a layer-4 test that holds on every change:
+
+- Proactive: the baseline encodes how you want the page to look.
+- Reactive: the test fails when a change breaks that look.
+
+Run it in the same environment that produced the baseline. See [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
 
 <details markdown="1">
 <summary>Aside: why snapshot tests use thresholds</summary>
 
-Two renders of the same page can differ by a few pixels because of font anti-aliasing, GPU differences or sub-pixel layout. An exact match fails on noise. A small threshold, such as one percent of pixels, ignores noise and still catches a moved button.
+Two renders of the same page can differ by a few pixels because of font anti-aliasing, GPU differences or sub-pixel layout.
+
+- An exact match fails on that noise.
+- A small threshold, such as one percent of pixels, ignores it and still catches a moved button.
 
 </details>
 

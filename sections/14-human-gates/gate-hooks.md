@@ -12,7 +12,17 @@ last_updated: "2026-11-09"
 
 Part of [Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}), in [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}).
 
-A gate hook is a small program that runs before a tool call and decides whether the call may proceed. Use one when a permission rule's pattern cannot express the gate: when the answer depends on the whole command, the state of the repository, the time, or a lookup. This page walks through one hook from first draft to tested, and the design rules that keep a gate a gate.
+A gate hook is a small program that runs before a tool call and decides whether the call may proceed. It serves two purposes:
+
+- Proactive: enforce how you want the work done, such as a commit message format or "changes go through a pull request".
+- Reactive: stop a mistake you have seen, such as a force-push to main.
+
+Use one when a permission rule's pattern cannot express the gate:
+
+- the answer depends on the whole command;
+- it depends on the state of the repository, the time, or a lookup.
+
+This page walks through one hook from first draft to tested, and the design rules that keep a gate a gate.
 
 ## Contents
 
@@ -40,7 +50,11 @@ A PreToolUse hook receives the pending call as JSON on standard input, with fiel
 | Block | exit with code 2, with the reason on standard error | the call stops before permission rules are evaluated, even when an allow rule matches |
 | Say nothing | exit 0 with no output | the normal rules and mode decide |
 
-Deny and ask rules in settings still apply whatever the hook says ([Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }})). The hook is layer 3 of the enforcement layers: it acts at the moment of the call. Branch protection and the test gate (layer 4) catch what it misses.
+Where the hook sits:
+
+- Deny and ask rules in settings still apply whatever the hook says ([Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }})).
+- The hook is layer 3 of the enforcement layers: it acts at the moment of the call.
+- Branch protection and the test gate (layer 4) catch what it misses.
 
 ## A first gate
 
@@ -112,7 +126,11 @@ The same rule applies to any guard in a script: write `check && act`, so that a 
 
 ## Write refusals the agent can act on
 
-The agent reads the reason and decides what to do next. A bare "blocked" leads to retries and workarounds. A good reason says what was refused, why, and the allowed route.
+The agent reads the reason and decides what to do next. A bare "blocked" leads to retries and workarounds; a good reason says:
+
+- what was refused;
+- why;
+- the allowed route.
 
 | Weak | Strong |
 |---|---|
@@ -121,7 +139,7 @@ The agent reads the reason and decides what to do next. A bare "blocked" leads t
 
 ## Test both arms
 
-A test that only checks the gate refuses the bad call proves half of it. A gate that refuses everything also passes that test. Check that it allows the good calls too.
+A test that only checks the gate refuses the bad call proves half of it, because a gate that refuses everything also passes that test. Check that it allows the good calls too.
 
 ```python
 from gate_no_push_main import decide
@@ -200,7 +218,13 @@ A hook reads the command text of one tool call. Some routes to the same action n
 | Another tool | a merge done through the hosting service's API | the service's own rules and required reviews |
 | Hooks turned off | a run started with `--settings '{"disableAllHooks": true}'` | permission deny rules, which still apply, and branch protection |
 
-A hook is one enforcement mechanism among several. Permission deny rules also block, a hook can refuse through its JSON `permissionDecision` as well as through exit code 2, and hooks can be switched off for a run. This is why the hook sits in front of layer 4, not instead of it.
+A hook is one enforcement mechanism among several:
+
+- permission deny rules also block;
+- a hook can refuse through its JSON `permissionDecision` as well as through exit code 2;
+- hooks can be switched off for a run.
+
+That is why the hook sits in front of layer 4, rather than replacing it.
 
 ## Examples from my own harness
 

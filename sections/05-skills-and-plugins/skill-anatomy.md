@@ -14,7 +14,15 @@ last_updated: "2026-11-09"
 
 # Skill anatomy and loading
 
-This page takes a skill apart: the folder, the `SKILL.md` file, each frontmatter field, how the client loads the parts, how arguments and live command output reach the body, and the open standard that lets one skill run in more than one client. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}). The sub-page [Writing skill descriptions]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) covers the one field that decides whether a skill is ever used.
+This page takes a skill apart:
+
+- the folder and the `SKILL.md` file;
+- each frontmatter field;
+- how the client loads the parts;
+- how arguments and live command output reach the body;
+- the open standard that lets one skill run in more than one client.
+
+It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}). The sub-page [Writing skill descriptions]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) covers the one field that decides whether a skill is ever used.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -24,7 +32,7 @@ This page takes a skill apart: the folder, the `SKILL.md` file, each frontmatter
 
 ## The folder
 
-A skill is a folder. The only required file is `SKILL.md`. Everything else in the folder is there because a step in `SKILL.md` names it.
+A skill is a folder whose only required file is `SKILL.md`. Everything else in the folder is there because a step in `SKILL.md` names it.
 
 ```text
 .claude/skills/<name>/       # here <name> is release
@@ -83,7 +91,10 @@ Give skills at different levels different names. When two levels define the same
 | `model` | No | Run the skill on a named model |
 | `context` | No | `fork` runs the skill in a separate sub-agent context |
 
-The two length limits come from the Agent Skills specification and were not re-checked for this page; a client can set its own. The [invocation page]({{ '/sections/05-skills-and-plugins/invocation-and-chaining.html' | relative_url }}#who-can-start-a-skill) covers the two invocation fields in depth. The [descriptions sub-page]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) covers `description`.
+The two length limits come from the Agent Skills specification and were not re-checked for this page; a client can set its own.
+
+- The [invocation page]({{ '/sections/05-skills-and-plugins/invocation-and-chaining.html' | relative_url }}#who-can-start-a-skill) covers the two invocation fields in depth.
+- The [descriptions sub-page]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) covers `description`.
 
 #### Example: a full frontmatter block
 
@@ -148,7 +159,12 @@ Anthropic calls this progressive disclosure: the client shows the model only as 
 <details markdown="1">
 <summary>When a fork is the wrong choice</summary>
 
-A forked skill cannot see the conversation that came before it except what is passed in its arguments. A skill that depends on decisions made earlier in the session, such as "write the PR description for what we just did", should run in the main context. A skill that starts from the repository state alone, such as "review the current diff", forks well.
+A forked skill cannot see the conversation that came before it except what is passed in its arguments.
+
+| Skill | Context | Why |
+|---|---|---|
+| "Write the PR description for what we just did" | Main | It depends on decisions made earlier in the session |
+| "Review the current diff" | Fork | It starts from the repository state alone |
 
 </details>
 

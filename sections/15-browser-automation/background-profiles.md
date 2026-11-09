@@ -12,7 +12,12 @@ last_updated: "2026-11-09"
 
 Part of [Driving a browser over CDP]({{ '/sections/15-browser-automation/cdp-and-playwright.html' | relative_url }}), in [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 
-A background browser profile is a browser the agent owns: its own profile directory, its own debugging port, no window on your screen. It is how an agent can browse for an hour while you keep working, and how two agents can browse at once without fighting over one browser. This page covers why it matters, how to set one up, and how to run several.
+A background browser profile is a browser the agent owns: its own profile directory, its own debugging port, no window on your screen. It lets:
+
+- an agent browse for an hour while you keep working;
+- two agents browse at once without fighting over one browser.
+
+This page covers why it matters, how to set one up, and how to run several.
 
 ## Contents
 
@@ -165,7 +170,10 @@ Each agent's launcher starts its own headless Chrome with a fresh profile, on po
 
 #### What the person sees
 
-Nothing. They keep editing in their own browser and editor. Ten minutes later two reports arrive: the settings agent with before-and-after screenshots, the pricing agent with "three plans listed; prices unchanged".
+Nothing. They keep editing in their own browser and editor. Ten minutes later two reports arrive:
+
+- the settings agent, with before-and-after screenshots;
+- the pricing agent: "three plans listed; prices unchanged".
 
 #### The cleanup
 

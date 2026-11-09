@@ -10,7 +10,13 @@ talk_stop: "13"
 
 # Moving a harness between tools
 
-Until recently, a harness built for one coding agent stayed with that agent. Now skills share a format, context files have converged on a few names, and Codex can import a Claude Code setup. Some parts still need rework when they move. This page sorts the parts of a harness by how well they travel, and walks through a move from Claude Code to Codex.
+Until recently, a harness built for one coding agent stayed with that agent. Now:
+
+- Skills share a format.
+- Context files have converged on a few names.
+- Codex can import a Claude Code setup.
+
+Some parts still need rework when they move. This page sorts the parts of a harness by how well they travel, and walks through a move from Claude Code to Codex.
 
 ![Sequence diagram of moving a Claude Code setup to Codex. You run /import in Codex, which reads the existing setup and carries the context into AGENTS.md and the skills over in the shared format; you then compare hook events and approval settings, rewrite each hook for the target, run three known tasks and compare the results with Claude Code.]({{ '/assets/images/18-trends/portability-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -30,13 +36,16 @@ Until recently, a harness built for one coding agent stayed with that agent. Now
 | Sub-agent profiles | 2 | Needs rework | Profile files and their fields differ by tool |
 | Habits and procedures | All | Well | They live in you and in your documents |
 
-Parts that live in plain files or run outside the agent move as they are. Parts that plug into the client's own event loop need rewriting. For the [systems approach]({{ '/sections/17-building-a-harness/' | relative_url }}#1-a-systems-approach-to-building-a-harness) this has a practical consequence: put each check in a script or a test where you can, and keep the hook as a thin trigger, so the enforcement survives a change of tool.
+- Parts that live in plain files or run outside the agent move as they are.
+- Parts that plug into the client's own event loop need rewriting.
+
+For the [systems approach]({{ '/sections/17-building-a-harness/' | relative_url }}#1-a-systems-approach-to-building-a-harness) this has a practical consequence: put each check in a script or a test where you can, and keep the hook as a thin trigger, so the enforcement survives a change of tool.
 
 ## Context files
 
 ### One content, two names
 
-Claude Code reads `CLAUDE.md`. Codex reads `AGENTS.md`. The content can be the same. Two common ways to keep one source:
+Claude Code reads `CLAUDE.md` and Codex reads `AGENTS.md`; the content can be the same. Two common ways to keep one source:
 
 #### Option 1: point one at the other
 

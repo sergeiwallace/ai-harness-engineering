@@ -13,7 +13,11 @@ stop_minutes: "1.5"
 
 # Templates, prompt stubs and injected prompts
 
-In a harness, the person writes a few prompts and agents write all the rest. A lead agent writes a brief for each sub-agent, a coordinator writes a task for each worker session, and a skill writes the prompt for the next skill in a chain. Templates give each of those prompts a fixed shape, so the rules that matter reach every agent word for word. The harness can also type text into a session that is already running, which is what this site calls an injected prompt.
+In a harness, the person writes a few prompts and agents write all the rest.
+
+- A lead agent writes a brief for each sub-agent, a coordinator writes a task for each worker session, and a skill writes the prompt for the next skill in a chain.
+- Templates give each of those prompts a fixed shape, so the rules that matter reach every agent word for word.
+- The harness can also type text into a session that is already running, which is what this site calls an injected prompt.
 
 ![A sequence across five participants. The person sends a request in exact words to the lead agent, which stores them with a hash. The lead sends a brief filled from the stub to the launch guard, which refuses it because the request block was edited. The lead resends with the block copied unchanged and the guard launches the sub-agent with the brief only. The sub-agent reads and searches the repository, reads thirty files and returns a nine-row table under the cap. The lead re-runs the search itself, gets the same nine callers, and returns the result to the person, checked against the request.]({{ '/assets/images/07-templates-and-stubs/brief-in-flight.png' | relative_url }}){: style="width:100%"}
 
@@ -37,7 +41,10 @@ In a harness, the person writes a few prompts and agents write all the rest. A l
 
 ### The fan-out problem
 
-One request from a person becomes many prompts, and agents write nearly all of them. Each prompt is a chance to leave out a rule, restate the goal slightly wrong, or forget to say what the output should look like. When each prompt is written fresh, no two match, and nobody can check a brief against anything.
+One request from a person becomes many prompts, and agents write nearly all of them.
+
+- Each prompt is a chance to leave out a rule, restate the goal slightly wrong, or forget to say what the output should look like.
+- When each prompt is written fresh, no two match, and nobody can check a brief against anything.
 
 A template gives every prompt of one kind the same shape. It does four things:
 
@@ -64,6 +71,8 @@ A rule reaching a sub-agent through its brief is the weakest layer, because a mo
    - Guides the model; the second line of defence.
 2. Workflows and tools: the brief stub itself, filled by a skill so the fixed blocks are always copied.
 3. Hooks, scripts and linters: a launch guard that refuses a brief missing its fixed blocks, and a hook that refuses the dangerous command outright.
+   - Proactive: they encode how you want the output to be, such as a brief's required fields or a report's headings.
+   - Reactive: they stop a mistake you have seen, such as a pattern kill.
 4. Validation and tests: a test that the guard and hook refuse what they should.
 
 Layers 2 to 4 do the enforcing. Adding one more detailed rule to the brief every time an agent makes a mistake is an anti-pattern: the brief grows, and the rule is still only as reliable as the model's attention.
@@ -116,7 +125,10 @@ The words are close, and on this site they mean three different things.
 <what to try, and when to stop and report>
 ```
 
-The lead agent fills in the angle-bracket fields. The Boundaries block is fixed text, the same in every brief. Each field, why it exists and how to fill it well is on the [sub-agent briefs]({{ '/sections/07-templates-and-stubs/briefs.html' | relative_url }}) page.
+The lead agent fills in the angle-bracket fields.
+
+- The Boundaries block is fixed text, the same in every brief.
+- Each field, why it exists and how to fill it well is on the [sub-agent briefs]({{ '/sections/07-templates-and-stubs/briefs.html' | relative_url }}) page.
 
 ## Where templates live
 
@@ -300,7 +312,10 @@ More on goals, their commands and edge cases, and the document templates: [Docum
 
 ## Keeping templates small
 
-Briefs grow, because each incident adds a block. A long brief costs tokens on every launch, and the important lines get lost among the rest. Prune templates the way you prune context files: merge blocks that cover the same failure, and move rarely needed detail into a procedure the brief links to.
+Briefs grow, because each incident adds a block.
+
+- A long brief costs tokens on every launch, and the important lines get lost among the rest.
+- Prune templates the way you prune context files: merge blocks that cover the same failure, and move rarely needed detail into a procedure the brief links to.
 
 <details markdown="1">
 <summary>A pruning pass, step by step</summary>

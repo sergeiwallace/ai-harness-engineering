@@ -208,7 +208,11 @@ A script outside the client runs the agent, checks the result itself (exit codes
 | Cost | the check's run time | a small-model call per turn | a full new run per retry |
 | Failure mode | a slow check slows every stop | a lenient judge passes weak work | each retry starts without the last session's context |
 
-A Stop hook fits anything a script can measure. `/goal` fits conditions that need judgement, such as "the design doc answers every open question". In the [systems approach]({{ '/' | relative_url }}#a-systems-approach), the scripted check is the enforcing layer, and a `/goal` condition is closer to an instruction with a reader.
+Which to use:
+
+- a Stop hook fits anything a script can measure;
+- `/goal` fits conditions that need judgement, such as "the design doc answers every open question";
+- in the [systems approach]({{ '/' | relative_url }}#a-systems-approach), the scripted check is the enforcing layer, and a `/goal` condition is closer to an instruction with a reader.
 </details>
 
 ### The unreachable condition

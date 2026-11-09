@@ -12,7 +12,16 @@ last_updated: "2026-11-09"
 
 Part of [Logging and observability]({{ '/sections/16-logging-and-evaluation/logging-and-observability.html' | relative_url }}), in [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
 
-Model calls cost money per token, and agents make a lot of them. Most of the time the spend is small and steady. The surprises come from jobs: a batch over thousands of documents, an evaluation run with many repeats, a loop that does not stop. Spend tracking tells you where the money went. A budget check stops the surprise before it starts.
+Model calls cost money per token, and agents make a lot of them. Most of the time the spend is small and steady; the surprises come from jobs:
+
+- a batch over thousands of documents;
+- an evaluation run with many repeats;
+- a loop that does not stop.
+
+| Tool | Does |
+|---|---|
+| Spend tracking | tells you where the money went |
+| A budget check | stops the surprise before it starts |
 
 ## Contents
 
@@ -38,7 +47,9 @@ Interactive spend is hard to stop without stopping the work, so watch it. Job sp
 
 ### From your own records
 
-Each model call reports its input and output tokens. Multiply by the model's list price and sum. An estimate built from local session transcripts at list price is useful for trends and comparisons; label it as an estimate, because it will differ from an invoice (discounts, caching, rounding).
+1. Each model call reports its input and output tokens.
+2. Multiply by the model's list price and sum.
+3. Label the result an estimate: it is useful for trends and comparisons, and it will differ from an invoice because of discounts, caching and rounding.
 
 ```python
 PRICE_PER_MTOK = {"large": {"in": 5.00, "out": 25.00}, "small": {"in": 1.00, "out": 5.00}}  # illustrative

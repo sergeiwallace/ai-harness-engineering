@@ -13,7 +13,12 @@ last_updated: "2026-11-09"
 
 Stop 11 on the talk path, about 2 minutes.
 
-A harness is a system you keep changing, so you need two instruments. Logs tell you what the agents and the harness actually did: commands, files, time and money. Evaluations tell you whether a change made things better: a fixed set of tasks, run before and after, with only one thing changed. Without logs you optimise the wrong step. Without a baseline you cannot tell whether a change helped.
+A harness is a system you keep changing, so you need two instruments:
+
+| Instrument | Tells you | Without it |
+|---|---|---|
+| Logs | what the agents and the harness actually did: commands, files, time and money | you optimise the wrong step |
+| Evaluations | whether a change made things better: a fixed set of tasks, run before and after, with one thing changed | you cannot tell whether a change helped |
 
 ![Sequence diagram. The person proposes a new hook. The eval runner runs a baseline loop, giving each task to the agent with the old harness, grading the result and writing pass, cost and time to the ledger. It then runs the same loop with the new harness. The ledger returns both runs, and the runner reports keep or revert to the person.]({{ '/assets/images/16-logging-and-evaluation/eval-run-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -180,7 +185,14 @@ A change that solves two new capability tasks and breaks three regression tasks 
 
 ### pass@k and pass^k
 
-Agents are not deterministic, so one run per task tells you little. Two measures from Anthropic's guide describe repeated runs: pass@k counts a task as solved if any of k attempts succeeds, and pass^k only if all k succeed. For an agent that solves a task 70 percent of the time, pass@3 is about 0.97 and pass^3 about 0.34. [pass@k and pass^k]({{ '/sections/16-logging-and-evaluation/pass-at-k.html' | relative_url }}) works through the arithmetic and when to use each.
+Agents are not deterministic, so one run per task tells you little. Two measures from Anthropic's guide describe repeated runs:
+
+| Measure | A task counts as solved when | For an agent that succeeds 70 percent of the time, k = 3 |
+|---|---|---|
+| pass@k | any of k attempts succeeds | about 0.97 |
+| pass^k | all k attempts succeed | about 0.34 |
+
+[pass@k and pass^k]({{ '/sections/16-logging-and-evaluation/pass-at-k.html' | relative_url }}) works through the arithmetic and when to use each.
 
 ![Bar chart for a per-attempt success rate of 0.7: pass@k rises to 1.00 by k = 5 while pass^k falls to 0.17.]({{ '/assets/images/16-logging-and-evaluation/pass-at-k.svg' | relative_url }}){: style="width:100%"}
 

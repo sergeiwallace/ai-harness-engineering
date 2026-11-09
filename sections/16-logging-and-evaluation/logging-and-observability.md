@@ -15,7 +15,14 @@ last_updated: "2026-11-09"
 
 Part of [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}). Sub-page: [Spend tracking and budget checks]({{ '/sections/16-logging-and-evaluation/spend-and-budgets.html' | relative_url }}).
 
-Observability is being able to answer questions about a system from what it records, without adding new code each time you ask. For a harness the questions are practical: what did this agent do, why did that run take an hour, which configuration wrote this line, and where did the money go. This page covers what to record, how to store it, how to get Claude Code's own telemetry, and how to measure the harness itself.
+Observability is being able to answer questions about a system from what it records, without adding new code each time you ask. For a harness the questions are practical:
+
+- What did this agent do?
+- Why did that run take an hour?
+- Which configuration wrote this line?
+- Where did the money go?
+
+This page covers what to record, how to store it, how to get Claude Code's own telemetry, and how to measure the harness itself.
 
 ## Contents
 
@@ -67,7 +74,12 @@ The right-hand column can be counted, summed and grouped; the left cannot.
 
 ### The per-run record
 
-Events describe what happened inside a run. A per-run record, written once at the start and completed at the end, describes the conditions the run worked under. A reader comment by Armorer Labs on ShipWithAI's "The Complete Claude Code Harness Engineering Guide" suggests an "operating record" per run covering "model/prompt/tool versions, effective permissions, MCP servers exposed, commands/files touched, approvals, failures, and recovery state". As fields:
+| Record | Describes | Written |
+|---|---|---|
+| Events | what happened inside a run | as it happens |
+| Per-run record | the conditions the run worked under | once at the start, completed at the end |
+
+A reader comment by Armorer Labs on ShipWithAI's "The Complete Claude Code Harness Engineering Guide" suggests an "operating record" per run covering "model/prompt/tool versions, effective permissions, MCP servers exposed, commands/files touched, approvals, failures, and recovery state". As fields:
 
 | Field | Example | Answers |
 |---|---|---|
@@ -274,7 +286,16 @@ To check the setup, start a session and look for `claude_code.session.count` in 
 
 ### Time every stage
 
-A change passes through stages: writing, focused tests, review, waiting, the final full test run, merge. Log the start and end of each. Then the question "why is merging slow" has an answer instead of a guess.
+A change passes through stages:
+
+1. writing;
+2. focused tests;
+3. review;
+4. waiting;
+5. the final full test run;
+6. merge.
+
+Log the start and end of each, and "why is merging slow" has an answer instead of a guess.
 
 ![An illustrative timeline: writing, focused tests, review, a wait for a slot and a long final full test run. The waits and the final run take most of the time.]({{ '/assets/images/16-logging-and-evaluation/merge-time.svg' | relative_url }}){: style="width:100%"}
 
@@ -294,7 +315,13 @@ jq -s 'group_by(.stage) | map({stage: .[0].stage, median: (map(.seconds) | sort 
 
 #### The answer
 
-Review has a median of four minutes. The final full test run has a median of twenty, and the queue before it another fifteen. The fix is to run the full suite on fewer, larger batches and to shard it.
+| Stage | Median |
+|---|---|
+| Review | 4 min |
+| Queue before the final run | 15 min |
+| Final full test run | 20 min |
+
+The fix is to run the full suite on fewer, larger batches and to shard it.
 
 ### Budget each gate
 

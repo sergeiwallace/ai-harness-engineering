@@ -12,7 +12,13 @@ stop_minutes: "6"
 
 # Context files after compaction
 
-Compaction summarises the conversation to free the window. For context files it is a reset with exceptions: some files are read again from disk, others are gone until something brings them back. A rule placed in the wrong kind of file can be followed for hours and then silently stop applying. This page explains what happens and how to place a rule so it holds.
+Compaction summarises the conversation to free the window. For context files it is a reset with exceptions:
+
+- some files are read again from disk;
+- others are gone until something brings them back;
+- so a rule placed in the wrong kind of file can be followed for hours and then silently stop applying.
+
+This page explains what happens and how to place a rule so it holds.
 
 ## Contents
 {: .no_toc .text-delta }

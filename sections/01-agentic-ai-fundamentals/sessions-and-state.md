@@ -9,7 +9,9 @@ last_updated: "2026-11-09"
 
 # Sessions and state
 
-A model keeps nothing between calls, so everything an agent "remembers" is something the client sends again or something written to a file. A session is the client's record of one conversation. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#sessions-and-state) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers memory systems in more depth. This page covers:
+A model keeps nothing between calls, so everything an agent "remembers" is something the client sends again or something written to a file. A session is the client's record of one conversation.
+
+The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#sessions-and-state) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers memory systems in more depth. This page covers:
 
 - what a session holds, and what it does not;
 - resuming, continuing, branching and forking a session in Claude Code;
@@ -192,7 +194,10 @@ A session discovers that the test database must be reset before the integration 
    - a CI job runs the same target, so a change that breaks the reset fails before it lands.
 3. A one-line note in the project's context file stays as a second layer: "the integration target resets the test database; do not run the suite by hand".
 
-Writing only a new context-file rule ("run `make reset-test-db` before `make test-integration`") would rely on every session remembering it. Building the step into the target removes the need to remember. The introduction describes this [systems approach]({{ '/' | relative_url }}#a-systems-approach).
+Writing only a new context-file rule ("run `make reset-test-db` before `make test-integration`") would rely on every session remembering it.
+
+- Building the step into the target removes the need to remember.
+- The introduction describes this [systems approach]({{ '/' | relative_url }}#a-systems-approach).
 
 ## Pitfalls
 

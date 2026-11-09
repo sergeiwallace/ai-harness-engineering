@@ -10,7 +10,9 @@ last_updated: "2026-11-09"
 
 # Writing skill descriptions
 
-The description is the only part of a skill that is always in the context window, and it is what the model reads when it decides which skill to use. A skill with a vague description is not picked, or is picked for the wrong request. This page is a sub-topic of [Skill anatomy and loading]({{ '/sections/05-skills-and-plugins/skill-anatomy.html' | relative_url }}).
+The description is the only part of a skill that is always in the context window, and it is what the model reads when it decides which skill to use. A skill with a vague description is not picked, or is picked for the wrong request.
+
+This page is a sub-topic of [Skill anatomy and loading]({{ '/sections/05-skills-and-plugins/skill-anatomy.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }

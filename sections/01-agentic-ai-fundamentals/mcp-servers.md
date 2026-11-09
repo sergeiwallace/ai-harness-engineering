@@ -10,7 +10,9 @@ last_updated: "2026-11-09"
 
 # MCP servers
 
-The Model Context Protocol (MCP) is an open standard for plugging an outside service into an AI client as a set of tools. One server can serve Claude Code, Codex, a desktop chat app and an IDE, so a tool written once works in all of them. This page is part of [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}). It covers:
+The Model Context Protocol (MCP) is an open standard for plugging an outside service into an AI client as a set of tools. One server can serve Claude Code, Codex, a desktop chat app and an IDE, so a tool written once works in all of them.
+
+This page is part of [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}). It covers:
 
 - how hosts, clients and servers fit together, and the two transports;
 - adding a server from the command line or a project file, and the three scopes;
@@ -154,7 +156,10 @@ Ways to keep the cost down:
 
 ### Trust
 
-A server runs with your permissions, or is a remote service that receives your data. Its tool descriptions and results go into the model's context, where text can steer the model. A malicious or compromised server can therefore both act and inject instructions.
+A server runs with your permissions, or is a remote service that receives your data.
+
+- Its tool descriptions and results go into the model's context, where text can steer the model.
+- A malicious or compromised server can therefore both act and inject instructions.
 
 Treat a server like a dependency you install:
 

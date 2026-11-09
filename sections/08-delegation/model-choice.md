@@ -44,7 +44,11 @@ This is the split my harness uses. A team with one model, or a tight budget, mak
 
 ### Choosing by the cost of a mistake
 
-One way to choose a tier is by how far a mistake would spread. A wrong decision in a plan affects every task built on it. A wrong row in a search table costs the lead one check. Under this approach a small decision still goes to the strongest tier, and a large search does not.
+One way to choose a tier is by how far a mistake would spread.
+
+- A wrong decision in a plan affects every task built on it.
+- A wrong row in a search table costs the lead one check.
+- Under this approach a small decision still goes to the strongest tier, and a large search does not.
 
 > Note: in my own harness, design decisions stay on the strongest tier even when they look small. A cheaper model that reaches a design question in the middle of a brief hands it back to the lead.
 
@@ -84,7 +88,10 @@ The force setting suits a session that must stay on one model, for example under
 
 ### Effort is separate from tier
 
-Effort and tier answer different questions. Tier is how capable the model is; effort is how long it thinks on this task. A mid-tier engineer on a tricky concurrency bug may want high effort; the strongest model summarising three short reports needs little.
+Effort and tier answer different questions.
+
+- Tier is how capable the model is; effort is how long it thinks on this task.
+- A mid-tier engineer on a tricky concurrency bug may want high effort; the strongest model summarising three short reports needs little.
 
 | Task | Tier | Effort |
 |---|---|---|

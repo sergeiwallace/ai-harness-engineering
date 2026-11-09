@@ -12,7 +12,15 @@ last_updated: "2026-11-09"
 
 Part of [Decision authority and escalation]({{ '/sections/14-human-gates/decision-authority.html' | relative_url }}), in [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}).
 
-A held decision is a question an agent cannot answer itself, written as a document and kept until the person rules on it. A review queue is the one place where all held decisions wait. Together they move questions out of the chat, where they scroll away, into files the person reads in one sitting and the agents can find again after their context is gone.
+| Term | Meaning |
+|---|---|
+| Held decision | a question an agent cannot answer itself, written as a document and kept until the person rules on it |
+| Review queue | the one place where all held decisions wait |
+
+Together they move questions out of the chat, where they scroll away, into files:
+
+- the person reads them in one sitting;
+- the agents can find them again after their context is gone.
 
 ## Why a document and not a chat message
 

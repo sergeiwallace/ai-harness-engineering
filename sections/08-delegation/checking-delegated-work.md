@@ -14,7 +14,11 @@ stop_minutes: "4"
 
 # Checking delegated work
 
-A sub-agent's report describes what the sub-agent believes it did. Agents report work they did not do, and summaries drop the caveat that changes the conclusion. The lead's job at collection time is to check the artifact the report describes: the commits, the diff, the test output, the source passage. This page covers the two failure modes, a checking routine you can run on every report, worked examples, and how to make reports easier to check.
+A sub-agent's report describes what the sub-agent believes it did.
+
+- Agents report work they did not do, and summaries drop the caveat that changes the conclusion.
+- The lead's job at collection time is to check the artifact the report describes: the commits, the diff, the test output, the source passage.
+- This page covers the two failure modes, a checking routine you can run on every report, worked examples, and how to make reports easier to check.
 
 ![A sequence across five participants. A sub-agent reports that it fixed a race and all 214 tests pass. The lead runs git log and diff and finds no new commit and no change, so it returns the report with the evidence. On the second attempt the sub-agent reports a commit and quotes a test line; the lead shows the commit, sees two files changed, runs the quoted command and gets 214 passed, and accepts. In a third exchange the sub-agent reports that a library supports streaming; the lead reads the cited passage and finds it is experimental and off by default.]({{ '/assets/images/08-delegation/check-report.png' | relative_url }}){: style="width:100%"}
 
@@ -40,7 +44,11 @@ The report describes the plan as if it had been carried out.
 
 ### The caveat that dropped out
 
-A summary keeps the headline and loses the qualifier. "The API supports batching" without "only on the paid tier". "The library streams responses" without "experimental and off by default". The dropped part is often the one that changes the plan.
+A summary keeps the headline and loses the qualifier.
+
+- "The API supports batching" without "only on the paid tier".
+- "The library streams responses" without "experimental and off by default".
+- The dropped part is often the one that changes the plan.
 
 | | Work not done | Caveat dropped |
 |---|---|---|

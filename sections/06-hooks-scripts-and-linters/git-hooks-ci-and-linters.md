@@ -9,7 +9,14 @@ last_updated: "2026-11-09"
 
 # Git hooks, CI and linters
 
-[Tool-call hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) check what an agent is about to do. Git hooks, CI gates and linters check what it produced. They apply to agents and people alike. On [the enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}), linters and git hooks are layer 3 (they flag or refuse at commit and push) and tests and CI are layer 4 (they validate the change before it lands). This page covers each check, how to split work between them, ratchets for adopting strict rules in an existing codebase, and what gates cost. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
+[Tool-call hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) check what an agent is about to do. Git hooks, CI gates and linters check what it produced, for agents and people alike.
+
+| Layer on [the enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}) | Checks | Proactive use | Reactive use |
+|---|---|---|---|
+| 3 | Linters and git hooks, at commit and push | Formatting, naming, import boundaries, commit message format | A secret, a debug statement, a known bad pattern |
+| 4 | Tests and CI, before the change lands | The behaviour the task asked for, required sections in docs | A regression that happened before |
+
+This page covers each check, how to split work between them, ratchets for adopting strict rules in an existing codebase, and what gates cost. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -136,7 +143,10 @@ A CI gate runs on a server after a push or before a merge. It is the slowest che
 <details markdown="1">
 <summary>When CI does not gate the merge</summary>
 
-Some teams run CI but merge on a green local gate, for speed or because CI is not trusted yet. Then the local gate is the real gate, and it must be as strict as CI would be. Say which one gates in the repository's context file, so agents do not treat a red CI run as advisory or a green local run as enough when it is not.
+Some teams run CI but merge on a green local gate, for speed or because CI is not trusted yet.
+
+- The local gate is then the real gate, and it must be as strict as CI would be.
+- Say which one gates in the repository's context file, so agents treat the right result as final.
 
 </details>
 

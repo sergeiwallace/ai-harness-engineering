@@ -13,14 +13,26 @@ last_updated: "2026-11-09"
 
 Stop 5 on the talk path, about 4 minutes.
 
-A context-file instruction guides an agent, and the agent applies it unevenly: less as its context fills, when it juggles several tasks, after a task switch, or after a compaction drops the rule. The working principle of this site is a systems approach to harness engineering: a fix goes into the system and is enforced by code wherever a program can check it. A harness enforces its rules in four layers:
+A context-file instruction guides an agent, and the agent applies it unevenly:
+
+- less as its context fills;
+- when it juggles several tasks, or after a task switch;
+- after a compaction drops the rule.
+
+The working principle of this site is a systems approach to harness engineering: the rule goes into the system and is enforced by code wherever a program can check it. A harness enforces its rules in four layers:
 
 1. Instructions in context files, skills and prompts guide the model. They are the second line of defence and never enough on their own.
 2. Workflows and tools build the steps into what the agent runs.
 3. Hooks, scripts and linters refuse or flag an action at the moment the agent tries it.
-4. Validation and tests catch what got past the earlier layers before a change lands.
+4. Validation and tests check the result before a change lands.
 
-Layers 2 to 4 do the enforcing. This section covers layers 3 and 4, and the scripts that layer 2 relies on.
+Layers 2 to 4 do the enforcing, and each works two ways:
+
+| Use | What it does | Examples |
+|---|---|---|
+| Proactive | Encodes how you want code, docs or any output to be | Formatting, naming, required sections in a document, a commit message format, which modules may import what |
+| Reactive | Stops a mistake you have seen, at the point it would happen again | Refusing a pattern kill, a force push, a commit with a secret |
+ This section covers layers 3 and 4, and the scripts that layer 2 relies on.
 
 ![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
 *Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*
@@ -78,7 +90,11 @@ The ladder ranks the places a rule can live, from read-by-the-model to checked-b
 
 Put each rule at the highest step that can check it, and keep a one-line context rule for the reason.
 
-> Adding another detailed rule to a context file each time an agent does something wrong is an anti-pattern. The new rule is followed as unevenly as the old one. The correction goes into a workflow, tool, hook, script, linter or test, and the context line is at most a second layer.
+> Adding another detailed rule to a context file each time an agent does something wrong is an anti-pattern.
+>
+> - The new rule is followed as unevenly as the old one.
+> - The correction goes into a workflow, tool, hook, script, linter or test.
+> - The context line is at most a second layer.
 
 ### Example: a broken rule fixed in the system
 
@@ -226,7 +242,10 @@ Conflict markers reached a repository with every exit code green this way: the c
 ![Sequence diagram with four lanes: Model, Client, PreToolUse hook and Shell. First attempt: the model asks for pkill -f pytest; the client sends the event JSON to the hook; the hook exits 2 with the message that pattern kills are refused; the client returns the block and message to the model. The agent follows the fix: it runs pgrep -a pytest, the hook allows it, and the shell returns process 4121. Second attempt: the model asks for kill 4121; the hook allows one PID; the shell stops only that process.]({{ '/assets/images/06-hooks-scripts-and-linters/guard-refusal-sequence.png' | relative_url }})
 *The process-kill guard during a real task. The refusal carries the fix, so the agent's next two calls are the right ones.*
 
-The rule was already in the agent's brief. Writing it more firmly would not have helped. The fix was a hook that refuses any pattern kill and tells the agent to kill one process id or one process group. The [guard page]({{ '/sections/06-hooks-scripts-and-linters/writing-a-guard.html' | relative_url }}) has this case in full and four more from my harness.
+- The rule was already in the agent's brief, so writing it more firmly would not have helped.
+- The fix was a hook that refuses any pattern kill and tells the agent to kill one process id or one process group.
+
+The [guard page]({{ '/sections/06-hooks-scripts-and-linters/writing-a-guard.html' | relative_url }}) has this case in full and four more from my harness.
 
 ## Git hooks, CI and linters
 

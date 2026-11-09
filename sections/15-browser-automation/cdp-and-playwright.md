@@ -15,7 +15,16 @@ last_updated: "2026-11-09"
 
 Part of [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}). Sub-page: [Background browser profiles]({{ '/sections/15-browser-automation/background-profiles.html' | relative_url }}).
 
-The Chrome DevTools Protocol (CDP) is the interface that Chrome's own developer tools use to inspect and control a page. Any program that speaks it can drive Chrome: open pages, click, type, read the page, run JavaScript and take screenshots. Playwright and Puppeteer are libraries built on it. For an agent, driving a browser over CDP is the route that works with any model provider, runs in the background, and keeps the agent's browsing apart from yours.
+The Chrome DevTools Protocol (CDP) is the interface that Chrome's own developer tools use to inspect and control a page.
+
+- Any program that speaks it can drive Chrome: open pages, click, type, read the page, run JavaScript and take screenshots.
+- Playwright and Puppeteer are libraries built on it.
+
+For an agent, it is the route that:
+
+- works with any model provider;
+- runs in the background;
+- keeps the agent's browsing apart from yours.
 
 ## Contents
 

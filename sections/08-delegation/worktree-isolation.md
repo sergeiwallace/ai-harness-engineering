@@ -11,7 +11,10 @@ stop_minutes: "4"
 
 # Worktree isolation
 
-When several agents write to one repository at once, each needs its own checkout or they overwrite each other's work. A git worktree is that checkout: a second working directory of the same repository, on its own branch, sharing one object store. This page covers why worktrees, how to create one per agent, a worktree's lifecycle from creation to safe removal, merging back, and the ways isolation fails.
+When several agents write to one repository at once, each needs its own checkout or they overwrite each other's work.
+
+- A git worktree is that checkout: a second working directory of the same repository, on its own branch, sharing one object store.
+- This page covers why worktrees, how to create one per agent, a worktree's lifecycle from creation to safe removal, merging back, and the ways isolation fails.
 
 ![A lifecycle with five main states from left to right: created, agent works, merged, audit, removed. From agent works, a merge failure leads to a conflict state that returns after a rebase and retest, and an early deletion leads to a work-lost failure state. From audit, a result that is not proved leads to a kept state, which returns to audit on the next pass.]({{ '/assets/images/08-delegation/worktree-lifecycle.png' | relative_url }}){: style="width:100%"}
 

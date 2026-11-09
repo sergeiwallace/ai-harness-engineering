@@ -10,7 +10,13 @@ last_updated: "2026-11-09"
 
 # Self-improving harness research
 
-The [improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) is a manual practice that agents gradually take over. Through 2026, researchers and vendors tried to automate it end to end: a system that reads its own traces and rewrites its own prompts, skills or tools. This page summarises what that work found, the evidence it adds for enforcing fixes rather than writing more instructions, and what it means for a personal harness.
+The [improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) is a manual practice that agents gradually take over. Through 2026, researchers and vendors tried to automate it end to end: a system that reads its own traces and rewrites its own prompts, skills or tools.
+
+This page summarises:
+
+1. What that work found.
+2. The evidence it adds for putting fixes into checks and workflows.
+3. What it means for a personal harness.
 
 ## The common shape
 
@@ -122,7 +128,10 @@ If the agent can change the evaluator, it can make any change look good.
 
 ### Your sample is small
 
-With one person's work, the task set is small, and scores are noisy. At 100 tasks with a pass rate near 80 percent, the 95 percent confidence interval is roughly plus or minus 8 percentage points. A change that moves the score by 3 points is inside the noise.
+With one person's work, the task set is small, and scores are noisy.
+
+- At 100 tasks with a pass rate near 80 percent, the 95 percent confidence interval is roughly plus or minus 8 percentage points.
+- A change that moves the score by 3 points is inside the noise.
 
 | Tasks in the set | Approximate 95% half-width at an 80% pass rate |
 |---|---|
@@ -135,7 +144,10 @@ So promote changes on deterministic checks and budgets (did the hook block the b
 <details markdown="1">
 <summary>How the table was computed</summary>
 
-The half-width of a normal-approximation interval for a pass rate p over n tasks is 1.96 times the square root of p(1 - p)/n. For p = 0.8: n = 20 gives 0.175, n = 50 gives 0.111, n = 100 gives 0.078. A Wilson interval gives similar values at these sizes.
+The half-width of a normal-approximation interval for a pass rate p over n tasks is 1.96 times the square root of p(1 - p)/n.
+
+- For p = 0.8: n = 20 gives 0.175, n = 50 gives 0.111, n = 100 gives 0.078.
+- A Wilson interval gives similar values at these sizes.
 
 </details>
 

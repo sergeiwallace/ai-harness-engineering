@@ -12,7 +12,13 @@ last_updated: "2026-11-09"
 
 # Harness habits in a chat app
 
-A chat app has no hooks, scripts or tests between the model and you. It has a place for standing instructions, a place for files, and your own review. This page takes five habits from the terminal harness and shows how each one works when you are the only enforcement.
+A chat app has no hooks, scripts or tests between the model and you. It has:
+
+- A place for standing instructions.
+- A place for files.
+- Your own review.
+
+This page takes five habits from the terminal harness and shows how each one works when you are the only enforcement.
 
 ![Sequence diagram of carrying the durable-notes habit into a chat project. In session 1 you add an instruction to end each chat with a notes block, work on the task, and get an answer plus a notes block; between sessions you paste the notes into the project's notes file; in session 2 you ask the model to continue from the notes, it reads the file and picks up at the right step, and you check the answer against the original ask.]({{ '/assets/images/19-chat-and-desktop-clients/chat-project-notes-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -127,7 +133,10 @@ You can ask the model to run the checklist on its own answer, which catches some
 
 ### Why it matters
 
-In a terminal harness, [human gates]({{ '/sections/14-human-gates/' | relative_url }}) stop the agent before outward or destructive actions. A chat model cannot act on your behalf, so the gate moves: it sits between the model's output and what you do with it. Decide in advance which outputs you will send, publish or act on without a second look, and which you will always check.
+In a terminal harness, [human gates]({{ '/sections/14-human-gates/' | relative_url }}) stop the agent before outward or destructive actions.
+
+- A chat model cannot act on your behalf, so the gate moves: it sits between the model's output and what you do with it.
+- Decide in advance which outputs you will send, publish or act on without a second look, and which you will always check.
 
 | Output | Use directly? |
 |---|---|
@@ -140,7 +149,10 @@ In a terminal harness, [human gates]({{ '/sections/14-human-gates/' | relative_u
 
 ### Why it matters
 
-Instructions are applied less consistently when a model juggles several things at once or switches between tasks, and when its context fills up. A coding harness avoids this by design: each task gets its own session or sub-agent. In a chat app, the design choice is yours.
+Instructions are applied less consistently when a model juggles several things at once or switches between tasks, and when its context fills up.
+
+- A coding harness avoids this by design: each task gets its own session or sub-agent.
+- In a chat app, the design choice is yours.
 
 | Situation | What to do |
 |---|---|

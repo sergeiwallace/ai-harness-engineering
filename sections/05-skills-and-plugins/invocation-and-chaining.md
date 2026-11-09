@@ -9,7 +9,13 @@ last_updated: "2026-11-09"
 
 # Invocation and chaining
 
-A skill can be started by a person, by the model, or by another skill. This page covers the settings that decide who may start a skill, how to choose them, the trap that breaks chains silently, and how to build a pipeline out of small skills. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+A skill can be started by a person, by the model, or by another skill. This page covers:
+
+- the settings that decide who may start a skill, and how to choose them;
+- the trap that breaks chains silently;
+- how to build a pipeline out of small skills.
+
+It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -27,6 +33,7 @@ A skill can be started by a person, by the model, or by another skill. This page
    - The agent reads that as an instruction.
    - It is the model that starts the skill, so this is a form of way 2.
    - That detail decides how chains behave.
+
 
 ### The settings
 
@@ -152,7 +159,9 @@ description: Take the current branch from finished code to an open pull request.
 3. Each finished task goes through `/review`.
 4. `/merge` lands the reviewed results one at a time.
 
-This is the chain in my harness. Every launch goes through the one delegation skill, so a fix to how briefs are written applies to every launch. Section 10 covers [orchestration]({{ '/sections/10-orchestration/' | relative_url }}).
+This is the chain in my harness: every launch goes through the one delegation skill, so a fix to how briefs are written applies to every launch.
+
+Section 10 covers [orchestration]({{ '/sections/10-orchestration/' | relative_url }}).
 
 ### How chains fail
 

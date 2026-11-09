@@ -9,7 +9,10 @@ last_updated: "2026-11-09"
 
 # Nesting and concurrency
 
-A lead agent can start several sub-agents at once, and a sub-agent can start sub-agents of its own. Both multiply work, and both need limits: nesting limits how deep the tree of agents goes, and concurrency limits how many agents run at the same time on one machine. This page covers the shapes delegation takes, the depth limit and what each level costs, three kinds of concurrency limit, and what a lead does when a launch is refused.
+A lead agent can start several sub-agents at once, and a sub-agent can start sub-agents of its own.
+
+- Both multiply work, and both need limits: nesting limits how deep the tree of agents goes, and concurrency limits how many agents run at the same time on one machine.
+- This page covers the shapes delegation takes, the depth limit and what each level costs, three kinds of concurrency limit, and what a lead does when a launch is refused.
 
 ![A sequence across five participants. The lead asks the launch checks to start a researcher at depth 1. The researcher asks for a search helper, which is allowed for its role, and the helper starts at depth 2, returns twelve matches, and the researcher answers the lead with sources. An engineer asks for a helper and is refused because its role may not start agents. The lead asks for a fifth engineer and is refused because four are running, so the lead works the item itself until an engineer reports and a slot frees.]({{ '/assets/images/08-delegation/fanout-bounds.png' | relative_url }}){: style="width:100%"}
 

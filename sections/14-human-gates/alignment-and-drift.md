@@ -11,7 +11,17 @@ last_updated: "2026-11-09"
 
 Part of [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}).
 
-Alignment here means something narrow and practical: the work an agent delivers matches what the person asked for, all of it, in the sense they meant. Drift is the loss of that match as work passes from the person to a plan, from a plan to a brief, from a brief to a sub-agent, and from a sub-agent back up as a report. Each hand-off is a summary, and each summary can drop something.
+| Term | Meaning |
+|---|---|
+| Alignment | the work an agent delivers matches what the person asked for, all of it, in the sense they meant |
+| Drift | the loss of that match as work passes between hands |
+
+Drift happens at each hand-off, because each one is a summary that can drop something:
+
+1. person to plan;
+2. plan to brief;
+3. brief to sub-agent;
+4. sub-agent back up as a report.
 
 ## Contents
 

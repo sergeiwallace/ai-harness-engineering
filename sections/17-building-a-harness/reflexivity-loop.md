@@ -22,6 +22,8 @@ The improvement loop is the [systems approach]({{ '/sections/17-building-a-harne
 - Output: one change to the system, measured on the next sessions.
   - The change sits at layer 2, 3 or 4 where it can.
   - A context-file line, if any, names the guard as a second layer.
+- The loop is the reactive half of the systems approach.
+  - The proactive half uses the same layers before any failure: encode the conventions, structure and style you want in workflows, hooks, checks and tests.
 
 ![Sequence diagram of the improvement loop on the tests-skipped task: friction, record, find the part, change the harness with a Stop hook, then measure on the next task, where the hook blocks an untested finish and the agent fixes a real failure.]({{ '/assets/images/17-building-a-harness/reflexivity-loop-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -73,7 +75,10 @@ What each entry needs:
 <details markdown="1">
 <summary>Why record before fixing</summary>
 
-A fix made in the moment is shaped by the last failure. A fix made after a week of records is shaped by the pattern. Recording also stops you from fixing a one-off that will never happen again, which is how complexity creep starts (see [Complexity creep and pruning]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }})). When you do fix something the first time, because it will recur or a repeat would be risky, record it anyway, so the log shows why the mechanism exists.
+A fix made in the moment is shaped by the last failure; a fix made after a week of records is shaped by the pattern.
+
+- Recording stops you from fixing a one-off that will never happen again, which is how complexity creep starts (see [Complexity creep and pruning]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }})).
+- When you do fix something the first time, because it will recur or a repeat would be risky, record it anyway, so the log shows why the mechanism exists.
 
 </details>
 
@@ -118,11 +123,15 @@ The ladder, from soft to hard:
 
 *Figure 2. One rule moving down three rungs. Diagram made with archify.*
 
-Start at the softest step that works. Move down when agents keep breaking the rule. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers each step's mechanics.
+Start at the softest step that works, and move down when agents keep breaking the rule. [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) covers each step's mechanics.
 
 ### 5. Measure, then keep or revert
 
-Treat the change as a trial. Check it against the next sessions, or against a small task set made from past failures (see [Building a task set]({{ '/sections/18-trends/building-a-task-set.html' | relative_url }}) and [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }})). Keep it if the friction stops and nothing else got worse. Revert it if it blocked correct work or did not change the outcome.
+Treat the change as a trial.
+
+1. Check it against the next sessions, or against a small task set made from past failures (see [Building a task set]({{ '/sections/18-trends/building-a-task-set.html' | relative_url }}) and [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }})).
+2. Keep it if the friction stops and nothing else got worse.
+3. Revert it if it blocked correct work or did not change the outcome.
 
 | Result after a week | Decision |
 |---|---|
@@ -229,7 +238,10 @@ Early on, you do. Later, agents can run most of it:
 | Measure | You watch | An evaluation run compares before and after |
 | Keep or revert | You decide | You still decide |
 
-The last row stays with a person. The research reports the same split: the evaluator and the final decision stay outside the thing being changed. See [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}).
+The last row stays with a person.
+
+- The research reports the same split: the evaluator and the final decision stay outside the thing being changed.
+- See [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}).
 
 ## Examples from my own harness
 
@@ -246,7 +258,7 @@ To start: pick the item at the top of your friction log and take it through all 
 <details markdown="1">
 <summary>Fixing the symptom in the prompt</summary>
 
-Adding "IMPORTANT: always run the tests" in capital letters keeps the rule on the softest rung. If the agent already had the rule, more emphasis rarely helps for long. Move to a check.
+Adding "IMPORTANT: always run the tests" in capital letters keeps the rule on the softest rung. If the agent already had the rule, more emphasis rarely helps for long, so move to a check.
 
 </details>
 

@@ -12,7 +12,13 @@ checked_against: "Claude Code mods documentation, read 2026-11-09 (the mods refe
 
 # Mods and function hooks
 
-A mod is a plugin whose hooks module registers function hooks: JavaScript or TypeScript functions that Claude Code loads into its own process and calls when an event happens, such as a tool call, a submitted prompt, the end of a turn, or part of the interface being drawn. A function hook can watch the event, change it, or answer it in Claude Code's place. Changing the interface, with panes, a band above the prompt, toasts or new slash commands, is one common use of a mod; a mod that only guards tool calls or adds context to prompts draws nothing. This page is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}), next to [Plugins, marketplaces and mods]({{ '/sections/05-skills-and-plugins/plugins-and-mods.html' | relative_url }}), and it complements the shell-based [hooks in section 6]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}).
+A mod is a plugin whose hooks module registers function hooks: JavaScript or TypeScript functions that Claude Code loads into its own process and calls when an event happens.
+
+- Events include a tool call, a submitted prompt, the end of a turn, and part of the interface being drawn.
+- A function hook can watch the event, change it, or answer it in Claude Code's place.
+- Changing the interface, with panes, a band above the prompt, toasts or new slash commands, is one common use; a mod that only guards tool calls or adds context to prompts draws nothing.
+
+This page is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}), next to [Plugins, marketplaces and mods]({{ '/sections/05-skills-and-plugins/plugins-and-mods.html' | relative_url }}), and it complements the shell-based [hooks in section 6]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }

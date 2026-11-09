@@ -10,7 +10,9 @@ last_updated: "2026-11-09"
 
 # Writing refusal messages
 
-When a hook, a script or a gate refuses an action, the agent reads the refusal message and decides what to do next. The message is the only part of the guard the agent sees. This page covers what a refusal message should contain, with before-and-after examples.
+When a hook, a script or a gate refuses an action, the agent reads the refusal message and decides what to do next. The message is the only part of the guard the agent sees.
+
+This page covers what a refusal message should contain, with before-and-after examples.
 
 ![Sequence diagram of two refusals of the same force push. With a bare refusal, the hook returns only "Blocked", the agent retries the same action with a different spelling, is blocked again, and hands the task back to you. With a refusal that names the next step, the hook explains why and says to push a new branch and open a pull request; the agent pushes a new branch and opens a pull request for review.]({{ '/assets/images/17-building-a-harness/refusal-messages-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -87,7 +89,9 @@ Run `make test`, fix any failure, then finish.
 <details markdown="1">
 <summary>Which stream the message goes to</summary>
 
-In Claude Code, a hook that exits with code 2 has its standard error passed back to the agent. A message printed to standard output in that case does not reach the agent. Other clients differ, so check the documentation for the client you use.
+- In Claude Code, a hook that exits with code 2 has its standard error passed back to the agent.
+- A message printed to standard output in that case does not reach the agent.
+- Other clients differ, so check the documentation for the client you use.
 
 </details>
 

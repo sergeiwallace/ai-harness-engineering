@@ -14,7 +14,12 @@ last_updated: "2026-11-09"
 
 Part of [Evaluating a harness change]({{ '/sections/16-logging-and-evaluation/evaluating-changes.html' | relative_url }}), in [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
 
-An agent that runs the same task several times does not always get the same result. Two measures from Anthropic's eval guide describe repeated attempts. pass@k counts a task as solved if any of k attempts succeeds. pass^k counts it as solved only if all k attempts succeed. The same agent can look excellent under one and poor under the other, so pick the one that matches how you use the agent.
+An agent that runs the same task several times does not always get the same result. Two measures from Anthropic's eval guide describe repeated attempts:
+
+- pass@k counts a task as solved if any of k attempts succeeds.
+- pass^k counts it as solved only if all k attempts succeed.
+
+The same agent can look excellent under one and poor under the other, so pick the one that matches how you use the agent.
 
 ## Contents
 
@@ -103,7 +108,14 @@ print(pass_at_k(10, 7, 3), pass_hat_k(10, 7, 3))   # 0.992, 0.292
 <details markdown="1">
 <summary>Aside: why the per-task estimate differs from the formula</summary>
 
-With 10 runs and 7 successes, the formula with p = 0.7 gives pass^3 = 0.343, while the subset estimate gives 0.292. The subset estimate samples without replacement from the runs you actually have, which reads a small sample more closely. The gap shrinks as n grows.
+With 10 runs and 7 successes:
+
+| Method | pass^3 |
+|---|---|
+| Formula, p = 0.7 | 0.343 |
+| Subset estimate | 0.292 |
+
+The subset estimate samples without replacement from the runs you actually have, which reads a small sample more closely. The gap shrinks as n grows.
 
 </details>
 
@@ -118,7 +130,10 @@ Tasks differ in difficulty, and pooling them hides it. Two tasks, each run many 
 | Mean of the per-task values | | 0.532 |
 | From the pooled p of 0.7 | 0.7 | 0.343 |
 
-The pooled figure says the agent gets three in a row about a third of the time. In fact it always succeeds on A and almost never on B. Report per-task values, or their mean, and look at the hard tasks by name.
+- The pooled figure says the agent gets three in a row about a third of the time.
+- In fact it always succeeds on A and almost never on B.
+
+Report per-task values, or their mean, and look at the hard tasks by name.
 
 ### Choosing n and k
 

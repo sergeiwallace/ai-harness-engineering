@@ -15,7 +15,15 @@ last_updated: "2026-11-09"
 
 Part of [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}). Sub-page: [Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}).
 
-Decision authority is the rule set that says which decisions an agent makes alone, which it makes and records, and which go to a person. Escalation is the act of sending a decision up, to a stronger model or to the person. A harness with clear authority lets agents run for hours without stalling, because they do not stop on calls they own, and without overreaching, because they stop on calls they do not.
+| Term | Meaning |
+|---|---|
+| Decision authority | the rule set that says which decisions an agent makes alone, which it makes and records, and which go to a person |
+| Escalation | sending a decision up, to a stronger model or to the person |
+
+With clear authority, agents run for hours:
+
+- without stalling, because they do not stop on calls they own;
+- without overreaching, because they stop on calls they do not.
 
 ## Contents
 

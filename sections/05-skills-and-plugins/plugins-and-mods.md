@@ -9,7 +9,9 @@ last_updated: "2026-11-09"
 
 # Plugins, marketplaces and mods
 
-A plugin packages skills, sub-agent profiles, hooks and MCP servers that are meant to be used together, so they install as one unit at one version. This page covers the plugin layout and manifest, marketplaces, what a plugin costs in context, mods, and a pattern for sharing code across the skills in a plugin. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+A plugin packages skills, sub-agent profiles, hooks and MCP servers that are meant to be used together, so they install as one unit at one version.
+
+This page covers the plugin layout and manifest, marketplaces, what a plugin costs in context, mods, and a pattern for sharing code across the skills in a plugin. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -172,7 +174,10 @@ Skills often include small command-line tools. Written one per skill, they diver
 
 ### Plugin modules
 
-One pattern I use is a plugin whose skills, MCP servers and hooks all import one shared library, so the code is written once. I call this a plugin module. That is my own name; Claude Code has no such term. The nearest vendor term is the hooks module above.
+One pattern I use is a plugin whose skills, MCP servers and hooks all import one shared library, so the code is written once.
+
+- I call this a plugin module. That is my own name; Claude Code has no such term.
+- The nearest vendor term is the hooks module of a [mod]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}).
 
 ![Sequence diagram with five lanes: Developer, Shared library, Skill A tool, Skill B tool and MCP server. Two skill tools call settings.load and both get a wrong path on a second profile. The developer fixes the profile lookup in the library once and adds a test, which passes. After the next install, Skill A, Skill B and the MCP server each call settings.load and get the correct path, with no change to any of them.]({{ '/assets/images/05-skills-and-plugins/shared-library-fix-sequence.png' | relative_url }})
 *A settings bug fixed once in the shared library. Every tool, hook and server that imports it gets the fix on the next install.*
@@ -199,7 +204,10 @@ def main(days):
 <details markdown="1">
 <summary>A core plugin for two clients</summary>
 
-In my harness one core plugin serves the same read-only tools to Claude Code and to Codex through an MCP server, so both clients query the same knowledge store the same way. The server is built on the same shared library as the skill tools. A tool added to the server is available in both clients at once.
+In my harness one core plugin serves the same read-only tools to Claude Code and to Codex through an MCP server, so both clients query the same knowledge store the same way.
+
+- The server is built on the same shared library as the skill tools.
+- A tool added to the server is available in both clients at once.
 
 </details>
 

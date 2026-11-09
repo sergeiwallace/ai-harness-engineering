@@ -14,7 +14,13 @@ last_updated: "2026-11-09"
 
 # Agentic AI fundamentals
 
-Stop 2 on the talk path, about 2 minutes. This overview explains how a language model becomes an agent, before any configuration: what the loop is, how tools are called, what the context window holds, why sessions forget, how a run stops, and how it fails. Every later page builds on these mechanics. Each idea has a worked example here, and the [topic pages](#topic-pages) at the end go deeper on each one.
+Stop 2 on the talk path, about 2 minutes. This overview explains how a language model becomes an agent, before any configuration:
+
+- what the loop is, and how tools are called;
+- what the context window holds, and why sessions forget;
+- how a run stops, and how it fails.
+
+Every later page builds on these mechanics. Each idea has a worked example here, and the [topic pages](#topic-pages) at the end go deeper on each one.
 
 ![Diagram: a coding agent as one tall map. You give the task to the client; the client loads context files and memory and sends the whole context to the model; the model's tool call passes a permission gate, which consults hooks; the tool runner edits files, runs the shell or fetches from the web and MCP servers; the tool result returns to the model]({{ '/assets/images/01-agentic-ai-fundamentals/agent-loop-map.svg' | relative_url }}){: style="width: 100%" }
 *Figure: one coding agent, top to bottom. The model only chooses; the client assembles context, checks each request and runs it; you steer from the top.*
@@ -47,7 +53,12 @@ A language model takes text in and produces text out. In a chat app, the text in
 
 ### What makes a model agentic
 
-An agent works toward a goal over many steps. You give it a task, such as "fix the failing test in this repository", and it decides what to look at, does it, reads what came back, and decides what to do next. It keeps going until the task is done, it gets stuck, or you stop it.
+An agent works toward a goal over many steps. You give it a task, such as "fix the failing test in this repository", and it:
+
+1. decides what to look at;
+2. does it;
+3. reads what came back, and decides what to do next;
+4. keeps going until the task is done, it gets stuck, or you stop it.
 
 A model becomes an agent when three things are added around it.
 
@@ -55,7 +66,10 @@ A model becomes an agent when three things are added around it.
 - A loop: a program that carries out each request, feeds the result back to the model, and asks it what to do next, over and over.
 - A goal: a task stated in terms of an outcome ("the tests pass", "the report is written"), so the model can judge when it is done.
 
-With those three, the model can work for minutes or hours on a task, making dozens or hundreds of decisions without a person typing between them. The model underneath is the same kind of model as in a chat app. What changes is the software around it, which lets the model act and feeds the results of its actions back in.
+With those three, the model can work for minutes or hours on a task, making dozens or hundreds of decisions without a person typing between them.
+
+- The model underneath is the same kind of model as in a chat app.
+- What changes is the software around it, which lets the model act and feeds the results of its actions back in.
 
 ![Sequence diagram: the same question twice. In a chat app you send the question with pasted code, the client passes the text to the model, and the model replies with a guess you must check yourself. In an agent you send the same question; the model asks the client to read src/dates.py and then to run a three-line script; the file text and the traceback return to the model, which answers from what it saw]({{ '/assets/images/01-agentic-ai-fundamentals/chat-vs-agent-sequence.svg' | relative_url }}){: style="width: 100%" }
 *Figure: the worked example below as a sequence. In the top band you do the acting; in the bottom band the client does.*
@@ -173,7 +187,13 @@ Two settings prevent this:
 
 ### What a tool is
 
-Tools are what let an agent act. A tool is a named action the client knows how to run. Each one has a name, a description and a schema for the inputs it takes. Coding agents ship with tools for reading files, searching, editing, running shell commands and fetching web pages. You can add more through MCP servers (Model Context Protocol, a standard way to plug a service into an agent), plugins or skills (see [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }})).
+Tools are what let an agent act. A tool is a named action the client knows how to run, with three parts:
+
+- a name;
+- a description;
+- a schema for the inputs it takes.
+
+Coding agents ship with tools for reading files, searching, editing, running shell commands and fetching web pages. You can add more through MCP servers (Model Context Protocol, a standard way to plug a service into an agent), plugins or skills (see [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }})).
 
 A simplified tool definition looks like this:
 
@@ -252,7 +272,11 @@ The context window is everything the model can see on one turn: its instructions
 ![Diagram: six sources flow into one context window, system instructions, context files, tool definitions, conversation history, tool results and the newest message; the window is sent to the model every turn; near the limit it goes to compaction, which replaces history with a summary while context files reload from disk]({{ '/assets/images/01-agentic-ai-fundamentals/context-sources.svg' | relative_url }}){: style="width: 100%" }
 *Figure: what the client sends on every turn. The top three are a fixed cost; history and tool results grow.*
 
-Everything above counts against one fixed budget, measured in tokens. A token is a piece of a word; English prose runs at roughly four characters, or three quarters of a word, per token. Several current Claude models support a one-million-token window, selected in Claude Code as a `[1m]` model variant. An agent that reads large files and long command outputs still fills it faster than you would expect.
+Everything above counts against one fixed budget, measured in tokens.
+
+- A token is a piece of a word; English prose runs at roughly four characters, or three quarters of a word, per token.
+- Several current Claude models support a one-million-token window, selected in Claude Code as a `[1m]` model variant.
+- An agent that reads large files and long command outputs still fills it faster than you would expect.
 
 Two facts about the window drive most of what a harness does.
 
@@ -446,8 +470,8 @@ A harness is the set of things you put around this loop. Its parts follow the fo
 |---|---|---|
 | 1. Instructions: context files, skills' text, prompts | what is in the window at the start | [Context files]({{ '/sections/04-context-files/' | relative_url }}), [Templates]({{ '/sections/07-templates-and-stubs/' | relative_url }}) |
 | 2. Workflows and tools | what the agent can do, and in what order | [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}) |
-| 3. Hooks, scripts and linters | the moment the client handles a tool call, or the agent tries to stop | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
-| 4. Validation and tests | before a change lands | [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}) |
+| 3. Hooks, scripts and linters | the moment the client handles a tool call, or the agent tries to stop: they enforce how you want the output to be, and stop the mistakes you have seen | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
+| 4. Validation and tests | before a change lands: they check the output meets your standards, and catch what got past | [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}) |
 
 Memory and plan files carry state across sessions ([Context window and memory]({{ '/sections/11-context-window/' | relative_url }})). [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}) puts the parts together.
 

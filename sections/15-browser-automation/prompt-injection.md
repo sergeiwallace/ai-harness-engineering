@@ -11,7 +11,15 @@ last_updated: "2026-11-09"
 
 Part of [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 
-Prompt injection is text written to steer an AI agent, placed where the agent will read it: in a web page, an email, an issue comment, a file in a repository. The agent cannot reliably tell your instructions from text that merely looks like instructions, because both arrive as words in its context. Any agent that browses is exposed. The answer is structural: treat everything a page says as data, and keep the gates that matter outside the agent's judgement.
+Prompt injection is text written to steer an AI agent, placed where the agent will read it: a web page, an email, an issue comment, a file in a repository.
+
+- The agent cannot reliably tell your instructions from text that looks like instructions, because both arrive as words in its context.
+- Any agent that browses is exposed.
+
+The answer is structural:
+
+1. Treat everything a page says as data.
+2. Keep the gates that matter outside the agent's judgement.
 
 ## Contents
 

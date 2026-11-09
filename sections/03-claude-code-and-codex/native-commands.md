@@ -7,14 +7,19 @@ has_toc: false
 last_updated: "2026-11-09"
 talk_stop: "4"
 stop_minutes: "6"
-checked_against: "Claude Code v2.1.319"
 ---
 
 {% include page_nav.html %}
 
 # Native commands
 
-A native command is a slash command that ships with the client, typed in the session, such as `/compact`. This page groups Claude Code's commands by what they are for, says when each one is the right tool, and ends with a worked session that uses several together. The two commands that keep a session working by themselves have a page of their own: [Goal and loop commands]({{ '/sections/03-claude-code-and-codex/goal-and-loop.html' | relative_url }}).
+A native command is a slash command that ships with the client, typed in the session, such as `/compact`. This page:
+
+- groups Claude Code's commands by what they are for;
+- says when each one is the right tool;
+- ends with a worked session that uses several together.
+
+The two commands that keep a session working by themselves have a page of their own: [Goal and loop commands]({{ '/sections/03-claude-code-and-codex/goal-and-loop.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -100,7 +105,11 @@ A workflow starts when you ask for one or use the `ultracode` keyword.
   ⎿  9 done · 2 running · 1 failed (packages/billing: test fixture hard-codes the old key)
 ```
 
-Each unit has its own worktree, so units do not collide on the same files, and the one failure is isolated to one package. The excerpt is an illustration. Delegation and coordination have their own sections: [Delegation]({{ '/sections/08-delegation/' | relative_url }}) and [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}).
+- Each unit has its own worktree, so units do not collide on the same files.
+- The one failure is isolated to one package.
+- The excerpt is an illustration.
+
+Delegation and coordination have their own sections: [Delegation]({{ '/sections/08-delegation/' | relative_url }}) and [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}).
 
 ## Context and session state
 

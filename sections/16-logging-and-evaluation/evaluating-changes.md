@@ -72,7 +72,14 @@ Two readings for your own evaluations:
 - The 13.7-point gain came from the harness alone, with the model unchanged, so harness changes need the same measurement as model changes.
 - More reasoning effort scored lower here because runs timed out, so time limits and effort settings belong in the fixed conditions of every run. LangChain used an `xhigh`-`high`-`xhigh` "reasoning sandwich" as its baseline: `xhigh` to plan and to verify, `high` to implement.
 
-An evaluation is itself a paid job. 30 tasks, 3 runs each, before and after, is 180 agent runs. At an illustrative $0.45 per run that is about $81, so run it through the same [budget check]({{ '/sections/16-logging-and-evaluation/spend-and-budgets.html' | relative_url }}) as any other batch.
+An evaluation is itself a paid job:
+
+| | |
+|---|---|
+| Runs | 30 tasks × 3 runs × before and after = 180 agent runs |
+| Cost at an illustrative $0.45 per run | about $81 |
+
+Run it through the same [budget check]({{ '/sections/16-logging-and-evaluation/spend-and-budgets.html' | relative_url }}) as any other batch.
 
 ## Building the task set
 
@@ -168,7 +175,14 @@ An agent that reaches a correct result by a route you did not expect should pass
 <details markdown="1">
 <summary>Aside: how big a difference is real?</summary>
 
-With 30 tasks run three times each, you have 90 graded runs per side. A change from 60 to 63 passes is well within run-to-run variation for a non-deterministic agent. A change from 60 to 75 is unlikely to be noise. If you need to detect small effects, you need more tasks, not more decimal places.
+With 30 tasks run three times each, you have 90 graded runs per side.
+
+| Change in passes | Reading |
+|---|---|
+| 60 to 63 | well within run-to-run variation for a non-deterministic agent |
+| 60 to 75 | unlikely to be noise |
+
+To detect small effects, add tasks.
 
 </details>
 
@@ -224,7 +238,13 @@ A new hook refuses commits when focused tests have not run since the last edit.
 
 #### The decision
 
-Keep the hook. Pass rate rose by 13 runs, the regression set held, and the cost and time increases are small. Record the result in the ledger next to the change.
+Keep the hook:
+
+- pass rate rose by 13 runs;
+- the regression set held;
+- the cost and time increases are small.
+
+Record the result in the ledger next to the change.
 
 ## Examples from my own harness
 

@@ -11,13 +11,24 @@ last_updated: "2026-11-09"
 
 Related: [Claude Code mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}).
 
-An MCP App is an MCP server tool that returns an interactive interface along with its result: a form, a chart, a map, a document viewer, rendered in a sandboxed frame inside the conversation. It is the chat clients' way to extend their own interface, much as a mod extends the Claude Code terminal interface. This page covers what an MCP App is, where it runs, how it works, how to build and test one, its security model, and how it compares with Claude Code mods.
+An MCP App is an MCP server tool that returns an interactive interface along with its result: a form, a chart, a map, a document viewer, rendered in a sandboxed frame inside the conversation. It is the chat clients' way to extend their own interface, much as a mod extends the Claude Code terminal interface.
+
+This page covers:
+
+1. What an MCP App is, and where it runs.
+2. How it works.
+3. How to build and test one.
+4. Its security model.
+5. How it compares with Claude Code mods.
 
 <!-- IMAGE NEEDED: a screenshot of an MCP App rendered inside a Claude conversation, for example an interactive chart or a form returned by a connector, with the surrounding chat visible. -->
 
 ## What an MCP App is
 
-MCP Apps is an official extension to the Model Context Protocol. Its stable specification is version 2026-01-26, discussed as SEP-1865. It combines two existing MCP primitives, a tool and a resource, with a new rendering step in the host.
+MCP Apps is an official extension to the Model Context Protocol.
+
+- Its stable specification is version 2026-01-26, discussed as SEP-1865.
+- It combines two existing MCP primitives, a tool and a resource, with a new rendering step in the host.
 
 | Part | What it is | Where it lives |
 |---|---|---|
@@ -41,7 +52,10 @@ The View talks to the host over `postMessage`, using JSON-RPC in a dialect of MC
 
 Anthropic's announcement lists the plans as "Free, Pro, Max, Ultra, Team, and Enterprise", with launch partners including Amplitude, Asana, Box, Canva, Clay, Figma, Hex, monday.com and Slack. Users enable them from the directory at claude.ai, in the featured section.
 
-Your own MCP App reaches Claude as a custom connector. The MCP build guide says custom connectors are available on paid plans (Pro, Max or Team). I have not checked this against Anthropic's current help pages.
+Your own MCP App reaches Claude as a custom connector.
+
+- The MCP build guide says custom connectors are available on paid plans (Pro, Max or Team).
+- I have not checked this against Anthropic's current help pages.
 
 ### Other hosts
 

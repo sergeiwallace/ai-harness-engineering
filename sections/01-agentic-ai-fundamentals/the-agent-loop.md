@@ -45,7 +45,9 @@ The client's half of the loop is software you can configure, and harness enginee
 
 ### The conversation as a list
 
-A model API does not keep a conversation. Each call sends the whole conversation as a list of messages, each with a role. In the Claude Messages API the roles are `user` and `assistant`, and the system instructions travel as a separate `system` field. A message's content is a list of blocks, and three block types carry the loop:
+A model API does not keep a conversation. Each call sends the whole conversation as a list of messages, each with a role.
+
+In the Claude Messages API the roles are `user` and `assistant`, and the system instructions travel as a separate `system` field. A message's content is a list of blocks, and three block types carry the loop:
 
 | Block | Written by | What it holds |
 |---|---|---|
@@ -76,7 +78,10 @@ The exchange behind the test-fixing example on the overview, trimmed to its shap
 ]
 ```
 
-The next call sends all three messages, and the model's reply is the fourth. Nothing else is remembered. If the client dropped the third message, the model would not know the test had been run.
+The next call sends all three messages, and the model's reply is the fourth.
+
+- Nothing else is remembered.
+- If the client dropped the third message, the model would not know the test had been run.
 
 ### Stop reasons
 
@@ -170,7 +175,10 @@ A real client replaces the string match with permission rules, hooks and a sandb
 
 ## Parallel and sequential tool calls
 
-A model can ask for several tools in one reply. Reading three files at once costs one round trip instead of three, and clients run independent calls at the same time. The Messages API allows parallel calls by default; `tool_choice` with `disable_parallel_tool_use: true` limits the model to one call per reply.
+A model can ask for several tools in one reply.
+
+- Reading three files at once costs one round trip instead of three, and clients run independent calls at the same time.
+- The Messages API allows parallel calls by default; `tool_choice` with `disable_parallel_tool_use: true` limits the model to one call per reply.
 
 A turn with parallel calls, step by step:
 

@@ -13,7 +13,12 @@ last_updated: "2026-11-09"
 
 Stop 10 on the talk path, about 3 minutes.
 
-An agent that runs for hours needs to know which calls are its own and which belong to you. Decide that in advance: outward, destructive, spending and architectural actions wait for a person, and the agent decides everything else and records why. Ask rarely and well, because each question stops the work. Keep your original words, because a request that passes through several agents loses pieces on the way. Enforce the gates in the system, so they hold when the agent's attention is elsewhere.
+An agent that runs for hours needs to know which calls are its own and which belong to you.
+
+- Decide in advance: outward, destructive, spending and architectural actions wait for a person; the agent decides everything else and records why.
+- Ask rarely and well, because each question stops the work.
+- Keep your original words, because a request that passes through several agents loses pieces on the way.
+- Enforce the gates in the system, so they hold when the agent's attention is elsewhere.
 
 ![Sequence diagram of one task. The person asks the agent to build an export. The agent asks the authority test whether to add a new package; the test says it is architectural, so the agent writes options and a pick to the review queue. The agent asks whether to rename a helper; the test says decide and record. The person reads the queue in one sitting and rules no package; the ruling returns to the agent verbatim, and the agent returns the result with its decision log.]({{ '/assets/images/14-human-gates/who-decides-sequence.svg' | relative_url }}){: style="width:100%"}
 
@@ -134,7 +139,13 @@ When an agent does need a person, it writes the question as a held decision that
 - Recommendation: the reasoning first, then the pick.
 - Consequences: what happens next under each option, with cost and time.
 
-The question goes into one review queue, a file or folder every agent writes to, so the person answers several at once when they have time. A file survives the end of the session; a chat message does not. [Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}) has the template.
+The question goes into one review queue:
+
+- a file or folder every agent writes to;
+- the person answers several questions at once, when they have time;
+- a file survives the end of the session, where a chat message is lost.
+
+[Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}) has the template.
 
 ### Example: a question that is easy to answer
 
@@ -194,7 +205,8 @@ A gate held only by an instruction is followed less reliably as a session grows 
 2. Workflows and tools that build the step in.
    - A merge skill that opens a pull request and never pushes to main.
 3. Hooks, scripts and linters that refuse or flag at the moment of action.
-   - A PreToolUse hook or a deny rule that refuses a force-push.
+   - Proactive: enforce how you want the work done, such as "every change goes through a pull request".
+   - Reactive: stop a mistake you have seen, such as a PreToolUse hook or a deny rule that refuses a force-push.
 4. Validation and tests before a change lands.
    - Branch protection or a pre-merge gate that rejects an unreviewed change.
 

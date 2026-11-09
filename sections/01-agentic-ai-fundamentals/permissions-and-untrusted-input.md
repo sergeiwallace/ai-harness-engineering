@@ -10,7 +10,9 @@ last_updated: "2026-11-09"
 
 # Permissions and untrusted input
 
-The client runs every tool, so before each call it can run the call, ask you first, or refuse. Permissions are those decisions written down as modes and rules. This page is part of [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}). It covers:
+The client runs every tool, so before each call it can run the call, ask you first, or refuse. Permissions are those decisions written down as modes and rules.
+
+This page is part of [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}). It covers:
 
 - the order in which Claude Code checks a call;
 - the six permission modes and when each fits;
@@ -183,7 +185,10 @@ Injection does the most damage when one session has all three of these at once:
 2. exposure to untrusted text, such as web pages or public issues;
 3. a way to send data out, such as a web request, a push or an email.
 
-Any two are manageable. With all three, one successful injection can read something private and send it away. Simon Willison calls this combination the [lethal trifecta](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/).
+Any two are manageable.
+
+- With all three, one successful injection can read something private and send it away.
+- Simon Willison calls this combination the [lethal trifecta](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/).
 
 <details markdown="1">
 <summary>Breaking the combination in practice</summary>

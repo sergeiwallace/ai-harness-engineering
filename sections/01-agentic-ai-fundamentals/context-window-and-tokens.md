@@ -9,7 +9,9 @@ last_updated: "2026-11-09"
 
 # The context window and tokens
 
-The context window is everything the model can see on one turn. A rule outside it does not exist for the model, and a rule buried deep inside it competes with everything else. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#the-context-window) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers techniques for long runs. This page covers:
+The context window is everything the model can see on one turn. A rule outside it does not exist for the model, and a rule buried deep inside it competes with everything else.
+
+The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#the-context-window) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers techniques for long runs. This page covers:
 
 - what Claude Code puts in the window, and when;
 - tokens, window sizes and a worked budget;
@@ -100,7 +102,11 @@ These are planning estimates; `/context` gives the real numbers.
 | Four verbose test runs, each near the inline limit | 30,000 | 100,000 |
 | Conversation and the model's own replies | 25,000 | 125,000 |
 
-On a 200,000-token window this session is well over half full before lunch; on a one-million-token window it has plenty of room. The four verbose runs cost more than the context files, the MCP servers and the quiet runs together. The numbers are illustrative.
+What the total means:
+
+- on a 200,000-token window this session is well over half full before lunch; on a one-million-token window it has plenty of room;
+- the four verbose runs cost more than the context files, the MCP servers and the quiet runs together;
+- the numbers are illustrative.
 </details>
 
 ## Why quality drops before the limit
