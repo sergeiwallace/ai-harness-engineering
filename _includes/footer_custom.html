@@ -1,1 +1,1 @@
-<p><a href="{{ '/' | relative_url }}">Back to the landing page</a>. Prose on this site is licensed under CC BY 4.0, and code under Apache-2.0.</p>
+<p>{% unless page.url == "/" %}<a href="{{ '/' | relative_url }}">Back to the landing page</a>. {% endunless %}Prose on this site is licensed under CC BY 4.0, and code under Apache-2.0.</p>
