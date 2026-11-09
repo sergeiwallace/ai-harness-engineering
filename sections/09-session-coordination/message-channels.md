@@ -6,13 +6,12 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/09-session-coordination/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Message channels and fallbacks
-
-As of 2026-11-09.
 
 Sessions coordinate by sending each other messages, and no single channel reaches every session. This page covers the kinds of channel, how to order them as one primary with fallbacks, how to probe a target before sending, how to confirm delivery, the last-resort channel, and what each extra channel costs. The [section overview]({{ '/sections/09-session-coordination/' | relative_url }}) is the short version; the sub-topic page covers the built-in [SendMessage and ListAgents]({{ '/sections/09-session-coordination/sendmessage-and-listagents.html' | relative_url }}) in depth.
 
@@ -49,7 +48,8 @@ A message sent through a channel the target does not read leaves the sender wait
 2. If it cannot reach the target, try the next one.
 3. Stop at the first channel that reaches the target.
 
-![A sequence diagram. The sender probes ListAgents through the native channel and learns the target is absent. In an optional fragment it probes the target's Agent Mail identity and learns it was last seen three hours ago. It commits the message to the git inbox; the target pulls its inbox and replies taken.]({{ '/assets/images/09-session-coordination/channel-ladder.svg' | relative_url }}){: style="width:100%"}
+![A vertical flow chart of the channel ladder for a message to a session on another machine. The sender tries native delivery first and probes whether the target is listed in ListAgents; if listed it sends there and asks for a reply. If not listed it moves down to Agent Mail and probes whether the target's identity is active; if stale, to a message board; if no one reads it, to the git inbox, where the sender commits the message and the target pulls it and replies taken. If nothing answers, a last-resort channel. The order runs from fastest and most direct to slowest and most durable.]({{ '/assets/images/diagrams/09-session-coordination/channel-ladder-flow.svg' | relative_url }})
+*Figure: walking the ladder. Each probe asks whether the target will read the message; the sender stops at the first channel that reaches it. Made with archify.*
 
 *Figure: walking the ladder: each probe asks whether the target will read it. Made with archify.*
 

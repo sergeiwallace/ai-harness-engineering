@@ -4,13 +4,12 @@ nav_order: 15
 has_children: true
 has_toc: false
 permalink: /sections/05-skills-and-plugins/
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Skills, commands and plugins
-
-As of 2026-11-09.
 
 Stop 4 on the talk path, about 1.5 minutes.
 
@@ -98,7 +97,7 @@ Before skills, Claude Code had custom slash commands: one Markdown file per comm
 
 ## Where skills fit in a harness
 
-A harness enforces its rules in four layers, described in the [AI harnesses overview]({{ '/sections/02-ai-harnesses/' | relative_url }}): instructions; workflows and tools; hooks, scripts and linters; validation and tests. A skill spans the first two.
+A harness enforces its rules in four layers, described in the [AI harnesses overview]({{ '/sections/02-what-is-a-harness/' | relative_url }}): instructions; workflows and tools; hooks, scripts and linters; validation and tests. A skill spans the first two.
 
 - Its numbered steps and the scripts it runs build a procedure into the work (layer 2).
 - Its prose is still an instruction the model reads (layer 1), followed as unevenly as any context-file line.

@@ -5,13 +5,12 @@ grand_parent: "Logging, observability and evaluation"
 nav_order: 1
 redirect_from:
   - /sections/16-logging-and-evaluation/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # pass@k and pass^k
-
-As of 2026-11-09.
 
 Part of [Evaluating a harness change]({{ '/sections/16-logging-and-evaluation/evaluating-changes.html' | relative_url }}), in [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
 

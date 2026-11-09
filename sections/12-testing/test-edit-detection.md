@@ -3,14 +3,13 @@ title: "Detecting test edits in a diff"
 parent: "Test tampering and oracle integrity"
 grand_parent: "Testing agent-written code"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Detecting test edits in a diff
 {: .no_toc }
-
-As of 2026-11-09. Part of [Test tampering and oracle integrity]({{ '/sections/12-testing/oracle-integrity.html' | relative_url }}), in [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
 
 One low-cost check against [test tampering]({{ '/sections/12-testing/oracle-integrity.html' | relative_url }}) lists every pre-existing test a branch changed. It costs a few `git` commands and no model call. Two 2026 reward-hacking benchmarks used it as a detection channel:
 

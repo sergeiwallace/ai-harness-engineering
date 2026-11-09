@@ -2,14 +2,13 @@
 title: "Test tampering and oracle integrity"
 parent: "Testing agent-written code"
 nav_order: 2
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Test tampering and oracle integrity
 {: .no_toc }
-
-As of 2026-11-09. Part of [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
 
 The oracle is whatever decides whether code is correct: a test suite, a reference output, a checker script. Test tampering is when an agent makes its code pass by changing the oracle instead of the code. It is the testing form of reward hacking.
 

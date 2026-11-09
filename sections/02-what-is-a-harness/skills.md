@@ -1,14 +1,17 @@
 ---
 title: "Harness skills"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 2
+redirect_from:
+  - /sections/02-ai-harnesses/skills.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Harness skills
 
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}). The full section on this topic is [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
+The full section on this topic is [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 
 A skill is a procedure packaged so the agent can follow it on demand. It is how a prompt you keep retyping becomes a step-by-step method that runs the same way every time, without paying for its full text on every turn.
 
@@ -137,7 +140,7 @@ The model is good at judgment and inconsistent at doing the same fiddly thing id
 | Validate the output file | "check the file is well formed" | `validate.py notes.md` exits non-zero with the line number |
 | Compute what changed | the model reads a long log | `changes.py <tag>` prints a fixed table |
 
-This is the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) inside one skill: the workflow carries the enforcement, and the text explains it.
+This is the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) inside one skill: the workflow carries the enforcement, and the text explains it.
 
 ### Point at detail
 
@@ -214,7 +217,7 @@ Claude Code has merged custom commands into skills. A file at `.claude/commands/
 
 <!-- IMAGE NEEDED: the folder of one skill (SKILL.md, reference file, script) next to the slash-command menu where it appears; search: claude code skills folder structure, agent skills SKILL.md diagram, agentskills.io -->
 
-See [Plugins and MCP servers]({{ '/sections/02-ai-harnesses/plugins-and-mcp-servers.html' | relative_url }}).
+See [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}).
 
 ## Sources
 

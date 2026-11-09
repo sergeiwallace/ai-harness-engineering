@@ -3,13 +3,12 @@ title: "Model choice"
 parent: "Agent profiles"
 grand_parent: "Agent profiles, sub-agents and delegation"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Model choice
-
-As of 2026-11-09. Sub-topic of [Agent profiles]({{ '/sections/08-delegation/agent-profiles.html' | relative_url }}), in [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}).
 
 Delegation lets each part of a task run on a model suited to it. A common split, the one figure 1 shows:
 

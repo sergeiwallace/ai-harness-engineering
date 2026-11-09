@@ -3,13 +3,12 @@ title: "Spend tracking and budget checks"
 parent: "Logging and observability"
 grand_parent: "Logging, observability and evaluation"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Spend tracking and budget checks
-
-As of 2026-11-09.
 
 Part of [Logging and observability]({{ '/sections/16-logging-and-evaluation/logging-and-observability.html' | relative_url }}), in [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
 

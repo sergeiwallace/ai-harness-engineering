@@ -6,13 +6,12 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/11-context-window/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Compaction and saving state
-
-As of 2026-11-09.
 
 Compaction replaces a session's history with a summary so the session can keep going. It is necessary on any long task and it loses detail every time. This page covers what survives, when to compact, the three ways to shrink a conversation, how to steer the summary, how to write state so nothing important depends on the summary, how to resume automatically, and the edge cases. The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version. Sub-topic pages cover [a context supervisor]({{ '/sections/11-context-window/context-supervisor.html' | relative_url }}) that automates the routine, and [context in Claude Code and Codex]({{ '/sections/11-context-window/claude-code-and-codex-context.html' | relative_url }}).
 

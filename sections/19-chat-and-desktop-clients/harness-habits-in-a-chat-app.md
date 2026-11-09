@@ -5,13 +5,12 @@ nav_order: 1
 redirect_from:
   - /sections/19-chat-and-desktop-clients/detail.html
   - /sections/19-chat-and-desktop-clients/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Harness habits in a chat app
-
-As of 2026-11-09. Topic page in [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}).
 
 A chat app has no hooks, scripts or tests between the model and you. It has a place for standing instructions, a place for files, and your own review. This page takes five habits from the terminal harness and shows how each one works when you are the only enforcement.
 

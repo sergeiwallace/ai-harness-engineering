@@ -2,13 +2,12 @@
 title: "Document and goal templates"
 parent: "Templates, prompt stubs and injected prompts"
 nav_order: 3
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Document and goal templates
-
-As of 2026-11-09. Topic page in [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}).
 
 A document template is the full shape of one kind of document, with a description of what goes under each heading. A goal template is the shape of a stop condition for `/goal`. Prompt stubs are read once, at launch, by one agent; these are read later, by many readers, or after every turn by an evaluator. This page covers both:
 

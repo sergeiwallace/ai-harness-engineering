@@ -1,17 +1,15 @@
 ---
 title: "Guides, sensors and enforcement"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 8
 redirect_from:
-  - /sections/02-ai-harnesses/detail.html
-  - /sections/02-ai-harnesses/advanced.html
+  - /sections/02-ai-harnesses/guides-sensors-and-enforcement.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Guides, sensors and enforcement
-
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
 The components of a harness can be sorted two ways, and the rest of this site uses both. By timing: guides act before the agent does anything, sensors after. By strength: soft parts are text the model interprets, hard parts are code that runs every time. This page covers both, the enforcement ladder that connects them, scripts and templates as enforcement, what a harness costs, and how to read a harness you did not build.
 
@@ -66,7 +64,7 @@ A context-file line, a skill or a template is text the model reads and usually f
 
 ### Code that always runs
 
-A hook, script, linter, test or CI gate runs the same way every time. It cannot be forgotten or argued with. It can be wrong, slow or too strict, so it needs maintenance like any code; [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}) lists the ways.
+A hook, script, linter, test or CI gate runs the same way every time. It cannot be forgotten or argued with. It can be wrong, slow or too strict, so it needs maintenance like any code; [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}) lists the ways.
 
 | | Soft | Hard |
 |---|---|---|
@@ -77,7 +75,8 @@ A hook, script, linter, test or CI gate runs the same way every time. It cannot 
 
 ## The enforcement ladder
 
-![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled hazards passes through holes that line up in every slice and comes out as losses. Each slice stands for one layer of defence; a mistake gets through only where the holes in every layer line up.]({{ '/assets/images/02-ai-harnesses/swiss-cheese-model.png' | relative_url }})
+![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
+*Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*
 
 *Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
 
@@ -102,7 +101,7 @@ The same ladder, as the concrete places a rule can live:
 | hook or guard | 3 | a `PreToolUse` hook that refuses the commit command until tests pass | as the agent acts |
 | test or CI gate | 4 | a git pre-push hook and a CI job that run the suite | at push and merge |
 
-These are the layers of the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering). My harness enforces each rule in the latest layer that can check it, and keeps a context-file line only as a second layer. Actions only a person may take, such as publishing or deleting, sit beside the ladder as human approvals; see [Human gates]({{ '/sections/14-human-gates/' | relative_url }}).
+These are the layers of the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering). My harness enforces each rule in the latest layer that can check it, and keeps a context-file line only as a second layer. Actions only a person may take, such as publishing or deleting, sit beside the ladder as human approvals; see [Human gates]({{ '/sections/14-human-gates/' | relative_url }}).
 
 ### One rule moved into the system
 
@@ -147,7 +146,7 @@ Fast sensors that run on every file the agent writes.
   "hooks": [ { "type": "command", "command": "uv run ruff check --quiet" } ] } ] } }
 ```
 
-- Run from a `PostToolUse` [hook]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}#posttooluse), so the model sees the problem while the edit is fresh.
+- Run from a `PostToolUse` [hook]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}#posttooluse), so the model sees the problem while the edit is fresh.
 - Lint only the file just written: a script reads `tool_input.file_path` from the hook's input and passes it to the linter, so a large repository does not slow every edit.
 - Run again at commit, so nothing that skipped the hook lands.
 
@@ -197,6 +196,8 @@ HarnessTax (UC Berkeley and Arena, 2026) compared model and harness pairs.
 - Claude Code cost about twice as much as a minimal four-tool harness on SWE-bench Lite.
 - These figures are not yet verified against the primary source.
 
+LangChain measured what a harness can gain. Its deepagents-cli went from 52.8% to 66.5% on Terminal Bench 2.0 with the model fixed at gpt-5.2-codex, by changing only the harness (LangChain, 2026-02-17). One of the changes was a check that stops the agent before it exits and asks for a verification pass, the same idea as a `Stop` hook.
+
 > Benchmark tasks are short and self-contained. Much of what a personal harness does (memory, coordination, approvals) never shows on them, so read the figures as a warning about cost; they say little about any one harness.
 {: .note }
 
@@ -210,7 +211,7 @@ A context file that grew to several hundred lines.
 4. Rules a hook or test now enforces shrink to a pointer to the check.
 5. `/context` in a fresh session shows the smaller standing cost.
 
-[Context file size budgets]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}) has the full trim ladder.
+[Context file size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}) has the full trim ladder.
 
 ## Reading a harness you did not build
 
@@ -237,6 +238,7 @@ When you adopt someone else's setup, or open your own after a few months, three 
 - "context, not enforced configuration" and the guidance quoted with it: <https://code.claude.com/docs/en/memory.md>, verified 2026-11-09.
 - Swiss cheese model image: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0. The model is James Reason's.
 - Harness cost measurements: reported by HarnessTax (UC Berkeley and Arena, 2026), <https://harnesstax.github.io/>; not yet verified against the primary source.
+- LangChain, "Improving deep agents with harness engineering" (2026-02-17): <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09.
 - The enforcement ladder, the citation example and the commit script are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

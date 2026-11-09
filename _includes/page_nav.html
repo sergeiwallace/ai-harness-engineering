@@ -43,3 +43,4 @@
   <span class="page-nav-next">{%- if here != nil -%}{%- assign last = order.size | minus: 1 -%}{%- if here < last -%}{%- assign next_i = here | plus: 1 -%}{%- assign next = order[next_i] -%}<a href="{{ next.url | relative_url }}" rel="next">Next: {{ next.title }} &rarr;</a>{%- endif -%}{%- endif -%}</span>
 </nav>
 {%- endif -%}
+{%- if here != nil or nav_slide != nil -%}{%- include page_meta.html -%}{%- endif -%}

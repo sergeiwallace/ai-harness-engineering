@@ -3,14 +3,13 @@ title: "Verifying review findings"
 parent: "Review rounds and stop rules"
 grand_parent: "Code review"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Verifying review findings
 {: .no_toc }
-
-As of 2026-11-09. Part of [Review rounds and stop rules]({{ '/sections/13-code-review/review-loops.html' | relative_url }}), in [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
 A review finding is a claim about the code, and some claims are wrong:
 

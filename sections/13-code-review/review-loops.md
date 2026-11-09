@@ -4,14 +4,13 @@ parent: "Code review"
 nav_order: 3
 redirect_from:
   - /sections/13-code-review/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Review rounds and stop rules
 {: .no_toc }
-
-As of 2026-11-09. Part of [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
 Agent review is cheap enough to run many times, which makes a new failure common: a loop in which each round's reviewer finds something, the author fixes it, and the next reviewer finds something else. The code gains defensive layers, and the loop ends only when someone stops it.
 

@@ -2,13 +2,14 @@
 title: "Compiled shared context files"
 parent: "Context files"
 nav_order: 4
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Compiled shared context files
-
-As of 2026-11-09. Part of [Context files]({{ '/sections/04-context-files/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 Once you work across several repositories, machines or clients, one hand-edited context file stops being enough. The same rules need to reach every session, with a few lines that differ per client and per machine, and the shared file needs a limit so it does not grow with every lesson. A compiled context file solves both: small source parts are joined by a script, checked against a size budget, written to a versioned directory and linked into place. This page describes the pattern as it works in my own harness, at the level of mechanism.
 

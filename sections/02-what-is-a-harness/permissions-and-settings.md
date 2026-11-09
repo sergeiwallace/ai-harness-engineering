@@ -1,16 +1,17 @@
 ---
 title: "Permissions and settings"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 5
+redirect_from:
+  - /sections/02-ai-harnesses/permissions-and-settings.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Permissions and settings
 
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
-
-Settings configure the harness itself. Permissions are the part of settings that decide which actions the agent may take without asking. Claude Code's docs put it plainly: "Permission rules are enforced by Claude Code, not by the model." They are the first hard control in the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering), and the allow list decides how often you are interrupted.
+Settings configure the harness itself. Permissions are the part of settings that decide which actions the agent may take without asking. Claude Code's docs put it plainly: "Permission rules are enforced by Claude Code, not by the model." They are the first hard control in the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), and the allow list decides how often you are interrupted.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -116,7 +117,7 @@ Claude Code splits a command on `&&`, `||`, `;`, `|`, `&` and newlines before it
 2. A deny or ask rule applies if any part matches, including a part inside a subshell or a `for` loop.
 3. A rule matches the command text as written. `Bash(curl *)` does not match `/usr/bin/curl ...` or `sh -c 'curl ...'`.
 
-> For limits that must hold against every spelling, match on the effect: the sandbox for files and network, or a [guard hook]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) that parses the command. A pattern that tries to constrain arguments, such as `Bash(curl http://github.com/ *)`, misses `curl -X GET http://github.com/...` and redirects.
+> For limits that must hold against every spelling, match on the effect: the sandbox for files and network, or a [guard hook]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) that parses the command. A pattern that tries to constrain arguments, such as `Bash(curl http://github.com/ *)`, misses `curl -X GET http://github.com/...` and redirects.
 {: .warning }
 
 ### A worked example
@@ -163,7 +164,7 @@ A cloned repository's `.claude/settings.json` could allow anything, so Claude Co
 | ask | refused | prompts | prompts |
 | no decision | refused | prompts | the normal default for that tool |
 
-A hook can always refuse, and it can never override a deny or ask rule. See [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}).
+A hook can always refuse, and it can never override a deny or ask rule. See [Harness hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}).
 
 ## Permission modes
 
@@ -218,7 +219,7 @@ Claude Code turns it on with `sandbox.enabled`; an organisation can enforce it f
 
 ## Settings in my harness
 
-My harness keeps settings in source and installs them, like its [compiled context files]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}).
+My harness keeps settings in source and installs them, like its [compiled context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
 
 - Every machine gets the same hooks and shared permission rules from one source.
 - Machine-specific differences live in that machine's overlay: which tools exist, which actions need approval there.
@@ -227,8 +228,8 @@ My harness keeps settings in source and installs them, like its [compiled contex
 
 ## Related pages
 
-- [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}): hooks are declared in the same files.
-- [Native commands and tools]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}): the tool names rules match.
+- [Harness hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}): hooks are declared in the same files.
+- [Native commands and tools]({{ '/sections/02-what-is-a-harness/native-commands-and-tools.html' | relative_url }}): the tool names rules match.
 - [Human gates]({{ '/sections/14-human-gates/' | relative_url }}): which actions should wait for a person.
 
 ## Sources

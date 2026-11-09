@@ -4,13 +4,14 @@ parent: "Context files"
 nav_order: 3
 redirect_from:
   - /sections/04-context-files/advanced.html
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Hub and spoke and path rules
-
-As of 2026-11-09. Part of [Context files]({{ '/sections/04-context-files/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 Two techniques keep the always-loaded part of the context small without losing the detail:
 

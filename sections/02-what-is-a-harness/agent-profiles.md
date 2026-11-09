@@ -1,14 +1,17 @@
 ---
 title: "Agent profiles"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 7
+redirect_from:
+  - /sections/02-ai-harnesses/agent-profiles.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Agent profiles
 
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}). The full section on this topic is [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}).
+The full section on this topic is [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}).
 
 An agent profile fixes a role: what it is for, which model runs it, and which tools it may use. The main session starts a sub-agent from a profile, hands it a brief, and gets back a summary. Profiles are how a harness turns "ask another agent" into a repeatable division of labour.
 
@@ -103,7 +106,7 @@ Because the sub-agent sees nothing else, the brief must carry everything.
 5. The limits: what it may not do, whatever it decides.
 6. The report shape: which fields come back.
 
-A short brief produces a confident answer to a different question. See [Templates and briefs]({{ '/sections/02-ai-harnesses/' | relative_url }}#templates-and-briefs).
+A short brief produces a confident answer to a different question. See [Templates and briefs]({{ '/sections/02-what-is-a-harness/' | relative_url }}#templates-and-briefs).
 
 ### Isolation
 
@@ -112,7 +115,7 @@ A sub-agent that edits files should work in its own git worktree.
 - `isolation: worktree` in the profile gives it a temporary worktree, branched from the default branch, cleaned up automatically if it changes nothing.
 - Its changes cannot collide with the main session's or another sub-agent's.
 - Its branch can be reviewed and merged, or thrown away, as one unit.
-- My harness enforces this with a [guard hook]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) that keeps an isolated agent's git commands and edits inside its own worktree, and refuses commands too complex to check.
+- My harness enforces this with a [guard hook]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) that keeps an isolated agent's git commands and edits inside its own worktree, and refuses commands too complex to check.
 
 ### Nesting
 

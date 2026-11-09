@@ -3,13 +3,12 @@ title: "Writing a guard"
 parent: "Hooks"
 grand_parent: "Hooks, scripts and linters"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Writing a guard
-
-As of 2026-11-09.
 
 A guard is a [hook]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) that refuses an action. Whether agents can work with a guard depends on three things: what its refusal says, what it does with commands it cannot read, and whether the risky step is unreachable when the check fails. This page covers each, then tells the stories of five guards in my harness that started as written rules agents broke. It is a sub-topic of [Hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}).
 

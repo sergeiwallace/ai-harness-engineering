@@ -3,13 +3,12 @@ title: "MCP servers"
 parent: "Tools and tool calling"
 grand_parent: "Agentic AI fundamentals"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # MCP servers
-
-As of 2026-11-09.
 
 The Model Context Protocol (MCP) is an open standard for plugging an outside service into an AI client as a set of tools. One server can serve Claude Code, Codex, a desktop chat app and an IDE, so a tool written once works in all of them. This page is part of [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}). It covers:
 

@@ -2,13 +2,13 @@
 title: "Moving a harness between tools"
 parent: "Trends and model changes"
 nav_order: 2
+last_updated: "2026-11-09"
+talk_stop: "13"
 ---
 
 {% include page_nav.html %}
 
 # Moving a harness between tools
-
-As of 2026-11-09. Topic page in [Trends and model changes]({{ '/sections/18-trends/' | relative_url }}). Slide: [Stop 13, "Model changes and trends"]({{ '/talk/' | relative_url }}#stop-13-1-minute).
 
 Until recently, a harness built for one coding agent stayed with that agent. Now skills share a format, context files have converged on a few names, and Codex can import a Claude Code setup. Some parts still need rework when they move. This page sorts the parts of a harness by how well they travel, and walks through a move from Claude Code to Codex.
 

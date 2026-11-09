@@ -6,13 +6,12 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/16-logging-and-evaluation/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Logging and observability
-
-As of 2026-11-09.
 
 Part of [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}). Sub-page: [Spend tracking and budget checks]({{ '/sections/16-logging-and-evaluation/spend-and-budgets.html' | relative_url }}).
 
@@ -21,6 +20,7 @@ Observability is being able to answer questions about a system from what it reco
 ## Contents
 
 - [What to record](#what-to-record)
+  - [The per-run record](#the-per-run-record)
 - [JSON Lines ledgers](#json-lines-ledgers)
   - [Capturing every tool call with a hook](#capturing-every-tool-call-with-a-hook)
 - [Commit provenance](#commit-provenance)
@@ -64,6 +64,29 @@ The right-hand column can be counted, summed and grouped; the left cannot.
 | `seconds` | number | duration |
 | `exit` | number | success or failure |
 | detail fields | varies | the command, the file, the token counts |
+
+### The per-run record
+
+Events describe what happened inside a run. A per-run record, written once at the start and completed at the end, describes the conditions the run worked under. A reader comment by Armorer Labs on ShipWithAI's "The Complete Claude Code Harness Engineering Guide" suggests an "operating record" per run covering "model/prompt/tool versions, effective permissions, MCP servers exposed, commands/files touched, approvals, failures, and recovery state". As fields:
+
+| Field | Example | Answers |
+|---|---|---|
+| `model`, `effort`, `harness_version` | `opus`, `high`, the harness commit | which configuration ran |
+| `permission_mode`, `rules_in_effect` | `auto`; a hash of the merged allow, ask and deny rules | what the agent was allowed to do without asking |
+| `mcp_servers` | the MCP servers connected for the run | which outside tools it could reach |
+| `files_touched`, `commands_run` | counts, with the list in the event ledger | how much it changed |
+| `approvals` | each prompt the person answered, with the answer | which gates a person opened |
+| `failures` | gate refusals, test failures, tool errors | where it struggled |
+| `recovery_state` | `clean`, `interrupted at step 4`, `resumable from checkpoint` | whether the next run can continue, and from where |
+
+```json
+{"run": "r-2026-11-09-14", "model": "opus", "effort": "high", "harness_version": "a1b2c3d",
+ "permission_mode": "auto", "rules_in_effect": "sha256:9f2e...", "mcp_servers": ["github"],
+ "files_touched": 6, "commands_run": 41, "approvals": [{"ask": "git push origin export", "answer": "yes"}],
+ "failures": [{"stage": "focused-tests", "exit": 1}], "recovery_state": "clean"}
+```
+
+The permissions and MCP fields matter most after an incident: they show whether the agent could have done what it did without anyone approving it.
 
 ### Record failures with the same care
 
@@ -310,6 +333,7 @@ To start: add `Model:` and `Agent:` trailers to agent commits, and one JSONL led
 ## Sources
 
 - Claude Code monitoring and OpenTelemetry: <https://code.claude.com/docs/en/monitoring-usage.md>, verified 2026-11-09.
+- The per-run "operating record" fields: a reader comment by Armorer Labs on ShipWithAI, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)", <https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j>, read 2026-11-09. A design suggestion, not a vendor feature.
 - Commit trailers, ledgers and gate timing: from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

@@ -6,13 +6,12 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/15-browser-automation/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Driving a browser over CDP
-
-As of 2026-11-09.
 
 Part of [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}). Sub-page: [Background browser profiles]({{ '/sections/15-browser-automation/background-profiles.html' | relative_url }}).
 

@@ -1,14 +1,17 @@
 ---
 title: "Harness memory and context"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 9
+redirect_from:
+  - /sections/02-ai-harnesses/memory-and-context.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Harness memory and context
 
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}). The full section on this topic is [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}).
+The full section on this topic is [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}).
 
 The context window is what the model can hold in one session. Memory is what carries from one session to the next. A task tracker is memory for work. Together they decide whether a long project gets smarter over time or repeats itself.
 
@@ -77,7 +80,7 @@ Next: write the docs page, then run the full suite and open the PR.
 Rules: never push to main; ask before adding a dependency.
 ```
 
-A `PreCompact` [hook]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}#precompact) can check that state was saved before the summary runs.
+A `PreCompact` [hook]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}#precompact) can check that state was saved before the summary runs.
 
 ## Memory files
 
@@ -142,7 +145,7 @@ A good lesson says what happened, how to recognise it next time, and what to do.
 | a context file | it is short guidance for every session, decided and stable |
 | a workflow, hook or test | it must hold every time |
 
-A lesson that keeps proving itself moves into the system, following the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering): a skill step, a [hook]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) or a test enforces it, and a short context-file line stays as a second layer.
+A lesson that keeps proving itself moves into the system, following the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering): a skill step, a [hook]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}) or a test enforces it, and a short context-file line stays as a second layer.
 
 ## Task tracking
 

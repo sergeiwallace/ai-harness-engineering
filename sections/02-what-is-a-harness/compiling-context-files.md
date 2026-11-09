@@ -1,15 +1,16 @@
 ---
 title: "Compiling context files"
 parent: "Harness context files"
-grand_parent: "AI harnesses"
+grand_parent: "What is a harness?"
 nav_order: 3
+redirect_from:
+  - /sections/02-ai-harnesses/compiling-context-files.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Compiling context files
-
-As of 2026-11-09. A sub-topic of [Harness context files]({{ '/sections/02-ai-harnesses/context-files.html' | relative_url }}), in [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
 Once you use more than one tool, or more than one machine, hand-editing each context file stops scaling. Compiling means keeping the rules in small source modules and building every tool's context file from them.
 
@@ -79,7 +80,7 @@ A small script reads a manifest that lists the modules in order, picks the varia
 
 ### The size check
 
-The build ends with the [size budget]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}) check.
+The build ends with the [size budget]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}) check.
 
 | Result | Effect |
 |---|---|
@@ -107,7 +108,7 @@ drift: AGENTS.md differs from a fresh build (line 214)
 edit the source module, then rebuild; generated files are not edited by hand
 ```
 
-This is the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) applied to the context files themselves: the generated header asks, and the check enforces.
+This is the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) applied to the context files themselves: the generated header asks, and the check enforces.
 
 ## A worked example
 
@@ -148,8 +149,8 @@ A compile step is machinery to maintain. The tools now offer simpler ways to sha
 
 ## Related pages
 
-- [Context file layering]({{ '/sections/02-ai-harnesses/context-file-layering.html' | relative_url }}): the overlays the build appends.
-- [Context file size budgets]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}): the check at the end of the build.
+- [Context file layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}): the overlays the build appends.
+- [Context file size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}): the check at the end of the build.
 - [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}): when to add machinery like this.
 
 ## Sources

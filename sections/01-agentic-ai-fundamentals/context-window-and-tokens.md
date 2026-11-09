@@ -2,13 +2,12 @@
 title: "The context window and tokens"
 parent: "Agentic AI fundamentals"
 nav_order: 3
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # The context window and tokens
-
-As of 2026-11-09.
 
 The context window is everything the model can see on one turn. A rule outside it does not exist for the model, and a rule buried deep inside it competes with everything else. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#the-context-window) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers techniques for long runs. This page covers:
 

@@ -2,13 +2,14 @@
 title: "Worktree isolation"
 parent: "Agent profiles, sub-agents and delegation"
 nav_order: 2
+last_updated: "2026-11-09"
+talk_stop: "6"
+stop_minutes: "4"
 ---
 
 {% include page_nav.html %}
 
 # Worktree isolation
-
-As of 2026-11-09. Topic page in [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}). Slides: [talk stop 6, "Delegation with worktrees"]({{ '/talk/' | relative_url }}#stop-6-4-minutes).
 
 When several agents write to one repository at once, each needs its own checkout or they overwrite each other's work. A git worktree is that checkout: a second working directory of the same repository, on its own branch, sharing one object store. This page covers why worktrees, how to create one per agent, a worktree's lifecycle from creation to safe removal, merging back, and the ways isolation fails.
 

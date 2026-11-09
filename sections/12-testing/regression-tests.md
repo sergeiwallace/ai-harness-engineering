@@ -4,14 +4,13 @@ parent: "Testing agent-written code"
 nav_order: 3
 redirect_from:
   - /sections/12-testing/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # The bug-fix regression test
 {: .no_toc }
-
-As of 2026-11-09. Part of [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
 
 A bug fix is the one place where the red step of test-driven development still pays for itself with agents. The regression test must fail on the unfixed code, for the reason the bug report describes, before it may pass on the fix.
 

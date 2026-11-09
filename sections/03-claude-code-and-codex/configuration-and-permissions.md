@@ -2,13 +2,14 @@
 title: "Configuration and permissions"
 parent: "Claude Code and Codex basics"
 nav_order: 3
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Configuration and permissions
-
-As of 2026-11-09. Part of [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 Settings decide what an agent may do without asking, which model it starts on, which hooks run and which environment it gets. This page covers where Claude Code's settings files live, which one wins when two disagree, how permission rules are written and combined, and how to check what actually loaded.
 

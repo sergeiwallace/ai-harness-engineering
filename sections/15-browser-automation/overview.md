@@ -4,13 +4,12 @@ permalink: /sections/15-browser-automation/
 nav_order: 25
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Browser automation and computer use
-
-As of 2026-11-09.
 
 Not a stop on the primary talk path; stop 9 mentions screenshots as evidence in one line.
 
@@ -50,7 +49,8 @@ Browser automation is slow, and it breaks when a page changes its layout, adds a
 4. A browser you drive yourself over the Chrome DevTools Protocol, in its own profile, in the background.
 5. Computer use or a browser extension that works on your screen, as a last resort.
 
-![Sequence diagram. An agent needing pull request comments first calls the API, which returns 401 because no token is configured. It tries the next rung, the gh CLI, which returns the comments as JSON. The CDP browser is never started, because the CLI answered.]({{ '/assets/images/15-browser-automation/route-ladder-sequence.svg' | relative_url }}){: style="width:100%"}
+![A vertical flow chart of the route ladder. An agent needs data or an action on a service. Rung 1 is an API or SDK; if it works, use it and stop. If there is none or it is refused, rung 2 is a file or export such as a CSV, sitemap or RSS feed; then rung 3, a command-line tool such as gh for GitHub; then rung 4, a browser driven over CDP in its own profile in the background. Only if the page blocks that does the agent reach rung 5, the last resort: computer use or an extension on your screen.]({{ '/assets/images/diagrams/15-browser-automation/route-ladder-flow.svg' | relative_url }})
+*Figure: an agent working down the route ladder. Each rung is tried only when the one above fails. Made with archify.*
 
 *An agent working down the route ladder. Each rung is tried only when the one above fails.*
 

@@ -2,13 +2,12 @@
 title: "Git hooks, CI and linters"
 parent: "Hooks, scripts and linters"
 nav_order: 3
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Git hooks, CI and linters
-
-As of 2026-11-09.
 
 [Tool-call hooks]({{ '/sections/06-hooks-scripts-and-linters/hooks.html' | relative_url }}) check what an agent is about to do. Git hooks, CI gates and linters check what it produced. They apply to agents and people alike. On [the enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}), linters and git hooks are layer 3 (they flag or refuse at commit and push) and tests and CI are layer 4 (they validate the change before it lands). This page covers each check, how to split work between them, ratchets for adopting strict rules in an existing codebase, and what gates cost. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
 

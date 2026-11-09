@@ -1,15 +1,16 @@
 ---
 title: "Hook failure modes"
 parent: "Harness hooks"
-grand_parent: "AI harnesses"
+grand_parent: "What is a harness?"
 nav_order: 3
+redirect_from:
+  - /sections/02-ai-harnesses/hook-failure-modes.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Hook failure modes
-
-As of 2026-11-09. A sub-topic of [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}), in [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
 A hook is code, and code fails. A failed guard leaves everyone believing the rule is enforced when it is not. This page lists the ways hooks fail and the check that catches each one.
 

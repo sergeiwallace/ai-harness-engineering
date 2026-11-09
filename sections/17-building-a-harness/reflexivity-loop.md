@@ -7,13 +7,14 @@ has_toc: false
 redirect_from:
   - /sections/17-building-a-harness/detail.html
   - /sections/17-building-a-harness/advanced.html
+last_updated: "2026-11-09"
+talk_stop: "12"
+stop_minutes: "5"
 ---
 
 {% include page_nav.html %}
 
 # The improvement loop
-
-As of 2026-11-09. Topic page in [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}). Slide: [Stop 12, "Building your own harness"]({{ '/talk/' | relative_url }}#stop-12-5-minutes).
 
 The improvement loop is the [systems approach]({{ '/sections/17-building-a-harness/' | relative_url }}#1-a-systems-approach-to-building-a-harness) applied again to each gap the agents expose. Each friction point becomes a change to the system, enforced where possible by a workflow or tool, a hook, script or linter, or a test, and the loop keeps the change only if it helped.
 
@@ -201,6 +202,8 @@ The settings entry that registers it:
 }
 ```
 
+LangChain used the same idea in its own agent: a `PreCompletionChecklistMiddleware` that "intercepts the agent before it exits" and asks for a verification pass. It was one of the harness changes behind a measured gain on Terminal Bench 2.0, from 52.8% to 66.5% with the model unchanged (see the [overview]({{ '/sections/17-building-a-harness/' | relative_url }}#43-what-the-research-says)).
+
 The hook also receives a `stop_hook_active` field on its input when the agent is already continuing because of a Stop hook; a production version reads it so that a test suite that cannot pass does not trap the session in a loop.
 
 Then shorten the line in `CLAUDE.md` to "Tests must pass after your last edit; a Stop hook enforces this." The context file now names the guard that enforces the rule.
@@ -268,6 +271,7 @@ A change that is never measured stays forever, whether it helped or not. Unmeasu
 ## Sources
 
 - Claude Code hooks, the `Stop` event and exit code 2: <https://code.claude.com/docs/en/hooks.md>, not re-checked for this page.
+- LangChain's verification middleware and Terminal Bench 2.0 result: <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09.
 - From the author's own harness, described conceptually.
 
 {% include page_nav.html %}

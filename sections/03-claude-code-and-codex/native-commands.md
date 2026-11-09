@@ -4,13 +4,15 @@ parent: "Claude Code and Codex basics"
 nav_order: 2
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
+checked_against: "Claude Code v2.1.319"
 ---
 
 {% include page_nav.html %}
 
 # Native commands
-
-As of 2026-11-09, checked against Claude Code v2.1.319. Part of [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 A native command is a slash command that ships with the client, typed in the session, such as `/compact`. This page groups Claude Code's commands by what they are for, says when each one is the right tool, and ends with a worked session that uses several together. The two commands that keep a session working by themselves have a page of their own: [Goal and loop commands]({{ '/sections/03-claude-code-and-codex/goal-and-loop.html' | relative_url }}).
 

@@ -1,15 +1,16 @@
 ---
 title: "Context file size budgets"
 parent: "Harness context files"
-grand_parent: "AI harnesses"
+grand_parent: "What is a harness?"
 nav_order: 2
+redirect_from:
+  - /sections/02-ai-harnesses/context-file-budgets.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Context file size budgets
-
-As of 2026-11-09. A sub-topic of [Harness context files]({{ '/sections/02-ai-harnesses/context-files.html' | relative_url }}), in [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
 Every line of an always-loaded context file is paid for on every turn of every session. A size budget turns "keep it short" into a number a check can enforce.
 
@@ -133,9 +134,9 @@ When a file is over budget, work down this list in order. Each step keeps the ru
 2. Remove lines the model follows without being told.
 3. Shorten: one sentence per rule, the reason in a clause.
 4. Move detail to a procedure document and keep a one-line pointer.
-5. Move file-specific rules to [path rules]({{ '/sections/02-ai-harnesses/context-file-layering.html' | relative_url }}#path-rules).
-6. Move procedures to [skills]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}).
-7. Move rules that must always hold to [hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}), and keep a short line saying the hook exists.
+5. Move file-specific rules to [path rules]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}#path-rules).
+6. Move procedures to [skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}).
+7. Move rules that must always hold to [hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}), and keep a short line saying the hook exists.
 8. Only then remove a rule, and record that you did.
 
 > Before removing any line, check it is not the only place the rule is written down. A trim that deletes a rule's only copy loses the rule.
@@ -175,8 +176,8 @@ My harness pairs every trim with a traceability check.
 
 ## Related pages
 
-- [Compiling context files]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}): where the size check runs.
-- [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}): the window the budget protects.
+- [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}): where the size check runs.
+- [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}): the window the budget protects.
 
 ## Sources
 

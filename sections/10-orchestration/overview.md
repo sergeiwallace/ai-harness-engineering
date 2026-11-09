@@ -4,13 +4,12 @@ nav_order: 20
 has_children: true
 has_toc: false
 permalink: /sections/10-orchestration/
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Orchestration and workflows
-
-As of 2026-11-09.
 
 Orchestration is how multi-step work gets done without you driving every step. In prompt-driven orchestration a lead agent holds the plan and directs other agents through briefs. In programmatic orchestration a script holds the plan and starts agents for each step. Goals and loops keep either kind going until a condition is met, and every loop needs an exit condition and a limit.
 

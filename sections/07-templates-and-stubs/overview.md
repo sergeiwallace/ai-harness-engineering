@@ -4,13 +4,14 @@ permalink: /sections/07-templates-and-stubs/
 nav_order: 17
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "1.5"
 ---
 
 {% include page_nav.html %}
 
 # Templates, prompt stubs and injected prompts
-
-As of 2026-11-09. Overview page. Slides: [talk stop 4, "Templates and briefs"]({{ '/talk/' | relative_url }}#stop-4-6-minutes), about 1.5 minutes.
 
 In a harness, the person writes a few prompts and agents write all the rest. A lead agent writes a brief for each sub-agent, a coordinator writes a task for each worker session, and a skill writes the prompt for the next skill in a chain. Templates give each of those prompts a fixed shape, so the rules that matter reach every agent word for word. The harness can also type text into a session that is already running, which is what this site calls an injected prompt.
 

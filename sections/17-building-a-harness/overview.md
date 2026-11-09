@@ -4,13 +4,14 @@ nav_order: 27
 has_children: true
 has_toc: false
 permalink: /sections/17-building-a-harness/
+last_updated: "2026-11-09"
+talk_stop: "12"
+stop_minutes: "5"
 ---
 
 {% include page_nav.html %}
 
 # Building your own harness
-
-As of 2026-11-09. Overview page. Slides for this part of the talk: [Stop 12 on the talk page]({{ '/talk/' | relative_url }}#stop-12-5-minutes).
 
 You build a harness with a systems approach: each time an agent's output falls short, you find the part of the system that let it through and change that part, so the fix is enforced on every later run. Repeating this for every gap is how a harness improves. This overview covers how to start, where each fix belongs, and how to keep the harness from growing into something nobody can follow. Each part links to a topic page that goes deeper.
 
@@ -209,7 +210,14 @@ Studies of self-improving harnesses describe one outer loop:
    - The evaluator stays outside what the loop may change.
 5. Promote it through someone other than the proposer, usually a person, and keep a record so it can be rolled back.
 
-One study found that automatic harness changes did no better than simply running the model more, so compare any automatic loop against that baseline. Details and sources: [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}).
+Harness changes alone can move results a long way. LangChain kept the model fixed (gpt-5.2-codex) and changed only the harness of its deepagents-cli agent:
+
+| Run | Model | Harness | Terminal Bench 2.0 |
+|---|---|---|---|
+| Before | gpt-5.2-codex | Original | 52.8% |
+| After | gpt-5.2-codex | Changed, including a verification step before the agent may finish | 66.5% |
+
+One study of automatic harness changes found a weaker result: they did no better than simply running the model more. Compare any automatic loop against that baseline before trusting it. Details and sources: [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}).
 
 ## 5. Complexity creep
 
@@ -276,6 +284,7 @@ A rule that helped one model generation can hurt the next. Re-test your rules wh
 
 - Self-improving harness research (mine failures, propose small bounded edits, keep only changes that do not regress, keep the evaluator outside the thing being changed): sources listed on [Self-improving harness research]({{ '/sections/17-building-a-harness/self-improving-harnesses.html' | relative_url }}); not yet verified against the primary sources.
 - Automatic harness changes doing no better than running the model more: <https://arxiv.org/abs/2607.12227>, verified 2026-11-09.
+- LangChain's Terminal Bench 2.0 result with the model fixed: LangChain, "Improving Deep Agents with harness engineering", 2026-02-17, <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09. Found through ShipWithAI's "The Complete Claude Code Harness Engineering Guide", <https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j>.
 - Claude Code hooks, including the `Stop` event, `timeout` and exit code 2: <https://code.claude.com/docs/en/hooks.md>, not re-checked for this page.
 
 {% include page_nav.html %}

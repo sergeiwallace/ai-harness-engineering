@@ -4,13 +4,14 @@ parent: "Agent profiles, sub-agents and delegation"
 nav_order: 1
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
+talk_stop: "6"
+stop_minutes: "4"
 ---
 
 {% include page_nav.html %}
 
 # Agent profiles
-
-As of 2026-11-09. Topic page in [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}). Slides: [talk stop 6, "Sub-agents and agent profiles"]({{ '/talk/' | relative_url }}#stop-6-4-minutes).
 
 An agent profile is a file that turns a general agent into a role: it names the role, says when to use it, lists the tools it may call, picks its model, and carries its standing instructions. A brief describes one task. A profile describes the role across every task it is used for. This page covers the fields, how the runtime picks and enforces a profile, how to design a role set, and how to record which profile did which work. Choosing the model for each role has its own sub-page: [model choice]({{ '/sections/08-delegation/model-choice.html' | relative_url }}).
 

@@ -4,13 +4,14 @@ nav_order: 14
 has_children: true
 has_toc: false
 permalink: /sections/04-context-files/
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Context files
-
-As of 2026-11-09. Slide: [stop 4 on the talk page]({{ '/talk/' | relative_url }}#stop-4-6-minutes), "Context files".
 
 A context file is a plain Markdown file of instructions that the client loads into the model's context: `CLAUDE.md` for Claude Code, `AGENTS.md` for Codex and several other tools. The agent sees it at the start of every session: how to build and test, the conventions, the commands to avoid. It is the cheapest part of a harness to write and the first one to add, and it guides behaviour without enforcing anything.
 
@@ -71,7 +72,7 @@ A context file guides general behaviour. The model applies it unevenly: less rel
    - Layers 2 to 4 do the enforcing.
    - Each time a gap shows up, the fix goes into the lowest layer that can prevent it, and the harness improves in a way that holds.
 
-See [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) for the systems approach and [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) for layer 3.
+See [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}) for the systems approach and [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) for layer 3.
 
 ## How they load
 

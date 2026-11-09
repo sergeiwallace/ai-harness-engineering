@@ -1,14 +1,17 @@
 ---
 title: "Native commands and tools"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 3
+redirect_from:
+  - /sections/02-ai-harnesses/native-commands-and-tools.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Native commands and tools
 
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}). The basics of both tools are in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}).
+The basics of both tools are in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}).
 
 Native tools are what the model can call before you add anything. Native commands are what a person types. Together they are the floor of every harness: skills call the tools, hooks watch them, permission rules name them. This page lists them, shows how a tool call moves through the harness, and gives the checks to run before you build something that already exists.
 
@@ -81,7 +84,7 @@ A rule for `Bash` sees every shell command; a rule for `Edit` sees every file ed
 | `Monitor` | runs a command in the background and feeds each output line back | |
 | `ToolSearch` | finds and loads deferred tools, such as MCP tools, when tool search is on | no |
 
-MCP servers add more tools, named `mcp__<server>__<tool>`. See [Plugins and MCP servers]({{ '/sections/02-ai-harnesses/plugins-and-mcp-servers.html' | relative_url }}).
+MCP servers add more tools, named `mcp__<server>__<tool>`. See [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}).
 
 ## Codex's tools
 
@@ -107,7 +110,7 @@ Codex's `sandbox_mode` (`read-only`, `workspace-write`, `danger-full-access`) de
 | `Bash` | a custom tool | tests, builds, git and your own scripts already run there |
 | a script called from `Bash` | a long chain of shell commands | one command the agent cannot get half right, and one pattern for a rule to allow |
 
-> A `Bash` permission rule matches the command text. Claude Code splits compound commands on `&&`, `;`, `|` and the rest, and each part must be allowed, but a rule for `curl *` does not match `/usr/bin/curl` or `sh -c 'curl ...'`. For filesystem and network limits that do not depend on the command text, use the sandbox; for full inspection, a [`PreToolUse` hook]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}).
+> A `Bash` permission rule matches the command text. Claude Code splits compound commands on `&&`, `;`, `|` and the rest, and each part must be allowed, but a rule for `curl *` does not match `/usr/bin/curl` or `sh -c 'curl ...'`. For filesystem and network limits that do not depend on the command text, use the sandbox; for full inspection, a [`PreToolUse` hook]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}).
 {: .warning }
 
 ## Commands the person types
@@ -149,7 +152,7 @@ A skill you write appears as `/name` next to the built-in commands.
 - The person sees one menu; the harness knows which entries are built in and which are yours.
 - A project skill named like a built-in command can replace it, so avoid the built-in names.
 - Up to six skills can start one message: `/skill-a /skill-b do this`.
-- See [Harness skills]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}).
+- See [Harness skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}).
 
 ## Worked examples
 

@@ -1,13 +1,12 @@
 ---
 title: "Talk slides"
 nav_order: 2
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Talk slides
-
-As of 2026-11-09.
 
 The talk has 13 stops in 42 minutes, then 3 minutes of questions. The slides carry few words, with a diagram where one helps. The pages on this site carry the full text, the examples and the sources.
 
@@ -50,7 +49,7 @@ The PDF has one page per slide, for showing the talk without a browser or for pr
 |---:|---:|---:|---|
 | 1 | 2 | 4 | Introduction |
 | 2 | 2 | 2 | Agentic AI fundamentals |
-| 3 | 3 | 3 | AI harnesses |
+| 3 | 3 | 3 | What is a harness? |
 | 4 | 6 | 6 | Claude Code and Codex, context files, skills, templates |
 | 5 | 4 | 4 | Hooks, scripts and linters |
 | 6 | 4 | 3 | Delegation |
@@ -84,7 +83,7 @@ Section page: [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals
 
 ### Stop 3, 3 minutes
 
-Section page: [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }})
+Section page: [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }})
 
 1. [Parts of a harness]({{ slides_url }}#/6){:target="_blank" rel="noopener"}
 2. [A systems approach to harness engineering]({{ slides_url }}#/7){:target="_blank" rel="noopener"}
@@ -177,7 +176,7 @@ One backup slide per section, used during questions. The [appendix index slide](
 
 1. [Introduction detail]({{ slides_url }}#/41){:target="_blank" rel="noopener"}, overview: [Introduction]({{ '/' | relative_url }})
 2. [Agentic AI fundamentals detail]({{ slides_url }}#/42){:target="_blank" rel="noopener"}, overview: [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }})
-3. [AI harnesses detail]({{ slides_url }}#/43){:target="_blank" rel="noopener"}, overview: [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }})
+3. [What is a harness? detail]({{ slides_url }}#/43){:target="_blank" rel="noopener"}, overview: [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }})
 4. [Claude Code and Codex basics detail]({{ slides_url }}#/44){:target="_blank" rel="noopener"}, overview: [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }})
 5. [Context files detail]({{ slides_url }}#/45){:target="_blank" rel="noopener"}, overview: [Context files]({{ '/sections/04-context-files/' | relative_url }})
 6. [Skills, commands and plugins detail]({{ slides_url }}#/46){:target="_blank" rel="noopener"}, overview: [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }})

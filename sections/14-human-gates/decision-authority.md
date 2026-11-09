@@ -6,13 +6,12 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/14-human-gates/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Decision authority and escalation
-
-As of 2026-11-09.
 
 Part of [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}). Sub-page: [Held decisions and the review queue]({{ '/sections/14-human-gates/held-decisions.html' | relative_url }}).
 

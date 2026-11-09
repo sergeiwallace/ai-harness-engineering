@@ -2,13 +2,12 @@
 title: "Memory files and lessons"
 parent: "Context window and memory"
 nav_order: 2
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Memory files and lessons
-
-As of 2026-11-09.
 
 Memory files carry what a session learned into the next session. This page covers what memory is for, Claude Code's auto memory, how to write a lesson that transfers, how to lay out an index that stays inside its load limit, where a fix for a repeated mistake belongs, and how memory differs from context files and the task tracker. The [section overview]({{ '/sections/11-context-window/' | relative_url }}) is the short version.
 

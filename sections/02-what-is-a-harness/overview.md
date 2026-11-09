@@ -1,22 +1,27 @@
 ---
-title: "AI harnesses"
-permalink: /sections/02-ai-harnesses/
+title: "What is a harness?"
+permalink: /sections/02-what-is-a-harness/
 nav_order: 12
 has_children: true
 has_toc: false
+redirect_from:
+  - /sections/02-ai-harnesses/
+  - /sections/02-ai-harnesses/detail.html
+  - /sections/02-ai-harnesses/advanced.html
+last_updated: "2026-11-09"
+talk_stop: "3"
+stop_minutes: "3"
 ---
 
 {% include page_nav.html %}
 
-# AI harnesses
-
-As of 2026-11-09. Stop 3 on the talk path, about 3 minutes. Slides for this stop are on the [talk slides page]({{ '/talk/' | relative_url }}), under stop 3.
+# What is a harness?
 
 A harness is the software around a model that gives it safe access to tools, memory and checks, set up to match one person's preferences, workflows and projects. Claude Code and Codex are harnesses out of the box. Harness engineering is the work of extending them: context files that say how you work, skills that hold your procedures, hooks and checks that stop the mistakes you have seen, agent profiles that fix who does what, and memory that carries lessons from one session to the next.
 
 The components sort into five functions around the agent loop: context injection (what the model reads), action (what it can do), control (what decides which actions run and who runs them), observe and verify (what checks the result) and persist (what carries into the next session). This overview walks through each function and each component in it, with what it is, why it matters, a worked example and a snippet. Every component links to a topic page that goes deeper, and some topic pages link further down to sub-topic pages. Two sections near the end tie it together: [a bug fix, step by step](#a-bug-fix-step-by-step) shows every component on one task, and [a systems approach to harness engineering](#a-systems-approach-to-harness-engineering) explains where a fix should go when something goes wrong.
 
-![A layered map of a harness, read top to bottom. Person and policy at the top: the person sends a prompt or a slash command into Skills, and permissions and settings send allow, ask and deny rules into the agent loop. Context injection: context files and the memory index load into the loop at session start, and a skill's steps load on use. In the middle, the agent loop, where the model reasons and decides and the context window is its working memory. Control: every tool call passes the hooks and guards. Action: allowed calls reach the native tools or MCP servers and plugins. Delegation: the Agent tool sends a brief to a sub-agent, which takes its role and tools from an agent profile and edits in its own worktree. Observe, verify, persist: the sub-agent's diff and report go to tests and review, a pass becomes a verified change, the task tracker closes the task, and lessons flow back up into memory for the next session.]({{ '/assets/images/02-ai-harnesses/harness-layers.png' | relative_url }})
+![A layered map of a harness, read top to bottom. The person at the top sends a prompt or a slash command into Skills. Context injection: context files and the memory index load into the loop at session start, and a skill's steps load on use. In the middle, the agent loop, where the model reasons and decides and the context window is its working memory. Control: every tool call passes the hooks and guards, and permissions and settings send allow, ask and deny rules up into the agent loop. Action: allowed calls reach the native tools or MCP servers and plugins. Delegation: the Agent tool sends a brief to a sub-agent, which takes its role and tools from an agent profile and edits in its own worktree. Observe, verify, persist: the sub-agent's diff and report go to tests and review, a pass becomes a verified change, the task tracker closes the task, and lessons flow back up into memory for the next session.]({{ '/assets/images/02-ai-harnesses/harness-layers.png' | relative_url }})
 
 *The harness as layers around the agent loop. Green arrows are the main path of one task; red are control points; dashed purple are asynchronous or returning flows. Our own diagram, made with archify. Inspired by Addy Osmani's harness anatomy (<https://addyosmani.com/assets/images/harness-anatomy.jpeg>), Phil Schmid's agent harness diagram (<https://www.philschmid.de/static/blog/agent-harness-2026/agent-harness.jpeg>) and a layered Claude Code architecture map published on Substack (<https://substack-post-media.s3.amazonaws.com/public/images/fd726fee-d916-4c94-8947-adb16f45d08d_2412x1488.jpeg>).*
 
@@ -30,18 +35,18 @@ The components sort into five functions around the agent loop: context injection
 
 | Component | Question it answers | In Claude Code | In Codex | Topic page |
 |---|---|---|---|---|
-| Context files | What does the agent know at the start? | `CLAUDE.md`, `.claude/rules/` | `AGENTS.md` | [Harness context files]({{ '/sections/02-ai-harnesses/context-files.html' | relative_url }}) |
-| Templates and briefs | What does a new agent get told? | skills, sub-agent briefs, `--append-system-prompt` | skills, prompt files | [Guides, sensors and enforcement]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}) |
-| Native commands and tools | What can it do with no setup? | Read, Edit, Bash, Grep, `/compact` | shell, apply patch, `/status` | [Native commands and tools]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}) |
-| Skills | What procedures does it follow? | `.claude/skills/<name>/SKILL.md` | `.agents/skills/<name>/SKILL.md` | [Harness skills]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}) |
-| Plugins and MCP servers | What outside services can it reach? | `/plugin`, `.mcp.json` | `[mcp_servers.<id>]` in `config.toml` | [Plugins and MCP servers]({{ '/sections/02-ai-harnesses/plugins-and-mcp-servers.html' | relative_url }}) |
-| Permissions and settings | What is it allowed to do unasked? | `settings.json` allow, ask, deny | `approval_policy`, `sandbox_mode` | [Permissions and settings]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) |
-| Hooks | What runs at fixed points, every time? | `hooks` in `settings.json` | `[hooks]` in `config.toml` | [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) |
-| Scripts, linters and tests | What checks the result? | git hooks, CI, test suites | the same | [Guides, sensors and enforcement]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}) |
-| Agent profiles | Who does which part of the work? | `.claude/agents/<name>.md` | roles in the `agents` table of `config.toml` | [Agent profiles]({{ '/sections/02-ai-harnesses/agent-profiles.html' | relative_url }}) |
-| Memory | What survives the end of a session? | auto memory, `MEMORY.md` | `AGENTS.md`, files you keep in the repo | [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}) |
-| Context window | How much room is left right now? | `/context`, `/compact` | `/status`, `/compact` | [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}) |
-| Task tracking | What work is open, and who owns it? | an issue tracker the agent can call | the same | [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}#task-tracking) |
+| Context files | What does the agent know at the start? | `CLAUDE.md`, `.claude/rules/` | `AGENTS.md` | [Harness context files]({{ '/sections/02-what-is-a-harness/context-files.html' | relative_url }}) |
+| Templates and briefs | What does a new agent get told? | skills, sub-agent briefs, `--append-system-prompt` | skills, prompt files | [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}) |
+| Native commands and tools | What can it do with no setup? | Read, Edit, Bash, Grep, `/compact` | shell, apply patch, `/status` | [Native commands and tools]({{ '/sections/02-what-is-a-harness/native-commands-and-tools.html' | relative_url }}) |
+| Skills | What procedures does it follow? | `.claude/skills/<name>/SKILL.md` | `.agents/skills/<name>/SKILL.md` | [Harness skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}) |
+| Plugins and MCP servers | What outside services can it reach? | `/plugin`, `.mcp.json` | `[mcp_servers.<id>]` in `config.toml` | [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}) |
+| Permissions and settings | What is it allowed to do unasked? | `settings.json` allow, ask, deny | `approval_policy`, `sandbox_mode` | [Permissions and settings]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) |
+| Hooks | What runs at fixed points, every time? | `hooks` in `settings.json` | `[hooks]` in `config.toml` | [Harness hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}) |
+| Scripts, linters and tests | What checks the result? | git hooks, CI, test suites | the same | [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}) |
+| Agent profiles | Who does which part of the work? | `.claude/agents/<name>.md` | roles in the `agents` table of `config.toml` | [Agent profiles]({{ '/sections/02-what-is-a-harness/agent-profiles.html' | relative_url }}) |
+| Memory | What survives the end of a session? | auto memory, `MEMORY.md` | `AGENTS.md`, files you keep in the repo | [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) |
+| Context window | How much room is left right now? | `/context`, `/compact` | `/status`, `/compact` | [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) |
+| Task tracking | What work is open, and who owns it? | an issue tracker the agent can call | the same | [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}#task-tracking) |
 
 > Every row is something you can add to, configure or replace. The table has no row for the model: by the 2026 definition, the harness is everything except the model.
 {: .note }
@@ -88,7 +93,7 @@ Böckeler sorts the parts by when they act.
 
 <!-- IMAGE NEEDED: guides acting before the agent acts and sensors acting after, around one agent loop; search: harness engineering guides sensors, feedforward feedback agent, Bockeler harness engineering diagram -->
 
-A harness strong in both steers the agent toward the right action and catches the cases where steering failed. The [guides and sensors]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#guides-and-sensors) section of the enforcement topic page has a worked example.
+A harness strong in both steers the agent toward the right action and catches the cases where steering failed. The [guides and sensors]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#guides-and-sensors) section of the enforcement topic page has a worked example.
 
 ### Instructions and enforcement
 
@@ -103,7 +108,8 @@ Some parts are text the model reads and interprets. Others are code that runs th
 
 Claude Code's docs describe `CLAUDE.md` as "context, not enforced configuration", and point to a `PreToolUse` hook "to block an action regardless of what Claude decides".
 
-![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled hazards passes through holes that line up in every slice and comes out as losses. Each slice stands for one layer of defence; a mistake gets through only where the holes in every layer line up.]({{ '/assets/images/02-ai-harnesses/swiss-cheese-model.png' | relative_url }})
+![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
+*Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*
 
 *Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
 
@@ -116,7 +122,7 @@ The ladder, from the layer that guides to the layers that enforce:
 | 3. Hooks, scripts and linters | checks at the moment of action | the harness, every time | a `PreToolUse` guard that refuses `pkill` and names the safe form | spellings the guard does not parse, and mistakes only visible in the finished result |
 | 4. Validation and tests | tests, CI, link checkers, review before a change lands | programs and reviewers on the result | a link checker that walks the built site before publish | design and judgment problems no check encodes; those go to a person |
 
-My harness puts each rule as high on this ladder as it can be checked, and keeps the context-file line as a second layer. Rules that cannot be checked from an action, such as design judgment, stay as guidance with a review step behind them. The [systems approach](#a-systems-approach-to-harness-engineering) section below explains the layers, and [Guides, sensors and enforcement]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#one-rule-moved-into-the-system) follows one rule into the system.
+My harness puts each rule as high on this ladder as it can be checked, and keeps the context-file line as a second layer. Rules that cannot be checked from an action, such as design judgment, stay as guidance with a review step behind them. The [systems approach](#a-systems-approach-to-harness-engineering) section below explains the layers, and [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#one-rule-moved-into-the-system) follows one rule into the system.
 
 
 ## Context injection
@@ -125,9 +131,9 @@ What reaches the model before it acts. These are guides: text the model reads an
 
 | Component | Reaches the model | Topic page |
 |---|---|---|
-| Context files | at session start, path rules on demand | [Harness context files]({{ '/sections/02-ai-harnesses/context-files.html' | relative_url }}) |
-| Templates and briefs | when a prompt or sub-agent brief is built | [Guides, sensors and enforcement]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#templates-as-guides) |
-| Skills | description every turn, body on use | [Harness skills]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}) |
+| Context files | at session start, path rules on demand | [Harness context files]({{ '/sections/02-what-is-a-harness/context-files.html' | relative_url }}) |
+| Templates and briefs | when a prompt or sub-agent brief is built | [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#templates-as-guides) |
+| Skills | description every turn, body on use | [Harness skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}) |
 
 ### Context files
 
@@ -151,7 +157,7 @@ The model starts every session with no memory of the last one. Whatever is in th
 
 *Which context files reach the model, and when. After compaction the project-root file is re-read from disk; folder files and path rules come back the next time a matching file is touched. Our own diagram, made with archify.*
 
-Files at several levels combine. A user file in `~/.claude/CLAUDE.md` applies to every project you open. A project file is committed and shared with the team. Path rules in `.claude/rules/` load only when the agent touches files that match their pattern, so a rule about test style costs nothing while the agent edits docs. [Context file layering]({{ '/sections/02-ai-harnesses/context-file-layering.html' | relative_url }}) covers precedence and imports.
+Files at several levels combine. A user file in `~/.claude/CLAUDE.md` applies to every project you open. A project file is committed and shared with the team. Path rules in `.claude/rules/` load only when the agent touches files that match their pattern, so a rule about test style costs nothing while the agent edits docs. [Context file layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}) covers precedence and imports.
 
 #### Snippet
 
@@ -177,11 +183,11 @@ An agent keeps editing a generated client file, and your changes vanish at the n
 <details markdown="1">
 <summary>How my harness builds its context files</summary>
 
-My global context file is compiled. Each rule lives in a small source module, a build step joins the modules into the files each tool reads, and a size check fails the build when the always-loaded result grows past its budget. A rule that needs more than a line or two moves into a procedure document, and the context file keeps a one-line pointer to it. [Compiling context files]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}) and [Context file size budgets]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}) describe both.
+My global context file is compiled. Each rule lives in a small source module, a build step joins the modules into the files each tool reads, and a size check fails the build when the always-loaded result grows past its budget. A rule that needs more than a line or two moves into a procedure document, and the context file keeps a one-line pointer to it. [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}) and [Context file size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}) describe both.
 
 </details>
 
-Topic page: [Harness context files]({{ '/sections/02-ai-harnesses/context-files.html' | relative_url }}). Full section: [Context files]({{ '/sections/04-context-files/' | relative_url }}).
+Topic page: [Harness context files]({{ '/sections/02-what-is-a-harness/context-files.html' | relative_url }}). Full section: [Context files]({{ '/sections/04-context-files/' | relative_url }}).
 
 ### Templates and briefs
 
@@ -243,7 +249,7 @@ description: Diagnose and fix a reproducible defect. Reproduce, find the root ca
 
 #### Worked example
 
-You keep typing the same five-paragraph prompt whenever a bug comes in, and the agent keeps skipping the regression test. As a skill, the steps are numbered and the test comes before the fix. My harness has skills for landing a change end to end, for fixing bugs, for delegating to another agent and for reviewing code, each grown from a prompt I kept retyping. [Harness skills]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}) covers authoring, triggering and testing them; [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}) is the full section.
+You keep typing the same five-paragraph prompt whenever a bug comes in, and the agent keeps skipping the regression test. As a skill, the steps are numbered and the test comes before the fix. My harness has skills for landing a change end to end, for fixing bugs, for delegating to another agent and for reviewing code, each grown from a prompt I kept retyping. [Harness skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}) covers authoring, triggering and testing them; [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}) is the full section.
 
 ## Action
 
@@ -251,8 +257,8 @@ What the agent can do in the world. Every action goes through a tool, so the too
 
 | Component | Gives the agent | Topic page |
 |---|---|---|
-| Native commands and tools | files, search, shell, web, sub-agents | [Native commands and tools]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}) |
-| Plugins and MCP servers | outside services and shared packages | [Plugins and MCP servers]({{ '/sections/02-ai-harnesses/plugins-and-mcp-servers.html' | relative_url }}) |
+| Native commands and tools | files, search, shell, web, sub-agents | [Native commands and tools]({{ '/sections/02-what-is-a-harness/native-commands-and-tools.html' | relative_url }}) |
+| Plugins and MCP servers | outside services and shared packages | [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}) |
 
 ### Native commands and tools
 
@@ -279,7 +285,7 @@ Two native commands, with the kind of output they give (shortened and illustrati
 
 #### Worked example
 
-Before writing a skill that "summarises the session so far", check `/compact`: it already summarises, and it takes an instruction for what to keep. Before writing a search helper, check that a plain `grep` or `find` through `Bash`, or the `LSP` tool for definitions and references, does not already cover it. The [topic page]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}) has a full table of tools and commands, with Codex equivalents. The basics of both tools are in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}).
+Before writing a skill that "summarises the session so far", check `/compact`: it already summarises, and it takes an instruction for what to keep. Before writing a search helper, check that a plain `grep` or `find` through `Bash`, or the `LSP` tool for definitions and references, does not already cover it. The [topic page]({{ '/sections/02-what-is-a-harness/native-commands-and-tools.html' | relative_url }}) has a full table of tools and commands, with Codex equivalents. The basics of both tools are in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}).
 
 ### Plugins and MCP servers
 
@@ -314,7 +320,7 @@ $ claude mcp add --transport http --scope project docs-search https://mcp.exampl
 
 #### Worked example
 
-Several sessions on one machine need to send each other messages. An MCP server that wraps a small mailbox gives every session the same send and fetch tools, with no new code in any session. Packaging those tools with the skill that explains when to use them, as a plugin, means a new machine gets both in one install. See [Plugins and MCP servers]({{ '/sections/02-ai-harnesses/plugins-and-mcp-servers.html' | relative_url }}).
+Several sessions on one machine need to send each other messages. An MCP server that wraps a small mailbox gives every session the same send and fetch tools, with no new code in any session. Packaging those tools with the skill that explains when to use them, as a plugin, means a new machine gets both in one install. See [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}).
 
 ## Control
 
@@ -322,10 +328,10 @@ What decides which actions run, who does them, and how much the session can hold
 
 | Component | Decides | Topic page |
 |---|---|---|
-| Permissions and settings | which calls run, ask or are refused | [Permissions and settings]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) |
-| Hooks | what happens at fixed points in the session | [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) |
-| Agent profiles | which role, model and tools a sub-agent gets | [Agent profiles]({{ '/sections/02-ai-harnesses/agent-profiles.html' | relative_url }}) |
-| Context window | how much the session holds, and when it compacts | [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}) |
+| Permissions and settings | which calls run, ask or are refused | [Permissions and settings]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) |
+| Hooks | what happens at fixed points in the session | [Harness hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}) |
+| Agent profiles | which role, model and tools a sub-agent gets | [Agent profiles]({{ '/sections/02-what-is-a-harness/agent-profiles.html' | relative_url }}) |
+| Context window | how much the session holds, and when it compacts | [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) |
 
 ### Permissions and settings
 
@@ -353,7 +359,7 @@ Permissions are the first hard control. A denied action is refused by the harnes
 
 You approve `npm run test` forty times in one afternoon. An `allow` rule for it removes the prompt. You never want the agent to read the `.env` file, even by accident; a `deny` rule makes that unreachable. Pushing stays on `ask`, because you want to see what leaves the machine. Rules are checked deny first, then ask, then allow, and the first match decides.
 
-<!-- IMAGE NEEDED: a screenshot of a Claude Code permission prompt for a Bash command with its Yes / Yes, and don't ask again / No options; search: claude code permission prompt screenshot, claude code bash approval dialog --> [Permissions and settings]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) covers scopes, precedence, modes and sandboxing.
+<!-- IMAGE NEEDED: a screenshot of a Claude Code permission prompt for a Bash command with its Yes / Yes, and don't ask again / No options; search: claude code permission prompt screenshot, claude code bash approval dialog --> [Permissions and settings]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) covers scopes, precedence, modes and sandboxing.
 
 ### Hooks
 
@@ -396,7 +402,7 @@ redirects git to the shared checkout via -C. Refusing to run it. Run the
 equivalent from <its worktree> without the redirect.
 ```
 
-[Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) is the topic page, with sub-topics on [lifecycle events]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}), [guard hooks]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) and [failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}). The full section is [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
+[Harness hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}) is the topic page, with sub-topics on [lifecycle events]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}), [guard hooks]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) and [failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}). The full section is [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
 
 ### Agent profiles
 
@@ -428,7 +434,7 @@ finding with file, line, severity and a suggested fix. Never edit files.
 
 #### Worked example
 
-The main session writes a feature, then starts a reviewer from a different model family with the diff and the original requirements. The reviewer reports two findings; the main session fixes one and answers the other. [Agent profiles]({{ '/sections/02-ai-harnesses/agent-profiles.html' | relative_url }}) has the profile fields and the roles I use; [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}) is the full section.
+The main session writes a feature, then starts a reviewer from a different model family with the diff and the original requirements. The reviewer reports two findings; the main session fixes one and answers the other. [Agent profiles]({{ '/sections/02-what-is-a-harness/agent-profiles.html' | relative_url }}) has the profile fields and the roles I use; [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}) is the full section.
 
 ### Context window
 
@@ -456,7 +462,7 @@ Next: write the docs page, run the full suite, open the PR.
 
 <!-- IMAGE NEEDED: a context window filling up over a session, with system prompt, tools, context files and messages as layers, and the compaction point; search: LLM context window filling diagram, context window compaction diagram, context engineering window -->
 
- The full treatment is in [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}#the-context-window) and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}).
+ The full treatment is in [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}#the-context-window) and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}).
 
 ## Observe and verify
 
@@ -488,7 +494,7 @@ $ commit-with-provenance --title "docs: add hooks page" --body-file body.txt
 refused: the body must say whether the change was delegated, and to whom
 ```
 
-The same pattern turned "check every link before you publish" into a link checker that walks the built site. See [Guides, sensors and enforcement]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#scripts-linters-and-tests) and [Testing]({{ '/sections/12-testing/' | relative_url }}).
+The same pattern turned "check every link before you publish" into a link checker that walks the built site. See [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#scripts-linters-and-tests) and [Testing]({{ '/sections/12-testing/' | relative_url }}).
 
 ## Persist
 
@@ -526,7 +532,7 @@ One line each: past the read limit drops silently, tail first.
 
 #### Worked example
 
-A session learns that a release tool reports success even when one of its checks was skipped. It writes a lesson file and one index line. The next session reads the line at startup, and when it sees the tool's success message it reads the verified line too. See [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}).
+A session learns that a release tool reports success even when one of its checks was skipped. It writes a lesson file and one index line. The next session reads the line at startup, and when it sees the tool's success message it reads the verified line too. See [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}).
 
 ### Task tracking
 
@@ -556,7 +562,7 @@ $ bd update <id> --claim
 3. Each issue is closed when that agent's work is collected.
 4. One agent crashes. Its issue stays open, so its unfinished work is visible and can be picked up.
 
-See [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}#task-tracking).
+See [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}#task-tracking).
 
 ## How the components work together
 
@@ -568,25 +574,25 @@ The diagram and the numbered steps below follow the same task: a person asks the
 
 *One bug-fix task in time order. Solid arrows are calls, dashed arrows are returns and events, red marks a control point. Our own diagram, made with archify.*
 
-1. Session start, with [context files]({{ '/sections/02-ai-harnesses/context-files.html' | relative_url }}) and [memory]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}) at work.
+1. Session start, with [context files]({{ '/sections/02-what-is-a-harness/context-files.html' | relative_url }}) and [memory]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) at work.
    - Does: the harness loads `CLAUDE.md`, any matching rules and the `MEMORY.md` index into the window. A `SessionStart` hook adds the git branch and the open tasks.
    - Prevents: the agent guessing the test command, or repeating a mistake an earlier session already recorded.
-2. The prompt, with a [skill]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}) at work.
+2. The prompt, with a [skill]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}) at work.
    - Does: the person types `/bug-fix login fails on empty email`. The harness adds the skill's full body: reproduce, find the cause, write a failing test, fix, verify.
    - Prevents: skipped steps, most often the regression test.
-3. Claiming the work, with the [task tracker]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}#task-tracking) at work.
+3. Claiming the work, with the [task tracker]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}#task-tracking) at work.
    - Does: the agent marks the issue as in progress and its own.
    - Prevents: two sessions fixing the same bug, and work lost if the session dies.
-4. A refused command, with a [guard hook]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) at work.
+4. A refused command, with a [guard hook]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) at work.
    - Does: the agent tries to stop a stuck test run with `pkill -f pytest`. The `PreToolUse` hook refuses and names the safe form: find the process id and kill that one process.
    - Prevents: stopping other people's test runs on a shared machine.
-5. Edit and test, with [native tools]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}) and a [permission rule]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) at work.
+5. Edit and test, with [native tools]({{ '/sections/02-what-is-a-harness/native-commands-and-tools.html' | relative_url }}) and a [permission rule]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) at work.
    - Does: the agent edits the test and the code with Edit and runs the suite with Bash. An `allow` rule lets the test command run without a prompt. One test fails, then none.
    - Prevents: interrupting the person for every test run.
-6. Lint on the fresh edit, with a `PostToolUse` [hook]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}#posttooluse) at work.
+6. Lint on the fresh edit, with a `PostToolUse` [hook]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}#posttooluse) at work.
    - Does: after each edit, the hook lints the changed file and returns any errors to the model.
    - Prevents: a commit that fails the lint gate later, after the agent has moved on.
-7. A second opinion (optional), with an [agent profile]({{ '/sections/02-ai-harnesses/agent-profiles.html' | relative_url }}) at work.
+7. A second opinion (optional), with an [agent profile]({{ '/sections/02-what-is-a-harness/agent-profiles.html' | relative_url }}) at work.
    - Does: the agent starts a reviewer sub-agent with read-only tools, ideally from another model family, and gives it the diff and the original request. It returns two findings.
    - Prevents: the author's blind spots reaching the merge.
    - Whether to delegate depends on the task. A sub-agent helps with a long search that would crowd the main window, or with a review run in parallel; a small fix like this one can be reviewed in the main session.
@@ -596,7 +602,7 @@ The diagram and the numbered steps below follow the same task: a person asks the
 9. Recording the outcome, with the tracker and memory at work.
    - Does: the agent closes the issue and writes one memory line about the cause.
    - Prevents: the next session rediscovering the same cause.
-10. Ending the turn, with a `Stop` [hook]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}#stop) at work.
+10. Ending the turn, with a `Stop` [hook]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}#stop) at work.
     - Does: before the agent finishes, the hook runs the fast checks and lets the turn end only if they pass.
     - Prevents: a reply that says "fixed" while a check is still red.
 
@@ -650,6 +656,21 @@ Use judgement too. Fix it the first time when the context shows it will recur, o
 | the mistake follows from how the work is set up, so it will come back | an agent edits generated files because nothing marks them | the first time |
 | one repeat would be costly or hard to undo | the pattern kill above stopped other sessions' test runs | the first time |
 
+#### Another way to slice the same stack
+
+ShipWithAI's guide, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)" (<https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j>), slices the stack by Claude Code surface: memory, tools, permissions, hooks and observability. This page slices it by how strongly a rule is enforced. The two line up like this:
+
+| Guide layer | Where it sits in the four layers above |
+|---|---|
+| memory (`CLAUDE.md`, `MEMORY.md`) | layer 1, instructions |
+| tools (MCP) | layer 2, workflows and tools |
+| permissions (allow, deny) | layer 3, enforced at the moment of action, beside hooks |
+| hooks | layer 3, hooks, scripts and linters |
+| observability (logs, cost) | not an enforcement layer here; it is the observe and verify group, and its self-verification part belongs to layer 4 |
+| (none) | layer 4, tests, CI and review before a change lands |
+
+Both make the same central point: memory and instructions advise, and hooks and checks enforce.
+
 ## What a harness costs
 
 Every component that loads into the context costs tokens on every turn.
@@ -657,6 +678,7 @@ Every component that loads into the context costs tokens on every turn.
 - HarnessTax (UC Berkeley and Arena, 2026) reported that across 21 model and harness pairs, the harness moved task success by about 2 to 5 points.
 - The same work reported that Claude Code cost about twice as much as a minimal four-tool harness on SWE-bench Lite.
 - Both figures are not yet verified against the primary source, and benchmark tasks are short, so memory, coordination and approvals never show on them.
+- LangChain reported the other side, what a harness can gain: its deepagents-cli went from 52.8% to 66.5% on Terminal Bench 2.0 with the model fixed at gpt-5.2-codex, by changing only the harness (LangChain, 2026-02-17, <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>).
 
 In practice:
 
@@ -664,27 +686,27 @@ In practice:
 2. Add a component when it fixes a failure you have seen.
 3. Measure again, and remove what does not help.
 
-[Guides, sensors and enforcement]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#harness-cost) has more on cost and on reading a harness you did not build.
+[Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#harness-cost) has more on cost and on reading a harness you did not build.
 
 ## Pages for this section
 
 | Page | What it covers |
 |---|---|
-| [Harness context files]({{ '/sections/02-ai-harnesses/context-files.html' | relative_url }}) | What goes in, what stays out, writing rules a model follows |
-| [Context file layering]({{ '/sections/02-ai-harnesses/context-file-layering.html' | relative_url }}) | Scopes, precedence, imports, path rules |
-| [Context file size budgets]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}) | Why size matters, measuring, trimming |
-| [Compiling context files]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}) | Source modules, one build for several tools |
-| [Native commands and tools]({{ '/sections/02-ai-harnesses/native-commands-and-tools.html' | relative_url }}) | Every built-in tool and command, with Codex equivalents |
-| [Harness skills]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}) | Anatomy, triggering, authoring, testing |
-| [Plugins and MCP servers]({{ '/sections/02-ai-harnesses/plugins-and-mcp-servers.html' | relative_url }}) | Protocol, transports, packaging, cost |
-| [Permissions and settings]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) | Scopes, rule syntax, modes, sandboxing |
-| [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) | Input, output, exit codes, writing one |
-| [Hook lifecycle events]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}) | Each event and what it can do |
-| [Guard hooks]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) | Hooks that refuse, and how to write the refusal |
-| [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}) | Fail open, fail closed, bypasses, noise |
-| [Agent profiles]({{ '/sections/02-ai-harnesses/agent-profiles.html' | relative_url }}) | Fields, roles, model choice |
-| [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}) | Memory files, the window, task tracking |
-| [Guides, sensors and enforcement]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}) | Guides and sensors, the ladder, cost, reading a harness |
+| [Harness context files]({{ '/sections/02-what-is-a-harness/context-files.html' | relative_url }}) | What goes in, what stays out, writing rules a model follows |
+| [Context file layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}) | Scopes, precedence, imports, path rules |
+| [Context file size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}) | Why size matters, measuring, trimming |
+| [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}) | Source modules, one build for several tools |
+| [Native commands and tools]({{ '/sections/02-what-is-a-harness/native-commands-and-tools.html' | relative_url }}) | Every built-in tool and command, with Codex equivalents |
+| [Harness skills]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}) | Anatomy, triggering, authoring, testing |
+| [Plugins and MCP servers]({{ '/sections/02-what-is-a-harness/plugins-and-mcp-servers.html' | relative_url }}) | Protocol, transports, packaging, cost |
+| [Permissions and settings]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) | Scopes, rule syntax, modes, sandboxing |
+| [Harness hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}) | Input, output, exit codes, writing one |
+| [Hook lifecycle events]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}) | Each event and what it can do |
+| [Guard hooks]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) | Hooks that refuse, and how to write the refusal |
+| [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}) | Fail open, fail closed, bypasses, noise |
+| [Agent profiles]({{ '/sections/02-what-is-a-harness/agent-profiles.html' | relative_url }}) | Fields, roles, model choice |
+| [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) | Memory files, the window, task tracking |
+| [Guides, sensors and enforcement]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}) | Guides and sensors, the ladder, cost, reading a harness |
 
 ## Sources
 
@@ -694,6 +716,8 @@ In practice:
 - Model Context Protocol: <https://modelcontextprotocol.io/>.
 - Beads: <https://github.com/steveyegge/beads>.
 - Harness cost measurements: reported by HarnessTax (UC Berkeley and Arena, 2026), <https://harnesstax.github.io/>; not yet verified against the primary source.
+- LangChain, "Improving deep agents with harness engineering" (2026-02-17): <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09.
+- ShipWithAI, "The Complete Claude Code Harness Engineering Guide (5 Layers, 8 Deep-Dives)", DEV Community, 2026-05-08: <https://dev.to/shipwithaiio/the-complete-claude-code-harness-engineering-guide-5-layers-8-deep-dives-3d4j>, read 2026-11-09.
 - The examples labelled as my harness are from the author's own harness, described conceptually.
 
 {% include page_nav.html %}

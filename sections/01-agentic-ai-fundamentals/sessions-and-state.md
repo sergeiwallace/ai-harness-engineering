@@ -2,13 +2,12 @@
 title: "Sessions and state"
 parent: "Agentic AI fundamentals"
 nav_order: 4
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Sessions and state
-
-As of 2026-11-09.
 
 A model keeps nothing between calls, so everything an agent "remembers" is something the client sends again or something written to a file. A session is the client's record of one conversation. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#sessions-and-state) is the short version, and [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) covers memory systems in more depth. This page covers:
 

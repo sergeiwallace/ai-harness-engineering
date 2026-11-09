@@ -1,15 +1,16 @@
 ---
 title: "Guard hooks"
 parent: "Harness hooks"
-grand_parent: "AI harnesses"
+grand_parent: "What is a harness?"
 nav_order: 2
+redirect_from:
+  - /sections/02-ai-harnesses/guard-hooks.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Guard hooks
-
-As of 2026-11-09. A sub-topic of [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}), in [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
 A guard is a `PreToolUse` hook that refuses an action as the agent tries it. This page covers when to write a guard, the ways a guard can answer, how to word its refusal, patterns that keep it accurate, and a worked example from my harness.
 
@@ -21,18 +22,19 @@ A guard is a `PreToolUse` hook that refuses an action as the agent tries it. Thi
 
 ## When a rule becomes a guard
 
-![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled hazards passes through holes that line up in every slice and comes out as losses. Each slice stands for one layer of defence; a mistake gets through only where the holes in every layer line up.]({{ '/assets/images/02-ai-harnesses/swiss-cheese-model.png' | relative_url }})
+![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
+*Figure: one agent action moving down the four layers. A guard is layer 3, between the workflows above it and the tests below. Made with archify.*
 
 *Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Resized for this page.*
 
-A guard is layer 3: it acts at the moment of action, after the instructions and workflows of layers 1 and 2, and before the tests of layer 4. The [full ladder]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#the-layers) shows what each layer catches and misses.
+A guard is layer 3: it acts at the moment of action, after the instructions and workflows of layers 1 and 2, and before the tests of layer 4. The [full ladder]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#the-layers) shows what each layer catches and misses.
 
-Under the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering), a rule that matters is enforced in code from the start where it can be, without waiting for agents to break it. A guard is the right place when both of these are true.
+Under the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), a rule that matters is enforced in code from the start where it can be, without waiting for agents to break it. A guard is the right place when both of these are true.
 
 1. Breaking it is costly or hard to undo: lost work, a leaked secret, someone else's process stopped.
 2. The bad action can be recognised from the tool input alone, reliably enough that false refusals are rare.
 
-If the second is false, the rule belongs in a later layer of the [enforcement ladder]({{ '/sections/02-ai-harnesses/guides-sensors-and-enforcement.html' | relative_url }}#the-enforcement-ladder): a test or a review step that sees the whole result.
+If the second is false, the rule belongs in a later layer of the [enforcement ladder]({{ '/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html' | relative_url }}#the-enforcement-ladder): a test or a review step that sees the whole result.
 
 ## Refuse, ask or rewrite
 
@@ -142,7 +144,7 @@ On a shared machine, an agent ran a pattern kill to stop its own test run.
 
 ### The guard
 
-A `PreToolUse` hook on Bash, shown in full on the [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}#a-complete-guard) page.
+A `PreToolUse` hook on Bash, shown in full on the [Harness hooks]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}#a-complete-guard) page.
 
 1. It splits the command into segments.
 2. It finds each segment's program, past `sudo`, `env` and a full path.
@@ -181,9 +183,9 @@ The agent was deep in a long task, the line was one of many, and the action look
 
 | Pitfall | Result | See |
 |---|---|---|
-| the guard crashes with exit 1 | the action runs | [fail open by accident]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#fail-open-by-accident) |
-| the guard is merged but not installed | nothing runs it | [never installed]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#never-installed) |
-| the same action through another tool | the guard never sees it | [matcher misses]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#matcher-misses) |
+| the guard crashes with exit 1 | the action runs | [fail open by accident]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}#fail-open-by-accident) |
+| the guard is merged but not installed | nothing runs it | [never installed]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}#never-installed) |
+| the same action through another tool | the guard never sees it | [matcher misses]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}#matcher-misses) |
 | a vague refusal | the agent tries the next way around | [the refusal message](#the-refusal-message) |
 
 ## Sources

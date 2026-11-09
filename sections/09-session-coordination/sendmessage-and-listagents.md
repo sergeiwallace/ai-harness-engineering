@@ -3,13 +3,12 @@ title: "SendMessage and ListAgents"
 parent: "Message channels and fallbacks"
 grand_parent: "Coordinating several sessions"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # SendMessage and ListAgents
-
-As of 2026-11-09.
 
 A sub-topic of [message channels and fallbacks]({{ '/sections/09-session-coordination/message-channels.html' | relative_url }}). Claude Code's cross-session messaging lets one of your sessions send another a plain-text message. This page covers what the two tools do, how sessions are named and addressed, how a message is delivered, the settings that control incoming messages, what a message cannot do, the limits, and how agent teams compare.
 

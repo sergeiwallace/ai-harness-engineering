@@ -6,13 +6,12 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/09-session-coordination/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Coordinator and chief-of-staff sessions
-
-As of 2026-11-09.
 
 A coordinator session is a long-running session whose job is routing work to other sessions and checking what comes back. This page covers the roles in a coordination layer, the coordinator's working cycle, what it keeps in its context and what it keeps in files, how it checks reports, the ways it goes wrong, and what to do when the coordinator itself stops. The [section overview]({{ '/sections/09-session-coordination/' | relative_url }}) is the short version. A sub-topic page covers [owning shared actions]({{ '/sections/09-session-coordination/shared-action-ownership.html' | relative_url }}).
 

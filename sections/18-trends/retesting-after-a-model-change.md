@@ -7,13 +7,13 @@ has_toc: false
 redirect_from:
   - /sections/18-trends/detail.html
   - /sections/18-trends/advanced.html
+last_updated: "2026-11-09"
+talk_stop: "13"
 ---
 
 {% include page_nav.html %}
 
 # Re-testing after a model change
-
-As of 2026-11-09. Topic page in [Trends and model changes]({{ '/sections/18-trends/' | relative_url }}). Slide: [Stop 13, "Model changes and trends"]({{ '/talk/' | relative_url }}#stop-13-1-minute).
 
 Most rules in a harness exist because of something the model got wrong. A new model gets different things wrong. Some rules stop helping, some start to hurt, and some failures appear that no rule covers. This page is a procedure for finding out which, using the same tools as [evaluating any harness change]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
 
@@ -28,7 +28,9 @@ Most rules in a harness exist because of something the model got wrong. A new mo
 | You switch to a new model on purpose | The obvious case |
 | The client changes its default model | The harness now runs against a model nobody chose |
 | A model version under the same name is updated | Behaviour can shift without a name change |
-| You change reasoning effort or a similar setting | The same model can behave like a different one |
+| You change reasoning effort or a similar setting | The same model can behave like a different one, and more effort is not always better (see below) |
+
+> Note: in LangChain's Terminal Bench 2.0 runs with gpt-5.2-codex, the `xhigh` reasoning setting on its own scored 53.9%, against 63.6% at `high`, "due to agent timeouts". Their best run used `xhigh` to plan and to verify, and `high` to build. A re-test after an effort change is how you find a result like this in your own harness.
 
 ## The procedure
 
@@ -149,6 +151,7 @@ To start: write five tasks from past failures into a file today, so the next mod
 
 ## Sources
 
+- Reasoning-effort results on Terminal Bench 2.0: LangChain, "Improving Deep Agents with harness engineering", 2026-02-17, <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09.
 - Starting with 20 to 50 simple tasks from real failures: Anthropic, <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents>, not re-checked for this page.
 - From the author's own harness, described conceptually.
 

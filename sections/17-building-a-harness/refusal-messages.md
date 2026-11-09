@@ -3,13 +3,12 @@ title: "Writing refusal messages"
 parent: "The improvement loop"
 grand_parent: "Building your own harness"
 nav_order: 2
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Writing refusal messages
-
-As of 2026-11-09. Sub-topic of [The improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}), in [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}).
 
 When a hook, a script or a gate refuses an action, the agent reads the refusal message and decides what to do next. The message is the only part of the guard the agent sees. This page covers what a refusal message should contain, with before-and-after examples.
 

@@ -3,13 +3,14 @@ title: "Goal and loop commands"
 parent: "Native commands"
 grand_parent: "Claude Code and Codex basics"
 nav_order: 1
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Goal and loop commands
-
-As of 2026-11-09. Sub-topic of [Native commands]({{ '/sections/03-claude-code-and-codex/native-commands.html' | relative_url }}) in [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 `/goal` and `/loop` keep a session going without you typing the next prompt. `/goal` keeps one task going until a condition holds; `/loop` re-runs a prompt over time. They fail in different ways, and longer autonomous runs in later sections are built on them.
 

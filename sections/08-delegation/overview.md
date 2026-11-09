@@ -4,13 +4,14 @@ permalink: /sections/08-delegation/
 nav_order: 18
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
+talk_stop: "6"
+stop_minutes: "4"
 ---
 
 {% include page_nav.html %}
 
 # Agent profiles, sub-agents and delegation
-
-As of 2026-11-09. Overview page. Slides: [talk stop 6]({{ '/talk/' | relative_url }}#stop-6-4-minutes), about 4 minutes: sub-agents and agent profiles, delegation with worktrees, checking delegated work.
 
 Delegation means a lead agent hands part of a task to another agent and keeps control of the result. Figure 1 follows one round from launch to merge. The parts work together like this:
 

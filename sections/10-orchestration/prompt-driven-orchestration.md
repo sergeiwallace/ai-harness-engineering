@@ -4,13 +4,12 @@ parent: "Orchestration and workflows"
 nav_order: 1
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Prompt-driven orchestration
-
-As of 2026-11-09.
 
 In prompt-driven orchestration a lead agent, or a coordinator session, holds the plan and directs other agents through briefs and agent profiles. This page covers the lead's job, the Claude Code tools it uses, how it splits work, briefs, how it joins and checks results, when it should hand off to a script, and how it fails. The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with programmatic orchestration. A sub-topic page covers [chaining skills into a pipeline]({{ '/sections/10-orchestration/skill-pipelines.html' | relative_url }}).
 

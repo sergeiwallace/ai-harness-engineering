@@ -3,13 +3,12 @@ title: "Permissions and untrusted input"
 parent: "Tools and tool calling"
 grand_parent: "Agentic AI fundamentals"
 nav_order: 2
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Permissions and untrusted input
-
-As of 2026-11-09.
 
 The client runs every tool, so before each call it can run the call, ask you first, or refuse. Permissions are those decisions written down as modes and rules. This page is part of [Tools and tool calling]({{ '/sections/01-agentic-ai-fundamentals/tools.html' | relative_url }}). It covers:
 

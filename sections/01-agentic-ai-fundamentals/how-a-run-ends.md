@@ -3,13 +3,12 @@ title: "How an agent run ends"
 parent: "The agent loop"
 grand_parent: "Agentic AI fundamentals"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # How an agent run ends
-
-As of 2026-11-09.
 
 An agent run ends in one of four ways: the model says it is done, a person stops it, a limit fires, or a check decides it is not done and sends it back. Two stopping problems come up again and again in long autonomous work:
 

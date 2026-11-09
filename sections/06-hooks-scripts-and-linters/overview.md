@@ -4,13 +4,12 @@ nav_order: 16
 has_children: true
 has_toc: false
 permalink: /sections/06-hooks-scripts-and-linters/
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Hooks, scripts and linters
-
-As of 2026-11-09.
 
 Stop 5 on the talk path, about 4 minutes.
 
@@ -23,8 +22,8 @@ A context-file instruction guides an agent, and the agent applies it unevenly: l
 
 Layers 2 to 4 do the enforcing. This section covers layers 3 and 4, and the scripts that layer 2 relies on.
 
-![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled Hazards passes through holes that happen to line up in every slice and comes out as Losses.]({{ '/assets/images/06-hooks-scripts-and-linters/swiss-cheese-model.png' | relative_url }})
-*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Re-encoded as PNG; no other changes.*
+![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
+*Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*
 
 This overview follows the layers in order: why code enforcement, the ladder that places each rule, scripts, hooks and guards, then git hooks, CI and linters, and what all of it costs. Each part has a worked example. Three topic pages go deeper:
 

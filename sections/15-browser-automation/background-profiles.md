@@ -3,13 +3,12 @@ title: "Background browser profiles"
 parent: "Driving a browser over CDP"
 grand_parent: "Browser automation and computer use"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Background browser profiles
-
-As of 2026-11-09.
 
 Part of [Driving a browser over CDP]({{ '/sections/15-browser-automation/cdp-and-playwright.html' | relative_url }}), in [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 

@@ -4,13 +4,12 @@ permalink: /sections/16-logging-and-evaluation/
 nav_order: 26
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Logging, observability and evaluation
-
-As of 2026-11-09.
 
 Stop 11 on the talk path, about 2 minutes.
 

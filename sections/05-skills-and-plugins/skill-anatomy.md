@@ -7,13 +7,12 @@ has_toc: false
 redirect_from:
   - /sections/05-skills-and-plugins/detail.html
   - /sections/05-skills-and-plugins/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Skill anatomy and loading
-
-As of 2026-11-09.
 
 This page takes a skill apart: the folder, the `SKILL.md` file, each frontmatter field, how the client loads the parts, how arguments and live command output reach the body, and the open standard that lets one skill run in more than one client. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}). The sub-page [Writing skill descriptions]({{ '/sections/05-skills-and-plugins/skill-descriptions.html' | relative_url }}) covers the one field that decides whether a skill is ever used.
 
@@ -48,7 +47,7 @@ A skill is a folder. The only required file is `SKILL.md`. Everything else in th
 
 #### Why scripts matter
 
-A script is the part of a skill that a program does exactly, which makes it the enforcing part of the procedure (layer 2 of the [four layers]({{ '/sections/02-ai-harnesses/' | relative_url }})).
+A script is the part of a skill that a program does exactly, which makes it the enforcing part of the procedure (layer 2 of the [four layers]({{ '/sections/02-what-is-a-harness/' | relative_url }})).
 
 | Step written as | What happens |
 |---|---|

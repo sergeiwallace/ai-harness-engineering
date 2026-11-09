@@ -3,13 +3,12 @@ title: "Held decisions and the review queue"
 parent: "Decision authority and escalation"
 grand_parent: "Human gates, decisions and alignment"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Held decisions and the review queue
-
-As of 2026-11-09.
 
 Part of [Decision authority and escalation]({{ '/sections/14-human-gates/decision-authority.html' | relative_url }}), in [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}).
 

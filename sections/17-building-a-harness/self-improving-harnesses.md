@@ -3,13 +3,12 @@ title: "Self-improving harness research"
 parent: "The improvement loop"
 grand_parent: "Building your own harness"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Self-improving harness research
-
-As of 2026-11-09. Sub-topic of [The improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}), in [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}).
 
 The [improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) is a manual practice that agents gradually take over. Through 2026, researchers and vendors tried to automate it end to end: a system that reads its own traces and rewrites its own prompts, skills or tools. This page summarises what that work found, the evidence it adds for enforcing fixes rather than writing more instructions, and what it means for a personal harness.
 

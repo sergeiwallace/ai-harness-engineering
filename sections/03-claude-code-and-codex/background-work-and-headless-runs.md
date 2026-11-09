@@ -2,13 +2,14 @@
 title: "Background work and headless runs"
 parent: "Claude Code and Codex basics"
 nav_order: 4
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Background work and headless runs
-
-As of 2026-11-09. Part of [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 Two features change how an agent spends the time it is not thinking:
 

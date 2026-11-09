@@ -2,14 +2,13 @@
 title: "How much of the diff to read"
 parent: "Code review"
 nav_order: 2
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # How much of the diff to read
 {: .no_toc }
-
-As of 2026-11-09. Part of [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
 When an agent hands back a large diff, there are two common shortcuts, and both leave gaps:
 

@@ -4,13 +4,14 @@ nav_order: 13
 has_children: true
 has_toc: false
 permalink: /sections/03-claude-code-and-codex/
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Claude Code and Codex basics
-
-As of 2026-11-09. Slide: [stop 4 on the talk page]({{ '/talk/' | relative_url }}#stop-4-6-minutes), "Claude Code and Codex".
 
 Claude Code (from Anthropic) and Codex (from OpenAI) are coding agents that work inside a repository. You start one in a terminal in a project folder and give it a task in plain language; it reads the code, runs commands, edits files and reports back. Every later section of this site builds on what these two clients provide before you customise anything.
 

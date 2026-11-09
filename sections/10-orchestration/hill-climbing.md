@@ -3,13 +3,12 @@ title: "Hill-climbing and quality ratchets"
 parent: "Goals and loops"
 grand_parent: "Orchestration and workflows"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Hill-climbing and quality ratchets
-
-As of 2026-11-09.
 
 A sub-topic of [goals and loops]({{ '/sections/10-orchestration/goals-and-loops.html' | relative_url }}). Hill-climbing is a loop with a measurement in it: run, measure, change one thing, and keep the change only if the measure improved. A quality ratchet applies the same rule to a whole codebase over time: a number may improve, and a change that makes it worse is refused. This page covers the loop, local maxima, choosing a measure, running a climb in Claude Code, and ratchets.
 

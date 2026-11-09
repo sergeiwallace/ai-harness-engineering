@@ -4,13 +4,14 @@ parent: "Claude Code and Codex basics"
 nav_order: 1
 redirect_from:
   - /sections/03-claude-code-and-codex/detail.html
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Claude Code and Codex compared
-
-As of 2026-11-09. Part of [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 This page sets the two clients side by side, building block by building block: what each one calls it, where it lives on disk, what the defaults and limits are, and what that means when one repository is used with both. It ends with which features need which sign-in.
 

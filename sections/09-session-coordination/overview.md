@@ -4,13 +4,12 @@ nav_order: 19
 has_children: true
 has_toc: false
 permalink: /sections/09-session-coordination/
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Coordinating several sessions
-
-As of 2026-11-09.
 
 Running several agent sessions at once multiplies output, and it multiplies the places you have to watch. A coordinator session gives you one place to talk to. It routes each request to a worker session, reaches that worker over a channel that works, checks the evidence that comes back, and reports only what needs you.
 
@@ -105,7 +104,7 @@ claude --name coordinator \
   --settings '{"permissions":{"deny":["Edit","Write"]}}'
 ```
 
-The deny rule does the enforcing. The context-file line explains the role to the model and to anyone reading the setup. [A systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) covers this layering in general.
+The deny rule does the enforcing. The context-file line explains the role to the model and to anyone reading the setup. [A systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) covers this layering in general.
 
 ### What a coordinator does
 
@@ -205,7 +204,8 @@ Separate messaging systems fill the gaps. Use them as ordered fallbacks behind o
 | A broadcast to several sessions | A message board |
 | The built-in channel refuses or holds the message | The next rung on the ladder |
 
-![A sequence diagram. The sender probes ListAgents through the native channel and learns the target is absent. In an optional fragment it probes the target's Agent Mail identity and learns it was last seen three hours ago. It commits the message to the git inbox; the target pulls its inbox and replies taken.]({{ '/assets/images/09-session-coordination/channel-ladder.svg' | relative_url }}){: style="width:100%"}
+![A vertical flow chart of the channel ladder for a message to a session on another machine. The sender tries native delivery first and probes whether the target is listed in ListAgents; if listed it sends there and asks for a reply. If not listed it moves down to Agent Mail and probes whether the target's identity is active; if stale, to a message board; if no one reads it, to the git inbox, where the sender commits the message and the target pulls it and replies taken. If nothing answers, a last-resort channel. The order runs from fastest and most direct to slowest and most durable.]({{ '/assets/images/diagrams/09-session-coordination/channel-ladder-flow.svg' | relative_url }})
+*Figure: walking the ladder. Each probe asks whether the target will read the message; the sender stops at the first channel that reaches it. Made with archify.*
 
 *Figure: walking the ladder: each probe asks whether the target will read it. Made with archify.*
 

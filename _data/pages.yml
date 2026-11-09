@@ -30,52 +30,52 @@
 - url: "/sections/01-agentic-ai-fundamentals/sessions-and-state.html"
   title: "Sessions and state"
   level: 1
-- url: "/sections/02-ai-harnesses/"
-  title: "AI harnesses"
+- url: "/sections/02-what-is-a-harness/"
+  title: "What is a harness?"
   level: 0
-- url: "/sections/02-ai-harnesses/context-files.html"
+- url: "/sections/02-what-is-a-harness/context-files.html"
   title: "Harness context files"
   level: 1
-- url: "/sections/02-ai-harnesses/context-file-layering.html"
+- url: "/sections/02-what-is-a-harness/context-file-layering.html"
   title: "Context file layering"
   level: 2
-- url: "/sections/02-ai-harnesses/context-file-budgets.html"
+- url: "/sections/02-what-is-a-harness/context-file-budgets.html"
   title: "Context file size budgets"
   level: 2
-- url: "/sections/02-ai-harnesses/compiling-context-files.html"
+- url: "/sections/02-what-is-a-harness/compiling-context-files.html"
   title: "Compiling context files"
   level: 2
-- url: "/sections/02-ai-harnesses/skills.html"
+- url: "/sections/02-what-is-a-harness/skills.html"
   title: "Harness skills"
   level: 1
-- url: "/sections/02-ai-harnesses/native-commands-and-tools.html"
+- url: "/sections/02-what-is-a-harness/native-commands-and-tools.html"
   title: "Native commands and tools"
   level: 1
-- url: "/sections/02-ai-harnesses/plugins-and-mcp-servers.html"
+- url: "/sections/02-what-is-a-harness/plugins-and-mcp-servers.html"
   title: "Plugins and MCP servers"
   level: 1
-- url: "/sections/02-ai-harnesses/permissions-and-settings.html"
+- url: "/sections/02-what-is-a-harness/permissions-and-settings.html"
   title: "Permissions and settings"
   level: 1
-- url: "/sections/02-ai-harnesses/hooks.html"
+- url: "/sections/02-what-is-a-harness/hooks.html"
   title: "Harness hooks"
   level: 1
-- url: "/sections/02-ai-harnesses/hook-lifecycle-events.html"
+- url: "/sections/02-what-is-a-harness/hook-lifecycle-events.html"
   title: "Hook lifecycle events"
   level: 2
-- url: "/sections/02-ai-harnesses/guard-hooks.html"
+- url: "/sections/02-what-is-a-harness/guard-hooks.html"
   title: "Guard hooks"
   level: 2
-- url: "/sections/02-ai-harnesses/hook-failure-modes.html"
+- url: "/sections/02-what-is-a-harness/hook-failure-modes.html"
   title: "Hook failure modes"
   level: 2
-- url: "/sections/02-ai-harnesses/agent-profiles.html"
+- url: "/sections/02-what-is-a-harness/agent-profiles.html"
   title: "Agent profiles"
   level: 1
-- url: "/sections/02-ai-harnesses/guides-sensors-and-enforcement.html"
+- url: "/sections/02-what-is-a-harness/guides-sensors-and-enforcement.html"
   title: "Guides, sensors and enforcement"
   level: 1
-- url: "/sections/02-ai-harnesses/memory-and-context.html"
+- url: "/sections/02-what-is-a-harness/memory-and-context.html"
   title: "Harness memory and context"
   level: 1
 - url: "/sections/03-claude-code-and-codex/"

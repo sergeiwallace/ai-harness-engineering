@@ -2,13 +2,12 @@
 title: "Untrusted page content"
 parent: "Browser automation and computer use"
 nav_order: 4
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Untrusted page content
-
-As of 2026-11-09.
 
 Part of [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}).
 

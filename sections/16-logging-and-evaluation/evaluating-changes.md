@@ -4,13 +4,12 @@ parent: "Logging, observability and evaluation"
 nav_order: 2
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Evaluating a harness change
-
-As of 2026-11-09.
 
 Part of [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }}). Sub-page: [pass@k and pass^k]({{ '/sections/16-logging-and-evaluation/pass-at-k.html' | relative_url }}).
 
@@ -56,6 +55,22 @@ Every rule, hook, skill and model choice in a harness is a bet that it makes the
 | A plugin or skill you plan to turn on by default | yes |
 | A wording fix in one skill used by one task type | a few tasks of that type |
 | A typo in a comment | no |
+
+### How far a harness change can move a score
+
+LangChain reported a measured case on Terminal Bench 2.0 with the model held fixed at `gpt-5.2-codex` (not a Claude model) and only the harness changed:
+
+| Run | Score | What changed |
+|---|---|---|
+| Starting harness | 52.8% | none |
+| Improved harness | 66.5% | harness changes only, including a check that asks the agent to verify its work before it exits |
+| Reasoning effort `xhigh` throughout | 53.9% | effort only; LangChain attributes the low score to agent timeouts |
+| Reasoning effort `high` throughout | 63.6% | effort only |
+
+Two readings for your own evaluations:
+
+- The 13.7-point gain came from the harness alone, with the model unchanged, so harness changes need the same measurement as model changes.
+- More reasoning effort scored lower here because runs timed out, so time limits and effort settings belong in the fixed conditions of every run. LangChain used an `xhigh`-`high`-`xhigh` "reasoning sandwich" as its baseline: `xhigh` to plan and to verify, `high` to implement.
 
 An evaluation is itself a paid job. 30 tasks, 3 runs each, before and after, is 180 agent runs. At an illustrative $0.45 per run that is about $81, so run it through the same [budget check]({{ '/sections/16-logging-and-evaluation/spend-and-budgets.html' | relative_url }}) as any other batch.
 
@@ -233,6 +248,7 @@ To start: ten tasks taken from your own past failures, run before and after one 
 - Anthropic on agent evals: <https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents> (2026-01-09), verified 2026-11-08.
 - OpenAI evaluation best practices: <https://developers.openai.com/api/docs/guides/evaluation-best-practices>, verified 2026-11-08.
 - `claude plugin eval`: <https://code.claude.com/docs/en/plugin-evals.md>, verified 2026-11-08.
+- LangChain, "Improving deep agents with harness engineering" (2026-02-17): 52.8% to 66.5% on Terminal Bench 2.0 with `gpt-5.2-codex` fixed, and 53.9% at `xhigh` against 63.6% at `high`, "due to agent timeouts": <https://www.langchain.com/blog/improving-deep-agents-with-harness-engineering>, verified 2026-11-09. Found through ShipWithAI's "The Complete Claude Code Harness Engineering Guide", which omits the model name.
 - The broken-benchmark figure: <https://openai.com/index/separating-signal-from-noise-coding-evaluations/>; the page returned HTTP 403 to a fetch on 2026-11-09, so the figure is not yet verified.
 
 {% include page_nav.html %}

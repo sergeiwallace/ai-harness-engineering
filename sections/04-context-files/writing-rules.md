@@ -2,13 +2,14 @@
 title: "Writing rules that get followed"
 parent: "Context files"
 nav_order: 2
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Writing rules that get followed
-
-As of 2026-11-09. Part of [Context files]({{ '/sections/04-context-files/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 A context file is read and interpreted by the model, so how a rule is written decides how often it is followed. This page covers what a context file can and cannot do, what to put in one, how to phrase each rule, what to do when a mistake repeats, and how to keep the file small and true.
 
@@ -167,10 +168,10 @@ The workflow change, in the `Makefile`:
 
 ```make
 test:        ## changed tests only, the default
-	files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
-	if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
+ files=$$(git diff --name-only origin/main -- 'tests/*.py'); \
+ if [ -n "$$files" ]; then pytest $$files -q; else echo 'no changed tests'; fi
 test-all:    ## the full suite; runs in the pre-push gate
-	pytest tests -q
+ pytest tests -q
 ```
 
 The hook, in `.claude/settings.json`:

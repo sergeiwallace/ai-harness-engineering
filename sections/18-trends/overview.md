@@ -4,13 +4,13 @@ nav_order: 28
 has_children: true
 has_toc: false
 permalink: /sections/18-trends/
+last_updated: "2026-11-09"
+talk_stop: "13"
 ---
 
 {% include page_nav.html %}
 
 # Trends and model changes
-
-As of 2026-11-09. Overview page. Slides for this part of the talk: [Stop 13 on the talk page]({{ '/talk/' | relative_url }}#stop-13-1-minute).
 
 A harness is tuned to a model, and models change every few months. The practice around harnesses is also changing quickly: it has names now, Anthropic reports merging about twelve times as many code changes per day in September 2026 as in May, and setups have started to move between tools. This overview covers what is changing and what to do about each change. Two topic pages go deeper: [Re-testing after a model change]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) and [Moving a harness between tools]({{ '/sections/18-trends/harness-portability.html' | relative_url }}).
 
@@ -21,7 +21,7 @@ A harness is tuned to a model, and models change every few months. The practice 
 | Trend | What it means for your harness | Where it goes deeper |
 |---|---|---|
 | New model generations | Re-test rules; remove the ones that no longer help | [Re-testing after a model change]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) |
-| Named practices | Shared vocabulary and published patterns to learn from | [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) |
+| Named practices | Shared vocabulary and published patterns to learn from | [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}) |
 | Agent work at scale | The system around the agents decides what lands | [Orchestration]({{ '/sections/10-orchestration/' | relative_url }}) |
 | Portable setups | Skills and context files can move between tools | [Moving a harness between tools]({{ '/sections/18-trends/harness-portability.html' | relative_url }}) |
 | Parallel agents in the client | Less need to build your own coordination | [Coordinating several sessions]({{ '/sections/09-session-coordination/' | relative_url }}) |
@@ -111,7 +111,7 @@ Through 2026, essays and reports used "harness engineering" for the whole system
 | Context engineering | What the model sees at each step of a task |
 | Harness engineering | The whole system: context, tools and workflows, hooks and checks, sub-agents, and the human gates |
 
-This site uses the term in that sense, with a systems approach to building it; [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) defines it.
+This site uses the term in that sense, with a systems approach to building it; [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}) defines it.
 
 ## 3. Agent work at scale
 

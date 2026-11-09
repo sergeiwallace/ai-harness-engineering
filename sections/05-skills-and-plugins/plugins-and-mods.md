@@ -2,13 +2,12 @@
 title: "Plugins, marketplaces and mods"
 parent: "Skills, commands and plugins"
 nav_order: 3
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Plugins, marketplaces and mods
-
-As of 2026-11-09.
 
 A plugin packages skills, sub-agent profiles, hooks and MCP servers that are meant to be used together, so they install as one unit at one version. This page covers the plugin layout and manifest, marketplaces, what a plugin costs in context, mods, and a pattern for sharing code across the skills in a plugin. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 

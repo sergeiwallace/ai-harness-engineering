@@ -4,13 +4,12 @@ parent: "Human gates, decisions and alignment"
 nav_order: 3
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Permission rules and auto mode
-
-As of 2026-11-09.
 
 Part of [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}). Sub-page: [Writing a gate hook]({{ '/sections/14-human-gates/gate-hooks.html' | relative_url }}).
 

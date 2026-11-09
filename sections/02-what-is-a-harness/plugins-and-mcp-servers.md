@@ -1,14 +1,15 @@
 ---
 title: "Plugins and MCP servers"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 4
+redirect_from:
+  - /sections/02-ai-harnesses/plugins-and-mcp-servers.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Plugins and MCP servers
-
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
 MCP servers connect a harness to services beyond the local machine. Plugins package skills, agent profiles, hooks and MCP servers so they install together. One extends what the agent can reach; the other makes a set of extensions shareable.
 

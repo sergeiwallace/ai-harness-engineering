@@ -2,13 +2,12 @@
 title: "Alignment with the original request"
 parent: "Human gates, decisions and alignment"
 nav_order: 2
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Alignment with the original request
-
-As of 2026-11-09.
 
 Part of [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}).
 

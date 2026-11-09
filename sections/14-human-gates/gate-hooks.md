@@ -3,13 +3,12 @@ title: "Writing a gate hook"
 parent: "Permission rules and auto mode"
 grand_parent: "Human gates, decisions and alignment"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Writing a gate hook
-
-As of 2026-11-09.
 
 Part of [Permission rules and auto mode]({{ '/sections/14-human-gates/permission-rules.html' | relative_url }}), in [Human gates, decisions and alignment]({{ '/sections/14-human-gates/' | relative_url }}).
 
@@ -201,8 +200,9 @@ A hook reads the command text of one tool call. Some routes to the same action n
 | A script that pushes | `./release.sh`, which runs `git push origin main` inside it | branch protection on the server |
 | An alias or a variable | `git p`, or `git push origin "$TARGET"` | branch protection on the server |
 | Another tool | a merge done through the hosting service's API | the service's own rules and required reviews |
+| Hooks turned off | a run started with `--settings '{"disableAllHooks": true}'` | permission deny rules, which still apply, and branch protection |
 
-This is why the hook sits in front of layer 4, not instead of it.
+A hook is one enforcement mechanism among several. Permission deny rules also block, a hook can refuse through its JSON `permissionDecision` as well as through exit code 2, and hooks can be switched off for a run. This is why the hook sits in front of layer 4, not instead of it.
 
 ## Examples from my own harness
 
@@ -219,7 +219,7 @@ To start: take the one rule in your context file that agents break most often, a
 
 ## Sources
 
-- PreToolUse hooks, their precedence with permission rules, and exit code 2 blocking before rules are evaluated: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
+- PreToolUse hooks, their precedence with permission rules, exit code 2 blocking before rules are evaluated, and `disableAllHooks` turning hooks off for a run: <https://code.claude.com/docs/en/permissions.md>, verified 2026-11-09.
 - Hook input and output fields: <https://code.claude.com/docs/en/hooks.md>, not yet verified against the primary source for this page.
 - The guard design rules: from the author's own harness, described conceptually.
 

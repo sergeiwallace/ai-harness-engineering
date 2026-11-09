@@ -4,13 +4,12 @@ parent: "Agentic AI fundamentals"
 nav_order: 2
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Tools and tool calling
-
-As of 2026-11-09.
 
 A tool is a named action the client can carry out for the model: read a file, run a command, search the web. Tools are what separate an agent from a chat model, and they are the largest surface a harness controls. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#tools) is the short version. This page covers:
 

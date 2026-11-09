@@ -1,0 +1,15 @@
+{%- comment -%}
+  Page metadata line, shown once under the top navigation bar (page_nav.html includes this
+  on its first call only). Front matter keys: last_updated (YYYY-MM-DD), talk_stop,
+  stop_minutes, checked_against. Falls back to the site build date. Uses nav_slide and deck,
+  which page_nav.html assigns before including this.
+{%- endcomment -%}
+{%- unless page_meta_done -%}
+{%- assign page_meta_done = true -%}
+{%- assign meta_date = page.last_updated | default: site.time | date: "%Y-%m-%d" -%}
+<p class="page-meta">Last updated {{ meta_date }}
+{%- if page.checked_against %}<span class="page-meta-sep" aria-hidden="true"> &middot; </span>checked against {{ page.checked_against | escape }}{%- endif -%}
+{%- if page.talk_stop %}<span class="page-meta-sep" aria-hidden="true"> &middot; </span>Talk stop {{ page.talk_stop }}{%- if page.stop_minutes %}, about {{ page.stop_minutes }} min{%- endif -%}{%- endif -%}
+{%- if nav_slide != nil %}<span class="page-meta-sep" aria-hidden="true"> &middot; </span><a href="{{ deck.url | relative_url }}#/{{ nav_slide.index }}" target="_blank" rel="noopener">Slide: {{ nav_slide.title | escape }}</a>{%- endif -%}
+</p>
+{%- endunless -%}

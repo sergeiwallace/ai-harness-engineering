@@ -5,13 +5,14 @@ nav_order: 4
 redirect_from:
   - /sections/08-delegation/detail.html
   - /sections/08-delegation/advanced.html
+last_updated: "2026-11-09"
+talk_stop: "6"
+stop_minutes: "4"
 ---
 
 {% include page_nav.html %}
 
 # Checking delegated work
-
-As of 2026-11-09. Topic page in [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}). Slides: [talk stop 6, "Checking delegated work"]({{ '/talk/' | relative_url }}#stop-6-4-minutes).
 
 A sub-agent's report describes what the sub-agent believes it did. Agents report work they did not do, and summaries drop the caveat that changes the conclusion. The lead's job at collection time is to check the artifact the report describes: the commits, the diff, the test output, the source passage. This page covers the two failure modes, a checking routine you can run on every report, worked examples, and how to make reports easier to check.
 

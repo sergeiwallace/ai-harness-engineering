@@ -2,13 +2,14 @@
 title: "Injected prompts"
 parent: "Templates, prompt stubs and injected prompts"
 nav_order: 2
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Injected prompts
-
-As of 2026-11-09. Topic page in [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}). Slides: [talk stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 An injected prompt, on this site, is text that reaches a session that is already running, at a moment the session cannot choose for itself: a wake-up when work finishes, a reminder after compaction, the compact command before the window fills. Claude Code now has native routes for most of these, and a harness should use them first. Typing into the session's terminal is the fallback for the cases no native route covers, chiefly running a built-in command such as `/compact` at a chosen moment.
 

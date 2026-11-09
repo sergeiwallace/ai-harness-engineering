@@ -2,13 +2,14 @@
 title: "Complexity creep and pruning"
 parent: "Building your own harness"
 nav_order: 3
+last_updated: "2026-11-09"
+talk_stop: "12"
+stop_minutes: "5"
 ---
 
 {% include page_nav.html %}
 
 # Complexity creep and pruning
-
-As of 2026-11-09. Topic page in [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}). Slide: [Stop 12, "Complexity creep"]({{ '/talk/' | relative_url }}#stop-12-5-minutes).
 
 Every fix in the [improvement loop]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}) adds a mechanism: a line in a context file, a hook, a script, a gate. Each one is reasonable on its own. Together they can grow into a patchwork that nobody can hold in their head, where a change in one place breaks another, and a growing share of the agent's context goes to rules. This page is about noticing that and pruning on the same loop.
 

@@ -4,14 +4,13 @@ parent: "Testing agent-written code"
 nav_order: 1
 redirect_from:
   - /sections/12-testing/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Testing at the real entry point
 {: .no_toc }
-
-As of 2026-11-09. Part of [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}).
 
 A behaviour-first test drives the code through the path a user or another program actually takes, and asserts the outcome the acceptance criteria name. This site uses it as the default test for agent-written code, because an agent cannot make it pass by mirroring its own implementation.
 

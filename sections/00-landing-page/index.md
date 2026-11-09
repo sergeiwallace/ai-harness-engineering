@@ -8,6 +8,7 @@ redirect_from:
   - /sections/00-introduction/
   - /sections/00-landing-page/detail.html
   - /sections/00-introduction/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
@@ -16,8 +17,6 @@ redirect_from:
 
 Fundamentals & How to Build Your Own
 {: .fs-6 .fw-300 }
-
-As of 2026-11-09.
 
 ![Illustration: a huge many-eyed monster labelled LLM, held by a harness of straps and reins, with a small agent at its head spraying a stream of code labelled your code]({{ '/assets/images/harness-llm-agent-code.jpg' | relative_url }}){: style="width: 100%" }
 
@@ -58,7 +57,7 @@ A coding agent is a model in a loop: it reads its context, asks for an action, a
 | Memory and plans | carry state from one session to the next | a plan file with done, next and watch out | [Context window and memory]({{ '/sections/11-context-window/' | relative_url }}) |
 | Coordination | split work across agents and bring it back together | a coordinator that briefs sub-agents | [Delegation]({{ '/sections/08-delegation/' | relative_url }}), [Orchestration]({{ '/sections/10-orchestration/' | relative_url }}) |
 
-The model is the same in every setup; the harness decides what it sees, what it may do, and what gets checked before its work lands. [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) takes the parts in turn.
+The model is the same in every setup; the harness decides what it sees, what it may do, and what gets checked before its work lands. [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}) takes the parts in turn.
 
 ## The conductor model
 
@@ -82,7 +81,7 @@ My own harness appears throughout as one example of what is possible. It is desc
 
 The talk runs from the basics to building your own harness.
 
-1. What makes a model agentic, and what a harness is ([fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}), [harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }})).
+1. What makes a model agentic, and what a harness is ([fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}), [harnesses]({{ '/sections/02-what-is-a-harness/' | relative_url }})).
 2. A quick tour of the building blocks that Claude Code and Codex provide: [the clients]({{ '/sections/03-claude-code-and-codex/' | relative_url }}), [context files]({{ '/sections/04-context-files/' | relative_url }}), [skills and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}), [hooks and checks]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) and [templates]({{ '/sections/07-templates-and-stubs/' | relative_url }}).
 3. How the blocks combine into a harness: [delegation]({{ '/sections/08-delegation/' | relative_url }}), [coordination]({{ '/sections/09-session-coordination/' | relative_url }}), [orchestration]({{ '/sections/10-orchestration/' | relative_url }}), [context management]({{ '/sections/11-context-window/' | relative_url }}), [testing]({{ '/sections/12-testing/' | relative_url }}), [review]({{ '/sections/13-code-review/' | relative_url }}), [human gates]({{ '/sections/14-human-gates/' | relative_url }}) and [measurement]({{ '/sections/16-logging-and-evaluation/' | relative_url }}).
 4. How to [build your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}) with a systems approach, and how to keep it current [as models change]({{ '/sections/18-trends/' | relative_url }}).
@@ -156,7 +155,7 @@ Conventions used on every page:
 |---|---:|---|---|
 | 1 | 2 | [Introduction]({{ '/' | relative_url }}) | Who the talk is for, the conductor model, how to use the linked pages |
 | 2 | 2 | [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}) | The agent loop, tools, and the context window |
-| 3 | 3 | [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) | What a harness is, and a systems approach to building one |
+| 3 | 3 | [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}) | What a harness is, and a systems approach to building one |
 | 4 | 6 | [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}), [Context files]({{ '/sections/04-context-files/' | relative_url }}), [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}), [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}) | The building blocks, one line each with its main use |
 | 5 | 4 | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) | Enforcing rules in code, and the soft-to-hard ladder |
 | 6 | 4 | [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}) | Delegation and sub-agents |

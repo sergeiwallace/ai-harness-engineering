@@ -6,13 +6,12 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/10-orchestration/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Programmatic workflows
-
-As of 2026-11-09.
 
 Programmatic orchestration holds the plan in code: a script or a graph decides which agent runs when, with what input, and what happens after. This page covers Claude Code's dynamic workflows in depth (starting, the script, limits, resume, saving, cost), graph frameworks such as LangGraph, and how to design a workflow that resumes cleanly. The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) compares it with [prompt-driven orchestration]({{ '/sections/10-orchestration/prompt-driven-orchestration.html' | relative_url }}); the sub-topic page compares [orchestration frameworks]({{ '/sections/10-orchestration/orchestration-frameworks.html' | relative_url }}).
 

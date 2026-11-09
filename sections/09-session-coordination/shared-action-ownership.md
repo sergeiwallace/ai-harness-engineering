@@ -3,13 +3,12 @@ title: "Owning shared actions"
 parent: "Coordinator and chief-of-staff sessions"
 grand_parent: "Coordinating several sessions"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Owning shared actions
-
-As of 2026-11-09.
 
 A sub-topic of [coordinator and chief-of-staff sessions]({{ '/sections/09-session-coordination/coordinator-sessions.html' | relative_url }}). It covers which actions several sessions must not run at once, how one owner per machine turns races into a queue, how to enforce the ownership so a worker that forgets is refused, locks for actions that need no owner, and how to keep the owner from becoming the bottleneck.
 

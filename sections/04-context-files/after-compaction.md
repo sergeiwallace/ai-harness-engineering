@@ -3,13 +3,14 @@ title: "Context files after compaction"
 parent: "How context files load"
 grand_parent: "Context files"
 nav_order: 1
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Context files after compaction
-
-As of 2026-11-09. Sub-topic of [How context files load]({{ '/sections/04-context-files/how-context-files-load.html' | relative_url }}) in [Context files]({{ '/sections/04-context-files/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 Compaction summarises the conversation to free the window. For context files it is a reset with exceptions: some files are read again from disk, others are gone until something brings them back. A rule placed in the wrong kind of file can be followed for hours and then silently stop applying. This page explains what happens and how to place a rule so it holds.
 

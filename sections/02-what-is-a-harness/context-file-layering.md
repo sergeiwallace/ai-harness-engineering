@@ -1,15 +1,16 @@
 ---
 title: "Context file layering"
 parent: "Harness context files"
-grand_parent: "AI harnesses"
+grand_parent: "What is a harness?"
 nav_order: 1
+redirect_from:
+  - /sections/02-ai-harnesses/context-file-layering.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Context file layering
-
-As of 2026-11-09. A sub-topic of [Harness context files]({{ '/sections/02-ai-harnesses/context-files.html' | relative_url }}), in [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
 A session rarely reads one context file. It reads several, from broad to narrow, and combines them. Knowing which files load, when, and which wins when two disagree is what lets you put each rule exactly where it applies.
 
@@ -36,7 +37,7 @@ A managed file set by an administrator, deployed with MDM, Group Policy or a sim
 - It is read for every user on the machine, in every project, and loads before user and project files.
 - A developer cannot exclude it with `claudeMdExcludes`.
 - Its content can also live in a `claudeMd` key inside managed settings.
-- Claude Code's docs split the job: managed settings do the technical enforcement (`permissions.deny`, `sandbox.enabled`), and the managed `CLAUDE.md` carries behavioural guidance. That is the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) at organisation scale.
+- Claude Code's docs split the job: managed settings do the technical enforcement (`permissions.deny`, `sandbox.enabled`), and the managed `CLAUDE.md` carries behavioural guidance. That is the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) at organisation scale.
 
 ### User file
 
@@ -186,7 +187,7 @@ My harness runs on several machines with different tools and access.
 <details markdown="1">
 <summary>Why an overlay and not a separate file</summary>
 
-A separate file per machine repeats the base, and the copies drift. An overlay is a short section that says only what differs, and the build places it after the base so it reads as the narrower layer. See [Compiling context files]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}).
+A separate file per machine repeats the base, and the copies drift. An overlay is a short section that says only what differs, and the build places it after the base so it reads as the narrower layer. See [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
 
 </details>
 
@@ -201,8 +202,8 @@ A separate file per machine repeats the base, and the copies drift. An overlay i
 
 ## Related pages
 
-- [Context file size budgets]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}): every layer adds to the always-loaded total.
-- [Compiling context files]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}): building the layers from source modules.
+- [Context file size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}): every layer adds to the always-loaded total.
+- [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}): building the layers from source modules.
 - [Context files]({{ '/sections/04-context-files/' | relative_url }}): the full section.
 
 ## Sources

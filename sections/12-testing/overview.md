@@ -4,14 +4,15 @@ nav_order: 22
 has_children: true
 has_toc: false
 permalink: /sections/12-testing/
+last_updated: "2026-11-09"
+talk_stop: "9"
+stop_minutes: "2"
 ---
 
 {% include page_nav.html %}
 
 # Testing agent-written code
 {: .no_toc }
-
-As of 2026-11-09. Stop 9 on the talk path, about 2 minutes.
 
 When an agent writes the code, it usually writes the tests too. The tests then double as the score the agent works toward, and an agent can make a test pass without meeting the intent behind it. This overview covers six testing practices for agent-written code, each with a worked example, and links to a topic page wherever a practice has more depth.
 

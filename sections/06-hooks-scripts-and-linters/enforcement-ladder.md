@@ -2,15 +2,14 @@
 title: "The enforcement ladder"
 parent: "Hooks, scripts and linters"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # The enforcement ladder
 
-As of 2026-11-09.
-
-A harness can put a rule in several places, from a sentence the model reads to a check that runs before every merge. The ladder ranks them by how consistently they hold. This page covers the four layers, the five concrete mechanisms inside them, how to place a rule, what to do when an agent breaks one, and what each mechanism costs. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}), and it applies the [systems approach to harness engineering]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) from the AI harnesses overview.
+A harness can put a rule in several places, from a sentence the model reads to a check that runs before every merge. The ladder ranks them by how consistently they hold. This page covers the four layers, the five concrete mechanisms inside them, how to place a rule, what to do when an agent breaks one, and what each mechanism costs. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}), and it applies the [systems approach to harness engineering]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) from the AI harnesses overview.
 
 ## Contents
 {: .no_toc .text-delta }
@@ -35,8 +34,8 @@ A fix belongs in the system, enforced by code wherever a program can check it.
 
 ## The four layers
 
-![The Swiss cheese model: four slices of cheese in a row, each with holes. A red arrow labelled Hazards passes through holes that happen to line up in every slice and comes out as Losses.]({{ '/assets/images/06-hooks-scripts-and-linters/swiss-cheese-model.png' | relative_url }})
-*Placeholder image: the Swiss cheese model of layered defence (James Reason). Each layer catches some mistakes; what gets through one layer is caught by the next. Source: <https://commons.wikimedia.org/wiki/File:Swiss_cheese_model_of_accident_causation.png>, Davidmack, CC BY-SA 3.0 (<https://creativecommons.org/licenses/by-sa/3.0/>). Re-encoded as PNG; no other changes.*
+![A vertical flow chart. One agent action enters at the top and moves down through four layers. Layer 1, instructions in context files, skills and prompts, is read by the model and guides it. Layers 2 to 4 are enforced by a program: workflows and tools refuse invalid input, hooks, scripts and linters refuse or flag the action as it happens, and validation and tests fail the change and send it back. At each layer a side branch shows what that layer caught, and what it missed passes down: a rule the model dropped, an action outside the workflow, a mistake not visible yet. A change that passes all four layers lands.]({{ '/assets/images/diagrams/02-ai-harnesses/enforcement-flow.svg' | relative_url }})
+*Figure: one agent action moving down the four layers. Each layer catches some mistakes and passes the rest to the next. Made with archify.*
 
 The layers in order, from the one the model reads to the one that checks the finished change. Steps 1 and 2 on this page are layer 1, step 3 is layer 2, step 4 is layer 3 and step 5 is layer 4.
 

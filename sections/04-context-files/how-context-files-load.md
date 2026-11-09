@@ -6,13 +6,14 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/04-context-files/detail.html
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # How context files load
-
-As of 2026-11-09. Part of [Context files]({{ '/sections/04-context-files/' | relative_url }}). Slide: [stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 A rule only works if it is in the window when the agent needs it. This page explains, for Claude Code and then Codex:
 

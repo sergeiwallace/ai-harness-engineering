@@ -4,13 +4,12 @@ nav_order: 29
 has_children: true
 has_toc: false
 permalink: /sections/19-chat-and-desktop-clients/
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Chat, desktop and web clients
-
-As of 2026-11-09. Overview page. This section has no stop of its own on the talk path; [Stop 1]({{ '/talk/' | relative_url }}#stop-1-2-minutes) says in one line that most of the ideas carry over.
 
 Most of this site is about coding agents in a terminal: Claude Code and Codex. Many people use the same models through a chat app, a desktop app or a browser. The question for them is which parts of harness engineering still apply. The short answer: the Claude Code desktop and web versions keep almost everything, a chat app keeps the habits and an adapted form of context, and anything that depends on running code on your machine, such as hooks, does not carry over to a chat app at all.
 

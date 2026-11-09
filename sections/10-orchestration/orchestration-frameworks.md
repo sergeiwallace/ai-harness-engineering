@@ -3,13 +3,12 @@ title: "Orchestration frameworks"
 parent: "Programmatic workflows"
 grand_parent: "Orchestration and workflows"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Orchestration frameworks
-
-As of 2026-11-09.
 
 A sub-topic of [programmatic workflows]({{ '/sections/10-orchestration/programmatic-workflows.html' | relative_url }}). When the plan moves into code, you can write the loop yourself, use your coding agent's own workflow feature, or use a framework. This page describes the main frameworks by how each one models a plan, compares them, and gives a way to choose.
 

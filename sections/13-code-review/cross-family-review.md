@@ -4,14 +4,13 @@ parent: "Code review"
 nav_order: 1
 redirect_from:
   - /sections/13-code-review/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Cross-family review
 {: .no_toc }
-
-As of 2026-11-09. Part of [Code review]({{ '/sections/13-code-review/' | relative_url }}).
 
 Cross-family review means the agent that reviews a change comes from a different model family than the agent that wrote it: a Codex model reviews Claude's code, and a Claude model reviews Codex's. Models from one family share training data, training methods and habits, so they tend to share blind spots and to rate each other's output favourably.
 

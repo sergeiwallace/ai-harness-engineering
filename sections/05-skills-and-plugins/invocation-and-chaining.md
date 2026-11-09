@@ -2,13 +2,12 @@
 title: "Invocation and chaining"
 parent: "Skills, commands and plugins"
 nav_order: 2
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Invocation and chaining
-
-As of 2026-11-09.
 
 A skill can be started by a person, by the model, or by another skill. This page covers the settings that decide who may start a skill, how to choose them, the trap that breaks chains silently, and how to build a pipeline out of small skills. It is part of [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}).
 

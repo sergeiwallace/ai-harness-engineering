@@ -2,13 +2,12 @@
 title: "Nesting and concurrency"
 parent: "Agent profiles, sub-agents and delegation"
 nav_order: 3
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Nesting and concurrency
-
-As of 2026-11-09. Topic page in [Agent profiles, sub-agents and delegation]({{ '/sections/08-delegation/' | relative_url }}).
 
 A lead agent can start several sub-agents at once, and a sub-agent can start sub-agents of its own. Both multiply work, and both need limits: nesting limits how deep the tree of agents goes, and concurrency limits how many agents run at the same time on one machine. This page covers the shapes delegation takes, the depth limit and what each level costs, three kinds of concurrency limit, and what a lead does when a launch is refused.
 

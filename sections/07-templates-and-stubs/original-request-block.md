@@ -3,13 +3,12 @@ title: "The original-request block"
 parent: "Sub-agent briefs"
 grand_parent: "Templates, prompt stubs and injected prompts"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # The original-request block
-
-As of 2026-11-09. Sub-topic of [Sub-agent briefs]({{ '/sections/07-templates-and-stubs/briefs.html' | relative_url }}), in [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}).
 
 The original-request block is a fixed block at the top of every brief that holds the person's words exactly as they were written. It exists because requests drift: each agent in a chain restates the one before, and a requirement can disappear while every check stays green. This page covers the drift, the incident that showed it, how the block is stored and checked, and how an agent uses it.
 

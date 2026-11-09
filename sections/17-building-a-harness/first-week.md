@@ -2,13 +2,14 @@
 title: "A first-week harness"
 parent: "Building your own harness"
 nav_order: 2
+last_updated: "2026-11-09"
+talk_stop: "12"
+stop_minutes: "5"
 ---
 
 {% include page_nav.html %}
 
 # A first-week harness
-
-As of 2026-11-09. Topic page in [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }}). Slide: [Stop 12, "A possible first week"]({{ '/talk/' | relative_url }}#stop-12-5-minutes).
 
 You can start a useful harness in a week with four small files. Each one covers a different kind of [friction]({{ '/sections/17-building-a-harness/reflexivity-loop.html' | relative_url }}): something the agent did not know, something you keep typing, something the agent keeps doing wrong, and something you want to approve first. This page gives a complete version of each for Claude Code, with notes on the Codex equivalent.
 

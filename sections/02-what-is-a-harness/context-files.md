@@ -1,18 +1,21 @@
 ---
 title: "Harness context files"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 1
 has_children: true
 has_toc: false
+redirect_from:
+  - /sections/02-ai-harnesses/context-files.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Harness context files
 
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}). The full section on this topic is [Context files]({{ '/sections/04-context-files/' | relative_url }}).
+The full section on this topic is [Context files]({{ '/sections/04-context-files/' | relative_url }}).
 
-A context file is the standing brief a harness hands the model at the start of every session. It is the cheapest component to add, and a long or vague one is followed poorly. This page covers what a context file is for, what belongs in one, how to write rules a model follows, and how a context file relates to the rest of the harness. Three sub-topic pages go deeper: [layering]({{ '/sections/02-ai-harnesses/context-file-layering.html' | relative_url }}), [size budgets]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}) and [compiling]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}).
+A context file is the standing brief a harness hands the model at the start of every session. It is the cheapest component to add, and a long or vague one is followed poorly. This page covers what a context file is for, what belongs in one, how to write rules a model follows, and how a context file relates to the rest of the harness. Three sub-topic pages go deeper: [layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}), [size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}) and [compiling]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -115,7 +118,7 @@ A rule loaded at the moment it applies is followed more reliably than one loaded
 | pushing | a hook on `git push` with the rule in its refusal | at the push |
 | a release step | the release skill | when the release starts |
 
-See [Context file layering]({{ '/sections/02-ai-harnesses/context-file-layering.html' | relative_url }}#path-rules).
+See [Context file layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}#path-rules).
 
 ### Emphasis
 
@@ -123,7 +126,7 @@ Capital letters and "IMPORTANT" help a rule stand out until every rule uses them
 
 - One or two emphasised rules in a file are noticed.
 - When most lines are emphasised, none stand out, and the file reads as noise.
-- A rule that needs emphasis to be followed is a rule that should be enforced in code. Move it to a [hook]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) or a test and keep a short plain line.
+- A rule that needs emphasis to be followed is a rule that should be enforced in code. Move it to a [hook]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}) or a test and keep a short plain line.
 
 ## A worked example
 
@@ -173,10 +176,10 @@ is in web/. Remember to update docs. Also use type hints.
 |---|---|
 | Always true, short, for every session | the context file |
 | True for some files only | a path rule |
-| A procedure with steps | a [skill]({{ '/sections/02-ai-harnesses/skills.html' | relative_url }}) |
-| Something that must hold every time | a [hook]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}) or a test |
-| An action the agent may never take | a [permission deny rule]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) |
-| A lesson from one session | [memory]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}) |
+| A procedure with steps | a [skill]({{ '/sections/02-what-is-a-harness/skills.html' | relative_url }}) |
+| Something that must hold every time | a [hook]({{ '/sections/02-what-is-a-harness/hooks.html' | relative_url }}) or a test |
+| An action the agent may never take | a [permission deny rule]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) |
+| A lesson from one session | [memory]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}) |
 
 ## Maintenance
 
@@ -200,7 +203,7 @@ A rule nobody breaks any more may be compensating for an older model.
 
 ### When an agent makes a mistake
 
-Adding another detailed rule to the context file each time an agent does something wrong is an anti-pattern. The file grows, each rule gets less attention, and the model still applies them unevenly when it juggles several things, switches tasks or works with a nearly full window. A rule of thumb for when: the second time you type the same correction, change the harness; act on the first occurrence when it will clearly recur or a repeat would be costly ([when to change the harness]({{ '/sections/02-ai-harnesses/' | relative_url }}#when-to-change-the-harness)). Following the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering), the fix goes into the system first:
+Adding another detailed rule to the context file each time an agent does something wrong is an anti-pattern. The file grows, each rule gets less attention, and the model still applies them unevenly when it juggles several things, switches tasks or works with a nearly full window. A rule of thumb for when: the second time you type the same correction, change the harness; act on the first occurrence when it will clearly recur or a repeat would be costly ([when to change the harness]({{ '/sections/02-what-is-a-harness/' | relative_url }}#when-to-change-the-harness)). Following the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering), the fix goes into the system first:
 
 1. Ask which part of the system let the mistake through.
 2. Build the fix into a workflow or tool where you can: a skill step, a script that does the fiddly part, a template with the right fields.
@@ -238,9 +241,9 @@ In my harness, a request to record a rule goes through one procedure that first 
 
 ## Sub-topics
 
-- [Context file layering]({{ '/sections/02-ai-harnesses/context-file-layering.html' | relative_url }}): scopes, precedence, imports, path rules and subfolder files.
-- [Context file size budgets]({{ '/sections/02-ai-harnesses/context-file-budgets.html' | relative_url }}): what size costs, how to measure it, and the trim ladder.
-- [Compiling context files]({{ '/sections/02-ai-harnesses/compiling-context-files.html' | relative_url }}): building several tools' files from one set of source modules.
+- [Context file layering]({{ '/sections/02-what-is-a-harness/context-file-layering.html' | relative_url }}): scopes, precedence, imports, path rules and subfolder files.
+- [Context file size budgets]({{ '/sections/02-what-is-a-harness/context-file-budgets.html' | relative_url }}): what size costs, how to measure it, and the trim ladder.
+- [Compiling context files]({{ '/sections/02-what-is-a-harness/compiling-context-files.html' | relative_url }}): building several tools' files from one set of source modules.
 
 ## Sources
 

@@ -4,14 +4,15 @@ nav_order: 23
 has_children: true
 has_toc: false
 permalink: /sections/13-code-review/
+last_updated: "2026-11-09"
+talk_stop: "9"
+stop_minutes: "2"
 ---
 
 {% include page_nav.html %}
 
 # Code review
 {: .no_toc }
-
-As of 2026-11-09. Stop 9 on the talk path, about 2 minutes.
 
 When agents write most of the code, nobody reads every change by hand. This section follows one way of handling that, which is to review each change in four stages:
 

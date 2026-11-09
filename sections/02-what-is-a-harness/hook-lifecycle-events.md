@@ -1,15 +1,16 @@
 ---
 title: "Hook lifecycle events"
 parent: "Harness hooks"
-grand_parent: "AI harnesses"
+grand_parent: "What is a harness?"
 nav_order: 1
+redirect_from:
+  - /sections/02-ai-harnesses/hook-lifecycle-events.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Hook lifecycle events
-
-As of 2026-11-09. A sub-topic of [Harness hooks]({{ '/sections/02-ai-harnesses/hooks.html' | relative_url }}), in [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}).
 
 Each hook event is a moment in the session where the harness pauses and asks your code what to do. Picking the right event is most of the design of a hook: the same check can be useless at one event and decisive at another.
 
@@ -120,7 +121,7 @@ The most used event. It sees the tool name and its full input before anything ru
 - Return `"allow"` to skip the prompt (a matching deny or ask rule still applies), `"ask"` to show one, or `"defer"` to leave it to the normal flow.
 - Return `updatedInput` to change the arguments before the tool runs.
 - Exit 2 with a message on standard error for a simple refusal.
-- [Guard hooks]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) covers writing one in depth.
+- [Guard hooks]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) covers writing one in depth.
 
 ### PostToolUse
 
@@ -147,7 +148,7 @@ Fires when the harness is about to show a permission prompt.
 
 - A hook here can approve or refuse by code, through its `decision` object.
 - Exit 2 does not refuse here, unlike `PreToolUse`.
-- It suits rules too subtle for a [permission pattern]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}), such as "allow `git push` only to branches this session created".
+- It suits rules too subtle for a [permission pattern]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}), such as "allow `git push` only to branches this session created".
 
 ## Turn events
 
@@ -187,7 +188,7 @@ Fires before the harness summarises the context, for both a manual `/compact` an
 - Plain text it prints becomes instructions for the summary, such as "keep the list of open decisions".
 - Write the current task, open decisions and git state somewhere durable.
 - `PostCompact` fires after, and a `SessionStart` hook with the `compact` matcher can put state back.
-- See [Harness memory and context]({{ '/sections/02-ai-harnesses/memory-and-context.html' | relative_url }}#compaction).
+- See [Harness memory and context]({{ '/sections/02-what-is-a-harness/memory-and-context.html' | relative_url }}#compaction).
 
 ## Choosing the event
 

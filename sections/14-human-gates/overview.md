@@ -4,13 +4,12 @@ permalink: /sections/14-human-gates/
 nav_order: 24
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Human gates, decisions and alignment
-
-As of 2026-11-09.
 
 Stop 10 on the talk path, about 3 minutes.
 

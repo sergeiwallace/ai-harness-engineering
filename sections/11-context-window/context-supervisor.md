@@ -5,13 +5,12 @@ grand_parent: "Context window and memory"
 nav_order: 1
 redirect_from:
   - /sections/11-context-window/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # A context supervisor
-
-As of 2026-11-09.
 
 A sub-topic of [compaction and saving state]({{ '/sections/11-context-window/compaction.html' | relative_url }}). A context supervisor is a small piece of automation that watches how full a session's context is and, past a threshold, saves state and compacts, so a long autonomous run does not depend on the agent noticing in time. This page covers the built-in options to try first, the parts of a supervisor, how they fit together, a minimal hook, and the failure modes.
 

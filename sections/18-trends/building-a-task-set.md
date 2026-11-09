@@ -3,13 +3,12 @@ title: "Building a task set"
 parent: "Re-testing after a model change"
 grand_parent: "Trends and model changes"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Building a task set
-
-As of 2026-11-09. Sub-topic of [Re-testing after a model change]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}), in [Trends and model changes]({{ '/sections/18-trends/' | relative_url }}).
 
 A task set is the list of tasks you run before and after a change to see whether the change helped. It is what makes a [model re-test]({{ '/sections/18-trends/retesting-after-a-model-change.html' | relative_url }}) or a [pruning decision]({{ '/sections/17-building-a-harness/complexity-creep.html' | relative_url }}) a measurement. In the [four layers]({{ '/sections/17-building-a-harness/' | relative_url }}#11-the-four-layers), the task set is layer 4 for the harness itself: it validates a change to the harness before the change is kept. This page covers where tasks come from, how to write each one, and how to read the results.
 

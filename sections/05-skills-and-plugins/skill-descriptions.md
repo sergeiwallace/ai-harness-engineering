@@ -3,13 +3,12 @@ title: "Writing skill descriptions"
 parent: "Skill anatomy and loading"
 grand_parent: "Skills, commands and plugins"
 nav_order: 1
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Writing skill descriptions
-
-As of 2026-11-09.
 
 The description is the only part of a skill that is always in the context window, and it is what the model reads when it decides which skill to use. A skill with a vague description is not picked, or is picked for the wrong request. This page is a sub-topic of [Skill anatomy and loading]({{ '/sections/05-skills-and-plugins/skill-anatomy.html' | relative_url }}).
 

@@ -1,18 +1,21 @@
 ---
 title: "Harness hooks"
-parent: "AI harnesses"
+parent: "What is a harness?"
 nav_order: 6
 has_children: true
 has_toc: false
+redirect_from:
+  - /sections/02-ai-harnesses/hooks.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Harness hooks
 
-As of 2026-11-09. Part of [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}). The full section on this topic is [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
+The full section on this topic is [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}).
 
-A hook is a command the harness runs at a fixed point in a session. It sees what the agent is about to do or has just done, and it can let the action through, refuse it with a reason, or add text to the conversation. A rule in a hook holds whether or not the model remembers it. This page covers how a hook is configured, what it receives, what it can return, and how to write one. Three sub-topic pages go further: [Hook lifecycle events]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}), [Guard hooks]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}) and [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}).
+A hook is a command the harness runs at a fixed point in a session. It sees what the agent is about to do or has just done, and it can let the action through, refuse it with a reason, or add text to the conversation. A rule in a hook holds whether or not the model remembers it. This page covers how a hook is configured, what it receives, what it can return, and how to write one. Three sub-topic pages go further: [Hook lifecycle events]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}), [Guard hooks]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}) and [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}).
 
 ## Contents
 {: .no_toc .text-delta }
@@ -24,7 +27,7 @@ A hook is a command the harness runs at a fixed point in a session. It sees what
 
 ![Where hooks fire in a session: SessionStart, then UserPromptSubmit, then a loop of PreToolUse, the tool, and PostToolUse, then Stop, which can send the agent back to work; PreCompact, SubagentStop and SessionEnd fire alongside.]({{ '/assets/images/02-ai-harnesses/hook-lifecycle.svg' | relative_url }})
 
-*The main hook events across one session. Orange events can change what happens next. Claude Code has many more events than shown here; [Hook lifecycle events]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}) lists them.*
+*The main hook events across one session. Orange events can change what happens next. Claude Code has many more events than shown here; [Hook lifecycle events]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}) lists them.*
 
 ### Hooks and the other controls
 
@@ -42,7 +45,7 @@ A permission rule matches a pattern. A hook runs code, so it can:
 - check the git state or the time of day;
 - call another tool or service before it decides.
 
-Use a [permission rule]({{ '/sections/02-ai-harnesses/permissions-and-settings.html' | relative_url }}) when a pattern is enough and a hook when it is not. The two combine: a hook can always refuse, and a hook's allow never overrides a deny or ask rule.
+Use a [permission rule]({{ '/sections/02-what-is-a-harness/permissions-and-settings.html' | relative_url }}) when a pattern is enough and a hook when it is not. The two combine: a hook can always refuse, and a hook's allow never overrides a deny or ask rule.
 
 ## Configuring a hook
 
@@ -119,7 +122,7 @@ PostToolUse
   Edit|Write  uv run ruff check --quiet                     (user)
 ```
 
-> Run it after every install. A hook that is in the repository and missing from this list is not running. See [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#never-installed).
+> Run it after every install. A hook that is in the repository and missing from this list is not running. See [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}#never-installed).
 {: .important }
 
 ## What a hook receives
@@ -163,7 +166,7 @@ The simplest hook answers with its exit code.
 | 2 | block, on events that can block | the action is refused or the agent is sent back, with standard error as the reason |
 | any other, including 1 | a non-blocking error | the action continues, and a hook error notice is shown |
 
-> Exit code 1 does not block. A guard that crashes with an ordinary error lets the action through. See [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#fail-open-by-accident).
+> Exit code 1 does not block. A guard that crashes with an ordinary error lets the action through. See [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}#fail-open-by-accident).
 {: .warning }
 
 ### JSON output
@@ -247,7 +250,7 @@ sys.exit(0)
 5. It exits 0 for everything it does not recognise, so it never blocks unrelated work.
 6. It runs in milliseconds; hooks on `Bash` run before every shell command.
 
-It does not catch `kill $(pgrep node)`, which kills by pattern through a substitution. [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}#bypass-by-spelling) lists spellings like this; each one belongs in the hook's tests.
+It does not catch `kill $(pgrep node)`, which kills by pattern through a substitution. [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}#bypass-by-spelling) lists spellings like this; each one belongs in the hook's tests.
 
 <details markdown="1">
 <summary>Testing a hook before you install it</summary>
@@ -268,7 +271,7 @@ Test both arms. A guard tested only on the case it should block can be a guard t
 
 ## Hooks in my harness
 
-Many of my harness's hooks came from the same pattern, which is the [systems approach]({{ '/sections/02-ai-harnesses/' | relative_url }}#a-systems-approach-to-harness-engineering) in practice: an agent broke a written rule, and the fix went into the system as a hook, with the written rule kept as a second layer. Today a rule that can be checked from the tool input goes to a hook first. The refusal text repeats the rule at the moment it applies. A few of the kinds, described conceptually:
+Many of my harness's hooks came from the same pattern, which is the [systems approach]({{ '/sections/02-what-is-a-harness/' | relative_url }}#a-systems-approach-to-harness-engineering) in practice: an agent broke a written rule, and the fix went into the system as a hook, with the written rule kept as a second layer. Today a rule that can be checked from the tool input goes to a hook first. The refusal text repeats the rule at the moment it applies. A few of the kinds, described conceptually:
 
 | Kind | Event | What it does |
 |---|---|---|
@@ -299,9 +302,9 @@ Codex declares hooks in a `[hooks]` table in `config.toml`.
 
 ## Sub-topics
 
-- [Hook lifecycle events]({{ '/sections/02-ai-harnesses/hook-lifecycle-events.html' | relative_url }}): each event, what it receives and what it can change.
-- [Guard hooks]({{ '/sections/02-ai-harnesses/guard-hooks.html' | relative_url }}): hooks that refuse, and how to write a refusal an agent learns from.
-- [Hook failure modes]({{ '/sections/02-ai-harnesses/hook-failure-modes.html' | relative_url }}): failing open, false positives, bypasses and cost.
+- [Hook lifecycle events]({{ '/sections/02-what-is-a-harness/hook-lifecycle-events.html' | relative_url }}): each event, what it receives and what it can change.
+- [Guard hooks]({{ '/sections/02-what-is-a-harness/guard-hooks.html' | relative_url }}): hooks that refuse, and how to write a refusal an agent learns from.
+- [Hook failure modes]({{ '/sections/02-what-is-a-harness/hook-failure-modes.html' | relative_url }}): failing open, false positives, bypasses and cost.
 
 ## Sources
 

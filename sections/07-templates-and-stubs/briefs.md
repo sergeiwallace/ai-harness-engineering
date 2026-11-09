@@ -7,13 +7,14 @@ has_toc: false
 redirect_from:
   - /sections/07-templates-and-stubs/detail.html
   - /sections/07-templates-and-stubs/advanced.html
+last_updated: "2026-11-09"
+talk_stop: "4"
+stop_minutes: "6"
 ---
 
 {% include page_nav.html %}
 
 # Sub-agent briefs
-
-As of 2026-11-09. Topic page in [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}). Slides: [talk stop 4]({{ '/talk/' | relative_url }}#stop-4-6-minutes).
 
 A brief is the prompt one agent writes to start another. It is the only channel from parent to child: the sub-agent starts with an empty context and knows what the brief tells it, plus its profile and the project's context files. This page covers each field of a brief in depth, a filled brief from end to end, how to review one, and the way briefs fail. The person's original words, which sit at the top of every brief, have their own page: [the original-request block]({{ '/sections/07-templates-and-stubs/original-request-block.html' | relative_url }}).
 

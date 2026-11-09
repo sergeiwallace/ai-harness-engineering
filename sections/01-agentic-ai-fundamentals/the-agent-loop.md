@@ -4,13 +4,12 @@ parent: "Agentic AI fundamentals"
 nav_order: 1
 has_children: true
 has_toc: false
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # The agent loop
-
-As of 2026-11-09.
 
 The agent loop is the small program that turns a language model into an agent: send the context, read back a request for an action, carry the action out, add the result, repeat. The [Agentic AI fundamentals overview]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}#the-agent-loop) is the short version. This page covers:
 

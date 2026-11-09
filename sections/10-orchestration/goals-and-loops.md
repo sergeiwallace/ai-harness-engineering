@@ -6,13 +6,12 @@ has_children: true
 has_toc: false
 redirect_from:
   - /sections/10-orchestration/detail.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Goals and loops
-
-As of 2026-11-09.
 
 A goal keeps an agent working until a condition is met. A loop repeats a prompt on a schedule. Both turn a single answer into sustained work, and both need an exit condition and a limit. This page covers `/goal` and its evaluator, writing a condition it can judge, Stop hooks as the enforced version of a goal, `/loop` and scheduled tasks, and how each one ends. The [section overview]({{ '/sections/10-orchestration/' | relative_url }}) is the short version; a sub-topic page covers [hill-climbing and quality ratchets]({{ '/sections/10-orchestration/hill-climbing.html' | relative_url }}).
 

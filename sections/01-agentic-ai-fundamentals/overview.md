@@ -7,13 +7,12 @@ permalink: /sections/01-agentic-ai-fundamentals/
 redirect_from:
   - /sections/01-agentic-ai-fundamentals/detail.html
   - /sections/01-agentic-ai-fundamentals/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Agentic AI fundamentals
-
-As of 2026-11-09.
 
 Stop 2 on the talk path, about 2 minutes. This overview explains how a language model becomes an agent, before any configuration: what the loop is, how tools are called, what the context window holds, why sessions forget, how a run stops, and how it fails. Every later page builds on these mechanics. Each idea has a worked example here, and the [topic pages](#topic-pages) at the end go deeper on each one.
 
@@ -453,7 +452,7 @@ A harness is the set of things you put around this loop. Its parts follow the fo
 | 3. Hooks, scripts and linters | the moment the client handles a tool call, or the agent tries to stop | [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}) |
 | 4. Validation and tests | before a change lands | [Testing agent-written code]({{ '/sections/12-testing/' | relative_url }}) |
 
-Memory and plan files carry state across sessions ([Context window and memory]({{ '/sections/11-context-window/' | relative_url }})). [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) puts the parts together.
+Memory and plan files carry state across sessions ([Context window and memory]({{ '/sections/11-context-window/' | relative_url }})). [What is a harness?]({{ '/sections/02-what-is-a-harness/' | relative_url }}) puts the parts together.
 
 ## Topic pages
 

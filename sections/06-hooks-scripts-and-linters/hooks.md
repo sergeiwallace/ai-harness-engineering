@@ -7,13 +7,12 @@ has_toc: false
 redirect_from:
   - /sections/06-hooks-scripts-and-linters/detail.html
   - /sections/06-hooks-scripts-and-linters/advanced.html
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Hooks
-
-As of 2026-11-09.
 
 A hook is a handler that the client runs at a fixed point in a session: before a tool call, after it, when a prompt is sent, before compaction, when the agent tries to stop. It runs whether or not the model remembers any rule, and some hooks can refuse the action. Hooks are layer 3 of the [enforcement ladder]({{ '/sections/06-hooks-scripts-and-linters/enforcement-ladder.html' | relative_url }}): they act at the moment the agent tries something. This page covers the events, the handler types, the data a hook receives and returns, exit codes, registration and debugging. It is part of [Hooks, scripts and linters]({{ '/sections/06-hooks-scripts-and-linters/' | relative_url }}). The sub-page [Writing a guard]({{ '/sections/06-hooks-scripts-and-linters/writing-a-guard.html' | relative_url }}) covers hooks that refuse actions.
 

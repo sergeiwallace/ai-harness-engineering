@@ -19,9 +19,9 @@ deck:
   - { index: 3, id: "route", title: "Talk route", part: "Introduction" }
   - { index: 4, id: "agent-loop", title: "The agent loop", part: "Agentic AI fundamentals" }
   - { index: 5, id: "context-window", title: "Context window and sessions", part: "Agentic AI fundamentals" }
-  - { index: 6, id: "harness-parts", title: "Parts of a harness", part: "AI harnesses" }
-  - { index: 7, id: "systems-reflexivity", title: "A systems approach to harness engineering", part: "AI harnesses" }
-  - { index: 8, id: "harness-cost", title: "Harness cost and effect", part: "AI harnesses" }
+  - { index: 6, id: "harness-parts", title: "Parts of a harness", part: "What is a harness?" }
+  - { index: 7, id: "systems-reflexivity", title: "A systems approach to harness engineering", part: "What is a harness?" }
+  - { index: 8, id: "harness-cost", title: "Harness cost and effect", part: "What is a harness?" }
   - { index: 9, id: "building-blocks", title: "The building blocks", part: "Building blocks" }
   - { index: 10, id: "clients", title: "Claude Code and Codex", part: "Building blocks" }
   - { index: 11, id: "native-commands", title: "Native commands", part: "Building blocks" }
@@ -56,7 +56,7 @@ deck:
   - { index: 40, id: "appendix", title: "Appendix", part: "Appendix" }
   - { index: 41, id: "detail-00-landing-page", title: "Introduction detail", part: "Appendix" }
   - { index: 42, id: "detail-01-agentic-ai-fundamentals", title: "Agentic AI fundamentals detail", part: "Appendix" }
-  - { index: 43, id: "detail-02-ai-harnesses", title: "AI harnesses detail", part: "Appendix" }
+  - { index: 43, id: "detail-02-what-is-a-harness", title: "What is a harness? detail", part: "Appendix" }
   - { index: 44, id: "detail-03-claude-code-and-codex", title: "Claude Code and Codex basics detail", part: "Appendix" }
   - { index: 45, id: "detail-04-context-files", title: "Context files detail", part: "Appendix" }
   - { index: 46, id: "detail-05-skills-and-plugins", title: "Skills, commands and plugins detail", part: "Appendix" }
@@ -95,11 +95,11 @@ sections:
     - { index: 4, title: "The agent loop" }
     - { index: 5, title: "Context window and sessions" }
     - { index: 42, title: "Agentic AI fundamentals detail" }
-  "02-ai-harnesses":
+  "02-what-is-a-harness":
     - { index: 6, title: "Parts of a harness" }
     - { index: 7, title: "A systems approach to harness engineering" }
     - { index: 8, title: "Harness cost and effect" }
-    - { index: 43, title: "AI harnesses detail" }
+    - { index: 43, title: "What is a harness? detail" }
   "03-claude-code-and-codex":
     - { index: 10, title: "Claude Code and Codex" }
     - { index: 11, title: "Native commands" }

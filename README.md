@@ -13,8 +13,8 @@ Read it at <https://sergeiwallace.github.io/ai-harness-engineering/>.
 - [Talk slides](https://sergeiwallace.github.io/ai-harness-engineering/talk/): the slide list, a link to [present the slides](https://sergeiwallace.github.io/ai-harness-engineering/talk/slides/) and the PDF
 - [Agentic AI fundamentals](https://sergeiwallace.github.io/ai-harness-engineering/sections/01-agentic-ai-fundamentals/)
   - [Agentic AI fundamentals in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/01-agentic-ai-fundamentals/detail.html)
-- [AI harnesses](https://sergeiwallace.github.io/ai-harness-engineering/sections/02-ai-harnesses/)
-  - [AI harnesses in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/02-ai-harnesses/detail.html)
+- [AI harnesses](https://sergeiwallace.github.io/ai-harness-engineering/sections/02-what-is-a-harness/)
+  - [AI harnesses in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/02-what-is-a-harness/detail.html)
 - [Claude Code and Codex basics](https://sergeiwallace.github.io/ai-harness-engineering/sections/03-claude-code-and-codex/)
   - [Claude Code and Codex in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/03-claude-code-and-codex/detail.html)
 - [Context files](https://sergeiwallace.github.io/ai-harness-engineering/sections/04-context-files/)

@@ -4,13 +4,12 @@ nav_order: 21
 has_children: true
 has_toc: false
 permalink: /sections/11-context-window/
+last_updated: "2026-11-09"
 ---
 
 {% include page_nav.html %}
 
 # Context window and memory
-
-As of 2026-11-09.
 
 A session's context window is everything the model can see at once: your context files, the conversation, every file it read and every command's output. As it fills, an agent follows instructions less reliably, and near the limit the session compacts: it replaces the history with a summary. Whatever was not written down is gone. Keeping a long session useful comes down to four habits, and the tools that enforce them:
 
