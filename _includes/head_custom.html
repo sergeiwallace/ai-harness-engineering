@@ -49,6 +49,17 @@
   .main-content table.table-squeeze th, .main-content table.table-squeeze td { overflow-wrap: normal !important; }
   .main-content .table-wrapper.table-scroll { overflow-x: auto !important; }
   .main-content .table-wrapper.table-wide { max-width: none !important; position: relative; z-index: 1; background: #fff; }
+  /* site-qa v2 */
+  @media (min-width: 1200px) {
+    .side-bar { width: calc((100% - 81.5rem) / 2 + 16.5rem); min-width: 16.5rem; }
+    .main { margin-left: Max(16.5rem, calc((100% - 81.5rem) / 2 + 16.5rem)); max-width: min(65rem, calc(100vw - 18.5rem)); }
+    .main-content > p, .main-content > ul, .main-content > ol, .main-content > blockquote, .main-content > dl, .main-content > h1, .main-content > h2, .main-content > h3, .main-content > h4 { max-width: 52rem; }
+    .main-content .table-wrapper { width: 100%; max-width: none; }
+  }
+  @media (min-width: 1600px) {
+    .side-bar { width: calc((100% - 91.5rem) / 2 + 16.5rem); }
+    .main { margin-left: Max(16.5rem, calc((100% - 91.5rem) / 2 + 16.5rem)); max-width: min(75rem, calc(100vw - 18.5rem)); }
+  }
 </style>
 <script>/* tables-fit v3: prose columns get room; wide tables widen, then tighten, then scroll; never break a word */
 (function () {
