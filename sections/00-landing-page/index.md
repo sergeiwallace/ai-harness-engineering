@@ -29,7 +29,7 @@ Anyone who uses AI models for work. The examples come from software engineering,
 | If you use | Start with | Then read |
 |---|---|---|
 | Claude Code or Codex in a terminal | [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}) | the building blocks, sections 3 to 7 |
-| A chat, desktop or web app | [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}) | context files and skills, which have chat-app equivalents |
+| A chat, desktop or web app | [Desktop, Web & Mobile Apps]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}) | context files and skills, which have chat-app equivalents |
 | Several agents already | [Delegation]({{ '/sections/08-delegation/' | relative_url }}) and [orchestration]({{ '/sections/10-orchestration/' | relative_url }}) | testing, review and human gates |
 
 You do not need a harness to start. The site shows what one is, how the parts fit, and a first week of steps to [build your own]({{ '/sections/17-building-a-harness/' | relative_url }}).
@@ -173,7 +173,7 @@ Conventions used on every page:
 Two sections are for reading only, off the talk path:
 
 - [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}), which stop 9 mentions in one line about screenshots;
-- [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}), which stop 1 mentions in one line for chat and desktop users.
+- [Desktop, Web & Mobile Apps]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}), which stop 1 mentions in one line for chat and desktop users.
 
 Demos come later, after the talk and these pages are settled.
 

@@ -194,10 +194,10 @@ One backup slide per section, used during questions. The [appendix index slide](
 17. [Logging, observability and evaluation]({{ slides_url }}#/58){:target="_blank" rel="noopener"}, overview: [Logging, observability and evaluation]({{ '/sections/16-logging-and-evaluation/' | relative_url }})
 18. [Building your own harness]({{ slides_url }}#/59){:target="_blank" rel="noopener"}, overview: [Building your own harness]({{ '/sections/17-building-a-harness/' | relative_url }})
 19. [Trends and model changes]({{ slides_url }}#/60){:target="_blank" rel="noopener"}, overview: [Trends and model changes]({{ '/sections/18-trends/' | relative_url }})
-20. [Chat, desktop and web clients]({{ slides_url }}#/61){:target="_blank" rel="noopener"}, overview: [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }})
+20. [Desktop, Web & Mobile Apps]({{ slides_url }}#/61){:target="_blank" rel="noopener"}, overview: [Desktop, Web & Mobile Apps]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }})
 21. [Advanced topics]({{ slides_url }}#/62){:target="_blank" rel="noopener"}
 22. [Mods and function hooks]({{ slides_url }}#/63){:target="_blank" rel="noopener"}, page: [Mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }})
-23. [MCP Apps in chat clients]({{ slides_url }}#/64){:target="_blank" rel="noopener"}, page: [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }})
+23. [MCP Apps in the desktop and web apps]({{ slides_url }}#/64){:target="_blank" rel="noopener"}, page: [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }})
 24. [Taste in practice]({{ slides_url }}#/65){:target="_blank" rel="noopener"}, page: [Taste and spiky capabilities]({{ '/sections/18-trends/taste-and-spiky-capabilities.html' | relative_url }})
 
 {% include page_nav.html %}

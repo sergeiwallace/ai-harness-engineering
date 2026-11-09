@@ -110,7 +110,7 @@ if [[ "$cmd" =~ git[[:space:]]+push.*(--force|[[:space:]]-f([[:space:]]|$)) ]]; 
 fi
 ```
 
-> Note: a check that also runs in CI is enforced even when the agent runs in a client with no hooks at all, such as a chat app. See [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}).
+> Note: a check that also runs in CI is enforced even when the agent runs in a client with no hooks at all, such as a chat app. See [Desktop, Web & Mobile Apps]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}).
 
 ## A worked move
 

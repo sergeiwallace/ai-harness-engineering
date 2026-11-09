@@ -74,10 +74,10 @@ deck:
   - { index: 58, id: "detail-16-logging-and-evaluation", title: "Logging, observability and evaluation", part: "Appendix" }
   - { index: 59, id: "detail-17-building-a-harness", title: "Building your own harness", part: "Appendix" }
   - { index: 60, id: "detail-18-trends", title: "Trends and model changes", part: "Appendix" }
-  - { index: 61, id: "detail-19-chat-and-desktop-clients", title: "Chat, desktop and web clients", part: "Appendix" }
+  - { index: 61, id: "detail-19-chat-and-desktop-clients", title: "Desktop, Web & Mobile Apps", part: "Appendix" }
   - { index: 62, id: "advanced-topics", title: "Advanced topics", part: "Appendix" }
   - { index: 63, id: "mods-and-function-hooks", title: "Mods and function hooks", part: "Appendix" }
-  - { index: 64, id: "mcp-apps", title: "MCP Apps in chat clients", part: "Appendix" }
+  - { index: 64, id: "mcp-apps", title: "MCP Apps in the desktop and web apps", part: "Appendix" }
   - { index: 65, id: "taste-detail", title: "Taste in practice", part: "Appendix" }
 
 sections:
@@ -171,5 +171,5 @@ sections:
     - { index: 40, title: "Questions and further reading" }
     - { index: 60, title: "Trends and model changes" }
   "19-chat-and-desktop-clients":
-    - { index: 61, title: "Chat, desktop and web clients" }
-    - { index: 64, title: "MCP Apps in chat clients" }
+    - { index: 61, title: "Desktop, Web & Mobile Apps" }
+    - { index: 64, title: "MCP Apps in the desktop and web apps" }

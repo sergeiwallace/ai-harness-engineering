@@ -1,5 +1,5 @@
 ---
-title: "Chat, desktop and web clients"
+title: "Desktop, Web & Mobile Apps"
 nav_order: 29
 has_children: true
 has_toc: false
@@ -9,20 +9,38 @@ last_updated: "2026-11-09"
 
 {% include page_nav.html %}
 
-# Chat, desktop and web clients
+# Desktop, Web & Mobile Apps
 
-Most of this site is about coding agents in a terminal: Claude Code and Codex. Many people use the same models through a chat app, a desktop app or a browser. The question for them is which parts of harness engineering still apply. The short answer: the Claude Code desktop and web versions keep almost everything, a chat app keeps the habits and an adapted form of context, and anything that depends on running code on your machine, such as hooks, does not carry over to a chat app at all.
+Most of this site is about coding agents in a terminal: Claude Code and Codex. Many people use the same models through the Claude desktop app, the web app at claude.ai and the mobile apps, each with several tabs: Chat, Projects, Cowork and Code. The question for them is which parts of harness engineering still apply, and where.
+
+The short answer:
+
+- The Code tab and Claude Code on the web keep almost everything, because they run Claude Code itself.
+- Chat, Projects and Cowork keep the habits and an adapted form of context, skills and connectors.
+- Anything that depends on running code on your machine, such as hooks, does not carry over to the chat tabs.
+- The mobile apps reach the same conversations, connectors and interactive apps.
 
 ![Sequence diagram comparing the same review checklist in a chat project and in Claude Code. In the chat project the checklist sits in the project instructions, the model reads them and returns a review that skips one item, and you have to check the list yourself. In Claude Code the checklist is a skill, and when the agent tries to finish, a hook blocks it because item 4 is missing, so the review comes back with every item covered.]({{ '/assets/images/19-chat-and-desktop-clients/chat-vs-cli-sequence.svg' | relative_url }}){: style="width:100%"}
 
 *Figure 1. The same checklist as an instruction in a chat project and as a skill plus a hook in Claude Code. Diagram made with archify.*
 
+## Tabs and surfaces
+
+| Surface | What it is | How much of a harness applies |
+|---|---|---|
+| Chat | A conversation in the web, desktop or mobile app | Instructions and habits; connectors and [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}) |
+| Projects | Conversations that share instructions and files | Project instructions play the role of a context file (unverified; check the claude.ai help pages) |
+| Cowork | An agent in the desktop app that works on tasks with your files and connectors | Plugins and connectors install there, with a different set of components than Claude Code; interactive connectors are available |
+| Code | Claude Code inside the desktop app | Almost the whole harness: the same engine, configuration, project memory and MCP servers as the terminal |
+| Claude Code on the web | Claude Code sessions that run in the cloud | The repository's harness; not the plugins in your local settings |
+| Mobile | The Claude apps on phones | Conversations, connectors and interactive apps; no local harness |
+
 ## The three tiers
 
 | Tier | What it covers | Examples |
 |---|---|---|
-| Carries over | Almost the whole harness | Claude Code desktop app, Claude Code on the web |
-| Applies in adapted form | Context, skills and habits, as instructions | The claude.ai chat app with projects; Cowork |
+| Carries over | Almost the whole harness | The Code tab in the desktop app, Claude Code on the web |
+| Applies in adapted form | Context, skills and habits, as instructions | Chat and Projects on web, desktop and mobile; Cowork |
 | Does not apply | Anything that runs code on your machine | Hooks, local scripts, local permission rules |
 | New in chat clients | Interactive interfaces supplied by connectors | [MCP Apps]({{ '/sections/19-chat-and-desktop-clients/mcp-apps.html' | relative_url }}), the chat counterpart to Claude Code mods |
 

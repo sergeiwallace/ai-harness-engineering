@@ -53,8 +53,8 @@ Read it on [the site](https://sergeiwallace.github.io/ai-harness-engineering/).
   - [Building a harness in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/17-building-a-harness/detail.html)
 - [Trends and model changes](https://sergeiwallace.github.io/ai-harness-engineering/sections/18-trends/)
   - [Trends in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/18-trends/detail.html)
-- [Chat, desktop and web clients](https://sergeiwallace.github.io/ai-harness-engineering/sections/19-chat-and-desktop-clients/)
-  - [Chat and desktop clients in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/19-chat-and-desktop-clients/detail.html)
+- [Desktop, Web & Mobile Apps](https://sergeiwallace.github.io/ai-harness-engineering/sections/19-chat-and-desktop-clients/)
+  - [Desktop, Web & Mobile Apps in detail](https://sergeiwallace.github.io/ai-harness-engineering/sections/19-chat-and-desktop-clients/detail.html)
 
 ## Layout
 

@@ -1,6 +1,6 @@
 ---
 title: "MCP Apps: interactive UI in chat clients"
-parent: "Chat, desktop and web clients"
+parent: "Desktop, Web & Mobile Apps"
 nav_order: 2
 last_updated: "2026-11-09"
 ---
@@ -252,7 +252,7 @@ The [mods page]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html
 ## Related
 
 - [Claude Code mods and function hooks]({{ '/sections/05-skills-and-plugins/mods-and-function-hooks.html' | relative_url }}): the Claude Code counterpart.
-- [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}): which parts of a harness carry over to these clients.
+- [Desktop, Web & Mobile Apps]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}): which parts of a harness carry over to these clients.
 - [Harness habits in a chat app]({{ '/sections/19-chat-and-desktop-clients/harness-habits-in-a-chat-app.html' | relative_url }}).
 
 ## References

@@ -1,6 +1,6 @@
 ---
 title: "Harness habits in a chat app"
-parent: "Chat, desktop and web clients"
+parent: "Desktop, Web & Mobile Apps"
 nav_order: 1
 redirect_from:
   - /sections/19-chat-and-desktop-clients/detail.html
