@@ -4,6 +4,8 @@ parent: "Logging, observability and evaluation"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Logging and evaluation in detail
 
 As of 2026-11-09.
@@ -43,3 +45,5 @@ To start: ten tasks taken from your own past failures, run before and after one 
 - `claude plugin eval`: <https://code.claude.com/docs/en/plugin-evals.md>, verified 2026-11-08.
 - Claude Code monitoring and OpenTelemetry: unverified; the monitoring pages were not fetched.
 - The broken-benchmark figure: <https://openai.com/index/separating-signal-from-noise-coding-evaluations/>; the page returned HTTP 403 to a fetch on 2026-11-09, so the figure is not yet verified.
+
+{% include page_nav.html %}

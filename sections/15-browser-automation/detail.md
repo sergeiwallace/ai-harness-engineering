@@ -4,6 +4,8 @@ parent: "Browser automation and computer use"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Browser automation in detail
 
 As of 2026-11-09.
@@ -36,3 +38,5 @@ To start: ask the agent to take a screenshot of what it changed.
 
 - Claude in Chrome: <https://code.claude.com/docs/en/chrome.md>, verified 2026-11-08.
 - Computer use: <https://code.claude.com/docs/en/computer-use.md>, verified 2026-11-08.
+
+{% include page_nav.html %}

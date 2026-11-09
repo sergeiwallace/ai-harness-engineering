@@ -1,0 +1,15 @@
+{%- assign order = site.data.pages -%}
+{%- assign here = nil -%}
+{%- for entry in order -%}
+  {%- if entry.url == page.url -%}{%- assign here = forloop.index0 -%}{%- endif -%}
+{%- endfor -%}
+{%- if here != nil -%}
+  {%- assign last = order.size | minus: 1 -%}
+  {%- assign prev_i = here | minus: 1 -%}
+  {%- assign next_i = here | plus: 1 -%}
+<nav class="page-nav" aria-label="Previous and next pages">
+  <span class="page-nav-prev">{%- if here > 0 -%}{%- assign prev = order[prev_i] -%}<a href="{{ prev.url | relative_url }}" rel="prev">&larr; Previous: {{ prev.title }}</a>{%- endif -%}</span>
+  <span class="page-nav-toc"><a href="{{ '/' | relative_url }}#contents">Table of contents</a></span>
+  <span class="page-nav-next">{%- if here < last -%}{%- assign next = order[next_i] -%}<a href="{{ next.url | relative_url }}" rel="next">Next: {{ next.title }} &rarr;</a>{%- endif -%}</span>
+</nav>
+{%- endif -%}

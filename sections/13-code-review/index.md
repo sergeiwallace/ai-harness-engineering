@@ -5,6 +5,8 @@ has_children: true
 has_toc: false
 ---
 
+{% include page_nav.html %}
+
 # Code review
 
 As of 2026-11-09.
@@ -20,3 +22,5 @@ Stop 9 on the talk path, about 2 minutes.
 
 - [Code review in detail]({{ '/sections/13-code-review/detail.html' | relative_url }})
 - [Advanced code review topics]({{ '/sections/13-code-review/advanced.html' | relative_url }})
+
+{% include page_nav.html %}

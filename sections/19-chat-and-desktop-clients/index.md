@@ -5,6 +5,8 @@ has_children: true
 has_toc: false
 ---
 
+{% include page_nav.html %}
+
 # Chat, desktop and web clients
 
 As of 2026-11-09.
@@ -14,3 +16,5 @@ This topic has a detail page only. Stop 1 on the talk path says in one line that
 ## Pages for this topic
 
 - [Chat and desktop clients in detail]({{ '/sections/19-chat-and-desktop-clients/detail.html' | relative_url }})
+
+{% include page_nav.html %}

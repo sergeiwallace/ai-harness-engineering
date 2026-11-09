@@ -4,6 +4,8 @@ parent: "Context window and memory"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Context window in detail
 
 As of 2026-11-09.
@@ -43,3 +45,5 @@ To start: one notes file the agent updates before each compaction.
 - Compaction, `/compact`, what reloads, one-million-token models: <https://code.claude.com/docs/en/context-window.md>, verified 2026-11-08.
 - Codex compaction threshold: <https://learn.chatgpt.com/docs/config-file/config-reference.md>, fetched 2026-11-08 (no default number given).
 - Codex pricing: <https://learn.chatgpt.com/docs/pricing.md>, fetched 2026-11-08.
+
+{% include page_nav.html %}

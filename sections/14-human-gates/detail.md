@@ -4,6 +4,8 @@ parent: "Human gates, decisions and alignment"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Human gates in detail
 
 As of 2026-11-09.
@@ -36,3 +38,5 @@ To start: a written list of the actions an agent must never take alone.
 ## Sources
 
 From the author's own harness, described conceptually.
+
+{% include page_nav.html %}

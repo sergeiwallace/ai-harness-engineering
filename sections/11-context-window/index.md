@@ -5,6 +5,8 @@ has_children: true
 has_toc: false
 ---
 
+{% include page_nav.html %}
+
 # Context window and memory
 
 As of 2026-11-09.
@@ -19,3 +21,5 @@ Stop 8 on the talk path, about 2 minutes.
 
 - [Context window in detail]({{ '/sections/11-context-window/detail.html' | relative_url }})
 - [Advanced context window topics]({{ '/sections/11-context-window/advanced.html' | relative_url }})
+
+{% include page_nav.html %}

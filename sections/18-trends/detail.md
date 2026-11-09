@@ -4,6 +4,8 @@ parent: "Trends and model changes"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Trends in detail
 
 As of 2026-11-09.
@@ -35,3 +37,5 @@ Cover what is changing now and how to keep a harness current.
 - Parallel agents in Claude Code: <https://code.claude.com/docs/en/agents.md>, verified 2026-11-08.
 - Codex `/import`: <https://learn.chatgpt.com/docs/developer-commands.md?surface=cli>, verified 2026-11-08.
 - Anthropic merged-changes figures: <https://www.anthropic.com/research/redesigning-source-control>, verified 2026-11-09.
+
+{% include page_nav.html %}

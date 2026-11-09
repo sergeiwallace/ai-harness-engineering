@@ -5,6 +5,8 @@ has_children: true
 has_toc: false
 ---
 
+{% include page_nav.html %}
+
 # Orchestration and workflows
 
 As of 2026-11-09.
@@ -19,3 +21,5 @@ Stop 7 on the talk path, about 2 minutes.
 
 - [Orchestration in detail]({{ '/sections/10-orchestration/detail.html' | relative_url }})
 - [Advanced orchestration topics]({{ '/sections/10-orchestration/advanced.html' | relative_url }})
+
+{% include page_nav.html %}

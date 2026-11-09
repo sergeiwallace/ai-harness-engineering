@@ -4,6 +4,8 @@ parent: "Building your own harness"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Building a harness in detail
 
 As of 2026-11-09.
@@ -46,3 +48,5 @@ Bring the pieces together: how to start, how to grow a harness with systems thin
 
 - Self-improving harness research (mine failures, propose small bounded edits, keep only changes that do not regress, keep the evaluator outside the thing being changed): not yet verified against the primary source.
 - Automatic harness changes doing no better than running the model more: <https://arxiv.org/abs/2607.12227>, verified 2026-11-09.
+
+{% include page_nav.html %}

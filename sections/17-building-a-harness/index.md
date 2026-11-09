@@ -5,6 +5,8 @@ has_children: true
 has_toc: false
 ---
 
+{% include page_nav.html %}
+
 # Building your own harness
 
 As of 2026-11-09.
@@ -19,3 +21,5 @@ Stop 12 on the talk path, about 5 minutes.
 ## Pages for this topic
 
 - [Building a harness in detail]({{ '/sections/17-building-a-harness/detail.html' | relative_url }})
+
+{% include page_nav.html %}

@@ -4,6 +4,8 @@ parent: "Code review"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Code review in detail
 
 As of 2026-11-09.
@@ -42,3 +44,5 @@ To start: have a model from another family review one change, and check which of
 - Automatic review of every pull request: <https://code.claude.com/docs/en/platforms.md>, verified 2026-11-08.
 - "will always find something": <https://code.claude.com/docs/en/best-practices.md>, verified 2026-11-08.
 - Claude Code review verification and the 65% to 78% figure: <https://claude.dev/blog/solving-code-review-at-anthropic/>, verified 2026-11-09.
+
+{% include page_nav.html %}

@@ -5,6 +5,8 @@ has_children: true
 has_toc: false
 ---
 
+{% include page_nav.html %}
+
 # Coordinating several sessions
 
 As of 2026-11-09.
@@ -19,3 +21,5 @@ Stop 7 on the talk path, about 2 minutes.
 
 - [Session coordination in detail]({{ '/sections/09-session-coordination/detail.html' | relative_url }})
 - [Advanced session coordination topics]({{ '/sections/09-session-coordination/advanced.html' | relative_url }})
+
+{% include page_nav.html %}

@@ -5,6 +5,8 @@ has_children: true
 has_toc: false
 ---
 
+{% include page_nav.html %}
+
 # Testing agent-written code
 
 As of 2026-11-09.
@@ -19,3 +21,5 @@ Stop 9 on the talk path, about 2 minutes.
 
 - [Testing in detail]({{ '/sections/12-testing/detail.html' | relative_url }})
 - [Advanced testing topics]({{ '/sections/12-testing/advanced.html' | relative_url }})
+
+{% include page_nav.html %}

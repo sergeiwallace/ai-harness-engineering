@@ -4,6 +4,8 @@ parent: "Coordinating several sessions"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Session coordination in detail
 
 As of 2026-11-09.
@@ -40,3 +42,5 @@ To start: two sessions and one shared notes file.
 - firstmate: <https://github.com/kunchenguid/firstmate>, verified 2026-11-08. My fork: <https://github.com/sergeiwallace/firstmate>.
 - `ListAgents` and `SendMessage`: <https://code.claude.com/docs/en/cross-session-messaging.md>, verified 2026-11-08.
 - Remote Control requirements: <https://code.claude.com/docs/en/remote-control.md>, verified 2026-11-08.
+
+{% include page_nav.html %}

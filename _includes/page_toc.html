@@ -1,0 +1,11 @@
+<ul class="site-toc">
+{%- for entry in site.data.pages -%}
+  {%- if entry.level == 0 %}
+  {%- unless forloop.first %}</ul></li>{% endunless %}
+  <li><a href="{{ entry.url | relative_url }}">{{ entry.title }}</a><ul>
+  {%- else %}
+    <li><a href="{{ entry.url | relative_url }}">{{ entry.title }}</a></li>
+  {%- endif -%}
+{%- endfor %}
+</ul></li>
+</ul>

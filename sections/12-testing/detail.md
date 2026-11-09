@@ -4,6 +4,8 @@ parent: "Testing agent-written code"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Testing in detail
 
 As of 2026-11-09.
@@ -41,3 +43,5 @@ To start: one end-to-end test per feature.
 - The test-tampering study (23.6% to 5.3% across eight models): <https://arxiv.org/abs/2608.29460>, verified 2026-11-09.
 - The deleted-tests example: <https://www.explainx.ai/blog/openclaw-test-audit-skill-deleted-400k-lines-tests-2026>, verified 2026-11-09, a secondary report of the maintainer's post.
 - Newer models checking their own work: not yet verified against the primary source.
+
+{% include page_nav.html %}

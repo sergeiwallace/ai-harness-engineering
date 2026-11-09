@@ -6,10 +6,18 @@ baseurl: "/ai-harness-engineering"
 remote_theme: just-the-docs/just-the-docs@v0.12.0
 plugins:
   - jekyll-remote-theme
+  - jekyll-redirect-from
 
 search_enabled: true
 heading_anchors: true
+
+kramdown:
+  toc_levels: "2..3"
+
 nav_sort: case_sensitive
+
+mermaid:
+  version: "11.4.1"
 
 aux_links:
   "Repository":

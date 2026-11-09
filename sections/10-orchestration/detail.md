@@ -4,6 +4,8 @@ parent: "Orchestration and workflows"
 nav_order: 1
 ---
 
+{% include page_nav.html %}
+
 # Orchestration in detail
 
 As of 2026-11-09.
@@ -44,3 +46,5 @@ To start: one `/goal` that has a clear finish condition.
 - `/goal`: <https://code.claude.com/docs/en/goal.md>, verified 2026-11-08.
 - Opus 5.5 harness guidance: <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5>, verified 2026-11-08.
 - `/loop`: <https://code.claude.com/docs/en/scheduled-tasks.md>, verified 2026-11-08.
+
+{% include page_nav.html %}

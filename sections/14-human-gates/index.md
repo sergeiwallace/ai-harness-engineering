@@ -5,6 +5,8 @@ has_children: true
 has_toc: false
 ---
 
+{% include page_nav.html %}
+
 # Human gates, decisions and alignment
 
 As of 2026-11-09.
@@ -19,3 +21,5 @@ Stop 10 on the talk path, about 3 minutes.
 ## Pages for this topic
 
 - [Human gates in detail]({{ '/sections/14-human-gates/detail.html' | relative_url }})
+
+{% include page_nav.html %}

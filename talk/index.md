@@ -3,6 +3,8 @@ title: "Talk slides"
 nav_order: 2
 ---
 
+{% include page_nav.html %}
+
 # Talk slides
 
 As of 2026-11-09.
@@ -13,7 +15,7 @@ The talk has 13 stops in 42 minutes, then 3 minutes of questions. The slide deck
 
 ### Stop 1, 2 minutes
 
-Section page: [Introduction]({{ '/sections/00-introduction/' | relative_url }})
+Section page: [Introduction]({{ '/' | relative_url }})
 
 1. Agentic AI Workflows & Harness Engineering
 2. Audience and scope
@@ -120,7 +122,7 @@ Section page: [Trends and model changes]({{ '/sections/18-trends/' | relative_ur
 
 One backup slide per section, used during questions.
 
-1. [Introduction detail]({{ '/sections/00-introduction/detail.html' | relative_url }})
+1. [Introduction detail]({{ '/sections/00-landing-page/detail.html' | relative_url }})
 2. [Agentic AI fundamentals detail]({{ '/sections/01-agentic-ai-fundamentals/detail.html' | relative_url }})
 3. [AI harnesses detail]({{ '/sections/02-ai-harnesses/detail.html' | relative_url }})
 4. [Claude Code and Codex basics detail]({{ '/sections/03-claude-code-and-codex/detail.html' | relative_url }})
@@ -140,3 +142,5 @@ One backup slide per section, used during questions.
 18. [Building your own harness detail]({{ '/sections/17-building-a-harness/detail.html' | relative_url }})
 19. [Trends and model changes detail]({{ '/sections/18-trends/detail.html' | relative_url }})
 20. [Chat, desktop and web clients detail]({{ '/sections/19-chat-and-desktop-clients/detail.html' | relative_url }})
+
+{% include page_nav.html %}

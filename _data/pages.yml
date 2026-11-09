@@ -1,0 +1,142 @@
+# Reading order for the previous and next links and the table of contents.
+- url: "/"
+  title: "Introduction"
+  level: 0
+- url: "/sections/00-landing-page/detail.html"
+  title: "Introduction in detail"
+  level: 1
+- url: "/talk/"
+  title: "Talk slides"
+  level: 0
+- url: "/sections/01-agentic-ai-fundamentals/"
+  title: "Agentic AI fundamentals"
+  level: 0
+- url: "/sections/01-agentic-ai-fundamentals/detail.html"
+  title: "Agentic AI fundamentals in detail"
+  level: 1
+- url: "/sections/02-ai-harnesses/"
+  title: "AI harnesses"
+  level: 0
+- url: "/sections/02-ai-harnesses/detail.html"
+  title: "AI harnesses in detail"
+  level: 1
+- url: "/sections/03-claude-code-and-codex/"
+  title: "Claude Code and Codex basics"
+  level: 0
+- url: "/sections/03-claude-code-and-codex/detail.html"
+  title: "Claude Code and Codex in detail"
+  level: 1
+- url: "/sections/04-context-files/"
+  title: "Context files"
+  level: 0
+- url: "/sections/04-context-files/detail.html"
+  title: "Context files in detail"
+  level: 1
+- url: "/sections/05-skills-and-plugins/"
+  title: "Skills, commands and plugins"
+  level: 0
+- url: "/sections/05-skills-and-plugins/detail.html"
+  title: "Skills and plugins in detail"
+  level: 1
+- url: "/sections/06-hooks-scripts-and-linters/"
+  title: "Hooks, scripts and linters"
+  level: 0
+- url: "/sections/06-hooks-scripts-and-linters/detail.html"
+  title: "Hooks and scripts in detail"
+  level: 1
+- url: "/sections/07-templates-and-stubs/"
+  title: "Templates, prompt stubs and injected prompts"
+  level: 0
+- url: "/sections/07-templates-and-stubs/detail.html"
+  title: "Templates and stubs in detail"
+  level: 1
+- url: "/sections/08-delegation/"
+  title: "Agent profiles, sub-agents and delegation"
+  level: 0
+- url: "/sections/08-delegation/detail.html"
+  title: "Delegation in detail"
+  level: 1
+- url: "/sections/09-session-coordination/"
+  title: "Coordinating several sessions"
+  level: 0
+- url: "/sections/09-session-coordination/detail.html"
+  title: "Session coordination in detail"
+  level: 1
+- url: "/sections/09-session-coordination/advanced.html"
+  title: "Advanced session coordination topics"
+  level: 1
+- url: "/sections/10-orchestration/"
+  title: "Orchestration and workflows"
+  level: 0
+- url: "/sections/10-orchestration/detail.html"
+  title: "Orchestration in detail"
+  level: 1
+- url: "/sections/10-orchestration/advanced.html"
+  title: "Advanced orchestration topics"
+  level: 1
+- url: "/sections/11-context-window/"
+  title: "Context window and memory"
+  level: 0
+- url: "/sections/11-context-window/detail.html"
+  title: "Context window in detail"
+  level: 1
+- url: "/sections/11-context-window/advanced.html"
+  title: "Advanced context window topics"
+  level: 1
+- url: "/sections/12-testing/"
+  title: "Testing agent-written code"
+  level: 0
+- url: "/sections/12-testing/detail.html"
+  title: "Testing in detail"
+  level: 1
+- url: "/sections/12-testing/advanced.html"
+  title: "Advanced testing topics"
+  level: 1
+- url: "/sections/13-code-review/"
+  title: "Code review"
+  level: 0
+- url: "/sections/13-code-review/detail.html"
+  title: "Code review in detail"
+  level: 1
+- url: "/sections/13-code-review/advanced.html"
+  title: "Advanced code review topics"
+  level: 1
+- url: "/sections/14-human-gates/"
+  title: "Human gates, decisions and alignment"
+  level: 0
+- url: "/sections/14-human-gates/detail.html"
+  title: "Human gates in detail"
+  level: 1
+- url: "/sections/15-browser-automation/"
+  title: "Browser automation and computer use"
+  level: 0
+- url: "/sections/15-browser-automation/detail.html"
+  title: "Browser automation in detail"
+  level: 1
+- url: "/sections/16-logging-and-evaluation/"
+  title: "Logging, observability and evaluation"
+  level: 0
+- url: "/sections/16-logging-and-evaluation/detail.html"
+  title: "Logging and evaluation in detail"
+  level: 1
+- url: "/sections/16-logging-and-evaluation/advanced.html"
+  title: "Advanced evaluation topics"
+  level: 1
+- url: "/sections/17-building-a-harness/"
+  title: "Building your own harness"
+  level: 0
+- url: "/sections/17-building-a-harness/detail.html"
+  title: "Building a harness in detail"
+  level: 1
+- url: "/sections/18-trends/"
+  title: "Trends and model changes"
+  level: 0
+- url: "/sections/18-trends/detail.html"
+  title: "Trends in detail"
+  level: 1
+- url: "/sections/19-chat-and-desktop-clients/"
+  title: "Chat, desktop and web clients"
+  level: 0
+- url: "/sections/19-chat-and-desktop-clients/detail.html"
+  title: "Chat and desktop clients in detail"
+  level: 1

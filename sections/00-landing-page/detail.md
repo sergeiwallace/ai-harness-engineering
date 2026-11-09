@@ -1,13 +1,14 @@
 ---
-title: "Agentic AI Workflows & Harness Engineering"
+title: "Detail"
+parent: "Introduction"
 nav_order: 1
-permalink: /
+redirect_from:
+  - /sections/00-introduction/detail.html
 ---
 
-# Agentic AI Workflows & Harness Engineering
+{% include page_nav.html %}
 
-Fundamentals & How to Build Your Own
-{: .fs-6 .fw-300 }
+# Introduction in detail
 
 As of 2026-11-09.
 
@@ -40,7 +41,7 @@ The talk path and the linked pages are the same content at two depths. During th
 
 | Stop | Minutes | Pages | What it covers |
 |---|---:|---|---|
-| 1 | 2 | [Introduction]({{ '/sections/00-introduction/' | relative_url }}) | Who the talk is for, the conductor model, how to use the linked pages |
+| 1 | 2 | [Introduction]({{ '/' | relative_url }}) | Who the talk is for, the conductor model, how to use the linked pages |
 | 2 | 2 | [Agentic AI fundamentals]({{ '/sections/01-agentic-ai-fundamentals/' | relative_url }}) | The agent loop, tools, and the context window |
 | 3 | 3 | [AI harnesses]({{ '/sections/02-ai-harnesses/' | relative_url }}) | What a harness is, systems thinking, reflexivity |
 | 4 | 6 | [Claude Code and Codex basics]({{ '/sections/03-claude-code-and-codex/' | relative_url }}), [Context files]({{ '/sections/04-context-files/' | relative_url }}), [Skills, commands and plugins]({{ '/sections/05-skills-and-plugins/' | relative_url }}), [Templates, prompt stubs and injected prompts]({{ '/sections/07-templates-and-stubs/' | relative_url }}) | The building blocks, one line each with its main use |
@@ -59,8 +60,31 @@ The talk path and the linked pages are the same content at two depths. During th
 
 [Browser automation and computer use]({{ '/sections/15-browser-automation/' | relative_url }}) and [Chat, desktop and web clients]({{ '/sections/19-chat-and-desktop-clients/' | relative_url }}) have detail pages only. Stop 9 mentions screenshots in one line, and stop 1 mentions chat and desktop users in one line. Demos come later, after the talk and these pages are settled.
 
+## Purpose
+
+Say who the material is for, what it covers, and how to read it.
+
+## Key points
+
+- The audience ranges from engineers running coding agents to technical and non-technical workers who use desktop or web chat interfaces.
+   - To leverage all the tools at one's disposal for AI harness engineering, it's recommended to use Claude Code / Code or other agentic AI CLI clients, though some of what is discussed will apply to desktop and web interfaces to varying degrees.
+- The methods apply to personal projects and goals as well as to professional work. As a person's skill and harness grow, the amount of work they can direct grows with them.
+  - The main tools are Claude Code, then optionally Codex.
+- In a more advanced setup, agents coordinate among themselves on long tasks. The person gives the starting direction and steps in on key decisions, blockers and feedback.
+- The aim is to show what is possible and how to start, so each reader can build a harness that fits how they work.
+
+## Pitfalls and lessons
+
+- A copied harness brings its author's habits and problems with it. Build from the problems you hit yourself.
+
+## Sources
+
+The meeting description I wrote for this talk.
+
 ## Licence and credits
 
 Prose on this site is licensed under CC BY 4.0, and code under Apache-2.0. The [repository README](https://github.com/sergeiwallace/ai-harness-engineering#licences) maps each licence to its files.
 
 The coordination examples use firstmate, an open-source project by GitHub user kunchenguid (<https://github.com/kunchenguid/firstmate>). I use my own public fork with customizations for my setup (<https://github.com/sergeiwallace/firstmate>).
+
+{% include page_nav.html %}
