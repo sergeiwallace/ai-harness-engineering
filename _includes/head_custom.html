@@ -60,6 +60,20 @@
     .side-bar { width: calc((100% - 91.5rem) / 2 + 16.5rem); }
     .main { margin-left: Max(16.5rem, calc((100% - 91.5rem) / 2 + 16.5rem)); max-width: min(75rem, calc(100vw - 18.5rem)); }
   }
+  /* mobile v1: phone and tablet widths. The theme drops the root font to 14px under 500px;
+     keep 16px. Under 75rem the page nav wraps instead of cutting its links short; under the
+     50rem sidebar breakpoint each nav link takes its own line and a wide table scrolls
+     inside its own box. */
+  @media (max-width: 31.24rem) { html { font-size: 1rem !important; } }
+  @media (max-width: 74.99rem) {
+    .page-nav { flex-wrap: wrap !important; }
+    .page-nav > span { flex: 1 1 12rem !important; white-space: normal !important; overflow: visible !important; }
+    .page-nav-prev:empty, .page-nav-next:empty { display: none; }
+  }
+  @media (max-width: 49.99rem) {
+    .page-nav > span { flex-basis: 100% !important; text-align: left !important; }
+    .main-content .table-wrapper { overflow-x: auto !important; }
+  }
 </style>
 <script>/* tables-fit v4: prose columns keep readable widths; tighten, relax, then scroll */
 (function () {
