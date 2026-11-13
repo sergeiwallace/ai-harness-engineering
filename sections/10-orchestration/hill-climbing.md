@@ -29,8 +29,6 @@ A quality ratchet applies the same rule to a whole codebase over time: a number 
 ![A flow chart of hill-climbing. Once, at the start, the agent measures a baseline, for example 38 of 50. Each round it changes one thing and commits it, measures again on the same tasks with the same check, and asks whether the result is better than the best so far. If yes, it keeps the change, so 42 of 50 becomes the new best. If no, for example 41 of 50, it reverts to the best. Either way it goes back to change one thing for the next round.]({{ '/assets/images/diagrams/10-orchestration/hill-climb-flow.svg' | relative_url }})
 *Figure: hill-climbing keeps a change only when the measure improves. Made with archify.*
 
-*Figure: hill-climbing keeps a change only when the measure improves. Made with archify.*
-
 ### The four rules
 
 1. Measure before changing anything. Without a baseline there is no "better".

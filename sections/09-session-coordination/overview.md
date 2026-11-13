@@ -214,8 +214,6 @@ Separate messaging systems fill the gaps. Use them as ordered fallbacks behind o
 ![A vertical flow chart of the channel ladder for a message to a session on another machine. The sender tries native delivery first and probes whether the target is listed in ListAgents; if listed it sends there and asks for a reply. If not listed it moves down to Agent Mail and probes whether the target's identity is active; if stale, to a message board; if no one reads it, to the git inbox, where the sender commits the message and the target pulls it and replies taken. If nothing answers, a last-resort channel. The order runs from fastest and most direct to slowest and most durable.]({{ '/assets/images/diagrams/09-session-coordination/channel-ladder-flow.svg' | relative_url }})
 *Figure: walking the ladder. Each probe asks whether the target will read the message; the sender stops at the first channel that reaches it. Made with archify.*
 
-*Figure: walking the ladder: each probe asks whether the target will read it. Made with archify.*
-
 [Message channels and fallbacks]({{ '/sections/09-session-coordination/message-channels.html' | relative_url }}) covers the ladder, probes and delivery checks.
 
 ## Owning shared actions

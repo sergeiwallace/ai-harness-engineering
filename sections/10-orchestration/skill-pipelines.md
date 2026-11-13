@@ -30,8 +30,6 @@ This page covers:
 ![A vertical flow chart of a four-stage pipeline. Stage 1, the research agent, writes a research file. Stage 2, the decide agent, reads it and writes the plan file. Stage 3, a fresh audit agent, reads the plan; if it finds must-fix findings it writes them to a file and the decide agent revises the plan, which goes back to audit. When the audit finds nothing new, stage 4, the build agent, reads the plan and writes code.]({{ '/assets/images/diagrams/10-orchestration/pipeline-stages-flow.svg' | relative_url }})
 *Figure: stages hand files to each other; the audit loop ends when nothing new turns up. Made with archify.*
 
-*Figure: stages hand files to each other; the audit loop ends when nothing new turns up. Made with archify.*
-
 | Stage | Reads | Writes | Ends when |
 |---|---|---|---|
 | Research | The request | A research doc with sources | Every question has an answer or is marked open |
